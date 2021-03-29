@@ -33,5 +33,7 @@ You can then start a shell in the docker:
 ```
 docker-compose exec phoenix-dev bash
 ```
-
 The code in docker will be automatically in sync with the code on your local machine.
+
+The docker will also start a JupyterLab server that you can visit: [http://localhost:8888/lab](http://localhost:8888/lab)
+So you can test and run code as you need.
