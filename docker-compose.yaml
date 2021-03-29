@@ -9,4 +9,11 @@ services:
         source: .
         target: /src
         consistency: cached
+    # See .jupyter/jupyter_notebook_config.py for setting
+    command: ["jupyter","lab"]
+    environment:
+      - JUPYTER_CONFIG_DIR=/src/.jupyter
+    ports:
+      - "8888:8888"
+
 
