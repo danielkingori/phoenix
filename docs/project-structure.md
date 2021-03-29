@@ -19,6 +19,6 @@ Let [PROJECT] be the new project's module name. E.g. `fb-scraping`
 3. Create file `requirements/[PROJECT].in`.
   * This file must start with the line `-r common.in` as first line, and should then contain project specific decencies. See `requirements/example.in` for an example.
   * Run `pip-compile requirements/[PROJECT].in` to compile the `in` file to the full `requirements/[PROJECT].txt` which pins all deps and sub-deps down to specific versions, to use in production.
-4. Append `-r [PROJECT].in` to the end of the file `requirements/all.in`, and re-compile `all.in`, using `pip-compile requirements/all.in` .
+4. Append `-r [PROJECT].in` to the end of the file `requirements/all.in`, and re-compile `all.in`, using `make compile` .
   * `requirements/all.in` specifies deps that will be installed on development "all" env.
 
