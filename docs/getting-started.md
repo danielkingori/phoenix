@@ -20,3 +20,18 @@ source venv/bin/activate
 make install_all
 ```
 Also recommended to install `pip-tools` into your virturalenv: `pip install pip-tools`
+
+### Docker
+It is also possible to use docker for development. You will need to install `docker` and `docker-compose`. [Info](https://docs.docker.com/compose/install/).
+Docker is useful because the environment that is run in production is the same as the one that you develop on.
+This way you can use docker to debug and develop with the knowledge that what runs in development also runs in production.
+```
+docker-compose up
+```
+
+You can then start a shell in the docker:
+```
+docker-compose exec phoenix-dev bash
+```
+
+The code in docker will be automatically in sync with the code on your local machine.
