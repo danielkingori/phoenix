@@ -1,4 +1,5 @@
 # Dependencies for all projects
 -r common.in
+-r development.in
 
 -r example.in
