@@ -24,6 +24,10 @@ make install_all
 ```
 Also recommended to install `pip-tools` into your virturalenv: `pip install pip-tools`
 
+### Report
+To run the report when in venv: `python phoenix/report/run.py`.
+This will start a development server at [https://localhost:8050](https://localhost:8050)
+
 ## Docker
 It is also possible to use docker for development. You will need to install `docker` and `docker-compose`. [Info](https://docs.docker.com/compose/install/).
 Docker is useful because the environment that is run in production is the same as the one that you develop on.
