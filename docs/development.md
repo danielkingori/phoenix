@@ -4,13 +4,20 @@
 It is recommended that you use some sort of vitualisation to setup your development environment.
 This repo has two options that are already set up: docker and virturalenv.
 
+## Python Version
+The current python version of this project is 3.9.2. This is the latest major version released minus 0.1.0 as of March 30 2021.
+
+It is recommend that you manage you manage your system python installations with pyenv ([installation info](https://github.com/pyenv/pyenv#installation)).
+
+Use `pyenv install` to install correct version.
+
+If the version is updated then the files `.python-version` and Dockerfiles should also be updated.
+
 ## Virtualenv
-It is recommended that you manage you manage your system python installations with pyenv ([installation info](https://github.com/pyenv/pyenv#installation)).
-And it is recommended you manage your python package installs (i.e. per project) using python's built in venv.
+It is recommended you manage your python package installs (i.e. per project) using python's built in venv.
 
 The terminal commands are then:
 ```
-pyenv install
 python -m venv venv
 source venv/bin/activate
 make install_all
