@@ -1,0 +1,9 @@
+# Development
+isort
+black
+flake8
+pydocstyle
+mypy
+pytest
+pytest-mock
+jupyterlab
