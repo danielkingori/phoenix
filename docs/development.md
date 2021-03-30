@@ -45,6 +45,10 @@ The code in docker will be automatically in sync with the code on your local mac
 The docker will also start a JupyterLab server that you can visit: [http://localhost:8888/lab](http://localhost:8888/lab)
 So you can test and run code as you need.
 
+### Report
+To run the report using docker: `./docker/report up`.
+This will start a development server at [https://localhost:8050](https://localhost:8050)
+
 ## CI/CD development
 The current CI uses gitlab. You are able to test this locally.
 
