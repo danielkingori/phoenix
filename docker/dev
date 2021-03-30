@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Command to run the dev environment
+docker-compose -f docker/dev-compose.yml $@
+

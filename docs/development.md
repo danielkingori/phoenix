@@ -29,12 +29,12 @@ It is also possible to use docker for development. You will need to install `doc
 Docker is useful because the environment that is run in production is the same as the one that you develop on.
 This way you can use docker to debug and develop with the knowledge that what runs in development also runs in production.
 ```
-docker-compose up
+./docker/dev up
 ```
 
 You can then start a shell in the docker:
 ```
-docker-compose exec phoenix-dev bash
+./docker/dev exec phoenix-dev bash
 ```
 The code in docker will be automatically in sync with the code on your local machine.
 

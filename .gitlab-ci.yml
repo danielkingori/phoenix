@@ -34,5 +34,5 @@ before_script:
 
 build_test_all_image:
   script:
-    - docker build -t all-image -f dev.Dockerfile .
+    - docker build -t all-image -f docker/dev.Dockerfile .
     - docker run all-image
