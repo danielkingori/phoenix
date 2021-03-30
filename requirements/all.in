@@ -3,3 +3,4 @@
 -r development.in
 
 -r example.in
+-r report.in
