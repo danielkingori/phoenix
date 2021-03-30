@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  phoenix-report:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+      args:
+        PROJECT: "report"
+    volumes:
+      - type: bind
+        source: ../phoenix/report/
+        target: /src/phoenix/report/
+        consistency: cached
+    entrypoint: /src/docker/entrypoints/editable-install.sh
+    command: ["python", "./phoenix/report/run.py"]
+    ports:
+      - "8050:8050"

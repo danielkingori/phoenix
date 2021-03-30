@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Command to run the dev environment for report
+docker-compose -f docker/report-compose.yml $@
