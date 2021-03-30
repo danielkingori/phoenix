@@ -40,3 +40,11 @@ The code in docker will be automatically in sync with the code on your local mac
 
 The docker will also start a JupyterLab server that you can visit: [http://localhost:8888/lab](http://localhost:8888/lab)
 So you can test and run code as you need.
+
+## CI/CD development
+The current CI uses gitlab. You are able to test this locally.
+
+Install `gitlab-runner` locally: https://docs.gitlab.com/runner/install/
+
+You can then run the build locally:
+`gitlab-runner exec shell build_test_all_image`
