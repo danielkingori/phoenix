@@ -1,0 +1,5 @@
+# Dependencies for report project
+-r common.in
+
+dash
+pandas

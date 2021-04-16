@@ -24,22 +24,30 @@ make install_all
 ```
 Also recommended to install `pip-tools` into your virturalenv: `pip install pip-tools`
 
+### Report
+To run the report when in venv: `python phoenix/report/run.py`.
+This will start a development server at [https://localhost:8050](https://localhost:8050)
+
 ## Docker
 It is also possible to use docker for development. You will need to install `docker` and `docker-compose`. [Info](https://docs.docker.com/compose/install/).
 Docker is useful because the environment that is run in production is the same as the one that you develop on.
 This way you can use docker to debug and develop with the knowledge that what runs in development also runs in production.
 ```
-docker-compose up
+./docker/dev up
 ```
 
 You can then start a shell in the docker:
 ```
-docker-compose exec phoenix-dev bash
+./docker/dev exec phoenix-dev bash
 ```
 The code in docker will be automatically in sync with the code on your local machine.
 
 The docker will also start a JupyterLab server that you can visit: [http://localhost:8888/lab](http://localhost:8888/lab)
 So you can test and run code as you need.
+
+### Report
+To run the report using docker: `./docker/report up`.
+This will start a development server at [https://localhost:8050](https://localhost:8050)
 
 ## CI/CD development
 The current CI uses gitlab. You are able to test this locally.

@@ -2,11 +2,11 @@ version: "3.7"
 services:
   phoenix-dev:
     build:
-      context: .
-      dockerfile: ./dev.Dockerfile
+      context: ../
+      dockerfile: ./docker/dev.Dockerfile
     volumes:
       - type: bind
-        source: .
+        source: ../
         target: /src
         consistency: cached
     # See .jupyter/jupyter_notebook_config.py for setting
