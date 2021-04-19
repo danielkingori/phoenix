@@ -1,11 +1,12 @@
 """Artifacts DataFrame interface."""
+import functools
 import os
 
 import pandas as pd
 import tentaclio
 
 from phoenix.common import constants
-from phoenix.common.artifacts import dtypes
+from phoenix.common.artifacts import dtypes, utils
 
 
 def persist(artifacts_dataframe_url: str, dataframe: pd.DataFrame) -> dtypes.ArtifactDataFrame:
@@ -83,15 +84,6 @@ def url(
     return f"{artifacts_directory}{artifact_basename}"
 
 
-def _validate_artifact_dataframe_url(
-    artifacts_dataframe_url: str,
-) -> None:
-    """Validate an URL for a dataframe URL.
-
-    Raises:
-        ValueError if invalid.
-    """
-    if not artifacts_dataframe_url.endswith(constants.DATAFRAME_ARTIFACT_FILE_EXTENSION):
-        url_msg = f"URL: {artifacts_dataframe_url}"
-        invalid_msg = f"is not valid must end with {constants.DATAFRAME_ARTIFACT_FILE_EXTENSION}"
-        raise ValueError(f"{url_msg} {invalid_msg}")
+_validate_artifact_dataframe_url = functools.partial(
+    utils.validate_artifact_url, constants.DATAFRAME_ARTIFACT_FILE_EXTENSION
+)
