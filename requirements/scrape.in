@@ -1,0 +1,3 @@
+# Dependencies for scrape
+-r common.in
+-r development.in
