@@ -1,3 +1,6 @@
+# Local Artifacts
+local_artifacts/
+
 # Jupyterlab cache
 .jupyter/lab/
 .jupyter/migrated
