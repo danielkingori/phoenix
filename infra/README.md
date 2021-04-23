@@ -25,6 +25,15 @@ source ./lakes/variables.sh
 ./lakes/provision.sh
 ```
 
+## Ways of working
+The running of these scripts should be done with caution. Many of the delete script will not ask before
+deleting resources and data.
+
+In general these scripts should document the resources that have been provisions and make it easier to change
+the names and properties of resources.
+
+If there is more time these script should be moved into terraform code.
+
 ## Notes:
 When you create a new script use ".sh" file extension and run the command:
 `find ./ -type f -iname "*.sh" -exec chmod +x {} \;` to make it executable.
