@@ -1,2 +1,3 @@
 # Tag dependencies
 -r common.in
+textblob
