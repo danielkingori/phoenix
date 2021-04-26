@@ -1,5 +1,3 @@
-
-
 '''
 Script      : Soup Parser
 Created     : June, 2020
@@ -9,7 +7,7 @@ Description : Extract HTML elements from pages
 '''
 
 # load pre-defined scripts
-from fb_decoder.date_parser import main as date_parser_main, get_retrieved_date, return_datestring
+from date_parser import main as date_parser_main, get_retrieved_date, return_datestring
 
 # laod required libraries
 from bs4 import BeautifulSoup
@@ -20,7 +18,7 @@ import random, string
 import re
 from urllib import parse
 
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 logging.debug(f'logging level: {logging.getLogger().getEffectiveLevel()}')
 logging.warning(f'Comment photo post self.connections disabled. '
                 f'Need example of photo gallery with tagged users or other links.')
@@ -58,6 +56,7 @@ class Page(object):
     def __init__(self, raw_file:str):
 
         if test_is_file_mbasic(raw_file):
+            logging.debug(f'File is an mbasic file.')
             self.raw = raw_file
             self.setup()
             if self.test_page_url() and \
@@ -85,6 +84,7 @@ class Page(object):
         # Set up core components of the soup and url components that are
         # important for testing the validity of the page
         self.soup: BeautifulSoup = BeautifulSoup(self.raw, 'html.parser')
+        logging.debug(f'BeautifulSoup created')
         # Extract and save URL
         self.url = self.get_page_url()
         self.url_components = self.get_url_components()
@@ -113,7 +113,6 @@ class Page(object):
 
 
         logging.debug(f'len(metadata_raw): {len(self.metadata_raw)}')
-
 
 
         # Determine page type by analyzing url_components['path']
@@ -558,7 +557,6 @@ class Page(object):
     def get_comments_from_comment_section(self):
         # ===========================================================================
         #     Get section of HTML with section of embedded section
-        #
         # Args:
         #   soup: a soup object from Beautiful Soup
         #   post_metadata: HTML tag uniquely identifying comment section
@@ -575,23 +573,16 @@ class Page(object):
     def get_comment_section_parent(self):
         # ===========================================================================
         #     Get text
-        #
         # Args:
-        #
-        #
-        #
         # Returns:
-        #
         # ===========================================================================
         return re.findall(r'[0-9]+', self.comment_section['id'])[0]
 
     def get_comments(self):
         # ===========================================================================
         #     Get comment
-        #
         # Args:
         #   soup: a soup object from Beautiful Soup
-        #
         #
         # Returns:
         #   display_name:
@@ -828,10 +819,8 @@ class Comment(object):
     def get_comment_owner(comment):
         # ===========================================================================
         #     Get username of commenter
-        #
         # Args:
         #   comment: comment id number
-        #
         #
         # Returns:
         #   display_name: string of commenter's name
@@ -855,10 +844,8 @@ class Comment(object):
     def get_comment_text(comment):
         # ===========================================================================
         #     Get text
-        #
         # Args:
         #   comment: string of containing the comment
-        #
         #
         # Returns:
         #   comment.h3.next_sibling.text: HTML tag with comment text
@@ -886,10 +873,8 @@ class Comment(object):
     def get_comment_id(comment):
         # ===========================================================================
         #     Get text
-        #
         # Args:
         #   comment: string of containing the comment
-        #
         #
         # Returns:
         #   comment.h3.next_sibling.text: HTML tag with comment text
@@ -900,10 +885,8 @@ class Comment(object):
     def get_comment_date(comment):
         # ===========================================================================
         #     Get text
-        #
         # Args:
         #   comment: string of containing the comment
-        #
         #
         # Returns:
         #   comment.h3.next_sibling.text: HTML tag with comment text
