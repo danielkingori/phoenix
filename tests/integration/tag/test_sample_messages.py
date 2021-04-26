@@ -21,6 +21,6 @@ def test_sample_messages(sample_messages_df):
     assert "message" in sample_messages_df
 
     df = sample_messages_df.copy()
-    df["language"] = language.execute(df["message"])
+    df[["language", "language_prob"]] = language.execute(df["message"])
 
     df.to_csv(utils.relative_path("./output_tagging.csv", __file__))
