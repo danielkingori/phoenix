@@ -114,6 +114,8 @@ pyasn1==0.4.8
     #   rsa
 pyathena==1.10.7
     # via tentaclio
+pycld3==0.22
+    # via -r requirements/tag.in
 pycparser==2.20
     # via cffi
 pynacl==1.4.0

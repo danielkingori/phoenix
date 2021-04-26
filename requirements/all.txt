@@ -299,6 +299,8 @@ pyasn1==0.4.8
     #   rsa
 pyathena==1.10.7
     # via tentaclio
+pycld3==0.22
+    # via -r requirements/tag.in
 pycodestyle==2.7.0
     # via flake8
 pycparser==2.20
