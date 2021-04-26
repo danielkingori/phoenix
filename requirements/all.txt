@@ -123,6 +123,8 @@ google-resumable-media==1.2.0
     # via google-cloud-storage
 googleapis-common-protos==1.53.0
     # via google-api-core
+guess-language-spirit==0.5.3
+    # via -r requirements/tag.in
 httplib2==0.19.1
     # via
     #   google-api-python-client
@@ -305,6 +307,8 @@ pycparser==2.20
     # via cffi
 pydocstyle==6.0.0
     # via -r requirements/development.in
+pyenchant==3.2.0
+    # via -r requirements/tag.in
 pyflakes==2.3.1
     # via flake8
 pygments==2.8.1

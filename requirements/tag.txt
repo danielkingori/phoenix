@@ -67,6 +67,8 @@ google-resumable-media==1.2.0
     # via google-cloud-storage
 googleapis-common-protos==1.53.0
     # via google-api-core
+guess-language-spirit==0.5.3
+    # via -r requirements/tag.in
 httplib2==0.19.1
     # via
     #   google-api-python-client
@@ -116,6 +118,8 @@ pyathena==1.10.7
     # via tentaclio
 pycparser==2.20
     # via cffi
+pyenchant==3.2.0
+    # via -r requirements/tag.in
 pynacl==1.4.0
     # via paramiko
 pyodbc==4.0.30

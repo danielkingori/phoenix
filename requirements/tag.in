@@ -1,2 +1,4 @@
 # Tag dependencies
 -r common.in
+guess_language-spirit
+pyenchant
