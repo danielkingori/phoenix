@@ -25,8 +25,8 @@ def get_auth_token():
     return token
 
 
-def single_get(url: str, payload: Dict[str, Any]):
-    """Make a request to crowdtangle."""
+def get_post(url: str, payload: Dict[str, Any]):
+    """Get a post from crowdtangle."""
     logging.info(f"Making request {url}, payload {payload}")
     r = requests.get(url, params=payload, headers={"x-api-token": get_auth_token()})
     r.raise_for_status()
@@ -56,7 +56,7 @@ def get_all_posts(
     # Doing the pagination based on
     # https://github.com/CrowdTangle/API/wiki/Pagination
     while status == 200 and nextPage:
-        r = single_get(url, payload)
+        r = get_post(url, payload)
         status, found_posts, nextPage = _process_response_data(r)
         url = nextPage
         payload = {}

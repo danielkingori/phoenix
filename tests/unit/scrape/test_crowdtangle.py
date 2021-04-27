@@ -32,10 +32,10 @@ def ct_data_no_next(ct_data):
     return ct_no
 
 
-@mock.patch("phoenix.scrape.crowdtangle.single_get")
-def test_get_all_posts(m_single_get, ct_data_with_next, ct_data_no_next):
+@mock.patch("phoenix.scrape.crowdtangle.get_post")
+def test_get_all_posts(m_get_post, ct_data_with_next, ct_data_no_next):
     """Get all posts for 2 pages."""
-    m_single_get.side_effect = [
+    m_get_post.side_effect = [
         ct_data_with_next,
         ct_data_no_next,
     ]
@@ -59,7 +59,7 @@ def test_get_all_posts(m_single_get, ct_data_with_next, ct_data_no_next):
         mock.call(ct_data_with_next["result"]["pagination"]["nextPage"], {}),
     ]
 
-    m_single_get.assert_has_calls(calls)
+    m_get_post.assert_has_calls(calls)
 
     e_posts = ct_data_with_next["result"]["posts"] + ct_data_no_next["result"]["posts"]
 
