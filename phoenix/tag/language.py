@@ -14,5 +14,6 @@ def execute(ser: pd.Series) -> pd.Series:
 
 def translate_value(client, message: str):
     """Translate."""
-    result = client.translate(message, target_language="ar")
+    result_1 = client.translate(message, target_language="iw")
+    result = client.translate(result_1["translatedText"], target_language="ar")
     return pd.Series([result["translatedText"], result["detectedSourceLanguage"]])
