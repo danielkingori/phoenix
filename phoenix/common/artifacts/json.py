@@ -48,7 +48,7 @@ def _persist(
 def get(
     artifacts_json_url: str,
 ) -> dtypes.ArtifactJson:
-    """Get a persisted dataframe.
+    """Get a persisted json.
 
     Encoding is "utf-8" which comes from tentaclio.
 
