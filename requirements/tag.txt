@@ -28,9 +28,7 @@ cffi==1.14.5
 chardet==4.0.0
     # via requests
 click==7.1.2
-    # via
-    #   nltk
-    #   tentaclio
+    # via tentaclio
 cryptography==3.4.7
     # via paramiko
 cycler==0.10.0
@@ -39,10 +37,11 @@ dataclasses==0.6
     # via tentaclio
 future==0.18.2
     # via pyathena
-google-api-core==1.26.3
+google-api-core[grpc]==1.26.3
     # via
     #   google-api-python-client
     #   google-cloud-core
+    #   google-cloud-translate
 google-api-python-client==2.2.0
     # via tentaclio
 google-auth-httplib2==0.1.0
@@ -60,14 +59,20 @@ google-auth==1.29.0
     #   google-cloud-core
     #   google-cloud-storage
 google-cloud-core==1.6.0
-    # via google-cloud-storage
+    # via
+    #   google-cloud-storage
+    #   google-cloud-translate
 google-cloud-storage==1.37.1
     # via tentaclio
+google-cloud-translate==3.1.0
+    # via -r requirements/tag.in
 google-crc32c==1.1.2
     # via google-resumable-media
 google-resumable-media==1.2.0
     # via google-cloud-storage
 googleapis-common-protos==1.53.0
+    # via google-api-core
+grpcio==1.37.0
     # via google-api-core
 httplib2==0.19.1
     # via
@@ -79,14 +84,10 @@ jmespath==0.10.0
     # via
     #   boto3
     #   botocore
-joblib==1.0.1
-    # via nltk
 kiwisolver==1.3.1
     # via matplotlib
 matplotlib==3.4.1
     # via -r requirements/common.in
-nltk==3.6.2
-    # via textblob
 numpy==1.20.2
     # via
     #   matplotlib
@@ -104,10 +105,13 @@ paramiko==2.7.2
     # via pysftp
 pillow==8.2.0
     # via matplotlib
+proto-plus==1.18.1
+    # via google-cloud-translate
 protobuf==3.15.8
     # via
     #   google-api-core
     #   googleapis-common-protos
+    #   proto-plus
 psycopg2-binary==2.8.6
     # via tentaclio
 pyarrow==3.0.0
@@ -144,8 +148,6 @@ pytz==2021.1
     #   pandas
 pyyaml==5.4.1
     # via tentaclio
-regex==2021.4.4
-    # via nltk
 requests-oauthlib==1.3.0
     # via google-auth-oauthlib
 requests==2.25.1
@@ -168,6 +170,7 @@ six==1.15.0
     #   google-auth-httplib2
     #   google-cloud-core
     #   google-resumable-media
+    #   grpcio
     #   protobuf
     #   pynacl
     #   python-dateutil
@@ -178,10 +181,6 @@ tenacity==7.0.0
     # via pyathena
 tentaclio==0.0.15
     # via -r requirements/common.in
-textblob==0.15.3
-    # via -r requirements/tag.in
-tqdm==4.60.0
-    # via nltk
 typing-extensions==3.7.4.3
     # via tentaclio
 uritemplate==3.0.1
