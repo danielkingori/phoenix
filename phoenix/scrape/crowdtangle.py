@@ -21,7 +21,7 @@ def get_auth_token():
     """Get the authorisation token."""
     token = os.getenv(TOKEN_ENV_NAME)
     if not token:
-        raise ValueError(f"No token found for env {TOKEN_ENV_NAME}")
+        raise RuntimeError(f"No token found for env {TOKEN_ENV_NAME}")
     return token
 
 
