@@ -33,9 +33,9 @@ def connect_twitter_api(token: dict = None):
     return api
 
 
-def tweet_search(api, q: str = QUERY, num_items: int = NUM_ITEMS):
+def tweet_search(api, query: str = QUERY, num_items: int = NUM_ITEMS):
     """Twitter keyword search."""
-    for status in tweepy.Cursor(api.search, q=q).items(num_items):
+    for status in tweepy.Cursor(api.search, q=query).items(num_items):
         yield status
 
 def get_user_timeline(api, id = None, count = 200, num_items: int = NUM_ITEMS):
