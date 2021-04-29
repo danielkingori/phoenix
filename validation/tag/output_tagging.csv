@@ -1,4 +1,4 @@
-,message,language
-0,first sample message,en
-1,ana raye7 el gam3a el sa3a 3 el 3asr.,en
-2,أحب القراءة كثيرا,en
+,message,language,confidence
+0,first sample message,en,95.0
+1,ana raye7 el gam3a el sa3a 3 el 3asr.,sk,97.0
+2,أحب القراءة كثيرا,ar,97.0
