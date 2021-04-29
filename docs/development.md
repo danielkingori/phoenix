@@ -56,3 +56,16 @@ Install `gitlab-runner` locally: https://docs.gitlab.com/runner/install/
 
 You can then run the build locally:
 `gitlab-runner exec shell build_test_all_image`
+
+
+## Validation
+The project also contains a validation suite. This suite is used to validate the algorithms.
+
+Currently this is a simple test that will run the tagging on a list of sample messages and write the result as a CSV. The idea is that if the tagging is changed a PR can be opened with the changed output. Reviews of the PR can then see the results of the changes on the sample messages. In this way it is easy to assess and see the quality of the tagging functionality.
+
+Changes to the tagging should then go like this:
+- Change tagging code adding to `validation/tag/test_sample_messages.py` as needed
+- run `make validate`
+- check the output file `validation/tag/output_tagging.csv`
+- commit the changed `validation/tag/output_tagging.csv` if correct
+- make PR with the changes

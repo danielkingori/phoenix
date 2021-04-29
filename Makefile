@@ -32,6 +32,9 @@ lint:
 test:
 	pytest tests
 
+validate:
+	pytest validation
+
 format:
 	isort phoenix tests
 	black phoenix tests
