@@ -10,6 +10,8 @@ RUN apt-get update \
     gcc \
     build-essential \
     unixodbc-dev \
+    python-numpy libicu-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip
