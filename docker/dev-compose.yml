@@ -13,6 +13,7 @@ services:
     command: ["jupyter","lab"]
     environment:
       - JUPYTER_CONFIG_DIR=/src/.jupyter
+      - CROWDTANGLE_API_TOKEN=${CROWDTANGLE_API_TOKEN}
     ports:
       - "8888:8888"
 

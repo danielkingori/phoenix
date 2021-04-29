@@ -9,6 +9,7 @@ RUN apt-get update \
     make \
     gcc \
     build-essential \
+    unixodbc-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip

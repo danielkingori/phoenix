@@ -4,3 +4,4 @@
 
 -r example.in
 -r report.in
+-r scrape.in

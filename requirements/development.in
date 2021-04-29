@@ -6,4 +6,5 @@ pydocstyle
 mypy
 pytest
 pytest-mock
+mock
 jupyterlab
