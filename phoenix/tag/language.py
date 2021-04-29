@@ -1,6 +1,6 @@
 """Language detection tagging."""
-from polyglot.detect import Detector
 import pandas as pd
+from polyglot.detect import Detector
 
 
 def execute(ser: pd.Series):
@@ -11,4 +11,7 @@ def execute(ser: pd.Series):
 def detect(message: str):
     """Detect for a message."""
     ld = Detector(message)
-    return pd.Series([ld.language.code, ld.language.confidence])
+    code = ld.language.code
+    if code not in ["en", "ar"]:
+        code = "ar_izi"
+    return pd.Series([code, ld.language.confidence])
