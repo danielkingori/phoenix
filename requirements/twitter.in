@@ -1,0 +1,6 @@
+# Dependencies for twitter
+-r common.in
+-r development.in
+
+bs4
+tweepy
