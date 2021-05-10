@@ -45,13 +45,39 @@ def tweet_search(query: str = QUERY,
                                 extended=True,).items(num_items):
         yield status
 
-def get_user_timeline(id = None,
-                      num_items = 0,
-                      since_days = 1) -> tweepy.Status:
+
+def _get_tweet_cursor(api, id=None, num_items=0, since_days=1) -> tweepy.Status:
+    return tweepy.Cursor(
+        api.user_timeline,
+        id=id,
+        count=200,
+    ).items(num_items)
+
+
+def get_user_timeline(api=None, id=None, num_items=0, since_days=1) -> tweepy.Status:
     """Twitter get statuses from timeline of given id or username."""
-    api = connect_twitter_api()
-    for status in tweepy.Cursor(api.user_timeline,id=id,count=200, ).items(num_items):
+    if not api:
+        api = connect_twitter_api()
+    for status in _get_tweet_cursor(api, id, num_items, since_days):
         if twitter_utilities.is_recent_tweet(since_days, status):
             yield status
         else:
             break
+
+
+def _get_tweets_for_ids(api, ids_list, num_items, since_days):
+    tweets = []
+    for twitter_id in ids_list:
+        user_tweets = get_user_timeline(
+            api, id=twitter_id, since_days=since_days, num_items=num_items
+        )
+        tweets.extend(user_tweets)
+
+    return tweets
+
+
+def get_user_tweets_dataframe(ids_list, num_items, since_days):
+    api = connect_twitter_api()
+    tweets_for_ids = _get_tweets_for_ids(api, ids_list, num_items, since_days)
+    tweets_json = [tweet._json for tweet in tweets_for_ids]
+    return pd.DataFrame(tweets_json, columns=tweets_json[0].keys())
