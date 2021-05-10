@@ -1,5 +1,6 @@
 import os
 import tweepy
+import pandas as pd
 from phoenix.twitter import twitter_utilities
 
 ENV_C_KEY = 'TWITTER_CONSUMER_KEY'
@@ -65,7 +66,7 @@ def get_user_timeline(api=None, id=None, num_items=0, since_days=1) -> tweepy.St
             break
 
 
-def _get_tweets_for_ids(api, ids_list, num_items, since_days):
+def get_tweets_for_ids(api, ids_list, num_items, since_days):
     tweets = []
     for twitter_id in ids_list:
         user_tweets = get_user_timeline(
@@ -78,6 +79,6 @@ def _get_tweets_for_ids(api, ids_list, num_items, since_days):
 
 def get_user_tweets_dataframe(ids_list, num_items, since_days):
     api = connect_twitter_api()
-    tweets_for_ids = _get_tweets_for_ids(api, ids_list, num_items, since_days)
+    tweets_for_ids = get_tweets_for_ids(api, ids_list, num_items, since_days)
     tweets_json = [tweet._json for tweet in tweets_for_ids]
     return pd.DataFrame(tweets_json, columns=tweets_json[0].keys())
