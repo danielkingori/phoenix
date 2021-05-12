@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import tweepy
 
-from phoenix.twitter import twitter_utilities
+from phoenix.scrape import twitter_utilities
 
 
 ENV_C_KEY = "TWITTER_CONSUMER_KEY"
