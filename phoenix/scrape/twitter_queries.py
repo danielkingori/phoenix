@@ -39,6 +39,7 @@ def connect_twitter_api(token: dict = None) -> tweepy.API:
 
 
 def _tweet_search_cursor(api, query, num_items):
+    """Manages the cursor for Twitter api.search endpoint."""
     return tweepy.Cursor(
         api.search,
         q=query,
@@ -49,6 +50,7 @@ def _tweet_search_cursor(api, query, num_items):
 
 
 def _get_user_tweet_cursor(api, id, num_items) -> tweepy.Status:
+    """Manages the cursor for Twitter api.user_timeline endpoint."""
     return tweepy.Cursor(
         api.user_timeline,
         id=id,
@@ -57,7 +59,7 @@ def _get_user_tweet_cursor(api, id, num_items) -> tweepy.Status:
 
 
 def get_tweets_since_days(query_type, query, since_days, num_items, api=None) -> tweepy.Status:
-    """Twitter get statuses from timeline of given id or username."""
+    """Decides if query is for users or keywords, and checks if the returns are within the since_days timeframe."""
     # Check API
     print("running query")
     if not api:
@@ -79,18 +81,21 @@ def get_tweets_since_days(query_type, query, since_days, num_items, api=None) ->
             break
 
 
-def get_tweets(query_type, api, queries, num_items, since_days):
+def get_tweets(query_type, queries, num_items, since_days, api):
+    """Collects returned tweets."""
     tweets = []
     for query in queries:
         returned_tweets = get_tweets_since_days(
-            query_type, api, query=query, since_days=since_days, num_items=num_items
+            query_type, query, since_days, num_items, api
         )
         tweets.extend(returned_tweets)
     return tweets
 
 
 def get_tweets_dataframe(query_type: str, queries: list, num_items=0, since_days=1):
+    """Extracts json from returned tweets and puts them into a DataFrame"""
     api = connect_twitter_api()
-    tweets = get_tweets(query_type, api, queries, num_items, since_days)
+    tweets = get_tweets(query_type, queries, num_items, since_days, api)
     tweets_json = [tweet._json for tweet in tweets]
+    # note: currently if no tweets are found, this crashes with an IndexError
     return pd.DataFrame(tweets_json, columns=tweets_json[0].keys())
