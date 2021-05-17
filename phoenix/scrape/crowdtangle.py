@@ -8,6 +8,7 @@ from typing import Any, Dict, List
 import datetime
 import logging
 import os
+import time
 
 import requests
 
@@ -15,6 +16,10 @@ import requests
 POSTS_BASE_URL = "https://api.crowdtangle.com/posts"
 
 TOKEN_ENV_NAME = "CROWDTANGLE_API_TOKEN"
+
+# Rate Limit
+RATE_LIMIT_CALLS = 6
+RATE_LIMIT_SECONDS = 1 * 60  # 1 minute intervals
 
 
 def get_auth_token():
@@ -61,7 +66,14 @@ def get_all_posts(
         url = nextPage
         payload = {}
         posts.extend(found_posts)
-
+        # Slow down for rate limit
+        time.sleep(RATE_LIMIT_SECONDS / RATE_LIMIT_CALLS + 0.5)
+        # Facebook sends back a 429 response when the rate limit is met,
+        # but I couldn't figure out how to quickly except that response
+        # {"status":429,
+        #  "code":32,
+        #  "message":"Rate limit exceeded.
+        #             Allowed limit: 6 requests per minute."}
     return posts
 
 
