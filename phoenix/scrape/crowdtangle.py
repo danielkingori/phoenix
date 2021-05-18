@@ -27,9 +27,9 @@ def get_rate_limits():
     if not rate_limit_calls:
         rate_limit_calls = 6
     if not rate_limit_minutes:
-        rate_limit_seconds = 1*60
+        rate_limit_seconds = 1 * 60
     else:
-        rate_limit_seconds = int(rate_limit_minutes)*60
+        rate_limit_seconds = int(rate_limit_minutes) * 60
         rate_limit_calls = int(rate_limit_calls)
     return rate_limit_calls, rate_limit_seconds
 
