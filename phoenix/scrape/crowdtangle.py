@@ -21,6 +21,7 @@ RATE_LIMIT_MINUTES_ENV_NAME = "CT_RATE_LIMIT_MINUTES"
 
 
 def get_rate_limits():
+    """Get the rate limit for the Crowdtangle API."""
     rate_limit_calls = os.getenv(RATE_LIMIT_CALLS_ENV_NAME)
     rate_limit_minutes = os.getenv(RATE_LIMIT_MINUTES_ENV_NAME)
     # If not loaded, check defaults.
