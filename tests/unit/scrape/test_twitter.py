@@ -31,7 +31,7 @@ def test_get_tweets_dataframe(
     # Asserted behaviour
     m_connect_twitter_api.assert_called_once()
     m_get_tweets.assert_called_once_with(
-        query_type, m_connect_twitter_api.return_value, query, num_items, since_days
+        query_type, query, num_items, since_days, m_connect_twitter_api.return_value
     )
     # Asserted output
     pd.testing.assert_frame_equal(df, pd.DataFrame([mock_json, mock_json]))
@@ -39,7 +39,7 @@ def test_get_tweets_dataframe(
 
 @mock.patch("phoenix.scrape.twitter_queries.get_tweets_since_days")
 def test_get_tweets(m_get_tweets_since_days):
-    """Tests correct _get_tweets_for_ids."""
+    """Tests correct _get_tweets."""
     # Args input
     query_type = "users"
     id_list = ["user1", "user2"]
@@ -49,16 +49,10 @@ def test_get_tweets(m_get_tweets_since_days):
     api = mock.Mock()
     return_tweets = [mock.Mock(), mock.Mock()]
     m_get_tweets_since_days.return_value = return_tweets
-    tweets = twitter_queries.get_tweets(query_type, api, id_list, num_items, since_days)
+    tweets = twitter_queries.get_tweets(query_type, id_list, num_items, since_days, api)
     calls = [
-        mock.call(
-            query_type,
-            api,
-            query=id_list[0],
-            since_days=since_days,
-            num_items=num_items,
-        ),
-        mock.call(query_type, api, query=id_list[1], since_days=since_days, num_items=num_items),
+        mock.call(query_type, id_list[0], num_items, since_days, api),
+        mock.call(query_type, id_list[1], num_items, since_days, api),
     ]
     # Asserted behavior
     m_get_tweets_since_days.assert_has_calls(calls)
@@ -68,14 +62,16 @@ def test_get_tweets(m_get_tweets_since_days):
 
 @mock.patch("phoenix.scrape.twitter_queries._tweet_search_cursor")
 @mock.patch("phoenix.scrape.twitter_queries._get_user_tweet_cursor")
-def test_get_tweets_since_days(
+def test_get_tweets_since_days_all_endpoints(
     m_get_user_tweet_cursor,
     m_tweet_search_cursor,
 ):
     """Tests correct get_user_tweets_dataframe. Also proves twitter_utilities.is_recent_tweet."""
     # Args input
-    query_type = "users"
-    query = "user1"
+    queries = [
+        {"query_type": "users", "query": "user1"},
+        {"query_type": "keywords", "query": "keyword"},
+    ]
     num_items = 1
     since_days = 1
     # API mocking
@@ -85,23 +81,26 @@ def test_get_tweets_since_days(
     failing_date = passing_date - datetime.timedelta(since_days + 1)
     query_result = [mock.Mock(created_at=passing_date), mock.Mock(created_at=failing_date)]
     m_get_user_tweet_cursor.return_value = query_result
+    m_tweet_search_cursor.return_value = query_result
     # Function setup and call
-    calls = []
-    tweets = {}
-    for status in twitter_queries.get_tweets_since_days(
-        query_type=query_type,
-        api=api,
-        query=query,
-        num_items=num_items,
-        since_days=since_days,
-    ):
-        tweets = status
-        calls.extend(mock.call(api=api, query=query, num_items=num_items))
+    calls: list = []
+    tweets = []
+    for query in queries:
+        for status in twitter_queries.get_tweets_since_days(
+            query_type=query["query_type"],
+            api=api,
+            query=query["query"],
+            num_items=num_items,
+            since_days=since_days,
+        ):
+            tweets.append(status)
+            calls.extend(mock.call(api=api, query=query, num_items=num_items))
     # Asserted behavior
     m_get_user_tweet_cursor.assert_has_calls(calls[0])
-    m_tweet_search_cursor.assert_not_called()
+    m_tweet_search_cursor.assert_has_calls(calls[1])
     # Asserted output
-    assert tweets == query_result[0]
+    assert tweets[0] == query_result[0]
+    assert tweets[1] == query_result[0]
 
 
 def test_get_tweets_since_days_fails_with_bad_query_type():
