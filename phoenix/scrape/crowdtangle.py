@@ -17,22 +17,22 @@ POSTS_BASE_URL = "https://api.crowdtangle.com/posts"
 
 TOKEN_ENV_NAME = "CROWDTANGLE_API_TOKEN"
 RATE_LIMIT_CALLS_ENV_NAME = "CT_RATE_LIMIT_CALLS"
-RATE_LIMIT_MINUTES_ENV_NAME = "CT_RATE_LIMIT_MINUTES"
+RATE_LIMIT_MINUTES_ENV_NAME = "CT_RATE_LIMIT_SECONDS"
 
 
 def get_rate_limits():
     """Get the rate limit for the Crowdtangle API."""
     # Set defaults
     rate_limit_calls = 6
-    rate_limit_seconds = 1 * 60
+    rate_limit_seconds = 60
     # Load from env
     rate_limit_calls_env = os.getenv(RATE_LIMIT_CALLS_ENV_NAME)
-    rate_limit_minutes_env = os.getenv(RATE_LIMIT_MINUTES_ENV_NAME)
+    rate_limit_seconds_env = os.getenv(RATE_LIMIT_MINUTES_ENV_NAME)
     # If loaded, convert str to int
     if rate_limit_calls_env:
         rate_limit_calls = int(rate_limit_calls_env)
-    if rate_limit_minutes_env:
-        rate_limit_seconds = int(rate_limit_minutes_env) * 60
+    if rate_limit_seconds_env:
+        rate_limit_seconds = int(rate_limit_seconds_env)
     return rate_limit_calls, rate_limit_seconds
 
 
