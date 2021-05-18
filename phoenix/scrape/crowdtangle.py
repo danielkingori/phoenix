@@ -16,10 +16,22 @@ import requests
 POSTS_BASE_URL = "https://api.crowdtangle.com/posts"
 
 TOKEN_ENV_NAME = "CROWDTANGLE_API_TOKEN"
+RATE_LIMIT_CALLS_ENV_NAME = "CT_RATE_LIMIT_CALLS"
+RATE_LIMIT_MINUTES_ENV_NAME = "CT_RATE_LIMIT_MINUTES"
 
-# Rate Limit
-RATE_LIMIT_CALLS = 6
-RATE_LIMIT_SECONDS = 1 * 60  # 1 minute intervals
+
+def get_rate_limits():
+    rate_limit_calls = os.getenv(RATE_LIMIT_CALLS_ENV_NAME)
+    rate_limit_minutes = os.getenv(RATE_LIMIT_MINUTES_ENV_NAME)
+    # If not loaded, check defaults.
+    if not rate_limit_calls:
+        rate_limit_calls = 6
+    if not rate_limit_minutes:
+        rate_limit_seconds = 1*60
+    else:
+        rate_limit_seconds = int(rate_limit_minutes)*60
+        rate_limit_calls = int(rate_limit_calls)
+    return rate_limit_calls, rate_limit_seconds
 
 
 def get_auth_token():
@@ -57,7 +69,9 @@ def get_all_posts(
     url = POSTS_BASE_URL
     status = 200
     nextPage = "placeholder"
-
+    # get rate limits
+    rate_limit_calls, rate_limit_seconds = get_rate_limits()
+    logging.info(f"Rate limit: {rate_limit_calls} requests per {rate_limit_seconds} seconds.")
     # Doing the pagination based on
     # https://github.com/CrowdTangle/API/wiki/Pagination
     while status == 200 and nextPage:
@@ -67,13 +81,7 @@ def get_all_posts(
         payload = {}
         posts.extend(found_posts)
         # Slow down for rate limit
-        time.sleep(RATE_LIMIT_SECONDS / RATE_LIMIT_CALLS + 0.5)
-        # Facebook sends back a 429 response when the rate limit is met,
-        # but I couldn't figure out how to quickly except that response
-        # {"status":429,
-        #  "code":32,
-        #  "message":"Rate limit exceeded.
-        #             Allowed limit: 6 requests per minute."}
+        time.sleep(rate_limit_seconds / rate_limit_calls + 0.5)
     return posts
 
 
