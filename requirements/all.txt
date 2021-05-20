@@ -321,6 +321,8 @@ pyparsing==2.4.7
     #   httplib2
     #   matplotlib
     #   packaging
+pypiwin32==223
+    # via -r requirements\development.in
 pyrsistent==0.17.3
     # via jsonschema
 pysftp==0.2.9
@@ -348,6 +350,7 @@ pywin32==300
     # via
     #   jupyter-core
     #   jupyter-server
+    #   pypiwin32
 pywinpty==1.1.1
     # via terminado
 pyyaml==5.4.1

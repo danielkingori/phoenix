@@ -14,6 +14,8 @@ argon2-cffi==20.1.0
     #   notebook
 async-generator==1.10
     # via nbclient
+atomicwrites==1.4.0
+    # via pytest
 attrs==20.3.0
     # via
     #   jsonschema
@@ -34,6 +36,10 @@ chardet==4.0.0
     # via requests
 click==7.1.2
     # via black
+colorama==0.4.4
+    # via
+    #   ipython
+    #   pytest
 decorator==4.4.2
     # via ipython
 defusedxml==0.7.1
@@ -149,8 +155,6 @@ parso==0.8.1
     # via jedi
 pathspec==0.8.1
     # via black
-pexpect==4.8.0
-    # via ipython
 pickleshare==0.7.5
     # via ipython
 pluggy==0.13.1
@@ -161,10 +165,6 @@ prometheus-client==0.9.0
     #   notebook
 prompt-toolkit==3.0.18
     # via ipython
-ptyprocess==0.7.0
-    # via
-    #   pexpect
-    #   terminado
 py==1.10.0
     # via pytest
 pycodestyle==2.7.0
@@ -182,6 +182,8 @@ pygments==2.8.1
     #   nbconvert
 pyparsing==2.4.7
     # via packaging
+pypiwin32==223
+    # via -r requirements/development.in
 pyrsistent==0.17.3
     # via jsonschema
 pytest-mock==3.5.1
@@ -194,6 +196,13 @@ python-dateutil==2.8.1
     # via jupyter-client
 pytz==2021.1
     # via babel
+pywin32==300
+    # via
+    #   jupyter-core
+    #   jupyter-server
+    #   pypiwin32
+pywinpty==1.1.1
+    # via terminado
 pyzmq==22.0.3
     # via
     #   jupyter-client
