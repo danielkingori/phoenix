@@ -3,3 +3,5 @@ pandas
 tentaclio
 matplotlib
 pyarrow
+papermill
+click
