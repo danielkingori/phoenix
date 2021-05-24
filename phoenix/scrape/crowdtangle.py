@@ -8,6 +8,7 @@ from typing import Any, Dict, List
 import datetime
 import logging
 import os
+import time
 
 import requests
 
@@ -15,6 +16,27 @@ import requests
 POSTS_BASE_URL = "https://api.crowdtangle.com/posts"
 
 TOKEN_ENV_NAME = "CROWDTANGLE_API_TOKEN"
+
+DEFAULT_RATE_LIMIT_CALLS = 6
+DEFAULT_RATE_LIMIT_SECONDS = 60
+RATE_LIMIT_CALLS_ENV_NAME = "CT_RATE_LIMIT_CALLS"
+RATE_LIMIT_MINUTES_ENV_NAME = "CT_RATE_LIMIT_SECONDS"
+
+
+def get_rate_limits():
+    """Get the rate limit for the Crowdtangle API."""
+    # Set defaults
+    rate_limit_calls = DEFAULT_RATE_LIMIT_CALLS
+    rate_limit_seconds = DEFAULT_RATE_LIMIT_SECONDS
+    # Load from env
+    rate_limit_calls_env = os.getenv(RATE_LIMIT_CALLS_ENV_NAME)
+    rate_limit_seconds_env = os.getenv(RATE_LIMIT_MINUTES_ENV_NAME)
+    # If loaded, convert str to int
+    if rate_limit_calls_env:
+        rate_limit_calls = int(rate_limit_calls_env)
+    if rate_limit_seconds_env:
+        rate_limit_seconds = int(rate_limit_seconds_env)
+    return rate_limit_calls, rate_limit_seconds
 
 
 def get_auth_token():
@@ -52,7 +74,9 @@ def get_all_posts(
     url = POSTS_BASE_URL
     status = 200
     nextPage = "placeholder"
-
+    # get rate limits
+    rate_limit_calls, rate_limit_seconds = get_rate_limits()
+    logging.info(f"Rate limit: {rate_limit_calls} requests per {rate_limit_seconds} seconds.")
     # Doing the pagination based on
     # https://github.com/CrowdTangle/API/wiki/Pagination
     while status == 200 and nextPage:
@@ -61,7 +85,8 @@ def get_all_posts(
         url = nextPage
         payload = {}
         posts.extend(found_posts)
-
+        # Slow down for rate limit
+        time.sleep(rate_limit_seconds / rate_limit_calls + 0.5)
     return posts
 
 

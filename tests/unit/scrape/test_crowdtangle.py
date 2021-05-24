@@ -2,6 +2,7 @@
 import copy
 import datetime
 import json
+import os
 
 import mock
 import pytest
@@ -64,3 +65,19 @@ def test_get_all_posts(m_get_post, ct_data_with_next, ct_data_no_next):
     e_posts = ct_data_with_next["result"]["posts"] + ct_data_no_next["result"]["posts"]
 
     assert posts == e_posts
+
+
+@mock.patch.dict(os.environ, {"CT_RATE_LIMIT_CALLS": "100"})
+@mock.patch.dict(os.environ, {"CT_RATE_LIMIT_SECONDS": "300"})
+def test_get_rate_limits_env():
+    """Test get_rate_limits for set env variables."""
+    rate_limit_calls, rate_limit_seconds = crowdtangle.get_rate_limits()
+    assert rate_limit_calls == 100
+    assert rate_limit_seconds == 300
+
+
+def test_get_rate_limits_default():
+    """Test get_rate_limits for default values."""
+    rate_limit_calls, rate_limit_seconds = crowdtangle.get_rate_limits()
+    assert rate_limit_calls == 6
+    assert rate_limit_seconds == 60
