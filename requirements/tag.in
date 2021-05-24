@@ -1,2 +1,5 @@
 # Tag dependencies
 -r common.in
+polyglot
+pyicu
+pycld2
