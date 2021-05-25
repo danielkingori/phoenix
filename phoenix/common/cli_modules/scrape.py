@@ -39,6 +39,9 @@ def fb(
 ):
     """Run the fb scrape script.
 
+    Example command:
+    ./phoenix-cli fb $(date --utc --iso-8601=seconds)
+
     RUN_ISO_TIMESTAMP:
         Is the timestamp that will mark the artifacts that are created.
     """
