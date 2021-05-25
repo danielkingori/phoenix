@@ -4,6 +4,8 @@
 #
 #    pip-compile requirements/scrape.in
 #
+ansiwrap==0.8.4
+    # via papermill
 anyio==2.2.0
     # via jupyter-server
 appdirs==1.4.4
@@ -25,7 +27,9 @@ backcall==0.2.0
 bcrypt==3.2.0
     # via paramiko
 black==20.8b1
-    # via -r requirements/development.in
+    # via
+    #   -r requirements/development.in
+    #   papermill
 bleach==3.3.0
     # via nbconvert
 boto3==1.17.53
@@ -52,7 +56,9 @@ chardet==4.0.0
     # via requests
 click==7.1.2
     # via
+    #   -r requirements/common.in
     #   black
+    #   papermill
     #   tentaclio
 cryptography==3.4.7
     # via paramiko
@@ -67,7 +73,9 @@ defusedxml==0.7.1
 deprecation==2.1.0
     # via jupyter-packaging
 entrypoints==0.3
-    # via nbconvert
+    # via
+    #   nbconvert
+    #   papermill
 flake8==3.9.1
     # via -r requirements/development.in
 future==0.18.2
@@ -195,7 +203,9 @@ mypy==0.812
 nbclassic==0.2.7
     # via jupyterlab
 nbclient==0.5.3
-    # via nbconvert
+    # via
+    #   nbconvert
+    #   papermill
 nbconvert==6.0.7
     # via
     #   jupyter-server
@@ -206,6 +216,7 @@ nbformat==5.1.3
     #   nbclient
     #   nbconvert
     #   notebook
+    #   papermill
 nest-asyncio==1.5.1
     # via nbclient
 notebook==6.3.0
@@ -232,6 +243,8 @@ pandas==1.1.3
     #   tentaclio
 pandocfilters==1.4.3
     # via nbconvert
+papermill==2.3.3
+    # via -r requirements/common.in
 paramiko==2.7.2
     # via pysftp
 parso==0.8.2
@@ -320,7 +333,9 @@ pytz==2021.1
     #   google-api-core
     #   pandas
 pyyaml==5.4.1
-    # via tentaclio
+    # via
+    #   papermill
+    #   tentaclio
 pyzmq==22.0.3
     # via
     #   jupyter-client
@@ -337,6 +352,7 @@ requests[socks]==2.25.1
     #   google-api-core
     #   google-cloud-storage
     #   jupyterlab-server
+    #   papermill
     #   requests-oauthlib
     #   tentaclio
     #   tweepy
@@ -373,7 +389,9 @@ snowballstemmer==2.1.0
 sqlalchemy==1.3.24
     # via tentaclio
 tenacity==7.0.0
-    # via pyathena
+    # via
+    #   papermill
+    #   pyathena
 tentaclio==0.0.15
     # via -r requirements/common.in
 terminado==0.9.4
@@ -382,6 +400,8 @@ terminado==0.9.4
     #   notebook
 testpath==0.4.4
     # via nbconvert
+textwrap3==0.9.2
+    # via ansiwrap
 toml==0.10.2
     # via
     #   black
@@ -396,6 +416,8 @@ tornado==6.1
     #   jupyterlab
     #   notebook
     #   terminado
+tqdm==4.60.0
+    # via papermill
 traitlets==5.0.5
     # via
     #   ipykernel

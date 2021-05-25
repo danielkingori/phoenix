@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# A wrapper for the python cli.py script
+# Usage `./phoenix-cli --help`
+
+python phoenix/common/cli.py $@
+
