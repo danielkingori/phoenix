@@ -73,6 +73,14 @@ class ArtifactURLRegistry:
         self.environment_key = environment_key
         self.run_datetime = run_datetime
 
+    def get_run_iso_timestamp(self) -> str:
+        """Get the run date."""
+        return self.run_datetime.isoformat()
+
+    def get_run_date(self) -> str:
+        """Get the run date."""
+        return self.run_datetime.strftime("%Y-%m-%d")
+
     def get_url(self, artifact_key: str, url_config: Dict[str, Any] = {}) -> str:
         """Get the URL for the artifact key."""
         url_config = self._build_url_config(url_config)
@@ -85,9 +93,9 @@ class ArtifactURLRegistry:
     def _build_url_config(self, url_config: Dict[str, Any]) -> Dict[str, Any]:
         """Build the url config."""
         if "RUN_ISO_TIMESTAMP" not in url_config:
-            url_config["RUN_ISO_TIMESTAMP"] = self.run_datetime.isoformat()
+            url_config["RUN_ISO_TIMESTAMP"] = self.get_run_iso_timestamp()
 
         if "RUN_DATE" not in url_config:
-            url_config["RUN_DATE"] = self.run_datetime.strftime("%Y-%m-%d")
+            url_config["RUN_DATE"] = self.get_run_date()
 
         return url_config
