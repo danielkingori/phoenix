@@ -21,9 +21,24 @@ def test_source_url(m_get_local):
     assert r_url == f"{local_path}RUN_DATE/source_runs/source-posts-RUN_ISO_TIMESTAMP.json"
 
 
+@mock.patch("phoenix.common.artifacts.urls.get_local")
+def test_static_url(m_get_local):
+    """Test static urls."""
+    artifact_key = "base-to_process_posts"
+    url_config = {"RUN_DATE": "RUN_DATE", "RUN_ISO_TIMESTAMP": "RUN_ISO_TIMESTAMP"}
+    environment_key = "local"
+    local_path = "file:/local_path/"
+    m_get_local.return_value = local_path
+
+    r_url = registry.static_url(artifact_key, url_config, environment_key)
+
+    assert r_url == f"{local_path}base/to_process/posts-RUN_ISO_TIMESTAMP.json"
+
+
 @mock.patch("phoenix.common.artifacts.registry.ArtifactURLRegistry._build_url_config")
+@mock.patch("phoenix.common.artifacts.registry.static_url")
 @mock.patch("phoenix.common.artifacts.registry.source_url")
-def test_artifact_url_registry(m_source_url, m_build_url_config):
+def test_artifact_url_registry(m_source_url, m_static_url, m_build_url_config):
     """Test ArtifactURLRegistry."""
     artifact_key = "source-posts"
     run_datetime = datetime.datetime.now()
@@ -31,13 +46,37 @@ def test_artifact_url_registry(m_source_url, m_build_url_config):
     url_config = {"RAN": "ran"}
     aur = registry.ArtifactURLRegistry(run_datetime, environment_key)
     aur.mappers["source-"] = m_source_url
+    aur.mappers["base-"] = m_static_url
     r_url = aur.get_url(artifact_key, url_config)
     m_build_url_config.assert_called_once_with(url_config)
     m_source_url.assert_called_once_with(
         artifact_key, m_build_url_config.return_value, environment_key
     )
+    m_static_url.assert_not_called()
 
     assert r_url == m_source_url.return_value
+
+
+@mock.patch("phoenix.common.artifacts.registry.ArtifactURLRegistry._build_url_config")
+@mock.patch("phoenix.common.artifacts.registry.static_url")
+@mock.patch("phoenix.common.artifacts.registry.source_url")
+def test_artifact_url_registry_static(m_source_url, m_static_url, m_build_url_config):
+    """Test ArtifactURLRegistry."""
+    artifact_key = "base-posts"
+    run_datetime = datetime.datetime.now()
+    environment_key = "local"
+    url_config = {"RAN": "ran"}
+    aur = registry.ArtifactURLRegistry(run_datetime, environment_key)
+    aur.mappers["source-"] = m_source_url
+    aur.mappers["base-"] = m_static_url
+    r_url = aur.get_url(artifact_key, url_config)
+    m_build_url_config.assert_called_once_with(url_config)
+    m_static_url.assert_called_once_with(
+        artifact_key, m_build_url_config.return_value, environment_key
+    )
+    m_source_url.assert_not_called()
+
+    assert r_url == m_static_url.return_value
 
 
 @mock.patch("phoenix.common.artifacts.registry.ArtifactURLRegistry._build_url_config")
