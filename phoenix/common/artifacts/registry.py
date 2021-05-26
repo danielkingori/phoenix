@@ -28,6 +28,9 @@ def source_url(
 
     mapping = {
         "posts": f"/source_runs/source-posts-{url_config['RUN_ISO_TIMESTAMP']}.json",
+        "fb_post_source_api_notebook": (
+            f"/source_runs/fb_post_source_api-{url_config['RUN_ISO_TIMESTAMP']}.ipynb"
+        ),
     }
 
     for mapper_suffix, url_str in mapping.items():
@@ -47,9 +50,7 @@ def static_url(
         raise ValueError(f"No url for artifact key: {artifact_key}")
 
     mapping = {
-        "base-to_process_posts": (
-            f"base/to_process/posts-{url_config['RUN_ISO_TIMESTAMP']}.json"
-        )
+        "base-to_process_posts": (f"base/to_process/posts-{url_config['RUN_ISO_TIMESTAMP']}.json")
     }
 
     for mapper_suffix, url_str in mapping.items():
