@@ -1,0 +1,33 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "BuildUp"
+
+Parameters:
+  EnvType:
+    Type: String
+    Default: "dev"
+    Description: "The data environment [prefix|suffix]"
+
+Resources:
+  PhoenixDataLakeBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join [ "", [ "phoenix-data-lake-", !Ref EnvType ] ]
+      VersioningConfiguration:
+        Status: Enabled
+
+  PhoenixDataLakeBucketBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref PhoenixDataLakeBucket
+      PolicyDocument:
+        Statement:
+          - Action:
+              - "s3:*Object"
+            Effect: Allow
+            Principal: {"AWS": !Join ["",[ "arn:aws:iam::",!Ref AWS::AccountId,":root"]]}
+            Resource: !Join
+              - ""
+              - - "arn:aws:s3:::"
+                - !Ref PhoenixDataLakeBucket
+                - "/*"
