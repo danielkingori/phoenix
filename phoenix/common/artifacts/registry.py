@@ -26,7 +26,31 @@ def source_url(
     else:
         raise ValueError(f"No url for artifact key: {artifact_key}")
 
-    mapping = {"posts": f"/source_runs/source-posts-{url_config['RUN_ISO_TIMESTAMP']}.json"}
+    mapping = {
+        "posts": f"/source_runs/source-posts-{url_config['RUN_ISO_TIMESTAMP']}.json",
+    }
+
+    for mapper_suffix, url_str in mapping.items():
+        if artifact_key.endswith(mapper_suffix):
+            return f"{prefix}{url_str}"
+
+    raise ValueError(f"No url for artifact key: {artifact_key}")
+
+
+def static_url(
+    artifact_key: str, url_config: Dict[str, Any], environment_key: str = DEFAULT_ENVIRONMENT_KEY
+) -> str:
+    """Get a static urls."""
+    if environment_key == DEFAULT_ENVIRONMENT_KEY:
+        prefix = f"{urls.get_local()}"
+    else:
+        raise ValueError(f"No url for artifact key: {artifact_key}")
+
+    mapping = {
+        "base-to_process_posts": (
+            f"base/to_process/posts-{url_config['RUN_ISO_TIMESTAMP']}.json"
+        )
+    }
 
     for mapper_suffix, url_str in mapping.items():
         if artifact_key.endswith(mapper_suffix):
@@ -40,7 +64,7 @@ class ArtifactURLRegistry:
 
     environment_key: str
     run_datetime: datetime.datetime
-    mappers = {"source-": source_url}
+    mappers = {"source-": source_url, "base-": static_url}
 
     def __init__(
         self, run_datetime: datetime.datetime, environment_key: str = DEFAULT_ENVIRONMENT_KEY
