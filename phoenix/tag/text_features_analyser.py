@@ -80,3 +80,12 @@ def create():
 def combine_ngrams(df: pd.DataFrame):
     """Combine the ngrams columns."""
     return df.apply(lambda x: np.concatenate(x), axis=1)
+
+
+def ngram_count(df: pd.DataFrame):
+    """Combine the ngrams columns."""
+    return df.applymap(_ngram_count_apply).squeeze()
+
+
+def _ngram_count_apply(element_list):
+    return dict(zip(*np.unique(element_list, return_counts=True)))
