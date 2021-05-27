@@ -1,13 +1,7 @@
 """Scrape CLI commands."""
-import datetime
-import os
-import pathlib
-
 import click
-import papermill as pm
 
-from phoenix.common import artifacts
-
+from phoenix.common.cli_modules import utils
 
 @click.group()
 def scrape_cli():
@@ -45,9 +39,8 @@ def fb(
     RUN_ISO_TIMESTAMP:
         Is the timestamp that will mark the artifacts that are created.
     """
-    RUN_DATE_FORMAT = "%Y-%m-%d"
-    run_iso_datetime = datetime.datetime.fromisoformat(run_iso_timestamp)
-    RUN_DATE = run_iso_datetime.strftime(RUN_DATE_FORMAT)
+    RUN_DATE = utils.get_run_date(run_iso_timestamp)
+
     parameters = {}
     if scrape_start_date:
         parameters["SCRAPE_START_DATE"] = scrape_start_date
@@ -56,22 +49,55 @@ def fb(
         parameters["SCRAPE_END_DATE"] = scrape_end_date
 
     nb_name = "fb_posts_source_api.ipynb"
-    nb = f"../../scrape/{nb_name}"
-    # Build the notebook paths
-    cwd = os.getcwd()
-    input_nb_relative_to_cwd = relative_path(nb, __file__).relative_to(pathlib.Path(cwd))
-    output_nb = pathlib.Path(f"{artifacts.urls.ARTIFACTS_PATH}/{RUN_DATE}/source_runs/{nb_name}")
-    output_dir = output_nb.parent
-    # Make the output directory if needed
-    output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Run the notebook
-    click.echo(f"Running Notebook: {input_nb_relative_to_cwd}")
-    click.echo(f"Output Notebook: {output_nb}")
-    click.echo(f"Parameters: {parameters}")
-    pm.execute_notebook(input_nb_relative_to_cwd, output_nb, parameters=parameters)
+    utils.run_notebooks(RUN_DATE, parameters, nb_name)
 
 
-def relative_path(path: str, other_file: str) -> pathlib.Path:
-    """Form path of the relative path from __file__'s directory."""
-    return (pathlib.Path(other_file).parent.absolute() / path).absolute()
+
+@scrape_cli.command()
+@click.argument("endpoint", nargs=1)
+@click.argument("run_iso_timestamp", envvar="RUN_ISO_TIMESTAMP")
+@click.option(
+    "--scrape_since_days",
+    default=None,
+    help=("Set number of days to scrape back with an integer."),
+)
+@click.option(
+    "--num_items",
+    default=None,
+    help=("Maximum number of tweets to scrape." "Use 0 for no maximum."),
+)
+def tw(
+    run_iso_timestamp,
+    endpoint,
+    scrape_since_days,
+    num_items,
+):
+    """Run the twitter scrape script.
+
+    Example commands:
+    ./phoenix-cli tw keywords $(date --utc --iso-8601=seconds)
+    ./phoenix-cli tw users $(date --utc --iso-8601=seconds)
+
+    RUN_ISO_TIMESTAMP:
+        Is the timestamp that will mark the artifacts that are created.
+    """
+    RUN_DATE = utils.get_run_date(run_iso_timestamp)
+
+    parameters = {}
+    parameters["QUERY_TYPE"] = endpoint
+    if scrape_since_days:
+        parameters["SINCE_DAYS"] = scrape_since_days
+
+    if num_items:
+        parameters["NUM_ITEMS"] = num_items
+
+    if endpoint == "users":
+        nb_name = "twitter_user_timeline.ipynb"
+    elif endpoint == "keywords":
+        nb_name = "twitter_keyword_search.ipynb"
+
+    utils.run_notebooks(RUN_DATE, parameters, nb_name)
+
+
+
