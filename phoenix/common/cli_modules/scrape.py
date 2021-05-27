@@ -3,6 +3,7 @@ import click
 
 from phoenix.common.cli_modules import utils
 
+
 @click.group()
 def scrape_cli():
     """Scrape commands."""
@@ -53,7 +54,6 @@ def fb(
     utils.run_notebooks(RUN_DATE, parameters, nb_name)
 
 
-
 @scrape_cli.command()
 @click.argument("endpoint", nargs=1)
 @click.argument("run_iso_timestamp", envvar="RUN_ISO_TIMESTAMP")
@@ -98,6 +98,3 @@ def tw(
         nb_name = "twitter_keyword_search.ipynb"
 
     utils.run_notebooks(RUN_DATE, parameters, nb_name)
-
-
-
