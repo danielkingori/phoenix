@@ -1,7 +1,7 @@
 """Cli package utilities."""
+import datetime
 import os
 import pathlib
-import datetime
 
 import click
 import papermill as pm
