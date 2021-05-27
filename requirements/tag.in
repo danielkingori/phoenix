@@ -3,3 +3,4 @@
 polyglot
 pyicu
 pycld2
+dask[complete]
