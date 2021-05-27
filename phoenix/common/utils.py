@@ -1,10 +1,12 @@
 """General utilities."""
 import logging
+import os
 import pathlib
 import sys
 
 import matplotlib.pyplot as plt
 import pandas as pd
+from dask.distributed import Client
 
 
 def setup_notebook_logging(level=logging.INFO):
@@ -59,3 +61,31 @@ def setup_notebook_output():
 def relative_path(path: str, file_path: str) -> pathlib.Path:
     """Form path of the relative path from __file__'s directory."""
     return (pathlib.Path(file_path).parent.absolute() / path).absolute()
+
+
+def dask_global_init():
+    """Initialise the global dask if DASK_CLUSTER_IP is set.
+
+    You can set DASK_CLUSTER_URL for development by doing
+    ```
+    python
+    from dask.distributed import LocalCluster
+    cluster = LocalCluster()
+    cluster.scheduler.address
+    ```
+    This will print out the URL of the cluster
+    something like: `tcp://127.0.0.1:8786`.
+    `export DASK_CLUSTER_IP=<ip:port>`
+    or in the notebook (don't use quotes if in notebook):
+    `%env DASK_CLUSTER_IP=<ip:port>`
+    You can see the cluster by going to:
+    http://localhost:8787/status
+
+    Be aware this doesn't work for docker yet.
+    """
+    dask_cluster_ip = os.getenv("DASK_CLUSTER_IP")
+    if dask_cluster_ip:
+        logging.info(f"Dask cluster initialised with URL: {dask_cluster_ip}")
+        Client(dask_cluster_ip)
+    else:
+        logging.info("Dask default is used.")
