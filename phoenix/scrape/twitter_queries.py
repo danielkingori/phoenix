@@ -46,7 +46,7 @@ def _tweet_search_cursor(api, query, num_items) -> tweepy.Cursor:
         q=query,
         count=100,
         results="recent",
-        extended=True,
+        tweet_mode="extended",
     ).items(num_items)
 
 
@@ -56,6 +56,7 @@ def _get_user_tweet_cursor(api, id, num_items) -> tweepy.Status:
         api.user_timeline,
         id=id,
         count=200,
+        tweet_mode="extended",
     ).items(num_items)
 
 
