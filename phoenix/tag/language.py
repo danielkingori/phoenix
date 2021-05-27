@@ -1,13 +1,15 @@
 """Language detection tagging."""
 from typing import Tuple
 
+import dask.dataframe as dd
 import pandas as pd
 from polyglot.detect import Detector
 
 
 def execute(ser: pd.Series):
     """From a series of messages return the series of detect languages."""
-    return ser.apply(detect)
+    ddf = dd.from_pandas(ser, npartitions=30)  # Should have npartitions configured in envirnment
+    return ddf.apply(detect, meta={0: str, 1: int}).compute()
 
 
 def detect(message: str):
