@@ -2,7 +2,6 @@
 import datetime
 
 import mock
-import pandas as pd
 import pytest
 
 from phoenix.scrape import twitter_queries
@@ -10,7 +9,7 @@ from phoenix.scrape import twitter_queries
 
 @mock.patch("phoenix.scrape.twitter_queries.get_tweets")
 @mock.patch("phoenix.scrape.twitter_queries.connect_twitter_api")
-def test_get_tweets_dataframe(
+def test_get_tweets_json(
     m_connect_twitter_api,
     m_get_tweets,
 ):
@@ -27,14 +26,14 @@ def test_get_tweets_dataframe(
     tweets = [tweet_mock, tweet_mock]
     m_get_tweets.return_value = tweets
     # Function called
-    df = twitter_queries.get_tweets_dataframe(query_type, query, num_items, since_days)
+    tweets_json = twitter_queries.get_tweets_json(query_type, query, num_items, since_days)
     # Asserted behaviour
     m_connect_twitter_api.assert_called_once()
     m_get_tweets.assert_called_once_with(
         query_type, query, num_items, since_days, m_connect_twitter_api.return_value
     )
     # Asserted output
-    pd.testing.assert_frame_equal(df, pd.DataFrame([mock_json, mock_json]))
+    assert tweets_json == [mock_json, mock_json]
 
 
 @mock.patch("phoenix.scrape.twitter_queries.get_tweets_since_days")

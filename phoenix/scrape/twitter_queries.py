@@ -2,7 +2,6 @@
 import logging
 import os
 
-import pandas as pd
 import tweepy
 
 from phoenix.scrape import twitter_utilities
@@ -92,12 +91,11 @@ def get_tweets(query_type, queries, num_items, since_days, api) -> list:
     return tweets
 
 
-def get_tweets_dataframe(
-    query_type: str, queries: list, num_items=0, since_days=1
-) -> pd.DataFrame:
+def get_tweets_json(query_type: str, queries: list, num_items=0, since_days=1) -> list:
     """Extracts json from returned tweets and puts them into a DataFrame."""
     api = connect_twitter_api()
     tweets = get_tweets(query_type, queries, num_items, since_days, api)
-    tweets_json = [tweet._json for tweet in tweets]
+    return [tweet._json for tweet in tweets]
     # note: currently if no tweets are found, this crashes with an IndexError
-    return pd.DataFrame(tweets_json, columns=tweets_json[0].keys())
+    # previously this was ->def get_tweets_dataframe():
+    #                       return pd.DataFrame(tweets_json, columns=tweets_json[0].keys())
