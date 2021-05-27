@@ -25,4 +25,5 @@ def test_sample_messages(sample_messages_df):
     tfa = text_features_analyser.create()
     df["features"] = tfa.features(df[["message", "language"]], "message")
     df["features_count"] = text_features_analyser.ngram_count(df[["features"]])
+    df["features_index"] = text_features_analyser.features_index(df[["features_count"]])
     df.to_csv(utils.relative_path("./output_tagging.csv", __file__))

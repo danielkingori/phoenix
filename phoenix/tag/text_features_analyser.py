@@ -89,3 +89,16 @@ def ngram_count(df: pd.DataFrame):
 
 def _ngram_count_apply(element_list):
     return dict(zip(*np.unique(element_list, return_counts=True)))
+
+
+def features_index(df: pd.DataFrame):
+    """Combine the ngrams_count columns into features index.
+
+    Returns a tuple of all the features:
+    (ngram_key, feature, count)
+    """
+    return df.apply(_features_index, axis=1)
+
+
+def _features_index(row):
+    return [[(key,) + v for v in list(value.items())] for key, value in row.items()]
