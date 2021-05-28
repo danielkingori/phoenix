@@ -21,13 +21,13 @@ def relative_path(path: str, other_file: str) -> pathlib.Path:
     return (pathlib.Path(other_file).parent.absolute() / path).absolute()
 
 
-def run_notebooks(RUN_DATE, parameters, nb_name):
+def run_notebooks(run_date, parameters, nb_name):
     """Build input/output file paths and run notebooks."""
     # Build the notebook paths
     nb = f"../../scrape/{nb_name}"
     cwd = os.getcwd()
     input_nb_relative_to_cwd = relative_path(nb, __file__).relative_to(pathlib.Path(cwd))
-    output_nb = pathlib.Path(f"{artifacts.urls.ARTIFACTS_PATH}/{RUN_DATE}/source_runs/{nb_name}")
+    output_nb = pathlib.Path(f"{artifacts.urls.ARTIFACTS_PATH}/{run_date}/source_runs/{nb_name}")
     output_dir = output_nb.parent
     # Make the output directory if needed
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -37,3 +37,4 @@ def run_notebooks(RUN_DATE, parameters, nb_name):
     click.echo(f"Output Notebook: {output_nb}")
     click.echo(f"Parameters: {parameters}")
     pm.execute_notebook(input_nb_relative_to_cwd, output_nb, parameters=parameters)
+# TODO: Check execution_timeout error: "Timeout waiting for IOPub output." somewhere around NBClientEngine
