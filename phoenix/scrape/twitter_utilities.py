@@ -1,8 +1,11 @@
 """Utilities for twitter queries."""
 import datetime
 import re
+from pathlib import PosixPath, WindowsPath
 
 import tweepy
+
+from phoenix.common import utils
 
 
 def find_hashtags_in_tweet_text(full_text) -> list:
@@ -26,3 +29,15 @@ def is_recent_tweet(since_days, status: tweepy.Status) -> bool:
     compare_time = today - datetime.timedelta(since_days)
     status_time = status.created_at
     return status_time >= compare_time
+
+
+def load_queries_from_csv(file) -> list:
+    """Load list of query terms from a local csv."""
+    if type(file) != WindowsPath and type(file) != PosixPath:
+        filepath = utils.relative_path(f"./{file}", __file__)
+    else:
+        filepath = file
+    queries = []
+    with open(filepath, "r", encoding="utf-8") as f:
+        queries = [row.strip() for row in f]
+    return queries
