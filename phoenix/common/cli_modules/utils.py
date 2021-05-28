@@ -37,4 +37,3 @@ def run_notebooks(run_date, parameters, nb_name):
     click.echo(f"Output Notebook: {output_nb}")
     click.echo(f"Parameters: {parameters}")
     pm.execute_notebook(input_nb_relative_to_cwd, output_nb, parameters=parameters)
-# TODO: Check execution_timeout error: "Timeout waiting for IOPub output." somewhere around NBClientEngine
