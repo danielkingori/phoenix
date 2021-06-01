@@ -1,11 +1,9 @@
 """Utilities for twitter queries."""
 import datetime
 import re
-from pathlib import PosixPath, WindowsPath
 
+import tentaclio
 import tweepy
-
-from phoenix.common import utils
 
 
 def find_hashtags_in_tweet_text(full_text) -> list:
@@ -31,13 +29,9 @@ def is_recent_tweet(since_days, status: tweepy.Status) -> bool:
     return status_time >= compare_time
 
 
-def load_queries_from_csv(file) -> list:
+def load_queries_from_csv(filepath) -> list:
     """Load list of query terms from a local csv."""
-    if type(file) != WindowsPath and type(file) != PosixPath:
-        filepath = utils.relative_path(f"./{file}", __file__)
-    else:
-        filepath = file
     queries = []
-    with open(filepath, "r", encoding="utf-8") as f:
+    with tentaclio.open(filepath) as f:
         queries = [row.strip() for row in f]
     return queries
