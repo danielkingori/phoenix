@@ -19,3 +19,23 @@ def tag_dataframe(given_df: pd.DataFrame, message_key: str = "message") -> pd.Da
     # TODO: topics: `topics`
     # TODO: has key feature: `hasKeyFeature`
     return df
+
+
+def explode_features(given_df: pd.DataFrame):
+    """Explode dataframe by the features_index."""
+    df = given_df.copy()
+    df["features_count"] = text_features_analyser.ngram_count(df[["features"]])
+    df["features_1_count"] = df["features_count"]
+    df["features_index"] = text_features_analyser.features_index(
+        df[["features_count", "features_1_count"]]
+    )
+    ex_df = df.explode("features_index")
+    ex_df["features"] = ex_df["features_index"].str[1]
+    ex_df["features_count"] = ex_df["features_index"].str[2].fillna(0).astype(int)
+    ex_df["index"] = ex_df.index
+    return ex_df.drop(
+        [
+            "features_index",
+        ],
+        axis=1,
+    )
