@@ -2,6 +2,7 @@
 import datetime
 import re
 
+import tentaclio
 import tweepy
 
 
@@ -26,3 +27,11 @@ def is_recent_tweet(since_days, status: tweepy.Status) -> bool:
     compare_time = today - datetime.timedelta(since_days)
     status_time = status.created_at
     return status_time >= compare_time
+
+
+def load_queries_from_csv(filepath) -> list:
+    """Load list of query terms from a local csv."""
+    queries = []
+    with tentaclio.open(filepath) as f:
+        queries = [row.strip() for row in f]
+    return queries
