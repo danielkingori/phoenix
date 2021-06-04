@@ -3,7 +3,7 @@ import pandas as pd
 import pytest
 
 from phoenix.common import utils
-from phoenix.tag import language, text_features_analyser
+from phoenix.tag import tag, text_features_analyser
 
 
 @pytest.fixture
@@ -21,9 +21,8 @@ def test_sample_messages(sample_messages_df):
     assert "message" in sample_messages_df
 
     df = sample_messages_df.copy()
-    df[["language", "confidence"]] = language.execute(df["message"])
-    tfa = text_features_analyser.create()
-    df["features"] = tfa.features(df[["message", "language"]], "message")
-    df["features_count"] = text_features_analyser.ngram_count(df[["features"]])
-    df["features_index"] = text_features_analyser.features_index(df[["features_count"]])
-    df.to_csv(utils.relative_path("./output_tagging.csv", __file__))
+    tagged_df = tag.tag_dataframe(df, "message")
+    tagged_df.to_csv(utils.relative_path("./output_tagging.csv", __file__))
+    exploed_features = tag.explode_features(tagged_df)
+    exploed_features.to_csv(utils.relative_path("./output_exploded.csv", __file__))
+

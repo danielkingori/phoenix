@@ -1,6 +1,8 @@
 """Text feature analyser."""
 from typing import Dict, List
 
+import itertools
+
 import dask.dataframe as dd
 import numpy as np
 import pandas as pd
@@ -101,4 +103,8 @@ def features_index(df: pd.DataFrame):
 
 
 def _features_index(row):
-    return [[(key,) + v for v in list(value.items())] for key, value in row.items()]
+    return list(
+        itertools.chain.from_iterable(
+            [[(key,) + v for v in list(value.items())] for key, value in row.items()]
+        )
+    )
