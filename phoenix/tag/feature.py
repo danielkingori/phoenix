@@ -55,9 +55,9 @@ def get_key_posts(exploded_features_df) -> pd.DataFrame:
 def get_features_to_label(exploded_features_df) -> pd.DataFrame:
     """Get the features to label."""
     df = exploded_features_df.copy()
-    df = df[["features", "features_count", "index"]]
-    all_feature_count = df.groupby("features").agg({"features_count": "sum", "index": "count"})
-    all_feature_count = all_feature_count.rename(columns={"index": "number_of_items"})
+    df = df[["features", "features_count", "object_id"]]
+    all_feature_count = df.groupby("features").agg({"features_count": "sum", "object_id": "count"})
+    all_feature_count = all_feature_count.rename(columns={"object_id": "number_of_items"})
     all_feature_count.sort_values(by="features_count", inplace=True, ascending=False)
     ten_percent = round(all_feature_count.shape[0] * 0.1)
     return all_feature_count[:ten_percent]
