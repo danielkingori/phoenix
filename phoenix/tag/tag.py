@@ -10,11 +10,11 @@ PROCESSOR_NAME = "tag"
 def tag_dataframe(given_df: pd.DataFrame, message_key: str = "message") -> pd.DataFrame:
     """Tag Data."""
     df = given_df.copy()
-    # TODO: general clean message: `cleanMessage`
-    df[["language", "confidence"]] = language.execute(df[message_key])
+    df["clean_message"] = clean_message(df[message_key])
+    df[["language", "confidence"]] = language.execute(df["clean_message"])
     # TODO: arabicMessage (translation): `arabicMessage`
     tfa = text_features_analyser.create()
-    df["features"] = tfa.features(df[[message_key, "language"]], message_key)
+    df["features"] = tfa.features(df[["clean_message", "language"]], "clean_message")
     # TODO: sentiment: `sentiment`
     # TODO: topics: `topics`
     # TODO: has key feature: `hasKeyFeature`
@@ -24,10 +24,16 @@ def tag_dataframe(given_df: pd.DataFrame, message_key: str = "message") -> pd.Da
 def tag_features(given_df: pd.DataFrame, message_key: str = "message") -> pd.DataFrame:
     """Tag Data."""
     df = given_df.copy()
-    df[["language", "confidence"]] = language.execute(df[message_key])
+    df["clean_message"] = clean_message(df[message_key])
+    df[["language", "confidence"]] = language.execute(df["clean_message"])
     tfa = text_features_analyser.create()
-    df["features"] = tfa.features(df[[message_key, "language"]], message_key)
+    df["features"] = tfa.features(df[["clean_message", "language"]], "clean_message")
     return df
+
+
+def clean_message(message_ser) -> pd.Series:
+    """Clean message."""
+    return message_ser.replace(to_replace=r"https?:\/\/.*[\r\n]*", value="", regex=True)
 
 
 def explode_features(given_df: pd.DataFrame):
