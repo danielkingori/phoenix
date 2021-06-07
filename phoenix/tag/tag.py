@@ -21,6 +21,15 @@ def tag_dataframe(given_df: pd.DataFrame, message_key: str = "message") -> pd.Da
     return df
 
 
+def tag_features(given_df: pd.DataFrame, message_key: str = "message") -> pd.DataFrame:
+    """Tag Data."""
+    df = given_df.copy()
+    df[["language", "confidence"]] = language.execute(df[message_key])
+    tfa = text_features_analyser.create()
+    df["features"] = tfa.features(df[[message_key, "language"]], message_key)
+    return df
+
+
 def explode_features(given_df: pd.DataFrame):
     """Explode dataframe by the features_index."""
     df = given_df.copy()
