@@ -1,6 +1,7 @@
 """Text feature analyser."""
 from typing import Dict, List
 
+import functools
 import itertools
 
 import dask.dataframe as dd
@@ -52,16 +53,20 @@ class TextFeaturesAnalyser:
         ddf = dd.from_pandas(
             df, npartitions=30
         )  # Should have npartitions configured in envirnment
-        return ddf.apply(self.feature_apply, axis=1, meta=self._build_meta_return()).compute()
+        # When using dask have to create a partial rather then a method on a class
+        fn = functools.partial(feature_apply, self.dict_analyser, self.message_key)
+        return ddf.apply(fn, axis=1, meta=self._build_meta_return()).compute()
 
-    def feature_apply(self, row):
-        """Get features for row."""
-        message = row[self.message_key]
-        lang = row["language"]
-        if lang in self.dict_analyser:
-            analysers = self.dict_analyser[lang]
-            return pd.Series(map(lambda analyser_fn: analyser_fn(message), analysers))
-        raise ValueError(f"Language {lang} is not supported")
+
+def feature_apply(dict_analyser, message_key, row):
+    """Get features for row."""
+    message = row[message_key]
+    lang = row["language"]
+    if lang in dict_analyser:
+        analysers = dict_analyser[lang]
+        return pd.Series(map(lambda analyser_fn: analyser_fn(message), analysers))
+    keys = list(dict_analyser.keys())
+    raise ValueError(f"Language {lang} is not supported. Supported keys: {keys}")
 
 
 def create():
