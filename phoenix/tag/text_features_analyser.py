@@ -1,4 +1,10 @@
-"""Text feature analyser."""
+"""Text feature analyser.
+
+For this to work you need to download the stopwords.
+```
+python -m nltk.downloader stopwords
+```
+"""
 from typing import Dict, List
 
 import functools
@@ -7,7 +13,42 @@ import itertools
 import dask.dataframe as dd
 import numpy as np
 import pandas as pd
+from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
+from snowballstemmer import stemmer
+
+
+class StemmedCountVectorizer(CountVectorizer):
+    """CountVectorizer with stemming."""
+
+    def __init__(self, stemmer=None, **kwargs):
+        super(StemmedCountVectorizer, self).__init__(**kwargs)
+        if stemmer:
+            self.stemmer = stemmer
+        else:
+            self.stemmer = None
+
+    def build_analyzer(self):
+        """Build the analyzer with the stemmer."""
+        analyzer = super(StemmedCountVectorizer, self).build_analyzer()
+        if not self.stemmer:
+            return analyzer
+
+        fn = functools.partial(stem_analyzer, self.stemmer, analyzer)
+        return fn
+
+
+def stem_analyzer(stemmer, analyzer, doc):
+    """Stem_analyzer."""
+    li = []
+    for w in filter(None, analyzer(doc)):  # type: ignore
+        if w:
+            try:
+                li.append(stemmer.stemWord(w))
+            except IndexError:
+                # Index Errors causes problems
+                li.append(w)
+    return li
 
 
 class TextFeaturesAnalyser:
@@ -28,7 +69,7 @@ class TextFeaturesAnalyser:
                 lang_default_params = default_params[lang]
             countvectorizers = list(
                 map(
-                    lambda ngram_range: CountVectorizer(
+                    lambda ngram_range: StemmedCountVectorizer(
                         **lang_default_params, ngram_range=ngram_range
                     ),
                     ngram_ranges,
@@ -72,9 +113,19 @@ def feature_apply(dict_analyser, message_key, row):
 def create():
     """Create the TextFeaturesAnalyser."""
     default_params = {
-        "ar": {"strip_accents": "unicode"},
+        "ar": {
+            "stemmer": stemmer("arabic"),
+            "stop_words": stopwords.words("arabic"),
+            "strip_accents": "unicode",
+            "encoding": "utf-8",
+        },
         "ar_izi": {"strip_accents": "unicode"},
-        "en": {"strip_accents": "ascii"},
+        "en": {
+            "stemmer": stemmer("english"),
+            "stop_words": stopwords.words("english"),
+            "strip_accents": "ascii",
+            "encoding": "utf-8",
+        },
     }
 
     return TextFeaturesAnalyser(
