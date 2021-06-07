@@ -37,3 +37,21 @@ def to_type(column_name: str, astype, df: pd.DataFrame):
 def map_names(name: str):
     """Map column names."""
     return re.sub(r"\W+", "_", name.lower())
+
+
+def twitter_json(url_to_folder: str) -> pd.DataFrame:
+    """Get all the csvs and return a normalised facebook posts."""
+    li = []
+    for entry in tentaclio.listdir(url_to_folder):
+        with tentaclio.open(entry) as file_io:
+            df = pd.read_json(file_io)
+            li.append(df)
+
+    posts_df = pd.concat(li, axis=0, ignore_index=True)
+    return normalise_tweets(posts_df)
+
+
+def normalise_tweets(raw_df: pd.DataFrame):
+    """normalise_tweets raw dataframe."""
+    df = to_type("full_text", str, raw_df)
+    return df
