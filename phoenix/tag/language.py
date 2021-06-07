@@ -25,5 +25,10 @@ def detect_lang_code(message: str) -> Tuple[str, float]:
 
     Not able to mock out the polyglot detector.
     """
-    ld = Detector(message)
-    return ld.language.code, ld.language.confidence
+    try:
+        ld = Detector(message)
+        return ld.language.code, ld.language.confidence
+    # TODO: fix this
+    except:  # noqa[E722]
+        print("An exception occurred")
+        return "en", 0.0
