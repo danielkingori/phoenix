@@ -5,11 +5,11 @@ from phoenix.common import artifacts
 from phoenix.tag import text_features_analyser
 
 
-def features(given_df: pd.DataFrame, message_key: str = "clean_message") -> pd.DataFrame:
+def features(given_df: pd.DataFrame, text_key: str = "clean_text") -> pd.DataFrame:
     """Tag Data."""
     df = given_df.copy()
     tfa = text_features_analyser.create()
-    df["features"] = tfa.features(df[[message_key, "language"]], message_key)
+    df["features"] = tfa.features(df[[text_key, "language"]], text_key)
     return df
 
 
