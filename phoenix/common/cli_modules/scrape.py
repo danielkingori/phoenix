@@ -98,3 +98,25 @@ def tw(
         nb_name = "twitter_keyword_search.ipynb"
 
     utils.run_notebooks(RUN_DATE, parameters, nb_name)
+
+
+@scrape_cli.command()
+@click.argument("run_iso_timestamp", envvar="RUN_ISO_TIMESTAMP")
+def fb_comments(
+    run_iso_timestamp,
+):
+    """Run the fb-comments parse script.
+
+    Example command:
+    ./phoenix-cli fb_comments $(date --utc --iso-8601=seconds)
+
+    RUN_ISO_TIMESTAMP:
+        Is the timestamp that will mark the artifacts that are created.
+    """
+    RUN_DATE = utils.get_run_date(run_iso_timestamp)
+
+    parameters: dict = {}
+
+    nb_name = "fb_comments_parse.ipynb"
+
+    utils.run_notebooks(RUN_DATE, parameters, nb_name)
