@@ -17,9 +17,7 @@ def explode_features(given_df: pd.DataFrame):
     """Explode dataframe by the features_index."""
     df = given_df.copy()
     df["features_count"] = text_features_analyser.ngram_count(df[["features"]])
-    df["features_index"] = text_features_analyser.features_index(
-        df[["features_count"]]
-    )
+    df["features_index"] = text_features_analyser.features_index(df[["features_count"]])
     ex_df = df.explode("features_index")
     ex_df["features"] = ex_df["features_index"].str[1]
     ex_df["features_count"] = ex_df["features_index"].str[2].fillna(0).astype(int)
@@ -44,12 +42,13 @@ def key_features(given_df, features_key: str = "features") -> pd.Series:
 def get_key_posts(exploded_features_df) -> pd.DataFrame:
     """Get the posts with key features."""
     exploded_features_df["has_key_feature"] = key_features(exploded_features_df[["features"]])
-    posts = (
-        exploded_features_df.groupby("index")
+    key_posts = (
+        exploded_features_df[exploded_features_df["has_key_feature"].isin([True])]
+        .groupby("index")
         .first()
         .drop(columns=["features", "features_count"])
     )
-    return posts[posts["has_key_feature"].isin([True])]
+    return key_posts
 
 
 def get_features_to_label(exploded_features_df) -> pd.DataFrame:
