@@ -39,16 +39,19 @@ def key_features(given_df, features_key: str = "features") -> pd.Series:
     return df[features_key].isin(interesting_features["interesting_features"])
 
 
-def get_key_posts(exploded_features_df) -> pd.DataFrame:
-    """Get the posts with key features."""
-    exploded_features_df["has_key_feature"] = key_features(exploded_features_df[["features"]])
-    key_posts = (
-        exploded_features_df[exploded_features_df["has_key_feature"].isin([True])]
+def get_key_items(exploded_features_df, features_key: str = "features") -> pd.DataFrame:
+    """Get the items with key features."""
+    df = exploded_features_df.copy()
+    df["is_key_feature"] = key_features(df[[features_key]])
+    key_items = (
+        df[df["is_key_feature"].isin([True])]
         .groupby("index")
         .first()
         .drop(columns=["features", "features_count"])
+        .rename(columns={"is_key_feature": "has_key_feature"})
     )
-    return key_posts
+    df_has = df.join(key_items[["has_key_feature"]]).fillna(False)
+    return key_items, df_has
 
 
 def get_features_to_label(exploded_features_df) -> pd.DataFrame:
