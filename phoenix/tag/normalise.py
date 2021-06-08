@@ -29,7 +29,7 @@ def language_distribution(normalised_df) -> pd.DataFrame:
 def join_fb_posts_tweets(posts_df, tweets_df) -> pd.DataFrame:
     """Join the facebook posts with the tweets."""
     tweets_formated = tweets_df[
-        ["id_str", "clean_message", "full_text", "features", "features_count"]
+        ["id_str", "clean_message", "full_text", "features", "features_count", "has_key_feature"]
     ]
     tweets_formated = tweets_formated.rename(columns={"id_str": "object_id", "full_text": "text"})
     tweets_formated["object_type"] = "tweets"
@@ -40,6 +40,7 @@ def join_fb_posts_tweets(posts_df, tweets_df) -> pd.DataFrame:
             "message",
             "features",
             "features_count",
+            "has_key_feature",
         ]
     ]
     posts_formated = posts_formated.rename(columns={"facebook_id": "object_id", "message": "text"})
