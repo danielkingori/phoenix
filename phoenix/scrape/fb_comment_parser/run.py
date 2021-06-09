@@ -10,6 +10,7 @@ import tentaclio
 
 from phoenix.scrape.fb_comment_parser import fb_comment_parser
 
+
 # TODO bring into line with mypy
 
 TO_PARSE_FOLDER = (
@@ -25,6 +26,7 @@ run_iso_datetime = datetime.datetime.fromisoformat(RUN_ISO_TIMESTAMP)
 RUN_DATE = datetime.datetime.today().strftime(RUN_DATE_FORMAT)
 
 # TODO change this over to a file: url structure
+
 
 def get_files(path):
     """Get files from a folder."""
