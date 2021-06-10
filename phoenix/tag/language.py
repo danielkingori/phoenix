@@ -1,6 +1,8 @@
 """Language detection tagging."""
 from typing import Tuple
 
+import logging
+
 import dask.dataframe as dd
 import pandas as pd
 from polyglot.detect import Detector
@@ -30,5 +32,5 @@ def detect_lang_code(message: str) -> Tuple[str, float]:
         return ld.language.code, ld.language.confidence
     # TODO: fix this
     except:  # noqa[E722]
-        print("An exception occurred")
+        logging.info(f"Info: An exception the detection occured for message {message}")
         return "en", 0.0
