@@ -1,4 +1,6 @@
 """Normalise module."""
+from typing import Tuple
+
 import pandas as pd
 
 from phoenix.common import artifacts
@@ -18,10 +20,11 @@ def explode_features(given_df: pd.DataFrame):
     df = given_df.copy()
     df["features_count"] = text_features_analyser.ngram_count(df[["features"]])
     df["features_index"] = text_features_analyser.features_index(df[["features_count"]])
+    # Will create the index on object_id so that it is quicker to groupby
+    df = df.set_index("object_id", drop=False)
     ex_df = df.explode("features_index")
     ex_df["features"] = ex_df["features_index"].str[1]
     ex_df["features_count"] = ex_df["features_index"].str[2].fillna(0).astype(int)
-    ex_df["index"] = ex_df.index
     return ex_df.drop(
         [
             "features_index",
@@ -39,19 +42,42 @@ def key_features(given_df, features_key: str = "features") -> pd.Series:
     return df[features_key].isin(interesting_features["interesting_features"])
 
 
-def get_key_items(exploded_features_df, features_key: str = "features") -> pd.DataFrame:
+def get_key_items(exploded_features_is_key_df, features_key: str = "features") -> pd.DataFrame:
     """Get the items with key features."""
-    df = exploded_features_df.copy()
-    df["is_key_feature"] = key_features(df[[features_key]])
+    df = exploded_features_is_key_df.copy()
     key_items = (
         df[df["is_key_feature"].isin([True])]
-        .groupby("index")
+        .groupby(level=0)
         .first()
         .drop(columns=["features", "features_count"])
         .rename(columns={"is_key_feature": "has_key_feature"})
     )
+    return key_items
+
+
+def get_feature_items(exploded_features_df, features_key: str = "features") -> pd.DataFrame:
+    """Get the items with key features."""
+    g = exploded_features_df.groupby(level=0)
+    items_features = g.agg({"features": list, "features_count": list})
+    return items_features
+
+
+def finalise(
+    all_items, exploded_features_df, features_key: str = "features"
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Get the final features and items dataframes."""
+    df = exploded_features_df.copy()
+    df["is_key_feature"] = key_features(df[[features_key]])
+    key_items = get_key_items(df)
+    items_features = get_feature_items(df)
     df_has = df.join(key_items[["has_key_feature"]]).fillna(False)
-    return key_items, df_has
+    items = all_items.copy()
+    items = items.set_index("object_id", drop=False)
+    items = items.join(key_items[["has_key_feature"]]).fillna(False)
+    items = items.join(items_features[["features", "features_count"]])
+    items = items.reset_index(drop=True)
+    key_items_result = items[items["has_key_feature"].isin([True])]
+    return items, key_items_result, df_has
 
 
 def get_features_to_label(exploded_features_df) -> pd.DataFrame:

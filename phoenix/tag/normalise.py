@@ -12,7 +12,9 @@ def merge(for_tagging_folder):
     for entry in tentaclio.listdir(for_tagging_folder):
         df = artifacts.dataframes.get(entry).dataframe
         li.append(df)
-    return pd.concat(li, axis=0, ignore_index=True)
+    df = pd.concat(li, axis=0, ignore_index=True)
+    df["object_id"] = df["object_id"].astype(str)
+    return df
 
 
 def execute(given_df: pd.DataFrame, text_key: str = "text") -> pd.DataFrame:
