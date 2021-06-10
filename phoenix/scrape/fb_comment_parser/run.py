@@ -20,7 +20,6 @@ PARSED_FOLDER = pathlib.Path(__file__).parents[3] / "local_artifacts" / "fb_comm
 FAIL_FOLDER = pathlib.Path(__file__).parents[3] / "local_artifacts" / "fb_comments" / "failed"
 
 RUN_DATE_FORMAT = "%Y-%m-%d"
-# This can be overwritten at execution time by Papermill to enable historic runs and backfills etc.
 RUN_ISO_TIMESTAMP = datetime.datetime.now().isoformat()
 run_iso_datetime = datetime.datetime.fromisoformat(RUN_ISO_TIMESTAMP)
 RUN_DATE = datetime.datetime.today().strftime(RUN_DATE_FORMAT)
@@ -63,6 +62,7 @@ def run_fb_page_parser():
             move_processed_file(TO_PARSE_FOLDER, PARSED_FOLDER, filename)
             pages_json.append(page.json)
         except Exception as e:
+            # We want to save failed files but continue processing.
             logging.info(f"Failure: {e} from {filename}.")
             move_processed_file(TO_PARSE_FOLDER, FAIL_FOLDER, filename)
     return pages_json

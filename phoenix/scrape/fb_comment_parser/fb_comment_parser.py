@@ -31,6 +31,7 @@ from phoenix.scrape.fb_comment_parser.date_parser import return_datestring
 
 
 def test_is_file_mbasic(file, file_name):  # noqa
+    """Test if the file is from mbasic.facebook.com ."""
     # Sometimes pages come in that aren't mbasic files - we can tell
     # because they're either too big, or the url: saved with SingleFile
     # is wrong
