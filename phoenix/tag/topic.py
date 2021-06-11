@@ -1,6 +1,9 @@
 """Topic tagging."""
 import pandas as pd
 
+from phoenix.common import artifacts
+DEFAULT_RAW_TOPIC_CONFIG = "raw_topic_config.csv"
+
 
 def get_topics(topic_config, features_df) -> pd.DataFrame:
     """Get the topics.
@@ -38,4 +41,7 @@ def get_topic_config(config_url=None) -> pd.DataFrame:
 
 def _get_raw_topic_config(config_url=None) -> pd.DataFrame:
     """Get the raw topic_config."""
-    pass
+    if not config_url:
+        return f"{artifacts.urls.get_static_config()}{DEFAULT_RAW_TOPIC_CONFIG}"
+
+    ValueError("Currently, only none config_urls are supported for raw_topic_config.")
