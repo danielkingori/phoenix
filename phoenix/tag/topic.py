@@ -23,3 +23,19 @@ def get_topics(topic_config, features_df) -> pd.DataFrame:
 
     result_df = pd.concat(dfs)
     return result_df.reset_index()
+
+
+def get_topic_config(config_url=None) -> pd.DataFrame:
+    """Get topic config dataframe."""
+    df = _get_raw_topic_config(config_url)
+    df["topic"] = df["Topic"].str.lower()
+    df["features"] = df["Features"].str.split(",")
+    df["features_count"] = df["features"].str.len()
+    df_ex = df.explode("features", ignore_index=True)
+    df_ex["features_completeness"] = 1 / df_ex["features_count"]
+    return df_ex[["features", "topic", "features_completeness"]]
+
+
+def _get_raw_topic_config(config_url=None) -> pd.DataFrame:
+    """Get the raw topic_config."""
+    pass
