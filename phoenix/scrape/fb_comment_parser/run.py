@@ -6,8 +6,6 @@ import logging
 import os
 import pathlib
 
-# import tentaclio - removed because it can't read a '#' in the filename
-
 from phoenix.scrape.fb_comment_parser import fb_comment_parser
 
 
