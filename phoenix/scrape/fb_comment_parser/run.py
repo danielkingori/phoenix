@@ -6,7 +6,7 @@ import logging
 import os
 import pathlib
 
-import tentaclio
+# import tentaclio - removed because it can't read a '#' in the filename
 
 from phoenix.scrape.fb_comment_parser import fb_comment_parser
 
@@ -36,7 +36,7 @@ def get_files(path):
 
 def get_single_file(path, filename):
     """Open single file and return the contents."""
-    with tentaclio.open(os.path.join(path, filename), mode="rb") as f:
+    with open(os.path.join(path, filename), mode="rb") as f:
         contents = f.read()
     return contents, filename
 
@@ -59,12 +59,13 @@ def run_fb_page_parser():
     for contents, filename in get_files(TO_PARSE_FOLDER):
         try:
             page = parse_fb_page(contents, filename)
-            move_processed_file(TO_PARSE_FOLDER, PARSED_FOLDER, filename)
             pages_json.append(page.json)
+            move_processed_file(TO_PARSE_FOLDER, PARSED_FOLDER, filename)
         except Exception as e:
             # We want to save failed files but continue processing.
             logging.info(f"Failure: {e} from {filename}.")
             move_processed_file(TO_PARSE_FOLDER, FAIL_FOLDER, filename)
+            continue
     return pages_json
 
 
