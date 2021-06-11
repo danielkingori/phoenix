@@ -52,4 +52,6 @@ def _get_raw_topic_config(config_url=None) -> pd.DataFrame:
     return df
 
 
-    ValueError("Currently, only none config_urls are supported for raw_topic_config.")
+def get_object_topics(topics_df) -> pd.DataFrame:
+    """Get topics grouped by object."""
+    return topics_df.groupby("object_id").agg(list).reset_index()
