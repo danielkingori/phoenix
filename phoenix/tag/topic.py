@@ -1,7 +1,10 @@
 """Topic tagging."""
 import pandas as pd
+import tentaclio
 
 from phoenix.common import artifacts
+
+
 DEFAULT_RAW_TOPIC_CONFIG = "raw_topic_config.csv"
 
 
@@ -42,6 +45,11 @@ def get_topic_config(config_url=None) -> pd.DataFrame:
 def _get_raw_topic_config(config_url=None) -> pd.DataFrame:
     """Get the raw topic_config."""
     if not config_url:
-        return f"{artifacts.urls.get_static_config()}{DEFAULT_RAW_TOPIC_CONFIG}"
+        config_url = f"{artifacts.urls.get_static_config()}{DEFAULT_RAW_TOPIC_CONFIG}"
+
+    with tentaclio.open(config_url, "r") as fb:
+        df = pd.read_csv(fb)
+    return df
+
 
     ValueError("Currently, only none config_urls are supported for raw_topic_config.")
