@@ -8,7 +8,14 @@ from phoenix.tag import text_features_analyser
 
 
 def features(given_df: pd.DataFrame, text_key: str = "clean_text") -> pd.DataFrame:
-    """Tag Data."""
+    """Tag Data.
+
+
+    Return:
+    pd.DataFrame
+    object_id, text, clean_text, language, features
+    ...                                 , list of features from the clean text
+    """
     df = given_df.copy()
     tfa = text_features_analyser.create()
     df["features"] = tfa.features(df[[text_key, "language"]], text_key)
@@ -16,7 +23,13 @@ def features(given_df: pd.DataFrame, text_key: str = "clean_text") -> pd.DataFra
 
 
 def explode_features(given_df: pd.DataFrame):
-    """Explode dataframe by the features_index."""
+    """Explode dataframe by the features_index.
+
+    Returns:
+    pd.DataFrame:
+    object_id, ..., features, features_count
+    ...         , string, integer (number of times the feature occurs in the object)
+    """
     df = given_df.copy()
     df["features_count"] = text_features_analyser.ngram_count(df[["features"]])
     df["features_index"] = text_features_analyser.features_index(df[["features_count"]])
