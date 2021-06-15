@@ -76,12 +76,44 @@ def test_get_topics():
         }
     )
 
-    result_df = topic.get_topics(topic_config, features_df)
+    result_df, confidence_df = topic.get_topics(topic_config, features_df)
 
     pd.testing.assert_frame_equal(
         result_df,
         pd.DataFrame({"object_id": [1, 4, 4, 1], "topic": ["t1", "t1", "t2", "t3"]}),
     )
+
+    e_confidence_df = pd.DataFrame(
+        {
+            "object_id": list(range(1, 7)) * 3,
+            "confidence": [
+                # topic 1
+                1.5,
+                0.5,
+                0.5,
+                1,
+                0,
+                0,
+                # topic 2
+                0,
+                0,
+                0,
+                1,
+                1 / 3,
+                0,
+                # topic 3
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            "topic": (["t1"] * 6) + (["t2"] * 6) + (["t3"] * 6),
+        }
+    )
+
+    pd.testing.assert_frame_equal(confidence_df, e_confidence_df)
 
 
 @mock.patch("phoenix.tag.topic._get_raw_topic_config")
