@@ -41,6 +41,7 @@ def normalise(raw_df: pd.DataFrame):
     df["total_interactions"] = (
         df["total_interactions"].replace(to_replace=r",", value="", regex=True).astype(int)
     )
+    df["scrape_url"] = df["url"].str.replace("https://www.facebook", "https://mbasic.facebook")
     # There is no post id from the csv export
     # So we are making one from the account that posted it and a hash of the message
     df["phoenix_post_id"] = df["facebook_id"].astype(str) + "-" + df["message_hash"].astype(str)
