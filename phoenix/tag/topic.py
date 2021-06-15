@@ -8,7 +8,7 @@ from phoenix.common import artifacts
 DEFAULT_RAW_TOPIC_CONFIG = "raw_topic_config.csv"
 
 
-def get_topics(topic_config, features_df) -> pd.DataFrame:
+def get_topics(topic_config, features_df, with_features_and_text = False) -> pd.DataFrame:
     """Get the topics.
 
     Return:
@@ -17,18 +17,26 @@ def get_topics(topic_config, features_df) -> pd.DataFrame:
         topic: string
     """
     dfs = []
+    confidence_dfs = []
     features_indexed_df = features_df.set_index("object_id")
     topic_config_i = topic_config.set_index("features")
     for topic in topic_config["topic"].unique():
         t_topic = topic_config_i[topic_config_i["topic"] == topic]
         joined_df = features_indexed_df.join(t_topic, on="features")
         g = joined_df.groupby(level=0)
-        df = g.agg({"features_completeness": "sum", "topic": "first"})
+        aggregation_conf = {"features_completeness": "sum", "topic": "first"}
+        if with_features_and_text:
+            aggregation_conf = {**aggregation_conf, "features": list, "text": "first"}
+
+        df = g.agg(aggregation_conf)
+        df["topic"] = df["topic"].fillna(topic)
+        confidence_dfs.append(df.rename(columns={"features_completeness": "confidence"}))
         df = df[df["features_completeness"] >= 1]
         dfs.append(df.drop(columns="features_completeness"))
 
     result_df = pd.concat(dfs)
-    return result_df.reset_index()
+    confidence_df = pd.concat(confidence_dfs)
+    return result_df.reset_index(), confidence_df.reset_index()
 
 
 def get_topic_config(config_url=None) -> pd.DataFrame:
