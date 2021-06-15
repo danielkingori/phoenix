@@ -1,4 +1,5 @@
 """Test Feature."""
+import mock
 import pandas as pd
 
 from phoenix.tag import feature
@@ -28,3 +29,14 @@ def test_explode_features():
             index=pd.Index([1, 1, 2, 2], name="object_id"),
         ),
     )
+
+
+@mock.patch("phoenix.tag.feature.get_interesting_features")
+def test_key_features(m_get_interesting_features):
+    """Test get key features."""
+    m_get_interesting_features.return_value = pd.DataFrame(
+        {"interesting_features": ["match", "i_not_match"]}
+    )
+    input_df = pd.DataFrame({"features": ["match", "not_match"]})
+    output_s = feature.key_features(input_df)
+    pd.testing.assert_series_equal(output_s, pd.Series([True, False], name="features"))

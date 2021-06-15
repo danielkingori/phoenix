@@ -36,10 +36,13 @@ def explode_features(given_df: pd.DataFrame):
 def key_features(given_df, features_key: str = "features") -> pd.Series:
     """Return key features."""
     df = given_df.copy()
-    interesting_features = pd.read_csv(
-        f"{artifacts.urls.get_static_config()}/interesting_features.csv"
-    )
+    interesting_features = get_interesting_features()
     return df[features_key].isin(interesting_features["interesting_features"])
+
+
+def get_interesting_features():
+    """Get interesting_features."""
+    return pd.read_csv(f"{artifacts.urls.get_static_config()}/interesting_features.csv")
 
 
 def get_key_items(exploded_features_is_key_df, features_key: str = "features") -> pd.DataFrame:
