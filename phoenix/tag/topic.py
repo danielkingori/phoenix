@@ -1,4 +1,6 @@
 """Topic tagging."""
+from typing import Any, Dict
+
 import pandas as pd
 import tentaclio
 
@@ -8,7 +10,7 @@ from phoenix.common import artifacts
 DEFAULT_RAW_TOPIC_CONFIG = "raw_topic_config.csv"
 
 
-def get_topics(topic_config, features_df, with_features_and_text = False) -> pd.DataFrame:
+def get_topics(topic_config, features_df, with_features_and_text=False) -> pd.DataFrame:
     """Get the topics.
 
     Return:
@@ -24,7 +26,7 @@ def get_topics(topic_config, features_df, with_features_and_text = False) -> pd.
         t_topic = topic_config_i[topic_config_i["topic"] == topic]
         joined_df = features_indexed_df.join(t_topic, on="features")
         g = joined_df.groupby(level=0)
-        aggregation_conf = {"features_completeness": "sum", "topic": "first"}
+        aggregation_conf: Dict[str, Any] = {"features_completeness": "sum", "topic": "first"}
         if with_features_and_text:
             aggregation_conf = {**aggregation_conf, "features": list, "text": "first"}
 
