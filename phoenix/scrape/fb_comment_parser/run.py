@@ -1,48 +1,52 @@
 # type: ignore
 """Functions for running the Facebook comment parsing process."""
 
-import datetime
 import logging
 import os
-import pathlib
+
+import tentaclio
 
 from phoenix.scrape.fb_comment_parser import fb_comment_parser
 
 
 # TODO bring into line with mypy
 
-TO_PARSE_FOLDER = (
-    pathlib.Path(__file__).parents[3] / "local_artifacts" / "fb_comments" / "to_parse"
-)
-PARSED_FOLDER = pathlib.Path(__file__).parents[3] / "local_artifacts" / "fb_comments" / "parsed"
-FAIL_FOLDER = pathlib.Path(__file__).parents[3] / "local_artifacts" / "fb_comments" / "failed"
 
-RUN_DATE_FORMAT = "%Y-%m-%d"
-RUN_ISO_TIMESTAMP = datetime.datetime.now().isoformat()
-run_iso_datetime = datetime.datetime.fromisoformat(RUN_ISO_TIMESTAMP)
-RUN_DATE = datetime.datetime.today().strftime(RUN_DATE_FORMAT)
-
-# TODO change this over to a file: url structure
+def file_url_strip(path):
+    """File adjustment to remove 'file:' where necessary."""
+    if path.startswith("file:"):
+        return path[len("file:") :]
+    else:
+        return path
 
 
-def get_files(path):
+def get_files(url):
     """Get files from a folder."""
-    for filename in os.listdir(path):
+    for filename in os.listdir(file_url_strip(url)):
         logging.info(f"Processing {filename}...")
-        yield get_single_file(path, filename)
+        yield get_single_file(url, filename)
 
 
 def get_single_file(path, filename):
+    """Retrieve contents of a single file."""
+    file_url = path + filename
     """Open single file and return the contents."""
-    with open(os.path.join(path, filename), mode="rb") as f:
+    logging.info(file_url)
+    with tentaclio.open(file_url, mode="rb") as f:
         contents = f.read()
     return contents, filename
 
 
-def move_processed_file(from_path, to_path, file):
+def move_processed_file(from_path, to_path, filename):
     """Move file from one folder to another."""
-    os.makedirs(os.path.join(to_path, RUN_DATE), exist_ok=True)
-    os.replace(os.path.join(from_path, file), os.path.join(to_path, RUN_DATE, file))
+    # Construct file urls
+    from_url = f"{from_path}{filename}"
+    to_url = f"{to_path}{filename}"
+    # Make a new directory if it's not there already
+    os.makedirs(os.path.dirname(file_url_strip(to_path)), exist_ok=True)
+
+    tentaclio.copy(from_url, to_url)
+    tentaclio.remove(from_url)
     return
 
 
@@ -51,23 +55,25 @@ def parse_fb_page(contents, filename):
     return fb_comment_parser.Page(contents, filename)
 
 
-def run_fb_page_parser():
+def run_fb_page_parser(to_parse_url, parsed_url, fail_url):
     """Run the parser and return a list of parsed pages."""
     pages_json = []
-    for contents, filename in get_files(TO_PARSE_FOLDER):
+    for contents, filename in get_files(to_parse_url):
         try:
             page = parse_fb_page(contents, filename)
             pages_json.append(page.json)
-            move_processed_file(TO_PARSE_FOLDER, PARSED_FOLDER, filename)
+            move_processed_file(to_parse_url, parsed_url, filename)
         except Exception as e:
             # We want to save failed files but continue processing.
             logging.info(f"Failure: {e} from {filename}.")
-            move_processed_file(TO_PARSE_FOLDER, FAIL_FOLDER, filename)
+            move_processed_file(to_parse_url, fail_url, filename)
             continue
     return pages_json
 
 
-def save_pretty(soup, filename):
-    """Save a human readable version of the html file."""
-    with open(os.path.join(FAIL_FOLDER, filename), "w", encoding="utf-8") as f:
+def save_pretty(soup, path, filename):
+    """Utility for saving a human readable version of the html file for debugging."""
+    # TODO: Fix this function, as it's broken now.
+    file_url = f"{path}{filename}"
+    with open(os.path.join(file_url, filename), "w", encoding="utf-8") as f:
         f.write(soup.prettify())
