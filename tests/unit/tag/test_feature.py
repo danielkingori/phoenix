@@ -1,8 +1,32 @@
 """Test Feature."""
 import mock
 import pandas as pd
+import pytest
 
 from phoenix.tag import feature
+
+
+@pytest.fixture
+def exploded_features_df():
+    """Get exploded_features_df."""
+    return pd.DataFrame(
+        {
+            "object_id": [1, 1, 2, 2, 3, 3],
+            "features": ["1-f1", "1-f2", "2-f1", "2-f2", "3-f1", "3-f2"],
+            "features_count": [2, 1, 1, 2, 3, 3],
+        },
+        index=pd.Index([1, 1, 2, 2, 3, 3], name="object_id"),
+    )
+
+
+@pytest.fixture
+def is_key_feature_s():
+    """Get the is key feature s."""
+    return pd.Series(
+        [False, True, False, False, True, False],
+        name="features",
+        index=pd.Int64Index([1, 1, 2, 2, 3, 3], dtype="int64", name="object_id"),
+    )
 
 
 def test_explode_features():
@@ -37,23 +61,25 @@ def test_key_features(m_get_interesting_features):
     m_get_interesting_features.return_value = pd.DataFrame(
         {"interesting_features": ["match", "i_not_match"]}
     )
-    input_df = pd.DataFrame({"features": ["match", "not_match"]})
-    output_s = feature.key_features(input_df)
-    pd.testing.assert_series_equal(output_s, pd.Series([True, False], name="features"))
-
-
-def test_get_key_items():
-    """Test get key items."""
     input_df = pd.DataFrame(
-        {
-            "object_id": [1, 1, 2, 2, 3, 3],
-            "features": ["1-f1", "1-f2", "2-f1", "2-f2", "3-f1", "3-f2"],
-            "features_count": [2, 1, 1, 2, 3, 3],
-            "is_key_feature": [False, True, False, False, True, False],
-        },
-        index=pd.Index([1, 1, 2, 2, 3, 3], name="object_id"),
+        {"features": ["match", "not_match", "not_match", "match", "not_match"]},
+        index=pd.Index([1, 1, 1, 2, 2], name="object_id"),
     )
-    output = feature.get_key_items(input_df)
+    output_s = feature.key_features(input_df)
+    pd.testing.assert_series_equal(
+        output_s,
+        pd.Series(
+            [True, False, False, True, False],
+            name="features",
+            index=pd.Int64Index([1, 1, 1, 2, 2], dtype="int64", name="object_id"),
+        ),
+    )
+
+
+def test_get_key_items(exploded_features_df, is_key_feature_s):
+    """Test get key items."""
+    exploded_features_df["is_key_feature"] = is_key_feature_s
+    output = feature.get_key_items(exploded_features_df)
     pd.testing.assert_frame_equal(
         output,
         pd.DataFrame(
