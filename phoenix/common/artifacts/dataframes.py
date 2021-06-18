@@ -3,6 +3,7 @@ import functools
 import os
 
 import pandas as pd
+import pyarrow
 import tentaclio
 
 from phoenix.common import constants
@@ -87,3 +88,25 @@ def url(
 _validate_artifact_dataframe_url = functools.partial(
     utils.validate_artifact_url, constants.DATAFRAME_ARTIFACT_FILE_EXTENSION
 )
+
+
+def read_schema(uri: str) -> pd.DataFrame:
+    """Return a Pandas dataframe corresponding to the schema of a local URI of a parquet file.
+
+    Ref: https://stackoverflow.com/a/64288036/
+
+    The returned dataframe has the columns: column, pa_dtype
+    """
+    with tentaclio.open(uri, "rb") as fb:
+        schema = pyarrow.parquet.read_schema(fb, memory_map=True)
+
+    schema = pd.DataFrame(
+        (
+            {"column": name, "pa_dtype": str(pa_dtype)}
+            for name, pa_dtype in zip(schema.names, schema.types)
+        )
+    )
+    schema = schema.reindex(
+        columns=["column", "pa_dtype"], fill_value=pd.NA
+    )  # Ensures columns in case the parquet file has an empty dataframe.
+    return schema
