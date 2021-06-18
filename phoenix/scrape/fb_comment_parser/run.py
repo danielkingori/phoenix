@@ -4,9 +4,10 @@
 import logging
 import os
 
-import tentaclio
-
 from phoenix.scrape.fb_comment_parser import fb_comment_parser
+
+
+# import tentaclio
 
 
 # TODO bring into line with mypy
@@ -29,10 +30,11 @@ def get_files(url):
 
 def get_single_file(path, filename):
     """Retrieve contents of a single file."""
-    file_url = path + filename
+    file_url = f"{path}{filename}"
     """Open single file and return the contents."""
     logging.info(file_url)
-    with tentaclio.open(file_url, mode="rb") as f:
+    # with tentaclio.open(file_url, mode="rb") as f:
+    with open(file_url_strip(file_url), mode="rb") as f:
         contents = f.read()
     return contents, filename
 
@@ -45,8 +47,9 @@ def move_processed_file(from_path, to_path, filename):
     # Make a new directory if it's not there already
     os.makedirs(os.path.dirname(file_url_strip(to_path)), exist_ok=True)
 
-    tentaclio.copy(from_url, to_url)
-    tentaclio.remove(from_url)
+    os.rename(file_url_strip(from_url), file_url_strip(to_url))
+    # tentaclio.copy(from_url, to_url)
+    # tentaclio.remove(from_url)
     return
 
 
