@@ -1,3 +1,4 @@
+"""data_mapper.py."""
 import logging
 import hashlib
 import json
@@ -16,6 +17,36 @@ logging.getLogger('DataMapper').setLevel(logging.DEBUG)
 
 
 class DataMapper:
+    """
+    A class used to map raw post data to normalised json
+    files ready to be loaded to a postgres db.
+
+    Attributes
+    ----
+    data_origin: str
+        a code representing the social platform
+        the raw data was sourced from E.G. fb | tw
+    expected_output_count: int
+        an integer representing the number of expected
+        output files to be created based on the number
+        of mapping configs for each social platform source
+    files_to_process: List[str]
+        a list of files found in the source incoming dir
+    output_files: List[str]
+        a list of files created by the mapper
+
+    Methods
+    ----
+    get_files_to_process()
+        Gets a list of files to process from the source
+        incoming dir
+    map_data_to_idl_files()
+        Maps the raw post data to normalised json files
+        ready to be loaded to the postgres db
+    archive_processed_files()
+        Moves processed raw post files to an archive dir
+        so they dont get processed more than once
+    """
     SOURCE_FILE_SUFFIX = '.json'
 
     def __init__(self, data_origin: str):
@@ -91,6 +122,11 @@ class DataMapper:
         return reshaped_df
 
     def get_files_to_process(self) -> None:
+        """
+        Gets a list of files to process from the source incoming dir.
+        return: None
+        rtype: None
+        """
         logger.info(f"""
         Searching base dir {os.path.join(*self._data_dir_base)} for files to process.
         """)
@@ -101,6 +137,12 @@ class DataMapper:
         ]
 
     def map_data_to_idl_files(self) -> None:
+        """
+        Maps the raw post data to normalised json files ready to be
+        loaded to the postgres db.
+        return: None
+        rtype: None
+        """
         logger.info('Starting data map process.')
         # Loop for when multiple datasets are extracted from single source file
         for cfg in self._map_config:
@@ -125,6 +167,12 @@ class DataMapper:
             self.output_files.append(persisted_object.url)
 
     def archive_processed_files(self) -> None:
+        """
+        Moves processed raw post files to an archive dir so they dont
+        get processed more than once.
+        return: None
+        rtype: None
+        """
         logger.info('Starting data archive process.')
         cwd_path = os.getcwd()
         for file in self.files_to_process:
@@ -135,9 +183,7 @@ class DataMapper:
 
 
 def main() -> int:
-    """
-    Main program
-    """
+    """Main program. Create and run data mapper."""
     # Instantiate data_mapper
     data_mapper = DataMapper(data_origin='fb')
     # Poll base dir for new files to process
