@@ -21,9 +21,7 @@ class DataMapper:
     def __init__(self, data_origin: str):
         self.data_origin = data_origin
         self._env_config = config.get_env_config()
-        logger.info(self._env_config)
         self._map_config = config.get_map_config(data_origin=self.data_origin)
-        logger.info(self._map_config)
         self._batch_ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         self._data_dir_base = self._env_config['data_dir_base']
         self._data_dir_idl = self._env_config['data_dir_idl']
@@ -77,7 +75,6 @@ class DataMapper:
             os.makedirs(os.path.join(*required_dir), exist_ok=True)
 
     def _load_files_to_df(self, files: List, map_cfg: Dict[str, Optional[Any]]) -> pd.DataFrame:
-        logger.info(map_cfg)
         logger.info(f"Loading base files to dataframes to process {map_cfg['name']}.")
         df_list = []
         for file in files:
