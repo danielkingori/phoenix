@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements/development.in
 #
-anyio==3.1.0
+anyio==3.2.0
     # via jupyter-server
 appdirs==1.4.4
     # via black
@@ -26,12 +26,6 @@ black==21.6b0
     # via -r requirements/development.in
 bleach==3.3.0
     # via nbconvert
-boto3==1.17.96
-    # via parquet-tools
-botocore==1.20.96
-    # via
-    #   boto3
-    #   s3transfer
 certifi==2021.5.30
     # via requests
 cffi==1.14.5
@@ -40,13 +34,6 @@ chardet==4.0.0
     # via requests
 click==8.0.1
     # via black
-colorama==0.4.4
-    # via
-    #   halo
-    #   log-symbols
-    #   parquet-tools
-cursor==1.3.4
-    # via halo
 decorator==5.0.9
     # via ipython
 defusedxml==0.7.1
@@ -55,8 +42,6 @@ entrypoints==0.3
     # via nbconvert
 flake8==3.9.2
     # via -r requirements/development.in
-halo==0.0.29
-    # via parquet-tools
 idna==2.10
     # via
     #   anyio
@@ -86,10 +71,6 @@ jinja2==3.0.1
     #   jupyterlab-server
     #   nbconvert
     #   notebook
-jmespath==0.10.0
-    # via
-    #   boto3
-    #   botocore
 json5==0.9.5
     # via jupyterlab-server
 jsonschema==3.2.0
@@ -121,8 +102,6 @@ jupyterlab-server==2.6.0
     # via jupyterlab
 jupyterlab==3.0.16
     # via -r requirements/development.in
-log-symbols==0.0.14
-    # via halo
 markupsafe==2.0.1
     # via jinja2
 matplotlib-inline==0.1.2
@@ -157,22 +136,14 @@ nest-asyncio==1.5.1
     # via nbclient
 notebook==6.4.0
     # via nbclassic
-numpy==1.20.3
-    # via
-    #   pandas
-    #   pyarrow
 packaging==20.9
     # via
     #   bleach
     #   jupyterlab
     #   jupyterlab-server
     #   pytest
-pandas==1.2.4
-    # via parquet-tools
 pandocfilters==1.4.3
     # via nbconvert
-parquet-tools==0.2.5
-    # via -r requirements/development.in
 parso==0.8.2
     # via jedi
 pathspec==0.8.1
@@ -187,7 +158,7 @@ prometheus-client==0.11.0
     # via
     #   jupyter-server
     #   notebook
-prompt-toolkit==3.0.18
+prompt-toolkit==3.0.19
     # via ipython
 ptyprocess==0.7.0
     # via
@@ -195,8 +166,6 @@ ptyprocess==0.7.0
     #   terminado
 py==1.10.0
     # via pytest
-pyarrow==0.17.1
-    # via parquet-tools
 pycodestyle==2.7.0
     # via flake8
 pycparser==2.20
@@ -221,14 +190,9 @@ pytest==6.2.4
     #   -r requirements/development.in
     #   pytest-mock
 python-dateutil==2.8.1
-    # via
-    #   botocore
-    #   jupyter-client
-    #   pandas
+    # via jupyter-client
 pytz==2021.1
-    # via
-    #   babel
-    #   pandas
+    # via babel
 pyzmq==22.1.0
     # via
     #   jupyter-client
@@ -238,8 +202,6 @@ regex==2021.4.4
     # via black
 requests==2.25.1
     # via jupyterlab-server
-s3transfer==0.4.2
-    # via boto3
 send2trash==1.5.0
     # via
     #   jupyter-server
@@ -248,28 +210,18 @@ six==1.16.0
     # via
     #   argon2-cffi
     #   bleach
-    #   halo
     #   jsonschema
     #   python-dateutil
-    #   thrift
 sniffio==1.2.0
     # via anyio
 snowballstemmer==2.1.0
     # via pydocstyle
-spinners==0.0.24
-    # via halo
-tabulate==0.8.9
-    # via parquet-tools
-termcolor==1.1.0
-    # via halo
 terminado==0.10.1
     # via
     #   jupyter-server
     #   notebook
 testpath==0.5.0
     # via nbconvert
-thrift==0.13.0
-    # via parquet-tools
 toml==0.10.2
     # via
     #   black
@@ -298,9 +250,7 @@ traitlets==5.0.5
 typing-extensions==3.10.0.0
     # via mypy
 urllib3==1.26.5
-    # via
-    #   botocore
-    #   requests
+    # via requests
 wcwidth==0.2.5
     # via prompt-toolkit
 webencodings==0.5.1
