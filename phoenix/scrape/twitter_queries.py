@@ -2,7 +2,6 @@
 import logging
 import os
 
-import pandas as pd
 import tweepy
 
 from phoenix.scrape import twitter_utilities
@@ -47,7 +46,7 @@ def _tweet_search_cursor(api, query, num_items) -> tweepy.Cursor:
         q=query,
         count=100,
         results="recent",
-        extended=True,
+        tweet_mode="extended",
     ).items(num_items)
 
 
@@ -57,6 +56,7 @@ def _get_user_tweet_cursor(api, id, num_items) -> tweepy.Status:
         api.user_timeline,
         id=id,
         count=200,
+        tweet_mode="extended",
     ).items(num_items)
 
 
@@ -67,7 +67,7 @@ def get_tweets_since_days(query_type, query, since_days, num_items, api=None) ->
     if not api:
         api = connect_twitter_api()
     # Check query type
-    logging.info(f"Query_type: {query_type}")
+    logging.info(f"Query_type: {query_type} | Query: {query}")
     if query_type == "users":
         cursor_function = _get_user_tweet_cursor(api, query, num_items)
     elif query_type == "keywords":
@@ -76,11 +76,18 @@ def get_tweets_since_days(query_type, query, since_days, num_items, api=None) ->
         logging.info("Bad query.")
         raise ValueError(f"No query for query type: {query_type}")
     # Run query
-    for status in cursor_function:
-        if twitter_utilities.is_recent_tweet(since_days, status):
-            yield status
-        else:
-            break
+    try:
+        for status in cursor_function:
+            if twitter_utilities.is_recent_tweet(since_days, status):
+                yield status
+            else:
+                break
+    except tweepy.error.TweepError as e:
+        if e.response.status_code == 401:
+            logging.info(
+                "401 Unauthorized: either bad api tokens or not \
+                authorized to access the query due to a locked account"
+            )
 
 
 def get_tweets(query_type, queries, num_items, since_days, api) -> list:
@@ -92,12 +99,15 @@ def get_tweets(query_type, queries, num_items, since_days, api) -> list:
     return tweets
 
 
-def get_tweets_dataframe(
-    query_type: str, queries: list, num_items=0, since_days=1
-) -> pd.DataFrame:
+def get_tweets_json(query_type: str, queries: list, num_items=0, since_days=1) -> list:
     """Extracts json from returned tweets and puts them into a DataFrame."""
     api = connect_twitter_api()
     tweets = get_tweets(query_type, queries, num_items, since_days, api)
-    tweets_json = [tweet._json for tweet in tweets]
+    if not tweets:
+        tweets_json = []
+    else:
+        tweets_json = [tweet._json for tweet in tweets]
+    return tweets_json
     # note: currently if no tweets are found, this crashes with an IndexError
-    return pd.DataFrame(tweets_json, columns=tweets_json[0].keys())
+    # previously this was ->def get_tweets_dataframe():
+    #                       return pd.DataFrame(tweets_json, columns=tweets_json[0].keys())
