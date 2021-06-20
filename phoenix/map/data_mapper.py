@@ -17,9 +17,10 @@ logging.getLogger('DataMapper').setLevel(logging.DEBUG)
 
 
 class DataMapper:
-    """
-    A class used to map raw post data to normalised json
-    files ready to be loaded to a postgres db.
+    """A class used to map data.
+
+    Maps raw post data to normalised json files with consistent
+    schemas ready to be loaded to a postgres db.
 
     Attributes
     ----
@@ -122,8 +123,7 @@ class DataMapper:
         return reshaped_df
 
     def get_files_to_process(self) -> None:
-        """
-        Gets a list of files to process from the source incoming dir.
+        """Gets a list of files to process from the source incoming dir.
         return: None
         rtype: None
         """
@@ -137,8 +137,7 @@ class DataMapper:
         ]
 
     def map_data_to_idl_files(self) -> None:
-        """
-        Maps the raw post data to normalised json files ready to be
+        """Maps the raw post data to normalised json files ready to be
         loaded to the postgres db.
         return: None
         rtype: None
@@ -167,8 +166,7 @@ class DataMapper:
             self.output_files.append(persisted_object.url)
 
     def archive_processed_files(self) -> None:
-        """
-        Moves processed raw post files to an archive dir so they dont
+        """Moves processed raw post files to an archive dir so they dont
         get processed more than once.
         return: None
         rtype: None
