@@ -91,7 +91,9 @@ class DataMapper:
         return reshaped_df
 
     def get_files_to_process(self) -> None:
-        logger.info(f"Searching base dir {os.path.join(*self._data_dir_base)} for files to process.")
+        logger.info(f"""
+        Searching base dir {os.path.join(*self._data_dir_base)} for files to process.
+        """)
         # Get list of file names in base/to_process dir
         self.files_to_process = [
             obj for obj in os.listdir(os.path.join(*self._data_dir_base))
