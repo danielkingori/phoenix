@@ -6,7 +6,7 @@
 #
 ansiwrap==0.8.4
     # via papermill
-anyio==2.2.0
+anyio==3.1.0
     # via jupyter-server
 appdirs==1.4.4
     # via black
@@ -16,36 +16,37 @@ argon2-cffi==20.1.0
     #   notebook
 async-generator==1.10
     # via nbclient
-attrs==20.3.0
+attrs==21.2.0
     # via
     #   jsonschema
     #   pytest
-babel==2.9.0
+babel==2.9.1
     # via jupyterlab-server
 backcall==0.2.0
     # via ipython
 bcrypt==3.2.0
     # via paramiko
-black==20.8b1
+black==21.6b0
     # via
     #   -r requirements/development.in
     #   papermill
 bleach==3.3.0
     # via nbconvert
-boto3==1.17.53
+boto3==1.17.96
     # via
+    #   parquet-tools
     #   pyathena
     #   tentaclio
-botocore==1.20.53
+botocore==1.20.96
     # via
     #   boto3
     #   pyathena
     #   s3transfer
 brotli==1.0.9
     # via flask-compress
-cachetools==4.2.1
+cachetools==4.2.2
     # via google-auth
-certifi==2020.12.5
+certifi==2021.5.30
     # via requests
 cffi==1.14.5
     # via
@@ -56,15 +57,22 @@ cffi==1.14.5
     #   pynacl
 chardet==4.0.0
     # via requests
-click==7.1.2
+click==8.0.1
     # via
     #   -r requirements/common.in
     #   black
     #   flask
     #   papermill
     #   tentaclio
+colorama==0.4.4
+    # via
+    #   halo
+    #   log-symbols
+    #   parquet-tools
 cryptography==3.4.7
     # via paramiko
+cursor==1.3.4
+    # via halo
 cycler==0.10.0
     # via matplotlib
 dash-core-components==1.16.0
@@ -79,21 +87,19 @@ dash_renderer==1.9.1
     # via dash
 dataclasses==0.6
     # via tentaclio
-decorator==5.0.7
+decorator==5.0.9
     # via ipython
 defusedxml==0.7.1
     # via nbconvert
-deprecation==2.1.0
-    # via jupyter-packaging
 entrypoints==0.3
     # via
     #   nbconvert
     #   papermill
-flake8==3.9.1
+flake8==3.9.2
     # via -r requirements/development.in
-flask-compress==1.9.0
+flask-compress==1.10.1
     # via dash
-flask==1.1.2
+flask==2.0.1
     # via
     #   dash
     #   flask-compress
@@ -101,11 +107,11 @@ future==0.18.2
     # via
     #   dash
     #   pyathena
-google-api-core==1.26.3
+google-api-core==1.30.0
     # via
     #   google-api-python-client
     #   google-cloud-core
-google-api-python-client==2.2.0
+google-api-python-client==2.9.0
     # via tentaclio
 google-auth-httplib2==0.1.0
     # via
@@ -113,7 +119,7 @@ google-auth-httplib2==0.1.0
     #   tentaclio
 google-auth-oauthlib==0.4.4
     # via tentaclio
-google-auth==1.29.0
+google-auth==1.31.0
     # via
     #   google-api-core
     #   google-api-python-client
@@ -121,16 +127,18 @@ google-auth==1.29.0
     #   google-auth-oauthlib
     #   google-cloud-core
     #   google-cloud-storage
-google-cloud-core==1.6.0
+google-cloud-core==1.7.0
     # via google-cloud-storage
-google-cloud-storage==1.37.1
+google-cloud-storage==1.38.0
     # via tentaclio
 google-crc32c==1.1.2
     # via google-resumable-media
-google-resumable-media==1.2.0
+google-resumable-media==1.3.0
     # via google-cloud-storage
 googleapis-common-protos==1.53.0
     # via google-api-core
+halo==0.0.29
+    # via parquet-tools
 httplib2==0.19.1
     # via
     #   google-api-python-client
@@ -141,7 +149,7 @@ idna==2.10
     #   requests
 iniconfig==1.1.1
     # via pytest
-ipykernel==5.5.3
+ipykernel==5.5.5
     # via notebook
 ipython-genutils==0.2.0
     # via
@@ -149,17 +157,17 @@ ipython-genutils==0.2.0
     #   nbformat
     #   notebook
     #   traitlets
-ipython==7.22.0
+ipython==7.24.1
     # via
     #   ipykernel
     #   jupyterlab
 isort==5.8.0
     # via -r requirements/development.in
-itsdangerous==1.1.0
+itsdangerous==2.0.1
     # via flask
 jedi==0.18.0
     # via ipython
-jinja2==2.11.3
+jinja2==3.0.1
     # via
     #   flask
     #   jupyter-server
@@ -191,24 +199,26 @@ jupyter-core==4.7.1
     #   nbconvert
     #   nbformat
     #   notebook
-jupyter-packaging==0.9.1
-    # via jupyterlab
-jupyter-server==1.6.1
+jupyter-server==1.8.0
     # via
     #   jupyterlab
     #   jupyterlab-server
     #   nbclassic
 jupyterlab-pygments==0.1.2
     # via nbconvert
-jupyterlab-server==2.4.0
+jupyterlab-server==2.6.0
     # via jupyterlab
-jupyterlab==3.0.14
+jupyterlab==3.0.16
     # via -r requirements/development.in
 kiwisolver==1.3.1
     # via matplotlib
-markupsafe==1.1.1
+log-symbols==0.0.14
+    # via halo
+markupsafe==2.0.1
     # via jinja2
-matplotlib==3.4.1
+matplotlib-inline==0.1.2
+    # via ipython
+matplotlib==3.4.2
     # via -r requirements/common.in
 mccabe==0.6.1
     # via flake8
@@ -220,9 +230,9 @@ mypy-extensions==0.4.3
     # via
     #   black
     #   mypy
-mypy==0.812
+mypy==0.902
     # via -r requirements/development.in
-nbclassic==0.2.7
+nbclassic==0.3.1
     # via jupyterlab
 nbclient==0.5.3
     # via
@@ -241,21 +251,19 @@ nbformat==5.1.3
     #   papermill
 nest-asyncio==1.5.1
     # via nbclient
-notebook==6.3.0
+notebook==6.4.0
     # via nbclassic
-numpy==1.20.2
+numpy==1.20.3
     # via
     #   matplotlib
     #   pandas
     #   pyarrow
-oauthlib==3.1.0
+oauthlib==3.1.1
     # via requests-oauthlib
 packaging==20.9
     # via
     #   bleach
-    #   deprecation
     #   google-api-core
-    #   jupyter-packaging
     #   jupyterlab
     #   jupyterlab-server
     #   pytest
@@ -263,6 +271,7 @@ pandas==1.1.3
     # via
     #   -r requirements/common.in
     #   -r requirements/report.in
+    #   parquet-tools
     #   tentaclio
 pandocfilters==1.4.3
     # via nbconvert
@@ -270,6 +279,8 @@ papermill==2.3.3
     # via -r requirements/common.in
 paramiko==2.7.2
     # via pysftp
+parquet-tools==0.2.5
+    # via -r requirements/development.in
 parso==0.8.2
     # via jedi
 pathspec==0.8.1
@@ -286,17 +297,17 @@ pluggy==0.13.1
     # via pytest
 polyglot==16.7.4
     # via -r requirements/tag.in
-prometheus-client==0.10.1
+prometheus-client==0.11.0
     # via
     #   jupyter-server
     #   notebook
 prompt-toolkit==3.0.18
     # via ipython
-protobuf==3.15.8
+protobuf==3.17.3
     # via
     #   google-api-core
     #   googleapis-common-protos
-psycopg2-binary==2.8.6
+psycopg2-binary==2.9.1
     # via tentaclio
 ptyprocess==0.7.0
     # via
@@ -304,8 +315,10 @@ ptyprocess==0.7.0
     #   terminado
 py==1.10.0
     # via pytest
-pyarrow==3.0.0
-    # via -r requirements/common.in
+pyarrow==0.17.1
+    # via
+    #   -r requirements/common.in
+    #   parquet-tools
 pyasn1-modules==0.2.8
     # via google-auth
 pyasn1==0.4.8
@@ -320,16 +333,16 @@ pycodestyle==2.7.0
     # via flake8
 pycparser==2.20
     # via cffi
-pydocstyle==6.0.0
+pydocstyle==6.1.1
     # via -r requirements/development.in
 pyflakes==2.3.1
     # via flake8
-pygments==2.8.1
+pygments==2.9.0
     # via
     #   ipython
     #   jupyterlab-pygments
     #   nbconvert
-pyicu==2.7.2
+pyicu==2.7.3
     # via -r requirements/tag.in
 pynacl==1.4.0
     # via paramiko
@@ -346,9 +359,9 @@ pysftp==0.2.9
     # via tentaclio
 pysocks==1.7.1
     # via requests
-pytest-mock==3.5.1
+pytest-mock==3.6.1
     # via -r requirements/development.in
-pytest==6.2.3
+pytest==6.2.4
     # via
     #   -r requirements/development.in
     #   pytest-mock
@@ -367,7 +380,7 @@ pyyaml==5.4.1
     # via
     #   papermill
     #   tentaclio
-pyzmq==22.0.3
+pyzmq==22.1.0
     # via
     #   jupyter-client
     #   jupyter-server
@@ -391,13 +404,13 @@ retrying==1.3.3
     # via plotly
 rsa==4.7.2
     # via google-auth
-s3transfer==0.3.7
+s3transfer==0.4.2
     # via boto3
 send2trash==1.5.0
     # via
     #   jupyter-server
     #   notebook
-six==1.15.0
+six==1.16.0
     # via
     #   argon2-cffi
     #   bcrypt
@@ -409,6 +422,7 @@ six==1.15.0
     #   google-auth-httplib2
     #   google-cloud-core
     #   google-resumable-media
+    #   halo
     #   jsonschema
     #   plotly
     #   protobuf
@@ -416,33 +430,41 @@ six==1.15.0
     #   python-dateutil
     #   retrying
     #   tenacity
+    #   thrift
     #   tweepy
 sniffio==1.2.0
     # via anyio
 snowballstemmer==2.1.0
     # via pydocstyle
+spinners==0.0.24
+    # via halo
 sqlalchemy==1.3.24
     # via tentaclio
+tabulate==0.8.9
+    # via parquet-tools
 tenacity==7.0.0
     # via
     #   papermill
     #   pyathena
 tentaclio==0.0.15
     # via -r requirements/common.in
-terminado==0.9.4
+termcolor==1.1.0
+    # via halo
+terminado==0.10.1
     # via
     #   jupyter-server
     #   notebook
-testpath==0.4.4
+testpath==0.5.0
     # via nbconvert
 textwrap3==0.9.2
     # via ansiwrap
+thrift==0.13.0
+    # via parquet-tools
 toml==0.10.2
     # via
     #   black
+    #   mypy
     #   pytest
-tomlkit==0.7.0
-    # via jupyter-packaging
 tornado==6.1
     # via
     #   ipykernel
@@ -451,7 +473,7 @@ tornado==6.1
     #   jupyterlab
     #   notebook
     #   terminado
-tqdm==4.60.0
+tqdm==4.61.1
     # via papermill
 traitlets==5.0.5
     # via
@@ -460,24 +482,20 @@ traitlets==5.0.5
     #   jupyter-client
     #   jupyter-core
     #   jupyter-server
+    #   matplotlib-inline
     #   nbclient
     #   nbconvert
     #   nbformat
     #   notebook
 tweepy==3.10.0
     # via -r requirements/scrape.in
-typed-ast==1.4.3
+typing-extensions==3.10.0.0
     # via
-    #   black
-    #   mypy
-typing-extensions==3.7.4.3
-    # via
-    #   black
     #   mypy
     #   tentaclio
 uritemplate==3.0.1
     # via google-api-python-client
-urllib3==1.26.4
+urllib3==1.26.5
     # via
     #   botocore
     #   requests
@@ -486,10 +504,10 @@ wcwidth==0.2.5
     # via prompt-toolkit
 webencodings==0.5.1
     # via bleach
-werkzeug==1.0.1
+websocket-client==1.1.0
+    # via jupyter-server
+werkzeug==2.0.1
     # via flask
-wheel==0.36.2
-    # via jupyter-packaging
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

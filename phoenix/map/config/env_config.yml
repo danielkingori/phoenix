@@ -1,0 +1,24 @@
+
+local_dev:
+  data_dir_base:
+    - local_artifacts
+    - base
+    - to_process
+  data_dir_idl:
+    - local_artifacts
+    - idl
+  data_dir_arch:
+    - local_artifacts
+    - archive
+
+docker_dev:
+  data_dir_base:
+    - local_artifacts
+    - base
+    - to_process
+  data_dir_idl:
+    - local_artifacts
+    - idl
+  data_dir_arch:
+    - local_artifacts
+    - archive

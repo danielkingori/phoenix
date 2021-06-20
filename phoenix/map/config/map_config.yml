@@ -1,0 +1,48 @@
+
+d_facebook_accounts:
+  data_origin: fb
+  data_category: dim
+  name: d_facebook_accounts
+  processing_steps:
+    - _normalize_nested_json
+  normalize_field: account
+  foreign_key_field: account
+  columns:
+    - src_file_name
+    - account
+
+f_facebook_posts:
+  data_origin: fb
+  data_category: fact
+  name: f_facebook_posts
+  processing_steps:
+  columns:
+    - src_file_name
+    - account
+    - brandedContentSponsor
+    - caption
+    - date
+    - description
+    - id
+    - imageText
+    - message
+    - platform
+    - platformId
+    - postUrl
+    - score
+    - subscriberCount
+    - type
+    - updated
+
+f_facebook_post_stats:
+  data_origin: fb
+  data_category: fact
+  name: f_facebook_post_stats
+  processing_steps:
+    - _normalize_nested_json
+  normalize_field: statistics
+  foreign_key_field: id
+  columns:
+    - src_file_name
+    - id
+    - statistics
