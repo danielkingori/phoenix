@@ -69,3 +69,12 @@ def is_unofficial_retweet(text_ser: pd.Series) -> pd.Series:
     """
     retweet_re = r"(^RT)"
     return text_ser.str.match(retweet_re)
+
+
+def is_retweet(df):
+    """Is retweet."""
+    if "retweeted" not in df.columns:
+        df["retweeted"] = False
+    else:
+        df["retweeted"] = df["retweeted"].fillna(False)
+    return df[(df["is_unofficial_retweet"]) | (df["retweeted"])]

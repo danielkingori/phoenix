@@ -11,3 +11,15 @@ def test_is_unofficial_retweet():
     pd.testing.assert_series_equal(
         result, pd.Series([True, False, True, False], name="clean_text")
     )
+
+
+def test_is_retweet():
+    """Test if is_reweet."""
+    input_df = pd.DataFrame(
+        {
+            "is_unofficial_retweet": [True, False, True, False],
+            "retweeted": [True, False, None, None],
+        }
+    )
+    result = normalise.is_retweet(input_df)
+    pd.testing.assert_series_equal(result, pd.Series([True, False, True, False]))
