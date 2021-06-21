@@ -22,6 +22,8 @@ def execute(given_df: pd.DataFrame, text_key: str = "text") -> pd.DataFrame:
     df = given_df.copy()
     df["clean_text"] = clean_text(df[text_key])
     df[["language", "confidence"]] = language.execute(df["clean_text"])
+    df["is_unofficial_retweet"] = is_unofficial_retweet(df["clean_text"])
+    df["is_retweet"] = is_retweet(df)
     return df
 
 
@@ -77,4 +79,4 @@ def is_retweet(df):
         df["retweeted"] = False
     else:
         df["retweeted"] = df["retweeted"].fillna(False)
-    return df[(df["is_unofficial_retweet"]) | (df["retweeted"])]
+    return (df["is_unofficial_retweet"]) | (df["retweeted"])
