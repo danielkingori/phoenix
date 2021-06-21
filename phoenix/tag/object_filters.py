@@ -47,6 +47,15 @@ def is_key_object(df):
     return df["is_key_object"].isin([True])
 
 
+def get_key_objects(df):
+    """All key objects.
+
+    This uses the `is_key_object` key and is for
+    finalised object lists.
+    """
+    return df[is_key_object(df)]
+
+
 def export(df, export_type):
     """Filter dataframe for exporting."""
     if "tweets" == export_type:
