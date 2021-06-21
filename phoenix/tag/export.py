@@ -32,40 +32,12 @@ def get_all_features_for_export(features_df) -> pd.DataFrame:
     return features_df
 
 
-def get_items_for_export(items_df) -> pd.DataFrame:
-    """Get the items for exporting."""
-    items_df["object_id"] = items_df["object_id"].astype(str)
-    items_df["language_from_api"] = items_df["language_from_api"].astype(str)
-    return items_df
-
-
-def filter_tag_data(df, export_type):
-    """Filter tag data."""
-    if "tweets" == export_type:
-        return df[df["object_type"] == constants.OBJECT_TYPE_TWEET]
-
-    if "facebook_posts" == export_type:
-        return df[df["object_type"] == constants.OBJECT_TYPE_FACEBOOK_POST]
-
-    if "key_facebook_posts" == export_type:
-        return df[
-            (df["has_key_feature"].isin([True]))
-            & (df["object_type"] == constants.OBJECT_TYPE_FACEBOOK_POST)
-        ]
-
-    if "key_tweets" == export_type:
-        key_tweets = df[
-            (df["has_key_feature"].isin([True]))
-            & (df["object_type"] == constants.OBJECT_TYPE_TWEET)
-        ]
-        return key_tweets[~key_tweets["is_retweet"]]
-
-    if "key_objects" == export_type:
-        return pd.concat(
-            [filter_tag_data(df, "key_tweets"), filter_tag_data(df, "key_facebook_posts")]
-        )
-
-    raise ValueError(f"Export Type not supported: {export_type}")
+def get_objects_for_export(objects_df) -> pd.DataFrame:
+    """Get the objects for exporting."""
+    objects_df["object_id"] = objects_df["object_id"].astype(str)
+    objects_df["language_from_api"] = objects_df["language_from_api"].astype(str)
+    objects_df["features"] = objects_df.apply(lambda x: list(map(str, x)))
+    return objects_df
 
 
 def features_for_labeling(ARTIFACTS_BASE_URL, all_features_df, export_type):
