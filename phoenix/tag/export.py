@@ -55,10 +55,16 @@ def filter_tag_data(df, export_type):
         ]
 
     if "key_tweets" == export_type:
-        return df[
+        key_tweets = df[
             (df["has_key_feature"].isin([True]))
             & (df["object_type"] == constants.OBJECT_TYPE_TWEET)
         ]
+        return key_tweets[~key_tweets["is_retweet"]]
+
+    if "key_objects" == export_type:
+        return pd.concat(
+            [filter_tag_data(df, "key_tweets"), filter_tag_data(df, "key_facebook_posts")]
+        )
 
     raise ValueError(f"Export Type not supported: {export_type}")
 
