@@ -80,7 +80,6 @@ def for_tagging(given_df: pd.DataFrame):
     """
     df = given_df.copy()
     df = df[["phoenix_post_id", "message"]]
-    # Twitter has a language column
     if "lang" in given_df.columns:
         df["language_from_api"] = given_df["lang"]
 
