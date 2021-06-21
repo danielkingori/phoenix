@@ -2,8 +2,7 @@
 import pandas as pd
 import tentaclio
 
-from phoenix.tag import feature
-from phoenix.tag.data_pull import constants
+from phoenix.tag import feature, object_filters
 
 
 def get_posts_to_scrape(posts_df) -> pd.DataFrame:
@@ -72,7 +71,7 @@ def filter_tag_data(df, export_type):
 def features_for_labeling(ARTIFACTS_BASE_URL, all_features_df, export_type):
     """Export the features for labeling."""
     if export_type:
-        df = filter_tag_data(all_features_df, export_type)
+        df = object_filters.export(all_features_df, export_type)
     else:
         df = all_features_df
 
