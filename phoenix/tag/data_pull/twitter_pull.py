@@ -56,6 +56,9 @@ def for_tagging(given_df: pd.DataFrame):
     if "lang" in given_df.columns:
         df["language_from_api"] = given_df["lang"]
 
+    if "retweeted" in given_df.columns:
+        df["retweeted"] = given_df["retweeted"]
+
     df = df.rename(columns={"id_str": "object_id", "full_text": "text"})
     df = df.set_index(df["object_id"], verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_TWEET
