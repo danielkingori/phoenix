@@ -1,6 +1,4 @@
 """Normalise module."""
-from typing import Tuple
-
 import pandas as pd
 
 from phoenix.common import artifacts
@@ -56,44 +54,6 @@ def key_features(given_df, features_key: str = "features") -> pd.Series:
 def get_interesting_features():
     """Get interesting_features."""
     return pd.read_csv(f"{artifacts.urls.get_static_config()}/interesting_features.csv")
-
-
-def get_key_items(exploded_features_is_key_df, features_key: str = "features") -> pd.DataFrame:
-    """Get the items with key features."""
-    df = exploded_features_is_key_df.copy()
-    key_items = (
-        df[df["is_key_feature"].isin([True])]
-        .groupby(level=0)
-        .first()
-        .drop(columns=["features", "features_count"])
-        .rename(columns={"is_key_feature": "has_key_feature"})
-    )
-    return key_items
-
-
-def get_feature_items(exploded_features_df, features_key: str = "features") -> pd.DataFrame:
-    """Get the items with key features."""
-    g = exploded_features_df.groupby(level=0)
-    items_features = g.agg({"features": list, "features_count": list})
-    return items_features
-
-
-def finalise(
-    all_items, exploded_features_df, features_key: str = "features"
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """Get the final features and items dataframes."""
-    df = exploded_features_df.copy()
-    df["is_key_feature"] = key_features(df[[features_key]])
-    key_items = get_key_items(df)
-    items_features = get_feature_items(df)
-    df_has = df.join(key_items[["has_key_feature"]]).fillna(False)
-    items = all_items.copy()
-    items = items.set_index("object_id", drop=False)
-    items = items.join(key_items[["has_key_feature"]]).fillna(False)
-    items = items.join(items_features[["features", "features_count"]])
-    items = items.reset_index(drop=True)
-    key_items_result = items[items["has_key_feature"].isin([True])]
-    return items, key_items_result, df_has
 
 
 def get_features_to_label(exploded_features_df) -> pd.DataFrame:
