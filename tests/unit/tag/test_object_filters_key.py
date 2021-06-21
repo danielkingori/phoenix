@@ -1,8 +1,8 @@
-"""Test export."""
+"""Test get_key objects."""
 import pandas as pd
 import pytest
 
-from phoenix.tag import export
+from phoenix.tag import object_filters
 from phoenix.tag.data_pull import constants
 
 
@@ -63,23 +63,23 @@ def key_facebook_posts_df():
     )
 
 
-def test_filter_tag_data_key_tweets(tweets_input_df, key_tweets_df):
+def test_key_tweets(tweets_input_df, key_tweets_df):
     """Test filter of tag data for key_tweets."""
-    result = export.filter_tag_data(tweets_input_df, "key_tweets")
+    result = object_filters.get_key_tweets(tweets_input_df)
     pd.testing.assert_frame_equal(result, key_tweets_df)
 
 
-def test_filter_tag_data_key_facebook_posts(facebook_posts_input_df, key_facebook_posts_df):
+def test_key_facebook_posts(facebook_posts_input_df, key_facebook_posts_df):
     """Test filter of tag data for key_facebook_posts."""
-    result = export.filter_tag_data(facebook_posts_input_df, "key_facebook_posts")
+    result = object_filters.get_key_facebook_posts(facebook_posts_input_df)
     pd.testing.assert_frame_equal(result, key_facebook_posts_df)
 
 
-def test_filter_tag_data_key_objects(
+def test_get_all_key_objects(
     tweets_input_df, facebook_posts_input_df, key_tweets_df, key_facebook_posts_df
 ):
-    """Test filter of tag data for key_facebook_posts."""
+    """Test get all key objects ."""
     df = pd.concat([tweets_input_df, facebook_posts_input_df])
-    result = export.filter_tag_data(df, "key_objects")
+    result = object_filters.get_all_key_objects(df)
     e_result = pd.concat([key_tweets_df, key_facebook_posts_df])
     pd.testing.assert_frame_equal(result, e_result)
