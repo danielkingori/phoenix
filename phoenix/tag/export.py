@@ -36,7 +36,7 @@ def get_objects_for_export(objects_df) -> pd.DataFrame:
     """Get the objects for exporting."""
     objects_df["object_id"] = objects_df["object_id"].astype(str)
     objects_df["language_from_api"] = objects_df["language_from_api"].astype(str)
-    objects_df["features"] = objects_df.apply(lambda x: list(map(str, x)))
+    objects_df["features"] = objects_df["features"].apply(lambda x: list(map(str, x)))
     return objects_df
 
 
