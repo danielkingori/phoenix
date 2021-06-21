@@ -58,3 +58,14 @@ def join_fb_posts_tweets(posts_df, tweets_df) -> pd.DataFrame:
     ]
     posts_formated = posts_formated.rename(columns={"facebook_id": "object_id", "text": "text"})
     posts_formated["object_type"] = "facebook_posts"
+
+
+def is_unofficial_retweet(text_ser: pd.Series) -> pd.Series:
+    """Detect if the text is an unofficial retweet.
+
+    According to the twitter docs this is
+    is when someone starts the message with "RT".
+    https://help.twitter.com/en/using-twitter/retweet-faqs
+    """
+    retweet_re = r"(^RT)"
+    return text_ser.str.match(retweet_re)
