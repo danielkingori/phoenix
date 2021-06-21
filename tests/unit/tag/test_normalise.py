@@ -1,7 +1,22 @@
 """Test Normalise of data for tagging."""
+import mock
 import pandas as pd
 
 from phoenix.tag import normalise
+
+
+@mock.patch("phoenix.tag.normalise.is_retweet")
+@mock.patch("phoenix.tag.normalise.is_unofficial_retweet")
+@mock.patch("phoenix.tag.language.execute")
+@mock.patch("phoenix.tag.normalise.clean_text")
+def test_execute(m_clean_text, m_lang_execute, m_is_unofficial_retweet, m_is_retweet):
+    """Test execute."""
+    m_df = mock.MagicMock(pd.DataFrame)
+    normalise.execute(m_df)
+    m_clean_text.assert_called_once()
+    m_lang_execute.assert_called_once()
+    m_is_unofficial_retweet.assert_called_once()
+    m_is_retweet.assert_called_once()
 
 
 def test_is_unofficial_retweet():
