@@ -1,5 +1,7 @@
-# Phoenix - UNDP Lebanon
-This project aims to supply and automate social media analysis reports for UNDP Lebanon.
+# Phoenix
+Open source social media analysis platform.
+
+This repo is currently in alpha, we are working hard towards beta!
 
 ## Contents
  - [Getting started](/docs/getting-started.md)
