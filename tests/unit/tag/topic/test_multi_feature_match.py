@@ -1,8 +1,8 @@
-"""Test of topic."""
+"""Test of multi feature topic match."""
 import mock
 import pandas as pd
 
-from phoenix.tag import topic
+from phoenix.tag.topic import multi_feature_match as mfm
 
 
 def test_get_topics():
@@ -76,7 +76,7 @@ def test_get_topics():
         }
     )
 
-    result_df, confidence_df = topic.get_topics(topic_config, features_df)
+    result_df, confidence_df = mfm.get_topics(topic_config, features_df)
 
     pd.testing.assert_frame_equal(
         result_df,
@@ -116,7 +116,7 @@ def test_get_topics():
     pd.testing.assert_frame_equal(confidence_df, e_confidence_df)
 
 
-@mock.patch("phoenix.tag.topic._get_raw_topic_config")
+@mock.patch("phoenix.tag.topic.multi_feature_match._get_raw_topic_config")
 def test_get_topic_config(m__get_raw_topic_config):
     """Test the get_topic_config."""
     # Taken from
@@ -125,7 +125,7 @@ def test_get_topic_config(m__get_raw_topic_config):
         {"Features": ["f1-t1", "f1-t2,f2-t2", "f1-t3,f2-t3,قبض"], "Topic": ["t1", "t2", "t3"]}
     )
 
-    result_df = topic.get_topic_config()
+    result_df = mfm.get_topic_config()
     pd.testing.assert_frame_equal(
         result_df,
         pd.DataFrame(
