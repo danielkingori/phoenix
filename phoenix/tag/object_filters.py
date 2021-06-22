@@ -14,6 +14,11 @@ def facebook_posts(df):
     return df["object_type"] == constants.OBJECT_TYPE_FACEBOOK_POST
 
 
+def facebook_comments(df):
+    """Get facebook_comments from dataframe."""
+    return df["object_type"] == constants.OBJECT_TYPE_FACEBOOK_COMMENT
+
+
 def key_feature(df):
     """Get key features from dataframe."""
     return df["has_key_feature"].isin([True])
@@ -29,6 +34,11 @@ def get_key_facebook_posts(df):
     return df[(facebook_posts(df)) & (key_feature(df))]
 
 
+def get_key_facebook_comments(df):
+    """Filter key facebook comments."""
+    return df[(facebook_comments(df)) & (key_feature(df))]
+
+
 def get_key_tweets(df):
     """Key tweets."""
     return df[(tweets(df)) & (key_feature(df)) & (not_retweet(df))]
@@ -39,7 +49,9 @@ def get_all_key_objects(df):
 
     This is used for determining the `is_key_object`.
     """
-    return pd.concat([get_key_tweets(df), get_key_facebook_posts(df)])
+    return pd.concat(
+        [get_key_tweets(df), get_key_facebook_posts(df), get_key_facebook_comments(df)]
+    )
 
 
 def is_key_object(df):
@@ -64,8 +76,14 @@ def export(df, export_type):
     if "facebook_posts" == export_type:
         return df[(facebook_posts(df))]
 
+    if "facebook_comments" == export_type:
+        return df[(facebook_comments(df))]
+
     if "key_facebook_posts" == export_type:
         return df[(facebook_posts(df)) & (is_key_object(df))]
+
+    if "key_facebook_comments" == export_type:
+        return df[(facebook_comments(df)) & (is_key_object(df))]
 
     if "key_tweets" == export_type:
         return df[(tweets(df)) & (is_key_object(df))]
