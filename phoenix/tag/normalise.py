@@ -20,6 +20,8 @@ def merge(for_tagging_folder):
 def execute(given_df: pd.DataFrame, text_key: str = "text") -> pd.DataFrame:
     """Tag Data."""
     df = given_df.copy()
+    if "language_from_api" not in df.columns:
+        df["language_from_api"] = None
     df["clean_text"] = clean_text(df[text_key])
     df[["language", "confidence"]] = language.execute(df["clean_text"])
     df["is_unofficial_retweet"] = is_unofficial_retweet(df["clean_text"])
