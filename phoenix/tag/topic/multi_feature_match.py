@@ -1,4 +1,4 @@
-"""Topic tagging."""
+"""Multi feature match for topic analysis."""
 from typing import Any, Dict
 
 import pandas as pd
@@ -7,7 +7,7 @@ import tentaclio
 from phoenix.common import artifacts
 
 
-DEFAULT_RAW_TOPIC_CONFIG = "raw_topic_config.csv"
+DEFAULT_RAW_TOPIC_CONFIG = "multi_feature_match_topic_config.csv"
 
 
 def get_topics(topic_config, features_df, with_features_and_text=False) -> pd.DataFrame:
