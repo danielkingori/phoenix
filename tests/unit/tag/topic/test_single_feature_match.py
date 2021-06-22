@@ -15,7 +15,11 @@ def test_get_topics():
     )
 
     features_df = pd.DataFrame(
-        {"features": ["f1", "f2", "f5", "f1", "f5"], "object_id": ["o1", "o1", "o1", "o2", "o3"]}
+        {
+            "features": ["f1", "f2", "f5", "f1", "f5"],
+            "object_id": ["o1", "o1", "o1", "o2", "o3"],
+            "object_type": ["ot1", "ot1", "ot1", "ot1", "ot2"],
+        }
     )
     result_df = sfm.get_topics(topic_config, features_df)
     pd.testing.assert_frame_equal(
@@ -24,6 +28,7 @@ def test_get_topics():
             {
                 "object_id": ["o1", "o1", "o2", "o2"],
                 "topic": ["t1", "t2", "t1", "t2"],
+                "object_type": ["ot1", "ot1", "ot1", "ot1"],
                 "matched_features": [["f1"], ["f1", "f2"], ["f1"], ["f1"]],
             }
         ),

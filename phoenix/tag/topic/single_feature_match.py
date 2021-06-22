@@ -13,7 +13,8 @@ def get_topics(topic_config, features_df) -> pd.DataFrame:
 
     Return:
     pd.DataFrame:
-        Index: object_id
+        object_id: object_id
+        object_type: object_type
         topic: string
         matched_features: array<string>
     """
@@ -22,7 +23,7 @@ def get_topics(topic_config, features_df) -> pd.DataFrame:
     topics_df = features_indexed_df.join(topic_config_i, on="features")
     topics_df = topics_df[~topics_df["topic"].isnull()]
     topics_df = (
-        topics_df.groupby(["object_id", "topic"])
+        topics_df.groupby(["object_id", "topic", "object_type"])
         .agg({"features": list})
         .rename(columns={"features": "matched_features"})
     )
