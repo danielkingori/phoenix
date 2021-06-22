@@ -8,6 +8,27 @@ from phoenix.common import artifacts
 DEFAULT_RAW_TOPIC_CONFIG = "single_feature_match_topic_config.csv"
 
 
+def get_topics(topic_config, features_df) -> pd.DataFrame:
+    """Get the topics.
+
+    Return:
+    pd.DataFrame:
+        Index: object_id
+        topic: string
+        matched_features: array<string>
+    """
+    features_indexed_df = features_df.set_index("object_id")
+    topic_config_i = topic_config.set_index("features")
+    topics_df = features_indexed_df.join(topic_config_i, on="features")
+    topics_df = topics_df[~topics_df["topic"].isnull()]
+    topics_df = (
+        topics_df.groupby(["object_id", "topic"])
+        .agg({"features": list})
+        .rename(columns={"features": "matched_features"})
+    )
+    return topics_df.reset_index()
+
+
 def get_topic_config(config_url=None) -> pd.DataFrame:
     """Get topic config dataframe."""
     df = _get_raw_topic_config(config_url)
