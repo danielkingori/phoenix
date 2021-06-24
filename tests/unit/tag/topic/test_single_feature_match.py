@@ -25,10 +25,10 @@ def test_get_topics():
         result_df,
         pd.DataFrame(
             {
-                "object_id": ["o1", "o1", "o2", "o2"],
-                "topic": ["t1", "t2", "t1", "t2"],
-                "object_type": ["ot1", "ot1", "ot1", "ot1"],
-                "matched_features": [["f1"], ["f1", "f2"], ["f1"], ["f1"]],
+                "object_id": ["o1", "o1", "o2", "o2", "o3"],
+                "topic": ["t1", "t2", "t1", "t2", sfm.FILL_TOPIC],
+                "object_type": ["ot1", "ot1", "ot1", "ot1", "ot2"],
+                "matched_features": [["f1"], ["f1", "f2"], ["f1"], ["f1"], None],
             }
         ),
     )
