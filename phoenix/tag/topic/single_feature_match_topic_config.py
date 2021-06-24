@@ -43,32 +43,28 @@ def merge_new_topic_config(topic_config, new_topic_config) -> pd.DataFrame:
     return n_df
 
 
-def commit_topic_config(topic_config: pd.DataFrame, config_url=None) -> pd.DataFrame:
-    """Commit a topic config.
+def committable_topic_config(topic_config: pd.DataFrame) -> pd.DataFrame:
+    """Create a committable a topic config.
 
-    This will commit the topic config in the format
+    This will create the topic config in the format
     features, topic
     "f1", "t1,t2"
 
     As this is easier to work with when labelling by hand.
 
     Returns:
-    Persisted dataframe.
+    features, topic
     """
-    if not config_url:
-        config_url = _default_config_url()
     df = topic_config.groupby("features", as_index=False).agg(
         {"topic": lambda x: ", ".join(sorted(x.dropna()))}
     )
-    _persist_topic_config_csv(df, config_url)
     return df
 
 
-def _persist_topic_config_csv(df, config_url):
-    """Persist the topic config as a csv.
-
-    Mockable function used when testing commit_topic_config.
-    """
+def persist_topic_config_csv(df, config_url=None):
+    """Persist the topic config as a csv."""
+    if not config_url:
+        config_url = _default_config_url()
     with tentaclio.open(config_url, "w") as fb:
         df.to_csv(fb)
 
