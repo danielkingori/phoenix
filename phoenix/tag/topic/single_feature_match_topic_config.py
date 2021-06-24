@@ -72,3 +72,13 @@ def persist_topic_config_csv(df, config_url=None):
 def _default_config_url() -> str:
     """Default config url."""
     return f"{artifacts.urls.get_static_config()}{constants.DEFAULT_RAW_TOPIC_CONFIG}"
+
+
+def create_new_committable_topic_config(topic_config, url_to_folder: str) -> pd.DataFrame:
+    """Create the new committable topic config by merge the csv in the folder to it."""
+    current_topic_config = topic_config.copy()
+    for entry in tentaclio.listdir(url_to_folder):
+        new_topic_config = get_topic_config(entry)
+        current_topic_config = merge_new_topic_config(current_topic_config, new_topic_config)
+
+    return committable_topic_config(current_topic_config)
