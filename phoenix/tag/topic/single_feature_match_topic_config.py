@@ -29,3 +29,14 @@ def _get_raw_topic_config(config_url=None) -> pd.DataFrame:
     with tentaclio.open(config_url, "r") as fb:
         df = pd.read_csv(fb)
     return df
+
+
+def merge_new_topic_config(topic_config, new_topic_config) -> pd.DataFrame:
+    """Merge a new topic config with the old one.
+
+    The new will replace add all new topic to feature mappings.
+    """
+    n_df = pd.concat([topic_config, new_topic_config])
+    n_df = n_df.drop_duplicates()
+    n_df = n_df.reset_index(drop=True)
+    return n_df
