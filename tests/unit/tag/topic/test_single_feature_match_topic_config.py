@@ -24,3 +24,29 @@ def test_get_topic_config(m__get_raw_topic_config):
             }
         ),
     )
+
+
+def test_merge_new_topic_config():
+    """Test the get_topic_config."""
+    original = pd.DataFrame(
+        {
+            "features": ["f1", "f1", "f2", "f3 f4", "f3 f4", "f3 f4"],
+            "topic": ["t1", "t2", "t2", "t3", "t4", "t5"],
+        }
+    )
+    new = pd.DataFrame(
+        {
+            "features": ["f1", "f1", "n-f1"],
+            "topic": ["n-t1", "t1", "n-t1"],
+        }
+    )
+    result_df = sfm_topic_config.merge_new_topic_config(original, new)
+    pd.testing.assert_frame_equal(
+        result_df,
+        pd.DataFrame(
+            {
+                "features": ["f1", "f1", "f2", "f3 f4", "f3 f4", "f3 f4", "f1", "n-f1"],
+                "topic": ["t1", "t2", "t2", "t3", "t4", "t5", "n-t1", "n-t1"],
+            }
+        ),
+    )
