@@ -36,8 +36,8 @@ def test_merge_new_topic_config():
     )
     new = pd.DataFrame(
         {
-            "features": ["f1", "f1", "n-f1"],
-            "topic": ["n-t1", "t1", "n-t1"],
+            "features": ["f1", "f1", "n-f1", "n-f2"],
+            "topic": ["n-t1", "t1", "n-t1", None],
         }
     )
     result_df = sfm_topic_config.merge_new_topic_config(original, new)
