@@ -52,7 +52,7 @@ def test_merge_new_topic_config():
     )
 
 
-def test_committable_topic_config(m_persist):
+def test_committable_topic_config():
     """Test the create of a committable of topic config."""
     topic_config = pd.DataFrame(
         {
