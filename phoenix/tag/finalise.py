@@ -38,7 +38,10 @@ def join_topics_to_facebook_posts(topics, facebook_posts):
 
 def join_topics_to_tweets(topics, tweets):
     """Join the topics to the tweets."""
-    tweets_df = tweets.set_index("id_str")
+    tweets_df = tweets.copy()
+    tweets_df["object_id"] = tweets_df["id_str"].astype(str)
+    tweets_df = tweets_df.set_index("object_id")
     tweets_df = tweets_df.drop(columns=["retweeted"])
-    result_df = topics.join(tweets_df, on="object_id")
-    return result_df
+    topics_df = topics.set_index("object_id")
+    result_df = topics_df.join(tweets_df, how="right")
+    return result_df.reset_index()
