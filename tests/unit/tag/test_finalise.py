@@ -63,3 +63,33 @@ def test_join_topics_to_tweets():
             }
         ),
     )
+
+
+def test_join_topics_to_facebook_comments():
+    """Test the join of topics to facebook comments."""
+    topics = pd.DataFrame(
+        {
+            "object_id": ["1", "1", "2", "3"],
+            "topics": ["o1", "o1", "o2", "o2"],
+        }
+    )
+
+    comments = pd.DataFrame(
+        {
+            "id": [1, 2],
+            "url": ["url1", "url2"],
+        }
+    )
+
+    result_df = finalise.join_topics_to_facebook_comments(topics, comments)
+    pd.testing.assert_frame_equal(
+        result_df,
+        pd.DataFrame(
+            {
+                "object_id": ["1", "1", "2"],
+                "topics": ["o1", "o1", "o2"],
+                "id": [1, 1, 2],
+                "url": ["url1", "url1", "url2"],
+            }
+        ),
+    )
