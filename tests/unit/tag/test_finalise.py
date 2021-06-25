@@ -38,14 +38,14 @@ def test_join_topics_to_tweets():
     """Test the join of topics to tweets."""
     topics = pd.DataFrame(
         {
-            "object_id": ["o1", "o1", "o2"],
-            "topics": ["o1", "o1", "o2"],
+            "object_id": ["1", "1", "2", "3"],
+            "topics": ["o1", "o1", "o2", "o2"],
         }
     )
 
     tweets = pd.DataFrame(
         {
-            "id_str": ["o1", "o2"],
+            "id_str": [1, 2],
             "url": ["url1", "url2"],
             "retweeted": [True, False],
         }
@@ -56,8 +56,9 @@ def test_join_topics_to_tweets():
         result_df,
         pd.DataFrame(
             {
-                "object_id": ["o1", "o1", "o2"],
+                "object_id": ["1", "1", "2"],
                 "topics": ["o1", "o1", "o2"],
+                "id_str": [1, 1, 2],
                 "url": ["url1", "url1", "url2"],
             }
         ),
