@@ -8,8 +8,8 @@ def test_join_topics_to_facebook_posts():
     """Test the join of topics to facebook posts."""
     topics = pd.DataFrame(
         {
-            "object_id": ["o1", "o1", "o2"],
-            "topics": ["o1", "o1", "o2"],
+            "object_id": ["o1", "o1", "o2", "o3"],
+            "topics": ["o1", "o1", "o2", "o3"],
         }
     )
 
@@ -27,6 +27,7 @@ def test_join_topics_to_facebook_posts():
             {
                 "object_id": ["o1", "o1", "o2"],
                 "topics": ["o1", "o1", "o2"],
+                "phoenix_post_id": ["o1", "o1", "o2"],
                 "url": ["url1", "url1", "url2"],
             }
         ),
