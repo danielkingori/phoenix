@@ -1,0 +1,9 @@
+# Dependencies for visualise_posts
+-r common.in
+-r development.in
+
+arabic_reshaper
+nltk
+python-bidi
+sklearn
+snowballstemmer
