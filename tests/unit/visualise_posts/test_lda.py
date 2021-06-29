@@ -1,6 +1,9 @@
 """Test lda."""
 
 import pandas as pd
+from nltk.corpus import stopwords
+from sklearn.feature_extraction.text import CountVectorizer
+from snowballstemmer import stemmer
 
 from phoenix.visualise_posts import lda
 
@@ -31,3 +34,44 @@ def test_remove_links():
     )
 
     pd.testing.assert_frame_equal(expected_df, output_df)
+
+
+def test_StemmedCountVectorizer():
+    """Test if StemmedCountVectorizer is initialized with the right stemmer."""
+    en_stemmer = stemmer("english")
+    ar_stemmer = stemmer("arabic")
+
+    en_corpus = ["succeeding in stemming removes the ends of words"]
+
+    en_vectorizer = lda.StemmedCountVectorizer(en_stemmer, stop_words=stopwords.words("english"))
+    en_vectorizer.fit_transform(en_corpus)
+    expected_feature_names = ["succeed", "stem", "remov", "end", "word"]
+    assert set(en_vectorizer.get_feature_names()) == set(expected_feature_names)
+    assert isinstance(en_vectorizer, CountVectorizer)
+
+    ar_vectorizer = lda.StemmedCountVectorizer(ar_stemmer, stop_words=stopwords.words("arabic"))
+    ar_corpus = [
+        "تقرير عن الأحداث التي ترافقت مع الانتخابات السورية ومقابلات مع سوريين شاهدوا الحلقة الكاملة من برنامج طوني خليفة عبر هذا الرابط"  # noqa
+    ]
+
+    ar_vectorizer.fit_transform(ar_corpus)
+    expected_ar_feature_names = [
+        "احداث",
+        "انتخاب",
+        "ترافق",
+        "تقرير",
+        "حلق",
+        "خليف",
+        "رابط",
+        "رنامج",
+        "سور",
+        "سوري",
+        "شاهد",
+        "طون",
+        "عبر",
+        "كامل",
+        "مقابلا",
+    ]
+
+    assert set(ar_vectorizer.get_feature_names()) == set(expected_ar_feature_names)
+    assert isinstance(ar_vectorizer, CountVectorizer)
