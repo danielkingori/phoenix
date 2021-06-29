@@ -1,8 +1,13 @@
 """Module to visualise posts by segmenting them through a Latent Dirichelet Allocation."""
-from typing import Dict
+from typing import Dict, List
 
+import arabic_reshaper
+from bidi.algorithm import get_display
+import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
+import numpy as np
 import pandas as pd
+import seaborn as sns
 from sklearn.feature_extraction.text import CountVectorizer
 
 
@@ -36,6 +41,20 @@ class StemmedCountVectorizer(CountVectorizer):
         count_dict = sorted(count_dict, key=lambda x: -x[1])
 
         return dict(count_dict)
+
+    def plot_most_common_words(self, count_vector_matrix: pd.arrays.SparseArray, n: int) -> None:
+        """Plot common words in the dataset in a bar graph."""
+        wordcount_dict = self.get_most_common_words(count_vector_matrix)
+        words = [get_display(arabic_reshaper.reshape(w)) for w in list(wordcount_dict)[0:n]]
+        counts = [word_count for word_count in list(wordcount_dict.values())[0:n]]
+        x_pos = np.arange(len(words))
+
+        sns.barplot(x_pos, counts)
+        plt.xticks(x_pos, words, rotation=80)
+        plt.xlabel("words", fontsize=13)
+        plt.ylabel("counts", fontsize=13)
+        plt.title(f"{n} most common words", fontsize=15)
+        plt.show()
 
 
 def remove_links(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
