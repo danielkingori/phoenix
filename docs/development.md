@@ -18,8 +18,8 @@ It is recommended you manage your python package installs (i.e. per project) usi
 
 The terminal commands are then:
 ```
-python -m venv venv
-source venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate
 make install_all
 ```
 Also recommended to install `pip-tools` into your virturalenv: `pip install pip-tools`
