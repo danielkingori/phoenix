@@ -1,6 +1,7 @@
 """Module to visualise posts by segmenting them through a Latent Dirichelet Allocation."""
 from typing import Dict
 
+from nltk.corpus import stopwords
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -42,3 +43,11 @@ def remove_links(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
     df[col_name] = df[col_name].replace(to_replace=r"\S*https?:\S*", value="", regex=True)
 
     return df
+
+
+def get_stopwords() -> List[str]:
+    """Gets stopwords for both arabic and english."""
+    stopwords_list = stopwords.words("arabic")
+    stopwords_list.extend(stopwords.words("english"))
+
+    return stopwords_list

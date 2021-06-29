@@ -92,3 +92,12 @@ def test_StemmedCountVectorizer_common_words():
     }
 
     assert actual_word_dict == expected_word_dict
+
+
+def test_get_stopwords():
+    """Test get_stopwords list and that it contains at least the english and arabic stopwords."""
+    stopwords_list = stopwords.words("arabic")
+    stopwords_list.extend(stopwords.words("english"))
+
+    actual_stopwords_list = lda.get_stopwords()
+    assert set(stopwords_list).issubset(actual_stopwords_list)
