@@ -1,4 +1,6 @@
 """Module to visualise posts by segmenting them through a Latent Dirichelet Allocation."""
+from typing import Dict
+
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -21,6 +23,18 @@ class StemmedCountVectorizer(CountVectorizer):
         """Overwrite of only the stemming of super's build_analyzer to use the added stemmer."""
         analyzer = super(StemmedCountVectorizer, self).build_analyzer()
         return lambda doc: (self.stemmer.stemWord(w) for w in analyzer(doc))
+
+    def get_most_common_words(self, count_vector_matrix: pd.arrays.SparseArray) -> Dict[str, int]:
+        """Gets a dict of the most common words and their occurrence numbers.
+
+        Args:
+            count_vector_matrix (pd.arrays.SparseArray): sparse matrix of (n_samples,
+            n_features), returned value of self.fit_transform()
+        """
+        count_dict = zip(self.get_feature_names(), count_vector_matrix.sum(axis=0).tolist()[0])
+        count_dict = sorted(count_dict, key=lambda x: -x[1])
+
+        return dict(count_dict)
 
 
 def remove_links(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
