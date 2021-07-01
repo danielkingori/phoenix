@@ -2,12 +2,13 @@
 from typing import Dict, List
 
 import arabic_reshaper
-from bidi.algorithm import get_display
 import matplotlib.pyplot as plt
-from nltk.corpus import stopwords
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from bidi.algorithm import get_display
+from nltk.corpus import stopwords
+from sklearn.decomposition._lda import LatentDirichletAllocation
 from sklearn.feature_extraction.text import CountVectorizer
 
 
@@ -70,3 +71,30 @@ def get_stopwords() -> List[str]:
     stopwords_list.extend(stopwords.words("english"))
 
     return stopwords_list
+
+
+def save_plot_top_lda_words(
+    model: LatentDirichletAllocation, feature_names: List, n_top_words: int, title: str, f
+) -> None:
+    """Plots the top words in each topic in the LDA model."""
+    fig, axes = plt.subplots(2, 5, figsize=(30, 15), sharex=True)
+    axes = axes.flatten()
+    for topic_idx, topic in enumerate(model.components_):
+        top_features_ind = topic.argsort()[: -n_top_words - 1 : -1]
+        top_features = [
+            get_display(arabic_reshaper.reshape(feature_names[i])) for i in top_features_ind
+        ]
+        weights = topic[top_features_ind]
+
+        ax = axes[topic_idx]
+        ax.barh(top_features, weights, height=0.7)
+        ax.set_title(f"Cloud {topic_idx +1}", fontdict={"fontsize": 30})
+        ax.invert_yaxis()
+        ax.tick_params(axis="both", which="major", labelsize=20)
+        for i in "top right left".split():
+            ax.spines[i].set_visible(False)
+        fig.suptitle(title, fontsize=40)
+
+    plt.subplots_adjust(top=0.90, bottom=0.05, wspace=0.90, hspace=0.3)
+    plt.savefig(f)
+    plt.show()
