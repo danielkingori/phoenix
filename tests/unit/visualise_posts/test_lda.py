@@ -1,6 +1,7 @@
 """Test lda."""
-
+import numpy as np
 import pandas as pd
+from mock import MagicMock
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from snowballstemmer import stemmer
@@ -101,3 +102,21 @@ def test_get_stopwords():
 
     actual_stopwords_list = lda.get_stopwords()
     assert set(stopwords_list).issubset(actual_stopwords_list)
+
+
+def test_write_cloud_results():
+    model = MagicMock()
+    model.transform.return_value = np.array([[0.1, 0.2, 0.3], [0.4, 0.5, 0.3]])
+
+    input_matrix = ["hi"]
+
+    input_df = pd.DataFrame(["message1", "message2"], columns=["message"])
+    expected_df = pd.DataFrame(
+        [("message1", 3, 0.3), ("message2", 2, 0.5)],
+        columns=["message", "lda_cloud", "lda_cloud_confidence"],
+    )
+
+    actual_df = lda.write_cloud_results(input_df, input_matrix, model)
+
+    pd.testing.assert_frame_equal(actual_df, expected_df)
+    model.transform.assert_called_with(input_matrix)

@@ -8,6 +8,7 @@ import pandas as pd
 import seaborn as sns
 from bidi.algorithm import get_display
 from nltk.corpus import stopwords
+from scipy.sparse.csr import csr_matrix
 from sklearn.decomposition._lda import LatentDirichletAllocation
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -98,3 +99,27 @@ def save_plot_top_lda_words(
     plt.subplots_adjust(top=0.90, bottom=0.05, wspace=0.90, hspace=0.3)
     plt.savefig(f)
     plt.show()
+
+
+def write_cloud_results(
+    df: pd.DataFrame, word_matrix: csr_matrix, model: LatentDirichletAllocation
+) -> pd.DataFrame:
+    """Write results of the LDA models back to the dataframe.
+
+    Args:
+        df: original dataframe used for fitting the CountVectorizer, must have same size and
+            index as word_matrix
+        word_matrix: matrix result from fitting the CountVectorizer, must have same size and index
+            as df
+        model: Trained LDA model
+
+    Returns:
+        pd.DataFrame: dataframe with additional columns lda_cloud, and lda_cloud_confidence
+    """
+    cloud_model_groups = model.transform(word_matrix)
+    # Get index of most confident grouping (plus 1 as humans start from 1, not 0)
+    df["lda_cloud"] = np.argmax(cloud_model_groups, axis=1) + 1
+
+    df["lda_cloud_confidence"] = np.amax(cloud_model_groups, axis=1)
+
+    return df
