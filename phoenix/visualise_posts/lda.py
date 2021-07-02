@@ -12,6 +12,8 @@ from scipy.sparse.csr import csr_matrix
 from sklearn.decomposition._lda import LatentDirichletAllocation
 from sklearn.feature_extraction.text import CountVectorizer
 
+from phoenix.common.artifacts import dataframes
+
 
 class StemmedCountVectorizer(CountVectorizer):
     """StemmedCountVectorizer vectorizes stemmed words.
@@ -40,7 +42,7 @@ class StemmedCountVectorizer(CountVectorizer):
             n_features), returned value of self.fit_transform()
         """
         count_dict = zip(self.get_feature_names(), count_vector_matrix.sum(axis=0).tolist()[0])
-        count_dict = sorted(count_dict, key=lambda x: -x[1])
+        count_dict = sorted(count_dict, key=lambda x: -x[1])  # type: ignore
 
         return dict(count_dict)
 
@@ -123,3 +125,10 @@ def write_cloud_results(
     df["lda_cloud_confidence"] = np.amax(cloud_model_groups, axis=1)
 
     return df
+
+
+def persist(output_dir_url: str, tagged_df: pd.DataFrame):
+    """Persist artifacts."""
+    name = "lda"
+    url = dataframes.url(output_dir_url, name)
+    dataframes.persist(url, tagged_df)

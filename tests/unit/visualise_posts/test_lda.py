@@ -1,12 +1,23 @@
 """Test lda."""
 import numpy as np
 import pandas as pd
+import pytest
 from mock import MagicMock
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from snowballstemmer import stemmer
 
+from phoenix.common.artifacts import dataframes
 from phoenix.visualise_posts import lda
+
+
+@pytest.fixture()
+def expected_df():
+    df = pd.DataFrame(
+        [("message1", 3, 0.3), ("message2", 2, 0.5)],
+        columns=["message", "lda_cloud", "lda_cloud_confidence"],
+    )
+    return df
 
 
 def test_remove_links():
@@ -104,7 +115,7 @@ def test_get_stopwords():
     assert set(stopwords_list).issubset(actual_stopwords_list)
 
 
-def test_write_cloud_results():
+def test_write_cloud_results(expected_df):
     model = MagicMock()
     model.transform.return_value = np.array([[0.1, 0.2, 0.3], [0.4, 0.5, 0.3]])
 
@@ -120,3 +131,12 @@ def test_write_cloud_results():
 
     pd.testing.assert_frame_equal(actual_df, expected_df)
     model.transform.assert_called_with(input_matrix)
+
+
+def test_persist(tmpdir, expected_df):
+    dir_url = "file:" + str(tmpdir) + "/"
+    lda.persist(dir_url, expected_df)
+    pd.testing.assert_frame_equal(
+        dataframes.get(dir_url + "lda.parquet").dataframe,
+        expected_df,
+    )
