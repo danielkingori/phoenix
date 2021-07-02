@@ -1,4 +1,7 @@
-"""Finalise functionality."""
+"""Finalise facebook posts, facebook comments and tweets.
+
+This will join objects and topic data frames to respective data source dataframe.
+"""
 
 
 def join_objects_to_facebook_posts(objects, facebook_posts):
