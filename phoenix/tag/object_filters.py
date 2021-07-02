@@ -1,4 +1,9 @@
-"""Filters for objects."""
+"""Filters for tagging dataframe.
+
+Dataframes that can be filtered are:
+    features_df: see docs/schemas/features.md
+    objects_df: see docs/schemas/features.md
+"""
 import pandas as pd
 
 from phoenix.tag.data_pull import constants
@@ -25,27 +30,27 @@ def key_feature(df):
 
 
 def not_retweet(df):
-    """Not retweet."""
+    """Get none retweet."""
     return ~df["is_retweet"]
 
 
 def get_key_facebook_posts(df):
-    """Filter key facebook posts."""
+    """Get key facebook posts."""
     return df[(facebook_posts(df)) & (key_feature(df))]
 
 
 def get_key_facebook_comments(df):
-    """Filter key facebook comments."""
+    """Get key facebook comments."""
     return df[(facebook_comments(df)) & (key_feature(df))]
 
 
 def get_key_tweets(df):
-    """Key tweets."""
+    """Get key tweets."""
     return df[(tweets(df)) & (key_feature(df)) & (not_retweet(df))]
 
 
 def get_all_key_objects(df):
-    """All key objects.
+    """Get all key objects.
 
     This is used for determining the `is_key_object`.
     """
