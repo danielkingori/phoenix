@@ -42,3 +42,13 @@ Final tweets dataframe.
 | is_key_object             | bool                | Does phoenix think the tweet is relevant |
 | features                  | object              | List of features of the text that phoenix calculated |
 | features_count            | object              | List of counts of the features that phoenix calculated |
+
+# Tweets topics
+
+This has the same data as tweets dataframe but has the columns as below.
+
+There can be multiple topics for a tweets in this case the tweets data is repeated.
+
+| Column                  | dtype          | Description |
+|-------------------------|----------------|-------------|
+| topic                   | object         | topic that phoenix found in the text |
