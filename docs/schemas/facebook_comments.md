@@ -26,3 +26,14 @@ Final facebook comments dataframe
 | is_key_object           | bool           | Does phoenix think the tweet is relevant |
 | features                | object         | List of features of the text that phoenix calculated |
 | features_count          | object         | List of counts of the features that phoenix calculated |
+
+
+# Facebook comments topics
+
+This has the same data as facebook comments dataframe but has the columns as below.
+
+There can be multiple topics for a facebook comment in this case the facebook comment data is repeated.
+
+| Column                  | dtype          | Description |
+|-------------------------|----------------|-------------|
+| topic                   | object         | topic that phoenix found in the text |

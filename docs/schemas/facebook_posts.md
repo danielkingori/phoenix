@@ -55,3 +55,13 @@ Final dataframe of facebook posts.
 | message_hash                                                                                               | object              | The hash of the message used for calculating the `phoenix_post_id` |
 | scrape_url                                                                                                 | object              | The scrape url to be used |
 | url_post_id                                                                                                | object              | The post id from the URL. |
+
+# Facebook posts topics
+
+This has the same data as facebook posts dataframe but has the columns as below.
+
+There can be multiple topics for a facebook post in this case the facebook post data is repeated.
+
+| Column                  | dtype          | Description |
+|-------------------------|----------------|-------------|
+| topic                   | object         | topic that phoenix found in the text |
