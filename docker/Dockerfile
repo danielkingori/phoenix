@@ -30,6 +30,7 @@ COPY Makefile ./Makefile
 
 COPY requirements/${PROJECT}.txt ./requirements/${PROJECT}.txt
 RUN pip install -r requirements/${PROJECT}.txt
+RUN python -m nltk.downloader popular
 
 COPY phoenix/__init__.py ./phoenix/__init__.py
 COPY phoenix/common ./phoenix/common

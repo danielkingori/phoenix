@@ -3,7 +3,10 @@
 -r development.in
 
 arabic_reshaper
+matplotlib
 nltk
 python-bidi
+scipy
+seaborn
 sklearn
 snowballstemmer

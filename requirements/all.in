@@ -6,3 +6,4 @@
 -r report.in
 -r scrape.in
 -r tag.in
+-r visualise_posts.in

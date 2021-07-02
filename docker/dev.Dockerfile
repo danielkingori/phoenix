@@ -20,6 +20,7 @@ WORKDIR /src
 
 COPY requirements ./requirements
 RUN pip install -r requirements/all.txt
+RUN python -m nltk.downloader popular
 
 COPY . ./
 
