@@ -8,12 +8,16 @@ FILL_TOPIC = "other"
 def get_topics(topic_config, features_df) -> pd.DataFrame:
     """Get the topics.
 
+    Arguments:
+        topic_config: see phoenix/tag/topic/single_feature_match_topic_config.py
+        features_df: data frame with schema docs/schemas/features.md
+
     Return:
-    pd.DataFrame:
-        object_id: object_id
-        object_type: object_type
-        topic: string
-        matched_features: array<string>
+        pd.DataFrame with dtypes:
+            object_id: string
+            object_type: string
+            topic: string
+            matched_features: array<string>
     """
     features_indexed_df = features_df.set_index("object_id")
     topic_config_i = topic_config.set_index("features")
