@@ -1,4 +1,10 @@
-"""Multi feature match for topic analysis."""
+"""Multi feature match for topic analysis.
+
+This is depreciated and does not work as expected.
+
+Please see tests/unit/tag/topic/test_multi_feature_match.py for
+more information.
+"""
 from typing import Any, Dict
 
 import pandas as pd
