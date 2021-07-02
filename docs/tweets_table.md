@@ -90,7 +90,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.tweets_topics_may (
   `is_key_object` boolean,
   `features` array<string>,
   `features_count` array<int>,
-  `topics` string
+  `topic` string
 )
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
 WITH SERDEPROPERTIES (
