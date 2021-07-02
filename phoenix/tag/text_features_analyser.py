@@ -4,8 +4,11 @@ For this to work you need to download the stopwords.
 ```
 python -m nltk.downloader stopwords
 ```
+
+The text feature analyser will do the analysis of text for
+arabic, arabizi, and english.
 """
-from typing import Dict, List
+from typing import Callable, Dict, List
 
 import functools
 import itertools
@@ -19,7 +22,10 @@ from snowballstemmer import stemmer
 
 
 class StemmedCountVectorizer(CountVectorizer):
-    """CountVectorizer with stemming."""
+    """CountVectorizer with stemming.
+
+    Extension of the CountVectorizer to include the stemming functionality.
+    """
 
     def __init__(self, stemmer=None, **kwargs):
         super(StemmedCountVectorizer, self).__init__(**kwargs)
@@ -38,6 +44,7 @@ class StemmedCountVectorizer(CountVectorizer):
         return fn
 
 
+# Cannot be a method on object when used by dash.
 def stem_analyzer(stemmer, analyzer, doc):
     """Stem_analyzer."""
     li = []
@@ -99,9 +106,23 @@ class TextFeaturesAnalyser:
         return ddf.apply(fn, axis=1, meta=self._build_meta_return()).compute()
 
 
-def feature_apply(dict_analyser, message_key, row):
-    """Get features for row."""
-    message = row[message_key]
+def feature_apply(
+    dict_analyser: Dict[str, List[Callable]], text_key: str, row: pd.Series
+) -> pd.Series:
+    """Get features for row.
+
+    Arguments:
+        dict_analyser: a dictionary of analyser for each language.
+            eg.
+                {"en": fn, "ar": fn, ...}
+        text_key: The key of the column for the text.
+        row: the row from the dataframe as a Series.
+
+    Returns:
+        A list of features:
+            pd.Series(["f1", "f2", ...])
+    """
+    message = row[text_key]
     lang = row["language"]
     if lang in dict_analyser:
         analysers = dict_analyser[lang]
@@ -112,6 +133,7 @@ def feature_apply(dict_analyser, message_key, row):
 
 def create():
     """Create the TextFeaturesAnalyser."""
+    # Configuration is hard coded this can be changed at some point.
     default_params = {
         "ar": {
             "stemmer": stemmer("arabic"),
@@ -136,12 +158,18 @@ def create():
 
 
 def combine_ngrams(df: pd.DataFrame):
-    """Combine the ngrams columns."""
+    """Combine the ngrams columns.
+
+    This is a dark pandas magic function and I can't remember what it does.
+    """
     return df.apply(lambda x: np.concatenate(x), axis=1)
 
 
 def ngram_count(df: pd.DataFrame):
-    """Combine the ngrams columns."""
+    """Combine the ngrams columns.
+
+    This is a dark pandas magic function and I can't remember what it does.
+    """
     return df.applymap(_ngram_count_apply).squeeze()
 
 
