@@ -34,7 +34,8 @@ def join_topics_to_facebook_posts(topics, facebook_posts):
     facebook_posts_df = facebook_posts.copy()
     facebook_posts_df["object_id"] = facebook_posts_df["phoenix_post_id"].astype(str)
     facebook_posts_df = facebook_posts_df.set_index("object_id")
-    topics_df = topics.set_index("object_id")
+    topics_df = topics[["object_id", "topic", "matched_features"]]
+    topics_df = topics_df.set_index("object_id")
     result_df = topics_df.join(facebook_posts_df, how="right")
     return result_df.reset_index()
 
@@ -45,7 +46,8 @@ def join_topics_to_tweets(topics, tweets):
     tweets_df["object_id"] = tweets_df["id_str"].astype(str)
     tweets_df = tweets_df.set_index("object_id")
     tweets_df = tweets_df.drop(columns=["retweeted"])
-    topics_df = topics.set_index("object_id")
+    topics_df = topics[["object_id", "topic", "matched_features"]]
+    topics_df = topics_df.set_index("object_id")
     result_df = topics_df.join(tweets_df, how="right")
     return result_df.reset_index()
 
@@ -55,6 +57,7 @@ def join_topics_to_facebook_comments(topics, facebook_comments):
     facebook_comments_df = facebook_comments.copy()
     facebook_comments_df["object_id"] = facebook_comments_df["id"].astype(str)
     facebook_comments_df = facebook_comments_df.set_index("object_id")
-    topics_df = topics.set_index("object_id")
+    topics_df = topics[["object_id", "topic", "matched_features"]]
+    topics_df = topics_df.set_index("object_id")
     result_df = topics_df.join(facebook_comments_df, how="right")
     return result_df.reset_index()
