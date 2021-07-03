@@ -5,7 +5,6 @@ all: lint test
 
 install_all:
 	pip install -r requirements/all.txt  -e .
-	mypy --install-types
 
 compile:
 	for f in requirements/*; \
@@ -28,6 +27,7 @@ lint:
 	pydocstyle phoenix
 	isort --check-only phoenix tests
 	black --check phoenix tests
+	mypy --install-types
 	mypy phoenix tests
 
 test:
