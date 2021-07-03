@@ -5,6 +5,7 @@ all: lint test
 
 install_all:
 	pip install -r requirements/all.txt  -e .
+	mypy --install-types
 
 compile:
 	for f in requirements/*; \

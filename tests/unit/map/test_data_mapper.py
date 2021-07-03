@@ -63,7 +63,7 @@ def test_data_mapper_map_data_to_idl_files(
             "data_origin": "fb",
             "data_category": "dim",
             "name": "d_facebook_accounts",
-            "processing_steps": ["_normalize_nested_json"],
+            "normalize_nested_json": True,
             "normalize_field": "account",
             "foreign_key_field": "account",
             "columns": ["src_file_name", "account"],

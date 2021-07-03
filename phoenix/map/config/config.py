@@ -1,19 +1,19 @@
 """config.py."""
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Union
 
 import os
 
 import yaml
 
 
-def get_map_config(data_origin: str) -> List[Dict[str, Optional[Any]]]:
+def get_map_config(data_origin: str) -> List[Dict[str, Union[str, List[str]]]]:
     """Gets list of config dicts for each dataset that needs mapping.
 
     param data_origin: a code representing the social platform
         the raw data was sourced from E.G. fb | tw
     type data_origin: str
     return: List of config dicts for each dataset to be extracted
-    rtype: List[Dict[str, Optional[Any]]]
+    rtype: List[Dict[str, Union[str, List[str]]]]
     """
     # Get all job configs
     with open(
@@ -25,11 +25,11 @@ def get_map_config(data_origin: str) -> List[Dict[str, Optional[Any]]]:
     return config
 
 
-def get_env_config() -> Dict[str, Optional[Any]]:
+def get_env_config() -> Dict[str, List[str]]:
     """Gets environment config for each env type [local_dev|docker_dev|docker_prod].
 
     return: Dict of environment config settings
-    rtype: Dict[str, Optional[Any]]
+    rtype: Dict[str, List[str]]
     """
     # Get configs and set constants
     if os.environ.get("IS_DOCKER_CONTAINER", False):

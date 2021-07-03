@@ -1,5 +1,5 @@
 """data_mapper.py."""
-from typing import Any, Dict, List, Optional
+from typing import List
 
 import hashlib
 import json
@@ -59,28 +59,27 @@ class DataMapper:
         self._env_config = config.get_env_config()
         self._map_config = config.get_map_config(data_origin=self.data_origin)
         self._batch_ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self._data_dir_base = self._env_config["data_dir_base"]
-        self._data_dir_idl = self._env_config["data_dir_idl"]
-        self._data_dir_arch = self._env_config["data_dir_arch"]
+        self._data_dir_base: List[str] = self._env_config["data_dir_base"]
+        self._data_dir_idl: List[str] = self._env_config["data_dir_idl"]
+        self._data_dir_arch: List[str] = self._env_config["data_dir_arch"]
         self.expected_output_count = len(self._map_config)
-        self.files_to_process = []
-        self.output_files = []
+        self.files_to_process: List[str] = []
+        self.output_files: List[str] = []
         self._make_required_dirs([self._data_dir_base, self._data_dir_idl, self._data_dir_arch])
 
     @staticmethod
-    def _normalize_nested_json(df: pd.DataFrame, cfg: Dict[str, Optional[Any]]) -> pd.DataFrame:
-        logger.info(f"Starting json normalization process for {cfg['name']}.")
+    def _normalize_nested_json(
+        df: pd.DataFrame, map_name: str, fk_field: str, normalize_field: str
+    ) -> pd.DataFrame:
+        logger.info(f"Starting json normalization process for {map_name}.")
         json_obj = [
             {
                 # Add source file name to help calc curr in pg db
                 "src_file_name": row["src_file_name"],
                 # Hash pk to use as pk|fk in pg db
-                cfg["foreign_key_field"]
-                + "_hash": hashlib.md5(
-                    json.dumps(row[cfg["foreign_key_field"]]).encode()
-                ).hexdigest(),
+                fk_field + "_hash": hashlib.md5(json.dumps(row[fk_field]).encode()).hexdigest(),
                 # Add field containing array that needs normalising
-                cfg["normalize_field"]: row[cfg["normalize_field"]],
+                normalize_field: row[normalize_field],
             }
             for i, row in df.iterrows()
         ]
@@ -89,12 +88,12 @@ class DataMapper:
         return df
 
     @staticmethod
-    def _reshape_df(df, map_cfg) -> pd.DataFrame:
+    def _reshape_df(df: pd.DataFrame, map_columns: List[str]) -> pd.DataFrame:
         logger.info("Reshaping dataframe to include full universe of columns.")
         # Create list of arrived cols
         arrived_columns = [col for col in df.columns]
         # Combine arrived cols with all expected cols
-        all_columns = list(set(arrived_columns + map_cfg["columns"]))
+        all_columns = list(set(arrived_columns + map_columns))
         # Create a template df with all required cols
         df_template = pd.DataFrame(columns=all_columns)
         # Reshape passed df to new df containing all expected cols
@@ -107,8 +106,10 @@ class DataMapper:
         for required_dir in lists_of_dirs:
             os.makedirs(os.path.join(*required_dir), exist_ok=True)
 
-    def _load_files_to_df(self, files: List, map_cfg: Dict[str, Optional[Any]]) -> pd.DataFrame:
-        logger.info(f"Loading base files to dataframes to process {map_cfg['name']}.")
+    def _load_files_to_df(
+        self, files: List, map_name: str, map_columns: List[str]
+    ) -> pd.DataFrame:
+        logger.info(f"Loading base files to dataframes to process {map_name}.")
         df_list = []
         for file in files:
             json_obj = json_arti.get(
@@ -120,7 +121,7 @@ class DataMapper:
         # Concat df's together if running map job for multiple files
         loaded_df = pd.concat(objs=df_list, ignore_index=True, axis=0)
         # Reshape df so that it is consisted shape to by copy'd to pg db
-        reshaped_df = self._reshape_df(loaded_df, map_cfg)
+        reshaped_df = self._reshape_df(loaded_df, map_columns)
         return reshaped_df
 
     def get_files_to_process(self) -> None:
@@ -150,15 +151,25 @@ class DataMapper:
         logger.info("Starting data map process.")
         # Loop for when multiple datasets are extracted from single source file
         for cfg in self._map_config:
+            # Unpacking cfg to work around mypy Union limitation
+            map_name: str = str(cfg["name"])
+            map_columns: List[str] = [col for col in cfg["columns"]]
+            fk_field: str = str(cfg["foreign_key_field"])
             # Load data file(s) to single df
-            posts_df = self._load_files_to_df(self.files_to_process, cfg)
+            posts_df = self._load_files_to_df(
+                files=self.files_to_process, map_name=map_name, map_columns=map_columns
+            )
             # Create new df of just cols we want
             df = posts_df[cfg["columns"]].copy()
             # Check for and run processing step(s)
-            if cfg["processing_steps"]:
-                for process_step in cfg["processing_steps"]:
-                    logger.info(f"Processing step {process_step} for {cfg['name']}")
-                    df = eval(f"self.{process_step}(df, cfg)")
+            if cfg["normalize_nested_json"]:
+                normalize_field: str = str(cfg["normalize_field"])
+                df = self._normalize_nested_json(
+                    df=df,
+                    map_name=map_name,
+                    fk_field=fk_field,
+                    normalize_field=normalize_field,
+                )
             df = df.fillna("")
             # Persist idl df to idl json ready for pg db ingest
             persisted_object = json_arti.persist(

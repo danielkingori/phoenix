@@ -16,11 +16,11 @@ bcrypt==3.2.0
     # via paramiko
 black==21.6b0
     # via papermill
-boto3==1.17.97
+boto3==1.17.105
     # via
     #   pyathena
     #   tentaclio
-botocore==1.20.97
+botocore==1.20.105
     # via
     #   boto3
     #   pyathena
@@ -57,7 +57,7 @@ google-api-core==1.30.0
     # via
     #   google-api-python-client
     #   google-cloud-core
-google-api-python-client==2.9.0
+google-api-python-client==2.11.0
     # via tentaclio
 google-auth-httplib2==0.1.0
     # via
@@ -65,7 +65,7 @@ google-auth-httplib2==0.1.0
     #   tentaclio
 google-auth-oauthlib==0.4.4
     # via tentaclio
-google-auth==1.31.0
+google-auth==1.32.1
     # via
     #   google-api-core
     #   google-api-python-client
@@ -73,9 +73,9 @@ google-auth==1.31.0
     #   google-auth-oauthlib
     #   google-cloud-core
     #   google-cloud-storage
-google-cloud-core==1.7.0
+google-cloud-core==1.7.1
     # via google-cloud-storage
-google-cloud-storage==1.38.0
+google-cloud-storage==1.40.0
     # via tentaclio
 google-crc32c==1.1.2
     # via google-resumable-media
@@ -119,7 +119,7 @@ nbformat==5.1.3
     #   papermill
 nest-asyncio==1.5.1
     # via nbclient
-numpy==1.20.3
+numpy==1.21.0
     # via
     #   matplotlib
     #   pandas
@@ -138,7 +138,7 @@ paramiko==2.7.2
     # via pysftp
 pathspec==0.8.1
     # via black
-pillow==8.2.0
+pillow==8.3.0
     # via matplotlib
 protobuf==3.17.3
     # via
@@ -167,7 +167,7 @@ pyparsing==2.4.7
     #   httplib2
     #   matplotlib
     #   packaging
-pyrsistent==0.17.3
+pyrsistent==0.18.0
     # via jsonschema
 pysftp==0.2.9
     # via tentaclio
@@ -187,7 +187,7 @@ pyyaml==5.4.1
     #   tentaclio
 pyzmq==22.1.0
     # via jupyter-client
-regex==2021.4.4
+regex==2021.7.1
     # via black
 requests-oauthlib==1.3.0
     # via google-auth-oauthlib
@@ -243,7 +243,7 @@ typing-extensions==3.10.0.0
     # via tentaclio
 uritemplate==3.0.1
     # via google-api-python-client
-urllib3==1.26.5
+urllib3==1.26.6
     # via
     #   botocore
     #   requests

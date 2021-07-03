@@ -3,8 +3,7 @@ d_facebook_accounts:
   data_origin: fb
   data_category: dim
   name: d_facebook_accounts
-  processing_steps:
-    - _normalize_nested_json
+  normalize_nested_json: true
   normalize_field: account
   foreign_key_field: account
   columns:
@@ -15,7 +14,7 @@ f_facebook_posts:
   data_origin: fb
   data_category: fact
   name: f_facebook_posts
-  processing_steps:
+  normalize_nested_json: false
   columns:
     - src_file_name
     - account
@@ -38,8 +37,7 @@ f_facebook_post_stats:
   data_origin: fb
   data_category: fact
   name: f_facebook_post_stats
-  processing_steps:
-    - _normalize_nested_json
+  normalize_nested_json: true
   normalize_field: statistics
   foreign_key_field: id
   columns:
