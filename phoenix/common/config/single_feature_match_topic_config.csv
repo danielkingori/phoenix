@@ -125,7 +125,7 @@
 123,الراعي بكركي,"christian, religious figure"
 124,الرييس,president
 125,الرييس عون,president
-126,السعودية,"external affairs, saudi arabia"
+126,السعودية,"external affairs, foreign countries"
 127,السفارة,"diplomacy, external affairs"
 128,السياسية,general politics
 129,السيد,political party
@@ -172,7 +172,7 @@
 170,انتخب,elections
 171,اوقفت وحدا,"safety and security"
 172,اوقفت وحدات الجيش,"safety and security"
-173,ايران,"foreign countries, foreign country"
+173,ايران,"foreign countries"
 174,باسيل,politician
 175,باعادة انتخاب,elections
 176,باعادة انتخابه رييس,elections
@@ -308,7 +308,7 @@
 306,في لبنان,"lebanon\lebanese"
 307,فيديو,media
 308,قادة حماس,palestine
-309,قبرص,foreign country
+309,قبرص,foreign countries
 310,قتل,"safety and security"
 311,قدس,palestine
 312,قوات اللبنان,political party
@@ -352,7 +352,7 @@
 351,هناه باعادة انتخاب,elections
 352,واسراييل,"palestine\israeli government"
 353,والشمال,north lebanon
-354,والعراق,foreign country
+354,والعراق,foreign countries
 355,وزارة,government
 356,وزير,government
 357,ى سوريا,syria
