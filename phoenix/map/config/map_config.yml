@@ -15,6 +15,7 @@ f_facebook_posts:
   data_category: fact
   name: f_facebook_posts
   normalize_nested_json: false
+  foreign_key_field: account
   columns:
     - src_file_name
     - account
