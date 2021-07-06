@@ -33,6 +33,8 @@ def ct_data_no_next(ct_data):
     return ct_no
 
 
+@mock.patch.dict(os.environ, {"CT_RATE_LIMIT_CALLS": "10000"})
+@mock.patch.dict(os.environ, {"CT_RATE_LIMIT_SECONDS": "1"})
 @mock.patch("phoenix.scrape.crowdtangle.get_post")
 def test_get_all_posts(m_get_post, ct_data_with_next, ct_data_no_next):
     """Get all posts for 2 pages."""
