@@ -32,6 +32,12 @@ lint:
 test:
 	pytest tests
 
+integration:
+	pytest tests/integration
+
+unit:
+	pytest tests/unit
+
 validate:
 	pytest validation
 
