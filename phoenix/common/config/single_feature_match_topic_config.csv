@@ -1,6 +1,6 @@
 ,features,topic
-0,13 اسراييل,israel
-1,13 اسراييلي انتصر,israel
+0,13 اسراييل,"palestine\israeli government"
+1,13 اسراييلي انتصر,"palestine\israeli government"
 2,aljadeed,media
 3,aljadeed tv,media
 4,aljadeed tv arabic,media
@@ -79,17 +79,17 @@
 77,www mtv,media
 78,www mtv com,media
 79,احباط محاولة تهريب,"safety and security"
-80,احتلال الاسراييل,israel
-81,احتلال الاسراييلي بحق,israel
+80,احتلال الاسراييل,"palestine\israeli government"
+81,احتلال الاسراييلي بحق,"palestine\israeli government"
 82,احزاب,political party
 83,اراضي السور,syria
 84,اسد,asad regime
-85,اسراييل,israel
-86,اسراييل اير,israel
-87,اسراييل تاريخ,israel
-88,اسراييل تاريخها تقتل,israel
-89,اسراييل حرب,israel
-90,اسراييلي انتصر,israel
+85,اسراييل,"palestine\israeli government"
+86,اسراييل اير,"palestine\israeli government"
+87,اسراييل تاريخ,"palestine\israeli government"
+88,اسراييل تاريخها تقتل,"palestine\israeli government"
+89,اسراييل حرب,"palestine\israeli government"
+90,اسراييلي انتصر,"palestine\israeli government"
 91,اعادة انتخاب,elections
 92,اقتراع,elections
 93,الازمة,general politics
@@ -157,8 +157,8 @@
 155,امن,"safety and security"
 156,اميرك,foreign countries
 157,اميون,north lebanon
-158,ان اسراييل,israel
-159,ان اسراييل تاريخ,israel
+158,ان اسراييل,"palestine\israeli government"
+159,ان اسراييل تاريخ,"palestine\israeli government"
 160,ان جعجع,politician
 161,انتخاب,elections
 162,انتخابا,elections
@@ -217,7 +217,7 @@
 215,حزب سوريا,political party
 216,حزب_السوري_القومي_الاجتماع,political party
 217,حكومة,government
-218,حكومة الاسراييل,israel
+218,حكومة الاسراييل,"palestine\israeli government"
 219,حل_الحزب_القوم,political party
 220,حلقة جديدة من,media
 221,حماس,palestine
@@ -323,7 +323,7 @@
 321,لبنان_الكبير,"christian, external affairs, general politics, religious figure"
 322,لبنان_الكبير الراعي,"christian, external affairs, general politics, religious figure"
 323,لبناني,"lebanon\lebanese"
-324,لقوات الاحتلال الاسراييل,israel
+324,لقوات الاحتلال الاسراييل,"palestine\israeli government"
 325,مخيم,refugee
 326,مرشح الواحد,elections
 327,مشاركة الانتخاب,elections
@@ -333,7 +333,7 @@
 332,معدة للتهريب,"safety and security"
 333,معدة للتهريب الي,"safety and security"
 334,مفاوض,negotiations
-335,مقابل 13 اسراييل,israel
+335,مقابل 13 اسراييل,"palestine\israeli government"
 336,مكتف,"government, judiciary"
 337,منطقة تعج بشهداء,martyrs
 338,مهرب,"safety and security"
@@ -350,7 +350,7 @@
 349,نظام الاسد,asad regime
 350,نظام السور,asad regime
 351,هناه باعادة انتخاب,elections
-352,واسراييل,israel
+352,واسراييل,"palestine\israeli government"
 353,والشمال,north lebanon
 354,والعراق,foreign country
 355,وزارة,government
