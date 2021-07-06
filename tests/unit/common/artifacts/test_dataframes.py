@@ -35,7 +35,23 @@ def test_persist_dataframe_copy(m__persist):
     url = "dir/df.parquet"
     dataframe = pd.DataFrame({"A": [1]})
     a_df = dataframes.persist(artifacts_dataframe_url=url, dataframe=dataframe)
-    m__persist.assert_called_once_with(a_df)
+    m__persist.assert_called_once_with(a_df, {})
+    assert a_df.url == url
+    # Checking that the dataframe was copied but they are equal
+    assert a_df.dataframe is not dataframe
+    pd.testing.assert_frame_equal(a_df.dataframe, dataframe)
+
+
+@mock.patch("phoenix.common.artifacts.dataframes._persist")
+def test_persist_dataframe_copy_to_parquet_params(m__persist):
+    """Test persist copies the dataframe to when creating ArtefactDataFrame."""
+    url = "dir/df.parquet"
+    dataframe = pd.DataFrame({"A": [1]})
+    to_parquet_params = {"p": 1}
+    a_df = dataframes.persist(
+        artifacts_dataframe_url=url, dataframe=dataframe, to_parquet_params=to_parquet_params
+    )
+    m__persist.assert_called_once_with(a_df, to_parquet_params)
     assert a_df.url == url
     # Checking that the dataframe was copied but they are equal
     assert a_df.dataframe is not dataframe

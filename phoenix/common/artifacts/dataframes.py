@@ -1,4 +1,6 @@
 """Artifacts DataFrame interface."""
+from typing import Any, Dict
+
 import functools
 import os
 
@@ -10,7 +12,9 @@ from phoenix.common import constants
 from phoenix.common.artifacts import dtypes, utils
 
 
-def persist(artifacts_dataframe_url: str, dataframe: pd.DataFrame) -> dtypes.ArtifactDataFrame:
+def persist(
+    artifacts_dataframe_url: str, dataframe: pd.DataFrame, to_parquet_params: Dict[str, Any] = {}
+) -> dtypes.ArtifactDataFrame:
     """Persist a DataFrame creating a ArtifactDataFrame.
 
     Args:
@@ -18,6 +22,7 @@ def persist(artifacts_dataframe_url: str, dataframe: pd.DataFrame) -> dtypes.Art
             This must be a valid dataframe URL with the extension
             defined in constants.DATAFRAME_ARTIFACT_FILE_EXTENSION.
         dataframe (DataFrame): pandas DataFrame to persist.
+        to_parquet_params (Dict[str, Any]): params to pass to the `to_parquet` function.
 
     Returns:
         ArtifactDataFrame object
@@ -26,12 +31,12 @@ def persist(artifacts_dataframe_url: str, dataframe: pd.DataFrame) -> dtypes.Art
     artifact_dataframe = dtypes.ArtifactDataFrame(
         url=artifacts_dataframe_url, dataframe=dataframe.copy()
     )
-    _persist(artifact_dataframe)
+    _persist(artifact_dataframe, to_parquet_params)
     return artifact_dataframe
 
 
 def _persist(
-    artifact_dataframe: dtypes.ArtifactDataFrame,
+    artifact_dataframe: dtypes.ArtifactDataFrame, to_parquet_params: Dict[str, Any]
 ) -> None:
     """Private persist that will be mocked when testing."""
     url = artifact_dataframe.url
@@ -41,7 +46,7 @@ def _persist(
 
     with tentaclio.open(artifact_dataframe.url, "wb") as file_io:
         artifact_dataframe.dataframe.reset_index(drop=True).to_parquet(
-            file_io, index=False, compression="snappy"
+            file_io, index=False, compression="snappy", **to_parquet_params
         )
 
 
