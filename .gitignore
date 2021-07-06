@@ -119,10 +119,14 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+creds.sh
 
 # Spyder project settings
 .spyderproject
 .spyproject
+
+# VS code workspace settings
+workspace.code-workspace
 
 # Rope project settings
 .ropeproject
