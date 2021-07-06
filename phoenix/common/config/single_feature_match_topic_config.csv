@@ -96,13 +96,13 @@
 94,الاقتصادية,economy
 95,الامن,"safety and security"
 96,الامن الداخلي,"internal security, safety and security"
-97,البطريرك,"christian, religious leader"
-98,البطريرك_الراعي,"christian, religious leader"
-99,البطريرك_الراعي شركة_ومحبة,"christian, religious leader"
-100,البطريرك_الراعي شركة_ومحبة حياد_لبنان,"christian, external affairs, general politics, religious leader"
-101,البطريركية_المارونية,"christian, religious leader"
-102,البطريركية_المارونية البطريرك_الراعي,"christian, religious leader"
-103,البطريركية_المارونية البطريرك_الراعي شركة_ومحبة,"christian, religious leader"
+97,البطريرك,"christian, religious figure"
+98,البطريرك_الراعي,"christian, religious figure"
+99,البطريرك_الراعي شركة_ومحبة,"christian, religious figure"
+100,البطريرك_الراعي شركة_ومحبة حياد_لبنان,"christian, external affairs, general politics, religious figure"
+101,البطريركية_المارونية,"christian, religious figure"
+102,البطريركية_المارونية البطريرك_الراعي,"christian, religious figure"
+103,البطريركية_المارونية البطريرك_الراعي شركة_ومحبة,"christian, religious figure"
 104,التدقيق,"government, safety and security"
 105,التيار,political party
 106,الجديد,media
@@ -121,8 +121,8 @@
 119,الحكومة,government
 120,الخارجية,"external affairs, government"
 121,الدولة,government
-122,الراعي,"christian, religious leader"
-123,الراعي بكركي,"christian, religious leader"
+122,الراعي,"christian, religious figure"
+123,الراعي بكركي,"christian, religious figure"
 124,الرييس,president
 125,الرييس عون,president
 126,السعودية,"external affairs, saudi arabia"
@@ -180,7 +180,7 @@
 178,بطريرك,religious figure
 179,بقاع,bekaa
 180,بقاع والشمال,lebanon
-181,بكركي,"christian, religious leader"
+181,بكركي,"christian, religious figure"
 182,بيروت,beirut
 183,بيروت lebanese,"beirut, lebanon"
 184,بيروت lebanese lebanon,"army, safety and security"
@@ -229,9 +229,9 @@
 227,حماس لبن,palestine
 228,حماس والت,palestine
 229,حماس والتي ستتولي,palestine
-230,حياد_لبنان,"christian, external affairs, general politics, religious leader"
-231,حياد_لبنان لبنان_الكبير,"christian, external affairs, general politics, religious leader"
-232,حياد_لبنان لبنان_الكبير الراعي,"christian, external affairs, general politics, religious leader"
+230,حياد_لبنان,"christian, external affairs, general politics, religious figure"
+231,حياد_لبنان لبنان_الكبير,"christian, external affairs, general politics, religious figure"
+232,حياد_لبنان لبنان_الكبير الراعي,"christian, external affairs, general politics, religious figure"
 233,خلال شهر رمضان,ceremonial
 234,خليج,foreign countries
 235,داعش,"safety and security"
@@ -273,8 +273,8 @@
 271,شرف_تضحية_وفاء laf,"army, safety and security"
 272,شرف_تضحية_وفاء laf lebanese_army,"army, safety and security"
 273,شركة_ومحبة,ceremonial
-274,شركة_ومحبة حياد_لبنان,"christian, external affairs, general politics, religious leader"
-275,شركة_ومحبة حياد_لبنان لبنان_الكبير,"christian, external affairs, general politics, religious leader"
+274,شركة_ومحبة حياد_لبنان,"christian, external affairs, general politics, religious figure"
+275,شركة_ومحبة حياد_لبنان لبنان_الكبير,"christian, external affairs, general politics, religious figure"
 276,شعبة,"safety and security"
 277,شهداء,martyrs
 278,شهداء المعارك سوري,martyrs
@@ -320,8 +320,8 @@
 318,لبنان,lebanon
 319,لبنان شرف_تضحية_وفاء,"army, safety and security"
 320,لبنان شرف_تضحية_وفاء laf,"army, safety and security"
-321,لبنان_الكبير,"christian, external affairs, general politics, religious leader"
-322,لبنان_الكبير الراعي,"christian, external affairs, general politics, religious leader"
+321,لبنان_الكبير,"christian, external affairs, general politics, religious figure"
+322,لبنان_الكبير الراعي,"christian, external affairs, general politics, religious figure"
 323,لبناني,lebanese
 324,لقوات الاحتلال الاسراييل,israel
 325,مخيم,refugees
