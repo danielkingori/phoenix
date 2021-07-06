@@ -99,7 +99,7 @@
 97,البطريرك,"christian, religious figure"
 98,البطريرك_الراعي,"christian, religious figure"
 99,البطريرك_الراعي شركة_ومحبة,"christian, religious figure"
-100,البطريرك_الراعي شركة_ومحبة حياد_لبنان,"christian, external affairs, general politics, religious figure"
+100,البطريرك_الراعي شركة_ومحبة حياد_لبنان,"christian, external affairs\diplomacy, general politics, religious figure"
 101,البطريركية_المارونية,"christian, religious figure"
 102,البطريركية_المارونية البطريرك_الراعي,"christian, religious figure"
 103,البطريركية_المارونية البطريرك_الراعي شركة_ومحبة,"christian, religious figure"
@@ -115,18 +115,18 @@
 113,الجيش_اللبناني lebanesearmy,"army, safety and security"
 114,الجيش_اللبناني الجيش,"army, safety and security"
 115,الجيش_اللبناني الجيش lebanesearmy,"army, safety and security"
-116,الحدود,"external affairs, safety and security"
+116,الحدود,"external affairs\diplomacy, safety and security"
 117,الحريري,politician
 118,الحزب,political party
 119,الحكومة,government
-120,الخارجية,"external affairs, government"
+120,الخارجية,"external affairs\diplomacy, government"
 121,الدولة,government
 122,الراعي,"christian, religious figure"
 123,الراعي بكركي,"christian, religious figure"
 124,الرييس,president
 125,الرييس عون,president
-126,السعودية,"external affairs, foreign countries"
-127,السفارة,"diplomacy, external affairs"
+126,السعودية,"external affairs\diplomacy, foreign countries"
+127,السفارة,"external affairs\diplomacy"
 128,السياسية,general politics
 129,السيد,political party
 130,الشعب,"lebanon\lebanese"
@@ -203,7 +203,7 @@
 201,حافظ الاسد,asad regime
 202,حدات الجيش,army
 203,حدات الجيش المنتشر,army
-204,حدود,borders
+204,حدود,"external affairs\diplomacy"
 205,حر جبران باسيل,politician
 206,حرب,"safety and security"
 207,حركة حماس,palestine
@@ -229,9 +229,9 @@
 227,حماس لبن,palestine
 228,حماس والت,palestine
 229,حماس والتي ستتولي,palestine
-230,حياد_لبنان,"christian, external affairs, general politics, religious figure"
-231,حياد_لبنان لبنان_الكبير,"christian, external affairs, general politics, religious figure"
-232,حياد_لبنان لبنان_الكبير الراعي,"christian, external affairs, general politics, religious figure"
+230,حياد_لبنان,"christian, external affairs\diplomacy, general politics, religious figure"
+231,حياد_لبنان لبنان_الكبير,"christian, external affairs\diplomacy, general politics, religious figure"
+232,حياد_لبنان لبنان_الكبير الراعي,"christian, external affairs\diplomacy, general politics, religious figure"
 233,خلال شهر رمضان,ceremonial
 234,خليج,foreign countries
 235,داعش,"safety and security"
@@ -256,7 +256,7 @@
 254,سعد الحريري,politician
 255,سعود,foreign countries
 256,سفارة السور,asad regime
-257,سفارة_الجمهورية_العربية_السورية_بيروت,"diplomacy, external affairs"
+257,سفارة_الجمهورية_العربية_السورية_بيروت,"external affairs\diplomacy"
 258,سمير جعجع,politician
 259,سوري,syria
 260,سوري بشار الاسد,asad regime
@@ -273,8 +273,8 @@
 271,شرف_تضحية_وفاء laf,"army, safety and security"
 272,شرف_تضحية_وفاء laf lebanese_army,"army, safety and security"
 273,شركة_ومحبة,ceremonial
-274,شركة_ومحبة حياد_لبنان,"christian, external affairs, general politics, religious figure"
-275,شركة_ومحبة حياد_لبنان لبنان_الكبير,"christian, external affairs, general politics, religious figure"
+274,شركة_ومحبة حياد_لبنان,"christian, external affairs\diplomacy, general politics, religious figure"
+275,شركة_ومحبة حياد_لبنان لبنان_الكبير,"christian, external affairs\diplomacy, general politics, religious figure"
 276,شعبة,"safety and security"
 277,شهداء,martyrs
 278,شهداء المعارك سوري,martyrs
@@ -320,8 +320,8 @@
 318,لبنان,"lebanon\lebanese"
 319,لبنان شرف_تضحية_وفاء,"army, safety and security"
 320,لبنان شرف_تضحية_وفاء laf,"army, safety and security"
-321,لبنان_الكبير,"christian, external affairs, general politics, religious figure"
-322,لبنان_الكبير الراعي,"christian, external affairs, general politics, religious figure"
+321,لبنان_الكبير,"christian, external affairs\diplomacy, general politics, religious figure"
+322,لبنان_الكبير الراعي,"christian, external affairs\diplomacy, general politics, religious figure"
 323,لبناني,"lebanon\lebanese"
 324,لقوات الاحتلال الاسراييل,"palestine\israeli government"
 325,مخيم,refugee
