@@ -20,7 +20,7 @@
 18,https www lbcgroup,media
 19,https www mtv,media
 20,laf lebanese_army,"army, safety and security"
-21,lb,lebanon
+21,lb,"lebanon\lebanese"
 22,lb vod,media
 23,lb vod ar,media
 24,lb vod en,media
@@ -29,17 +29,17 @@
 27,lbci,media
 28,lbci lbcilebanon,media
 29,lbcilebanon,media
-30,lebanese,lebanese
-31,lebanese lebanon,lebanon
-32,lebanese lebanon لبنان,lebanon
+30,lebanese,"lebanon\lebanese"
+31,lebanese lebanon,"lebanon\lebanese"
+32,lebanese lebanon لبنان,"lebanon\lebanese"
 33,lebanese_army,"army, safety and security"
 34,lebanese_army army,"army, safety and security"
 35,lebanese_army army military,"army, safety and security"
 36,lebanesearmy,"army, safety and security"
 37,lebanesearmy lebanese_army,"army, safety and security"
 38,lebanesearmy lebanese_army army,"army, safety and security"
-39,lebanon,lebanon
-40,lebanon لبنان,lebanon
+39,lebanon,"lebanon\lebanese"
+40,lebanon لبنان,"lebanon\lebanese"
 41,lebanon لبنان شرف_تضحية_وفاء,"army, safety and security"
 42,lebanondebate,media
 43,lebanondebate com,media
@@ -106,7 +106,7 @@
 104,التدقيق,"government, safety and security"
 105,التيار,political party
 106,الجديد,media
-107,الجمهورية,lebanon
+107,الجمهورية,"lebanon\lebanese"
 108,الجنايي,"safety and security"
 109,الجيش,"army, safety and security"
 110,الجيش lebanesearmy,"army, safety and security"
@@ -129,7 +129,7 @@
 127,السفارة,"diplomacy, external affairs"
 128,السياسية,general politics
 129,السيد,political party
-130,الشعب,"lebanese, lebanon"
+130,الشعب,"lebanon\lebanese"
 131,العربية,media
 132,العمل,economy
 133,الـ ام تي,media
@@ -139,18 +139,18 @@
 137,القضاء,judiciary
 138,القمر_عنا,ceremonial
 139,الكورة,north lebanon
-140,اللبناني,lebanese
-141,اللبنانية,lebanese
-142,اللبنانيين,lebanese
+140,اللبناني,"lebanon\lebanese"
+141,اللبنانية,"lebanon\lebanese"
+142,اللبنانيين,"lebanon\lebanese"
 143,المبارك,ceremonial
 144,المباشر,media
 145,المعلومات,"intelligence, safety and security"
 146,المكلف,government
-147,المواطنين,lebanese
+147,المواطنين,"lebanon\lebanese"
 148,النايب,politician
 149,الوزراء,government
-150,الوطني,"lebanese, lebanon"
-151,الوطنية,"lebanese, lebanon"
+150,الوطني,"lebanon\lebanese"
+151,الوطنية,"lebanon\lebanese"
 152,ام تي,media
 153,ام تي في,media
 154,امم المتحد,united nations
@@ -179,10 +179,10 @@
 177,بالفيديو,media
 178,بطريرك,religious figure
 179,بقاع,bekaa
-180,بقاع والشمال,lebanon
+180,بقاع والشمال,"lebanon\lebanese"
 181,بكركي,"christian, religious figure"
 182,بيروت,beirut
-183,بيروت lebanese,"beirut, lebanon"
+183,بيروت lebanese,"beirut, lebanon\lebanese"
 184,بيروت lebanese lebanon,"army, safety and security"
 185,تابعوا,media
 186,تشكيل,"general politics, government"
@@ -305,7 +305,7 @@
 303,فلسطين,palestine
 304,في الكورة,north lebanon
 305,في اميون,north lebanon
-306,في لبنان,lebanon
+306,في لبنان,"lebanon\lebanese"
 307,فيديو,media
 308,قادة حماس,palestine
 309,قبرص,foreign country
@@ -317,12 +317,12 @@
 315,قيادة الجيش,army
 316,كورونا,covid-19
 317,لبشار الاسد,asad regime
-318,لبنان,lebanon
+318,لبنان,"lebanon\lebanese"
 319,لبنان شرف_تضحية_وفاء,"army, safety and security"
 320,لبنان شرف_تضحية_وفاء laf,"army, safety and security"
 321,لبنان_الكبير,"christian, external affairs, general politics, religious figure"
 322,لبنان_الكبير الراعي,"christian, external affairs, general politics, religious figure"
-323,لبناني,lebanese
+323,لبناني,"lebanon\lebanese"
 324,لقوات الاحتلال الاسراييل,israel
 325,مخيم,refugee
 326,مرشح الواحد,elections
