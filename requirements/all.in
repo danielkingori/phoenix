@@ -1,6 +1,7 @@
 # Dependencies for all projects
 -r common.in
 -r development.in
+-r mypy.in
 
 -r example.in
 -r report.in

@@ -27,7 +27,6 @@ lint:
 	pydocstyle phoenix
 	isort --check-only phoenix tests
 	black --check phoenix tests
-	mypy --install-types
 	mypy phoenix tests
 
 test:

@@ -1,1 +1,1 @@
-"""Model module."""
+"""Data Mapper module."""
