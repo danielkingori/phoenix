@@ -7,9 +7,9 @@
 5,ar video,media
 6,arabic news,media
 7,arabic news local,media
-8,army,"army, safety and security"
-9,army military,"army, safety and security"
-10,army military beirut,"army, safety and security"
+8,army,"lebanese army\security forces, safety and security"
+9,army military,"lebanese army\security forces, safety and security"
+10,army military beirut,"lebanese army\security forces, safety and security"
 11,beirut,beirut
 12,beirut بيروت,beirut
 13,beirut بيروت lebanese,beirut
@@ -19,7 +19,7 @@
 17,https www aljadeed,media
 18,https www lbcgroup,media
 19,https www mtv,media
-20,laf lebanese_army,"army, safety and security"
+20,laf lebanese_army,"lebanese army\security forces, safety and security"
 21,lb,"lebanon\lebanese"
 22,lb vod,media
 23,lb vod ar,media
@@ -32,21 +32,21 @@
 30,lebanese,"lebanon\lebanese"
 31,lebanese lebanon,"lebanon\lebanese"
 32,lebanese lebanon لبنان,"lebanon\lebanese"
-33,lebanese_army,"army, safety and security"
-34,lebanese_army army,"army, safety and security"
-35,lebanese_army army military,"army, safety and security"
+33,lebanese_army,"lebanese army\security forces, safety and security"
+34,lebanese_army army,"lebanese army\security forces, safety and security"
+35,lebanese_army army military,"lebanese army\security forces, safety and security"
 36,lebanesearmy,"army, safety and security"
-37,lebanesearmy lebanese_army,"army, safety and security"
-38,lebanesearmy lebanese_army army,"army, safety and security"
+37,lebanesearmy lebanese_army,"lebanese army\security forces, safety and security"
+38,lebanesearmy lebanese_army army,"lebanese army\security forces, safety and security"
 39,lebanon,"lebanon\lebanese"
 40,lebanon لبنان,"lebanon\lebanese"
-41,lebanon لبنان شرف_تضحية_وفاء,"army, safety and security"
+41,lebanon لبنان شرف_تضحية_وفاء,"lebanese army\security forces, safety and security"
 42,lebanondebate,media
 43,lebanondebate com,media
 44,lebanondebate com news,media
-45,military,"army, safety and security"
-46,military beirut,"army, safety and security"
-47,military beirut بيروت,"army, safety and security"
+45,military,"lebanese army\security forces, safety and security"
+46,military beirut,"lebanese army\security forces, safety and security"
+47,military beirut بيروت,"lebanese army\security forces, safety and security"
 48,monthofgood,ceremonial
 49,monthofgood رمضان_الخير,ceremonial
 50,monthofgood رمضان_الخير القمر_عنا,ceremonial
@@ -95,7 +95,7 @@
 93,الازمة,general politics
 94,الاقتصادية,economy
 95,الامن,"safety and security"
-96,الامن الداخلي,"internal security, safety and security"
+96,الامن الداخلي,"lebanese army\security forces, safety and security"
 97,البطريرك,"religious figure"
 98,البطريرك_الراعي,"religious figure"
 99,البطريرك_الراعي شركة_ومحبة,"religious figure"
@@ -108,13 +108,13 @@
 106,الجديد,media
 107,الجمهورية,"lebanon\lebanese"
 108,الجنايي,"safety and security"
-109,الجيش,"army, safety and security"
-110,الجيش lebanesearmy,"army, safety and security"
-111,الجيش lebanesearmy lebanese_army,"army, safety and security"
-112,الجيش_اللبناني,"army, safety and security"
-113,الجيش_اللبناني lebanesearmy,"army, safety and security"
-114,الجيش_اللبناني الجيش,"army, safety and security"
-115,الجيش_اللبناني الجيش lebanesearmy,"army, safety and security"
+109,الجيش,"lebanese army\security forces, safety and security"
+110,الجيش lebanesearmy,"lebanese army\security forces, safety and security"
+111,الجيش lebanesearmy lebanese_army,"lebanese army\security forces, safety and security"
+112,الجيش_اللبناني,"lebanese army\security forces, safety and security"
+113,الجيش_اللبناني lebanesearmy,"lebanese army\security forces, safety and security"
+114,الجيش_اللبناني الجيش,"lebanese army\security forces, safety and security"
+115,الجيش_اللبناني الجيش lebanesearmy,"lebanese army\security forces, safety and security"
 116,الحدود,"external affairs\diplomacy, safety and security"
 117,الحريري,politician
 118,الحزب,political party
@@ -183,7 +183,7 @@
 181,بكركي,"religious figure"
 182,بيروت,beirut
 183,بيروت lebanese,"beirut, lebanon\lebanese"
-184,بيروت lebanese lebanon,"army, safety and security"
+184,بيروت lebanese lebanon,"lebanese army\security forces, safety and security"
 185,تابعوا,media
 186,تشكيل,"general politics, government"
 187,تهريب,"safety and security"
@@ -199,10 +199,10 @@
 197,جنبلاط,politician
 198,جنوب,south lebanon
 199,جنوب لبن,south lebanon
-200,جيش,army
+200,جيش,"lebanese army\security forces"
 201,حافظ الاسد,asad regime
-202,حدات الجيش,army
-203,حدات الجيش المنتشر,army
+202,حدات الجيش,"lebanese army\security forces"
+203,حدات الجيش المنتشر,"lebanese army\security forces"
 204,حدود,"external affairs\diplomacy"
 205,حر جبران باسيل,politician
 206,حرب,"safety and security"
@@ -269,9 +269,9 @@
 267,شار_الاسد,asad regime
 268,شار_الاسد سوري,asad regime
 269,شاشة,media
-270,شرف_تضحية_وفاء,"army, safety and security"
-271,شرف_تضحية_وفاء laf,"army, safety and security"
-272,شرف_تضحية_وفاء laf lebanese_army,"army, safety and security"
+270,شرف_تضحية_وفاء,"lebanese army\security forces, safety and security"
+271,شرف_تضحية_وفاء laf,"lebanese army\security forces, safety and security"
+272,شرف_تضحية_وفاء laf lebanese_army,"lebanese army\security forces, safety and security"
 273,شركة_ومحبة,ceremonial
 274,شركة_ومحبة حياد_لبنان,"external affairs\diplomacy, general politics, religious figure"
 275,شركة_ومحبة حياد_لبنان لبنان_الكبير,"external affairs\diplomacy, general politics, religious figure"
@@ -289,7 +289,7 @@
 287,طيلة شهر رمضان,ceremonial
 288,عاصمتها القدس,palestine
 289,عراق,foreign countries
-290,عسكر,army
+290,عسكر,"lebanese army\security forces"
 291,على lbci,media
 292,على الجديد,media
 293,على شاشة,media
@@ -313,13 +313,13 @@
 311,قدس,palestine
 312,قوات اللبنان,political party
 313,قومي السور,political party
-314,قوى الامن,"safety and security, security forces"
-315,قيادة الجيش,army
+314,قوى الامن,"safety and security, lebanese army\security forces"
+315,قيادة الجيش,"lebanese army\security forces"
 316,كورونا,covid-19
 317,لبشار الاسد,asad regime
 318,لبنان,"lebanon\lebanese"
-319,لبنان شرف_تضحية_وفاء,"army, safety and security"
-320,لبنان شرف_تضحية_وفاء laf,"army, safety and security"
+319,لبنان شرف_تضحية_وفاء,"lebanese army\security forces, safety and security"
+320,لبنان شرف_تضحية_وفاء laf,"lebanese army\security forces, safety and security"
 321,لبنان_الكبير,"external affairs\diplomacy, general politics, religious figure"
 322,لبنان_الكبير الراعي,"external affairs\diplomacy, general politics, religious figure"
 323,لبناني,"lebanon\lebanese"
