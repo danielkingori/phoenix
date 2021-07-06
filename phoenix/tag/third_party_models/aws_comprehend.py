@@ -25,11 +25,7 @@ def sentiment_analysis(objects: pd.DataFrame) -> pd.DataFrame:
     objects["sentiment_scores"] = pd.NA
 
     docs_per_batch = 25  # aka batch size (max=25)
-    comprehend = boto3.client(
-        "comprehend",
-        aws_access_key_id=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-    )
+    comprehend = boto3.client("comprehend")
 
     arabic = objects[objects["language"] == "ar"]
     english = objects[objects["language"] == "en"]
@@ -43,7 +39,9 @@ def sentiment_analysis(objects: pd.DataFrame) -> pd.DataFrame:
             )
             response_df = pd.DataFrame(comprehend_response["ResultList"])
             df["sentiment"].iloc[i : i + docs_per_batch] = response_df["Sentiment"].values
-            df["sentiment_scores"].iloc[i : i + docs_per_batch] = response_df["SentimentScore"].values
+            df["sentiment_scores"].iloc[i : i + docs_per_batch] = response_df[
+                "SentimentScore"
+            ].values
 
     results_df = pd.concat([arabic, english, ar_izi])
 
