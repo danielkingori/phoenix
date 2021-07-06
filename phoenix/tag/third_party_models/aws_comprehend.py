@@ -18,6 +18,7 @@ def sentiment_analysis(objects: pd.DataFrame) -> pd.DataFrame:
     Returns:
         dataframe with sentiment and sentiment score columns added (careful, different row order).
     """
+    objects = objects.copy()
     # TODO: restriction is 5000 bytes per text; how to optimally ensure this?
     objects["clean_text"] = objects["clean_text"].apply(lambda x: x[:1000])
     objects["sentiment"] = pd.NA
