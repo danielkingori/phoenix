@@ -7,9 +7,9 @@
 5,ar video,media
 6,arabic news,media
 7,arabic news local,media
-8,army,"army, security"
-9,army military,"army, security"
-10,army military beirut,"army, security"
+8,army,"army, safety and security"
+9,army military,"army, safety and security"
+10,army military beirut,"army, safety and security"
 11,beirut,beirut
 12,beirut بيروت,beirut
 13,beirut بيروت lebanese,beirut
@@ -19,7 +19,7 @@
 17,https www aljadeed,media
 18,https www lbcgroup,media
 19,https www mtv,media
-20,laf lebanese_army,"army, security"
+20,laf lebanese_army,"army, safety and security"
 21,lb,lebanon
 22,lb vod,media
 23,lb vod ar,media
@@ -32,21 +32,21 @@
 30,lebanese,lebanese
 31,lebanese lebanon,lebanon
 32,lebanese lebanon لبنان,lebanon
-33,lebanese_army,"army, security"
-34,lebanese_army army,"army, security"
-35,lebanese_army army military,"army, security"
-36,lebanesearmy,"army, security"
-37,lebanesearmy lebanese_army,"army, security"
-38,lebanesearmy lebanese_army army,"army, security"
+33,lebanese_army,"army, safety and security"
+34,lebanese_army army,"army, safety and security"
+35,lebanese_army army military,"army, safety and security"
+36,lebanesearmy,"army, safety and security"
+37,lebanesearmy lebanese_army,"army, safety and security"
+38,lebanesearmy lebanese_army army,"army, safety and security"
 39,lebanon,lebanon
 40,lebanon لبنان,lebanon
-41,lebanon لبنان شرف_تضحية_وفاء,"army, security"
+41,lebanon لبنان شرف_تضحية_وفاء,"army, safety and security"
 42,lebanondebate,media
 43,lebanondebate com,media
 44,lebanondebate com news,media
-45,military,"army, security"
-46,military beirut,"army, security"
-47,military beirut بيروت,"army, security"
+45,military,"army, safety and security"
+46,military beirut,"army, safety and security"
+47,military beirut بيروت,"army, safety and security"
 48,monthofgood,ceremonial
 49,monthofgood رمضان_الخير,ceremonial
 50,monthofgood رمضان_الخير القمر_عنا,ceremonial
@@ -78,7 +78,7 @@
 76,www lebanondebate com,media
 77,www mtv,media
 78,www mtv com,media
-79,احباط محاولة تهريب,smuggling
+79,احباط محاولة تهريب,"safety and security"
 80,احتلال الاسراييل,israel
 81,احتلال الاسراييلي بحق,israel
 82,احزاب,political party
@@ -94,8 +94,8 @@
 92,اقتراع,elections
 93,الازمة,general politics
 94,الاقتصادية,economy
-95,الامن,security
-96,الامن الداخلي,"internal security, security"
+95,الامن,"safety and security"
+96,الامن الداخلي,"internal security, safety and security"
 97,البطريرك,"christian, religious leader"
 98,البطريرك_الراعي,"christian, religious leader"
 99,البطريرك_الراعي شركة_ومحبة,"christian, religious leader"
@@ -103,19 +103,19 @@
 101,البطريركية_المارونية,"christian, religious leader"
 102,البطريركية_المارونية البطريرك_الراعي,"christian, religious leader"
 103,البطريركية_المارونية البطريرك_الراعي شركة_ومحبة,"christian, religious leader"
-104,التدقيق,"government, security"
+104,التدقيق,"government, safety and security"
 105,التيار,political party
 106,الجديد,media
 107,الجمهورية,lebanon
-108,الجنايي,security
-109,الجيش,"army, security"
-110,الجيش lebanesearmy,"army, security"
-111,الجيش lebanesearmy lebanese_army,"army, security"
-112,الجيش_اللبناني,"army, security"
-113,الجيش_اللبناني lebanesearmy,"army, security"
-114,الجيش_اللبناني الجيش,"army, security"
-115,الجيش_اللبناني الجيش lebanesearmy,"army, security"
-116,الحدود,"external affairs, security"
+108,الجنايي,"safety and security"
+109,الجيش,"army, safety and security"
+110,الجيش lebanesearmy,"army, safety and security"
+111,الجيش lebanesearmy lebanese_army,"army, safety and security"
+112,الجيش_اللبناني,"army, safety and security"
+113,الجيش_اللبناني lebanesearmy,"army, safety and security"
+114,الجيش_اللبناني الجيش,"army, safety and security"
+115,الجيش_اللبناني الجيش lebanesearmy,"army, safety and security"
+116,الحدود,"external affairs, safety and security"
 117,الحريري,politician
 118,الحزب,political party
 119,الحكومة,government
@@ -144,7 +144,7 @@
 142,اللبنانيين,lebanese
 143,المبارك,ceremonial
 144,المباشر,media
-145,المعلومات,"intelligence, security"
+145,المعلومات,"intelligence, safety and security"
 146,المكلف,government
 147,المواطنين,lebanese
 148,النايب,politician
@@ -154,7 +154,7 @@
 152,ام تي,media
 153,ام تي في,media
 154,امم المتحد,united nations
-155,امن,security
+155,امن,"safety and security"
 156,اميرك,foreign countries
 157,اميون,north lebanon
 158,ان اسراييل,israel
@@ -170,8 +170,8 @@
 168,انتخابه رييس,elections
 169,انتخابه رييسا لسوري,elections
 170,انتخب,elections
-171,اوقفت وحدا,arrest
-172,اوقفت وحدات الجيش,arrest
+171,اوقفت وحدا,"safety and security"
+172,اوقفت وحدات الجيش,"safety and security"
 173,ايران,"foreign countries, foreign country"
 174,باسيل,politician
 175,باعادة انتخاب,elections
@@ -183,14 +183,14 @@
 181,بكركي,"christian, religious leader"
 182,بيروت,beirut
 183,بيروت lebanese,"beirut, lebanon"
-184,بيروت lebanese lebanon,"army, security"
+184,بيروت lebanese lebanon,"army, safety and security"
 185,تابعوا,media
 186,تشكيل,"general politics, government"
-187,تهريب,smuggling
-188,تهريب الى الاراض,smuggling
-189,تهريب الى سوريا,smuggling
-190,تهريب الي,smuggling
-191,توقيف,"arrest, security"
+187,تهريب,"safety and security"
+188,تهريب الى الاراض,"safety and security"
+189,تهريب الى سوريا,"safety and security"
+190,تهريب الي,"safety and security"
+191,توقيف,"safety and security"
 192,تونس,foreign countries
 193,تي في,media
 194,جبل محس,north lebanon
@@ -205,7 +205,7 @@
 203,حدات الجيش المنتشر,army
 204,حدود,borders
 205,حر جبران باسيل,politician
-206,حرب,security
+206,حرب,"safety and security"
 207,حركة حماس,palestine
 208,حركة حماس لبقي,palestine
 209,حزب,political party
@@ -234,7 +234,7 @@
 232,حياد_لبنان لبنان_الكبير الراعي,"christian, external affairs, general politics, religious leader"
 233,خلال شهر رمضان,ceremonial
 234,خليج,foreign countries
-235,داعش,terrorism
+235,داعش,"safety and security"
 236,دمشق,syria
 237,دول,foreign countries
 238,دولار,economy
@@ -251,7 +251,7 @@
 249,رييس الحزب,political party
 250,رييس السوري بشار,asad regime
 251,رييس بشار الاسد,asad regime
-252,سرقة,security
+252,سرقة,"safety and security"
 253,سعد,politician
 254,سعد الحريري,"politican, politician"
 255,سعود,foreign countries
@@ -269,20 +269,20 @@
 267,شار_الاسد,asad regime
 268,شار_الاسد سوري,asad regime
 269,شاشة,media
-270,شرف_تضحية_وفاء,"army, security"
-271,شرف_تضحية_وفاء laf,"army, security"
-272,شرف_تضحية_وفاء laf lebanese_army,"army, security"
+270,شرف_تضحية_وفاء,"army, safety and security"
+271,شرف_تضحية_وفاء laf,"army, safety and security"
+272,شرف_تضحية_وفاء laf lebanese_army,"army, safety and security"
 273,شركة_ومحبة,ceremonial
 274,شركة_ومحبة حياد_لبنان,"christian, external affairs, general politics, religious leader"
 275,شركة_ومحبة حياد_لبنان لبنان_الكبير,"christian, external affairs, general politics, religious leader"
-276,شعبة,security
+276,شعبة,"safety and security"
 277,شهداء,martyrs
 278,شهداء المعارك سوري,martyrs
 279,شهر رمضان,ceremonial
 280,شهر رمضان المبارك,ceremonial
 281,صهاين,zionists
-282,صواريخ,security
-283,ضبط,arrest
+282,صواريخ,"safety and security"
+283,ضبط,"safety and security"
 284,طرابلس,north lebanon
 285,طوني_خليف,media figure
 286,طيلة شهر,ceremonial
@@ -309,17 +309,17 @@
 307,فيديو,media
 308,قادة حماس,palestine
 309,قبرص,foreign country
-310,قتل,security
+310,قتل,"safety and security"
 311,قدس,palestine
 312,قوات اللبنان,political party
 313,قومي السور,political party
-314,قوى الامن,"security, security forces"
+314,قوى الامن,"safety and security, security forces"
 315,قيادة الجيش,army
 316,كورونا,covid-19
 317,لبشار الاسد,asad regime
 318,لبنان,lebanon
-319,لبنان شرف_تضحية_وفاء,"army, security"
-320,لبنان شرف_تضحية_وفاء laf,"army, security"
+319,لبنان شرف_تضحية_وفاء,"army, safety and security"
+320,لبنان شرف_تضحية_وفاء laf,"army, safety and security"
 321,لبنان_الكبير,"christian, external affairs, general politics, religious leader"
 322,لبنان_الكبير الراعي,"christian, external affairs, general politics, religious leader"
 323,لبناني,lebanese
@@ -331,15 +331,15 @@
 329,مصر,foreign countries
 330,معارض,opposition
 331,معارك سوريا,syria
-332,معدة للتهريب,smuggling
-333,معدة للتهريب الي,smuggling
+332,معدة للتهريب,"safety and security"
+333,معدة للتهريب الي,"safety and security"
 334,مفاوض,negotiations
 335,مقابل 13 اسراييل,israel
 336,مكتف,"government, judiciary"
 337,منطقة تعج بشهداء,martyrs
-338,مهرب,smuggling
-339,موقوفين باشراف,arrest
-340,موقوفين باشراف القضاء,arrest
+338,مهرب,"safety and security"
+339,موقوفين باشراف,"safety and security"
+340,موقوفين باشراف القضاء,"safety and security"
 341,ميشال,president
 342,نازح,refugee
 343,نازح سور,refugee
