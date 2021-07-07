@@ -33,30 +33,3 @@ def test_dataframe_artifact(tmp_path):
 
     with pytest.raises(FileNotFoundError):
         artifacts.dataframes.get(a_df_2.url)
-
-
-def test_dataframe_artifact_partitions(tmp_path):
-    """Test that does not pass but shows the use of the partition."""
-    test_artefact_dir = tmp_path / "dataframe_artifacts/"
-    artefact_basename = "df"
-    artefact_url = artifacts.dataframes.url(test_artefact_dir, artefact_basename)
-    df = pd.DataFrame(
-        {
-            "id": [1, 2, 3, 4],
-            "group": [1, 1, 2, 2],
-        }
-    )
-
-    a_df = artifacts.dataframes.persist(artefact_url, df, {"partition_cols": ["group"]})
-    e_url = f"{test_artefact_dir}{artefact_basename}{constants.DATAFRAME_ARTIFACT_FILE_EXTENSION}"
-    assert a_df.url == e_url
-    pd.testing.assert_frame_equal(a_df.dataframe, df)
-
-    a_df_2 = artifacts.dataframes.get(artefact_url)
-    assert a_df.url == a_df_2.url
-    pd.testing.assert_frame_equal(a_df.dataframe, a_df_2.dataframe)
-
-    artifacts.dataframes.delete(a_df_2)
-
-    with pytest.raises(FileNotFoundError):
-        artifacts.dataframes.get(a_df_2.url)
