@@ -1,5 +1,6 @@
 """AWS comprehend functionality."""
 import os
+import sys
 
 import boto3
 import pandas as pd
@@ -23,15 +24,14 @@ def sentiment_analysis(objects: pd.DataFrame) -> pd.DataFrame:
     objects["clean_text"] = objects["clean_text"].apply(lambda x: x[:1000])
     objects["sentiment"] = pd.NA
     objects["sentiment_scores"] = pd.NA
+    objects["bytes_in_text"] = objects["clean_text"].apply(lambda s: sys.getsizeof(s))
 
     docs_per_batch = 25  # aka batch size (max=25)
     comprehend = boto3.client("comprehend")
 
-    arabic = objects[objects["language"] == "ar"]
-    english = objects[objects["language"] == "en"]
-    ar_izi = objects[objects["language"] == "ar_izi"]
-
-    for df, lang in zip([arabic, english], ["ar", "en"]):
+    all_dfs = [objects[objects["language"] == "ar_izi"]]
+    for lang in ["ar", "en"]:
+        df = objects[objects["language"] == lang]
         for i in range(0, len(df), docs_per_batch):
             comprehend_response = comprehend.batch_detect_sentiment(
                 TextList=list(df["clean_text"].iloc[i : i + docs_per_batch]),
@@ -42,7 +42,8 @@ def sentiment_analysis(objects: pd.DataFrame) -> pd.DataFrame:
             df["sentiment_scores"].iloc[i : i + docs_per_batch] = response_df[
                 "SentimentScore"
             ].values
+            all_dfs.append(df)
 
-    results_df = pd.concat([arabic, english, ar_izi])
+    results_df = pd.concat(all_dfs)
 
     return results_df
