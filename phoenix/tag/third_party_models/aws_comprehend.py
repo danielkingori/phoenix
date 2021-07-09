@@ -42,7 +42,6 @@ def sentiment_analysis(objects: pd.DataFrame, client=None) -> pd.DataFrame:
                 text_list=list(df["clean_text"].iloc[i : i + docs_per_batch]),
                 language_code=lang,
             )
-            print(comprehend_response)
             response_df = pd.DataFrame(comprehend_response["ResultList"])
             df["sentiment"].iloc[i : i + docs_per_batch] = response_df["Sentiment"].values
             df["sentiment_scores"].iloc[i : i + docs_per_batch] = response_df[
