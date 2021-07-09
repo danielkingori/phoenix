@@ -23,7 +23,7 @@ def test_sentiment_analysis(mock_comprehend_call):
 
     objects_df = pd.DataFrame({"clean_text": ["text"], "language": ["en"]})
     mock_comprehend_call.return_value = api_return_mock
-    result = aws_comprehend.sentiment_analysis(objects_df, None)
+    result = aws_comprehend.sentiment_analysis(objects_df, mock.Mock())
     assert (
         len(
             set(result.columns)
