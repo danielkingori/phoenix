@@ -6,14 +6,10 @@ import pathlib
 import click
 import papermill as pm
 
-from phoenix.common import artifacts
 
-
-def get_run_date(run_iso_timestamp):
+def get_run_iso_datetime(run_iso_timestamp):
     """Get run date for cli commands."""
-    RUN_DATE_FORMAT = "%Y-%m-%d"
-    run_iso_datetime = datetime.datetime.fromisoformat(run_iso_timestamp)
-    return run_iso_datetime.strftime(RUN_DATE_FORMAT)
+    return datetime.datetime.fromisoformat(run_iso_timestamp)
 
 
 def relative_path(path: str, other_file: str) -> pathlib.Path:
@@ -21,19 +17,30 @@ def relative_path(path: str, other_file: str) -> pathlib.Path:
     return (pathlib.Path(other_file).parent.absolute() / path).absolute()
 
 
-def run_notebooks(run_date, parameters, nb_name):
+def run_notebooks(input_nb_url, output_nb_url, parameters):
     """Build input/output file paths and run notebooks."""
-    # Build the notebook paths
-    nb = f"../../scrape/{nb_name}"
-    cwd = os.getcwd()
-    input_nb_relative_to_cwd = relative_path(nb, __file__).relative_to(pathlib.Path(cwd))
-    output_nb = pathlib.Path(f"{artifacts.urls.ARTIFACTS_PATH}/{run_date}/source_runs/{nb_name}")
-    output_dir = output_nb.parent
-    # Make the output directory if needed
-    output_dir.mkdir(parents=True, exist_ok=True)
+    create_output_dir_if_needed(output_nb_url)
 
     # Run the notebook
-    click.echo(f"Running Notebook: {input_nb_relative_to_cwd}")
-    click.echo(f"Output Notebook: {output_nb}")
+    click.echo(f"Running Notebook: {input_nb_url}")
+    click.echo(f"Output Notebook: {output_nb_url}")
     click.echo(f"Parameters: {parameters}")
-    pm.execute_notebook(input_nb_relative_to_cwd, output_nb, parameters=parameters)
+    pm.execute_notebook(input_nb_url, output_nb_url, parameters=parameters)
+
+
+def create_output_dir_if_needed(output_nb):
+    """If the output dir is needed then create it."""
+    # This only works for local should be refactored at somepoint
+    if output_nb.startswith("file:"):
+        output_nb = pathlib.Path(output_nb[5:])
+        output_dir = output_nb.parent
+        # Make the output directory if needed
+        output_dir.mkdir(parents=True, exist_ok=True)
+    return None
+
+
+def get_input_notebook_path(nb_phoenix_path: str):
+    """Get the input notebook path relative to cwd."""
+    nb = f"../../{nb_phoenix_path}"
+    cwd = os.getcwd()
+    return relative_path(nb, __file__).relative_to(pathlib.Path(cwd))
