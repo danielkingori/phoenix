@@ -2,6 +2,8 @@
 
 Final tweets dataframe.
 
+Data is mapped from `objects`, `topics` and data from twitter API: https://developer.twitter.com/en/docs/labs/tweets-and-users/api-reference/get-tweets-id.
+
 | Column                    | dtype               | Description |
 |---------------------------|---------------------|-------------|
 | id_str                    | int64               | ID |
