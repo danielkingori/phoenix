@@ -2,6 +2,8 @@
  
 Final dataframe of facebook posts.
 
+In general these relate to the data from crowdtangle API: https://github.com/CrowdTangle/API/wiki/Post
+
 | Column name                                                                                                | dtype               | Description                                                                                                       | 
 |------------------------------------------------------------------------------------------------------------|---------------------| ------------------------------------------------------------------------------------------------------------------|
 | phoenix_post_id                                                                                            | object              | Computed post id by phoenix. This is because csv data from crowdtangle has no post id. |
@@ -45,7 +47,7 @@ Final dataframe of facebook posts.
 | sponsor_name                                                                                               | float64             | - |
 | sponsor_category                                                                                           | float64             | - |
 | total_interactions_weighted_likes_1x_shares_1x_comments_1x_love_1x_wow_1x_haha_1x_sad_1x_angry_1x_care_1x_ | object              | - |
-| overperforming_score                                                                                       | float64             | - |
+| overperforming_score                                                                                       | float64             | Information about overperforming_score: https://help.crowdtangle.com/en/articles/1141056-how-is-overperforming-calculated |
 | overperforming_score_weighted_likes_1x_shares_1x_comments_1x_love_1x_wow_1x_haha_1x_sad_1x_angry_1x_       | float64             | - |
 | page_created_back                                                                                          | object              | - |
 | page_created_utc                                                                                           | object              | - |
