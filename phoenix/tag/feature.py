@@ -63,6 +63,7 @@ def key_features(given_df: pd.DataFrame, features_key: str = "features") -> pd.S
 
     Arguments:
         given_df: a dataframe containing "features" as a single string.
+        features_key: column in data frame where the list of features are.
 
     Returns:
         Subset of given_df that has interesting_features.
