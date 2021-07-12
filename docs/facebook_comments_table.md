@@ -1,5 +1,5 @@
 # Facebook Comments Table
-Current the facebook comments table is initialised in athena by hand.
+Currently the facebook comments table is initialised in Athena by hand.
 
 Once the tagging pipeline has been run:
 - `phoenix/tag/data_pull/facebook_comments_pull_json.ipynb`
@@ -14,7 +14,7 @@ FOR_TAGGING_ARTIFACTS_FOLDER = f"{ARTIFACTS_BASE_URL}comments_for_tagging/"
 - `phoenix/tag/facebook_comments_finalise.ipynb`
 
 
-The comments final data will be persisted to s3. See `phoenix/tag/facebook_comments_finalise.ipynb`
+The comments final data will be persisted to S3. See `phoenix/tag/facebook_comments_finalise.ipynb`
 as to where exactly.
 
 This will overwrite the persisted data each time it is run.
@@ -27,7 +27,7 @@ This can be labelled by an analyst with topics:
 `features`,`topic`
 `string`, `t1,t2...`
 
-Export this labelled data as a csv. It is then possible create a new config by merging the new and old mappings. Do this with the notebook:
+Export this labelled data as a CSV. It is then possible create a new config by merging the new and old mappings. Do this with the notebook:
 `phoenix/tag/topic/single_feature_match_topic_config_process.ipynb`
 
 
@@ -42,7 +42,7 @@ ALL_FEATURES = artifacts.dataframes.url(ARTIFACTS_BASE_URL, "all_features")
 ```
 - `phoenix/tag/facebook_comments_finalise_topics.ipynb`
 
-This will persist the final data to s3. See notebooks for more details.
+This will persist the final data to S3. See notebooks for more details.
 
 ## Athena table
 Was initialised using the command:
