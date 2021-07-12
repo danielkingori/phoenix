@@ -90,7 +90,7 @@ def persist_topic_config_csv(df: pd.DataFrame, config_url=None):
     if not config_url:
         config_url = _default_config_url()
     with tentaclio.open(config_url, "w") as fb:
-        df.to_csv(fb)
+        df.to_csv(fb, index=False)
 
 
 def _default_config_url() -> str:
