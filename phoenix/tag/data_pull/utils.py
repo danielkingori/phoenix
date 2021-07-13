@@ -1,4 +1,5 @@
 """Utils for pulling data."""
+import hashlib
 import re
 
 import pandas as pd
@@ -23,3 +24,8 @@ def camel_to_snake(name):
     """
     name = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
     return re.sub("([a-z0-9])([A-Z])", r"\1_\2", name).lower()
+
+
+def hash_message(message: str):
+    """Get the has of a message."""
+    return hashlib.md5(bytes(message, "utf-8")).hexdigest()[:16]

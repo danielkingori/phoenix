@@ -1,6 +1,4 @@
 """Data pulling for facebook posts."""
-import hashlib
-
 import pandas as pd
 import tentaclio
 
@@ -36,7 +34,7 @@ def normalise(raw_df: pd.DataFrame):
     df = process_edt_datetime("post_created", df)
     # This will be hashed so that links are in the hash
     df["message_link"] = df["message"] + "-" + df["link"].fillna("")
-    df["message_hash"] = df["message_link"].apply(hash_message)
+    df["message_hash"] = df["message_link"].apply(utils.hash_message)
     df["post_created_date"] = pd.to_datetime(df["post_created_date"], format="%Y-%m-%d").dt.date
     df["total_interactions"] = (
         df["total_interactions"].replace(to_replace=r",", value="", regex=True).astype(int)
@@ -48,11 +46,6 @@ def normalise(raw_df: pd.DataFrame):
     # So we are making one from the account that posted it and a hash of the message
     df["phoenix_post_id"] = df["facebook_id"].astype(str) + "-" + df["message_hash"].astype(str)
     return df
-
-
-def hash_message(message: str):
-    """Get the has of a message."""
-    return hashlib.md5(bytes(message, "utf-8")).hexdigest()[:16]
 
 
 def process_edt_datetime(column_name: str, df: pd.DataFrame):
