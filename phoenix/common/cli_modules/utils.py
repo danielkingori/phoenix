@@ -19,7 +19,7 @@ def relative_path(path: str, other_file: str) -> pathlib.Path:
 
 def run_notebooks(input_nb_url, output_nb_url, parameters):
     """Build input/output file paths and run notebooks."""
-    create_output_dir_if_needed(output_nb_url)
+    output_nb_url = create_output_dir_if_needed(output_nb_url)
 
     # Run the notebook
     click.echo(f"Running Notebook: {input_nb_url}")
@@ -36,7 +36,9 @@ def create_output_dir_if_needed(output_nb):
         output_dir = output_nb.parent
         # Make the output directory if needed
         output_dir.mkdir(parents=True, exist_ok=True)
-    return None
+        return output_nb
+
+    return output_nb
 
 
 def get_input_notebook_path(nb_phoenix_path: str):
