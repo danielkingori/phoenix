@@ -58,7 +58,7 @@ def normalise_comments_dataframe(df):
     df["post_id"] = df["post_id"].astype(int)
     df["file_id"] = df["file_id"].astype(str)
     df["parent_id"] = df["parent_id"].astype(int)
-    df["post_created"] = pd.to_datetime(df["post_created"])
+    df["post_created"] = pd.to_datetime(df["post_created"]).dt.tz_localize("UTC")
     df["text"] = df["text"].astype(str)
     df["reactions"] = df["reactions"].astype(int)
     df["user_display_name"] = df["user_display_name"].astype(str)
