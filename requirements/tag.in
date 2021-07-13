@@ -3,3 +3,7 @@
 polyglot
 pyicu
 pycld2
+dask[complete]
+nltk
+snowballstemmer
+sklearn

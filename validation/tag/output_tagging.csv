@@ -1,4 +1,5 @@
-,message,language,confidence
-0,first sample message,en,95.0
-1,ana raye7 el gam3a el sa3a 3 el 3asr.,ar_izi,97.0
-2,أحب القراءة كثيرا,ar,97.0
+,message,language,confidence,features
+0,first sample message,en,95.0,"['first', 'sample', 'message', 'first sample', 'sample message', 'first sample message']"
+1,first sample message second first,en,97.0,"['first', 'sample', 'message', 'second', 'first', 'first sample', 'sample message', 'message second', 'second first', 'first sample message', 'sample message second', 'message second first']"
+2,ana raye7 el gam3a el sa3a 3 el 3asr.,ar_izi,97.0,"['ana', 'raye7', 'el', 'gam3a', 'el', 'sa3a', 'el', '3asr', 'ana raye7', 'raye7 el', 'el gam3a', 'gam3a el', 'el sa3a', 'sa3a el', 'el 3asr', 'ana raye7 el', 'raye7 el gam3a', 'el gam3a el', 'gam3a el sa3a', 'el sa3a el', 'sa3a el 3asr']"
+3,أحب القراءة كثيرا,ar,97.0,"['احب', 'القراءة', 'كثيرا', 'احب القراءة', 'القراءة كثيرا', 'احب القراءة كثيرا']"
