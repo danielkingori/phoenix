@@ -24,7 +24,7 @@ def normalise(event_data: pd.DataFrame) -> pd.DataFrame:
     """Normalise and transform event data."""
     event_data["event_date_normalised"] = pd.to_datetime(
         event_data["event_date"], format="%d-%b-%y"
-    )
+    ).dt.tz_localize("UTC")
     event_data["year"] = event_data["event_date_normalised"].dt.year
     event_data["month"] = event_data["event_date_normalised"].dt.month
     event_data["day"] = event_data["event_date_normalised"].dt.day
