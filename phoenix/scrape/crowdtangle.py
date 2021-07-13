@@ -5,6 +5,7 @@ https://github.com/CrowdTangle/API/wiki
 """
 from typing import Any, Dict, List
 
+import copy
 import datetime
 import logging
 import os
@@ -49,7 +50,12 @@ def get_auth_token():
 
 def get_post(url: str, payload: Dict[str, Any]):
     """Get a post from crowdtangle."""
-    logging.info(f"Making request {url}, payload {payload}")
+    token = get_auth_token()
+    safe_url = url.replace(token, "****")
+    safe_payload = copy.deepcopy(payload)
+    if "token" in safe_payload:
+        safe_payload["token"] = "****"
+    logging.info(f"Making request {safe_url}, payload {safe_payload}")
     r = requests.get(url, params=payload, headers={"x-api-token": get_auth_token()})
     r.raise_for_status()
     return r.json()
