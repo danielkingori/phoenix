@@ -10,6 +10,6 @@ def to_type(column_name: str, astype, df: pd.DataFrame):
     return df
 
 
-def snake_names(name: str):
-    """Map column names."""
+def words_to_snake(name: str):
+    """Map Words with spaces to snake case."""
     return re.sub(r"\W+", "_", name.lower())

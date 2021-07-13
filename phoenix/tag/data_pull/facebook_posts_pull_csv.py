@@ -28,7 +28,7 @@ def from_csv(url_to_folder: str) -> pd.DataFrame:
 
 def normalise(raw_df: pd.DataFrame):
     """normalise_fb_posts raw dataframe."""
-    df = raw_df.rename(utils.snake_names, axis="columns")
+    df = raw_df.rename(utils.words_to_snake, axis="columns")
     df = df[~df["message"].isna()]
     df = utils.to_type("message", str, df)
     df = utils.to_type("page_description", str, df)
