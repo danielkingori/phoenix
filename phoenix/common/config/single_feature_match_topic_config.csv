@@ -44,6 +44,8 @@ lebanon لبنان شرف_تضحية_وفاء,"lebanese army\security forces, sa
 lebanondebate,media
 lebanondebate com,media
 lebanondebate com news,media
+lej2in,refugee
+leji2,refugee
 military,"lebanese army\security forces, safety and security"
 military beirut,"lebanese army\security forces, safety and security"
 military beirut بيروت,"lebanese army\security forces, safety and security"
@@ -63,6 +65,7 @@ news lbci,media
 news lbci lbcilebanon,media
 news local,media
 noursat,media
+souriya,syria
 tv,media
 tv arabic,media
 tv arabic news,media
@@ -83,7 +86,10 @@ www mtv com,media
 احتلال الاسراييلي بحق,palestine\israeli government
 احزاب,political party
 اراضي السور,syria
+ارهاب,safety and security
 اسد,asad regime
+اسد عاشت,asad regime
+اسد عاشت سوريا,asad regime
 اسراييل,palestine\israeli government
 اسراييل اير,palestine\israeli government
 اسراييل تاريخ,palestine\israeli government
@@ -91,7 +97,9 @@ www mtv com,media
 اسراييل حرب,palestine\israeli government
 اسراييلي انتصر,palestine\israeli government
 اعادة انتخاب,elections
+اعتداء,safety and security
 اقتراع,elections
+اقتصاد,economy
 الازمة,general politics
 الاقتصادية,economy
 الامن,safety and security
@@ -153,6 +161,7 @@ www mtv com,media
 الوطنية,lebanon\lebanese
 ام تي,media
 ام تي في,media
+امريك,foreign countries
 امم المتحد,united nations
 امن,safety and security
 اميرك,foreign countries
@@ -160,16 +169,20 @@ www mtv com,media
 ان اسراييل,palestine\israeli government
 ان اسراييل تاريخ,palestine\israeli government
 ان جعجع,politician
+انت نازح,refugee
 انتخاب,elections
 انتخابا,elections
 انتخابات الرياس,elections
 انتخابات الرياسية السور,elections
 انتخابات الرياسية سوريا,elections
 انتخابات السور,elections
+انتخابات بسوري,elections
+انتخابات كلها,elections
 انتخابات_الرياسية_السور,elections
 انتخابه رييس,elections
 انتخابه رييسا لسوري,elections
 انتخب,elections
+اوسخ,offensive language
 اوقفت وحدا,safety and security
 اوقفت وحدات الجيش,safety and security
 ايران,foreign countries
@@ -177,15 +190,19 @@ www mtv com,media
 باعادة انتخاب,elections
 باعادة انتخابه رييس,elections
 بالفيديو,media
+بشار وبس,asad regime
 بطريرك,religious figure
+بعث,political party
 بقاع,bekaa
 بقاع والشمال,lebanon\lebanese
 بكركي,religious figure
+بنان,lebanon\lebanese
 بيروت,beirut
 بيروت lebanese,"beirut, lebanon\lebanese"
 بيروت lebanese lebanon,"lebanese army\security forces, safety and security"
 تابعوا,media
 تشكيل,"general politics, government"
+تنتخب,elections
 تهريب,safety and security
 تهريب الى الاراض,safety and security
 تهريب الى سوريا,safety and security
@@ -193,6 +210,7 @@ www mtv com,media
 توقيف,safety and security
 تونس,foreign countries
 تي في,media
+جبران باسيل,politician
 جبل محس,north lebanon
 جديدة من مسلسل,media
 جعجع,politician
@@ -200,6 +218,8 @@ www mtv com,media
 جنوب,south lebanon
 جنوب لبن,south lebanon
 جيش,lebanese army\security forces
+جيش العربي السور,syria
+حافظ,asad regime
 حافظ الاسد,asad regime
 حدات الجيش,lebanese army\security forces
 حدات الجيش المنتشر,lebanese army\security forces
@@ -216,6 +236,7 @@ www mtv com,media
 حزب الل,political party
 حزب سوريا,political party
 حزب_السوري_القومي_الاجتماع,political party
+حقير,offensive language
 حكومة,government
 حكومة الاسراييل,palestine\israeli government
 حل_الحزب_القوم,political party
@@ -229,12 +250,20 @@ www mtv com,media
 حماس لبن,palestine
 حماس والت,palestine
 حماس والتي ستتولي,palestine
+حمير,offensive language
 حياد_لبنان,"external affairs\diplomacy, general politics, religious figure"
 حياد_لبنان لبنان_الكبير,"external affairs\diplomacy, general politics, religious figure"
 حياد_لبنان لبنان_الكبير الراعي,"external affairs\diplomacy, general politics, religious figure"
+حيوان,offensive language
+خرا عل,offensive language
+خري,offensive language
 خلال شهر رمضان,ceremonial
 خليج,foreign countries
+خنازير,offensive language
+خونه,offensive language
 داعش,safety and security
+دكتور بشار,asad regime
+دكتور بشار حافظ,asad regime
 دمشق,syria
 دول,foreign countries
 دولار,economy
@@ -250,6 +279,7 @@ www mtv com,media
 رييس الجمهورية,president
 رييس الحزب,political party
 رييس السوري بشار,asad regime
+رييس بشار,asad regime
 رييس بشار الاسد,asad regime
 سرقة,safety and security
 سعد,politician
@@ -257,49 +287,74 @@ www mtv com,media
 سعود,foreign countries
 سفارة السور,asad regime
 سفارة_الجمهورية_العربية_السورية_بيروت,external affairs\diplomacy
+سلاح,safety and security
 سمير جعجع,politician
 سوري,syria
 سوري بشار الاسد,asad regime
 سوريا,syria
 سوريا الاسد,asad regime
+سوريا الاسد عاش,asad regime
+سوريا بشاار,asad regime
+سوريا بشار,asad regime
+سوريا بشار الاسد,asad regime
+سوريا بشار وبس,asad regime
 سوريا بشار_الاسد,asad regime
+سوريا ه,syria
+سوريا وبشار,asad regime
 سوريا_الاسد,asad regime
+سوريين بلبن,refugee
 سياس,general politics
+سيد الرييس بشار,asad regime
 شار الاسد,asad regime
+شار حافظ,asad regime
+شار حافظ الاسد,asad regime
 شار_الاسد,asad regime
 شار_الاسد سوري,asad regime
 شاشة,media
+شام,syria
+شبيح,safety and security
 شرف_تضحية_وفاء,"lebanese army\security forces, safety and security"
 شرف_تضحية_وفاء laf,"lebanese army\security forces, safety and security"
 شرف_تضحية_وفاء laf lebanese_army,"lebanese army\security forces, safety and security"
 شركة_ومحبة,ceremonial
 شركة_ومحبة حياد_لبنان,"external affairs\diplomacy, general politics, religious figure"
 شركة_ومحبة حياد_لبنان لبنان_الكبير,"external affairs\diplomacy, general politics, religious figure"
+شعب اللبنان,lebanon\lebanese
 شعبة,safety and security
 شهداء,martyrs
 شهداء المعارك سوري,martyrs
 شهر رمضان,ceremonial
 شهر رمضان المبارك,ceremonial
-صهاين,zionists
+صهاين,"zionist, zionists"
+صهيون,zionist
 صواريخ,safety and security
 ضبط,safety and security
+ضده,offensive language
 طرابلس,north lebanon
 طوني_خليف,media figure
 طيلة شهر,ceremonial
 طيلة شهر رمضان,ceremonial
+عااااشت سوريا الاسد,asad regime
+عاشت سوري,syria
+عاشت سوريا الاسد,asad regime
 عاصمتها القدس,palestine
+عاهر,offensive language
 عراق,foreign countries
+عرص,offensive language
 عسكر,lebanese army\security forces
 على lbci,media
 على الجديد,media
 على شاشة,media
+عم تنتخب,elections
+عم ينتخب,elections
 عملية عودة النازح,return of refugees
-عودة النازح,refugee
+عودة النازح,"refugee, return of refugees"
 عودة النازحين السوري,return of refugees
 عودة النازحين الي,return of refugees
 عون,government
 غادة,judiciary
 غادة عون,judiciary
+غباء,offensive language
 غزة,palestine
 فرنس,foreign countries
 فلسطين,palestine
@@ -311,11 +366,22 @@ www mtv com,media
 قبرص,foreign countries
 قتل,safety and security
 قدس,palestine
+قطيع,offensive language
 قوات اللبنان,political party
 قومي السور,political party
 قوى الامن,"lebanese army\security forces, safety and security"
 قيادة الجيش,lebanese army\security forces
+قيادة سوريا,syria
+قيادة سوريا الله,syria
+كلاب,offensive language
+كلب,offensive language
+كلب اب,offensive language
+كلب بشار,offensive language
 كورونا,covid-19
+كول خر,offensive language
+لاجىء,refugee
+لاجي,refugee
+لاجيء,refugee
 لبشار الاسد,asad regime
 لبنان,lebanon\lebanese
 لبنان شرف_تضحية_وفاء,"lebanese army\security forces, safety and security"
@@ -323,9 +389,21 @@ www mtv com,media
 لبنان_الكبير,"external affairs\diplomacy, general politics, religious figure"
 لبنان_الكبير الراعي,"external affairs\diplomacy, general politics, religious figure"
 لبناني,lebanon\lebanese
+لجوء,refugee
 لقوات الاحتلال الاسراييل,palestine\israeli government
+له سوريا,syria
+له سوريا بشار,asad regime
+له وسوريا,syria
+له وسوريا وبشار,asad regime
+مبعوص,offensive language
+مجرم,safety and security
+مجلس الام,united nations
+مخابرات وغصب,intelligence
+مخابرات وغصب عنك,intelligence
 مخيم,refugee
+مرتزق,offensive language
 مرشح الواحد,elections
+مزبل,offensive language
 مشاركة الانتخاب,elections
 مشاركة الانتخابات الرياس,elections
 مصر,foreign countries
@@ -346,15 +424,25 @@ www mtv com,media
 نازحين الي,refugee
 نايب,parlementarian
 نبيه بر,politician
+نتخب,elections
 نظام,asad regime
 نظام الاسد,asad regime
 نظام السور,asad regime
+ننتخب,elections
 هناه باعادة انتخاب,elections
 واسراييل,palestine\israeli government
 والشمال,north lebanon
 والعراق,foreign countries
 وزارة,government
 وزير,government
+وسخ,offensive language
+وقح,offensive language
 ى سوريا,syria
+ياخنزير,offensive language
+ياعرصا,offensive language
+ياكلب,offensive language
+يرجعو السوري,return of refugees
 يرموك,syria
+يقتل,safety and security
 يمن,foreign countries
+ينتخب,elections
