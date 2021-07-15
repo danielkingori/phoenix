@@ -8,7 +8,7 @@ from typing import Optional
 import pandas as pd
 import tentaclio
 
-from phoenix.tag import feature, object_filters
+from phoenix.tag import constants, feature, object_filters
 
 
 def get_posts_to_scrape(posts_df: pd.DataFrame) -> pd.DataFrame:
@@ -36,7 +36,7 @@ def get_posts_to_scrape(posts_df: pd.DataFrame) -> pd.DataFrame:
         ]
     ]
     posts_to_scrape.sort_values(by="total_interactions", inplace=True, ascending=False)
-    ten_percent = round(posts_to_scrape.shape[0] * 0.1)
+    ten_percent = min(constants.TO_LABEL_CSV_MAX, round(posts_to_scrape.shape[0] * 0.1))
 
     return posts_to_scrape[:ten_percent]
 
