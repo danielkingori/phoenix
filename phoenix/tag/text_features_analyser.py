@@ -43,6 +43,18 @@ class StemmedCountVectorizer(CountVectorizer):
         fn = functools.partial(stem_analyzer, self.stemmer, analyzer)
         return fn
 
+    def get_most_common_words(self, count_vector_matrix: pd.arrays.SparseArray) -> Dict[str, int]:
+        """Gets a dict of the most common words and their occurrence numbers.
+
+        Args:
+            count_vector_matrix (pd.arrays.SparseArray): sparse matrix of (n_samples,
+            n_features), returned value of self.fit_transform()
+        """
+        count_dict = zip(self.get_feature_names(), count_vector_matrix.sum(axis=0).tolist()[0])
+        count_dict = sorted(count_dict, key=lambda x: -x[1])  # type: ignore
+
+        return dict(count_dict)
+
 
 # Cannot be a method on object when used by dash.
 def stem_analyzer(stemmer, analyzer, doc):

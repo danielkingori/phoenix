@@ -49,3 +49,20 @@ def test_StemmedCountVectorizer_ar():
 
     assert set(ar_vectorizer.get_feature_names()) == set(expected_ar_feature_names)
     assert isinstance(ar_vectorizer, CountVectorizer)
+
+
+def test_StemmedCountVectorizer_common_words():
+    en_stemmer = stemmer("english")
+    en_corpus = ["succeeding in stemming removes the ends of words", "words words words"]
+    en_vectorizer = tfa.StemmedCountVectorizer(en_stemmer, stop_words=stopwords.words("english"))
+    en_matrix = en_vectorizer.fit_transform(en_corpus)
+    actual_word_dict = en_vectorizer.get_most_common_words(en_matrix)
+    expected_word_dict = {
+        "succeed": 1,
+        "stem": 1,
+        "remov": 1,
+        "end": 1,
+        "word": 4,
+    }
+
+    assert actual_word_dict == expected_word_dict
