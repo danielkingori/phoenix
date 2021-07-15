@@ -8,10 +8,10 @@ import pandas as pd
 from phoenix.common import artifacts
 
 
-def get_unique_groups(data, user_scheme):
+def get_unique_groups(data):
     """Gets distinct users with topic attached."""
     # TODO: fix for 'username' and "user_name"
-    return data.groupby(user_scheme)["topic"].unique()
+    return data.groupby("user_name")["topic"].unique()
 
 
 def permutations_remove_duplicates(array):
@@ -66,19 +66,23 @@ def set_webweb_vis_settings(web):
     web.display.showNodeNames = True
     web.display.colorBy = "degree"
     web.display.sizeBy = "degree"
-    web.display.width = "1200"
-    web.display.height = "900"
+    web.display.width = "900"
+    web.display.height = "600"
 
 
-def prepare_dataset(data_url, user_schema):
+def prepare_dataset(data):
     """Prepare the dataset."""
-    # Get the datafra,e.
-    data = artifacts.dataframes.get(data_url).dataframe
-    groups = get_unique_groups(data, user_schema)
+    # Get the dataframe.
+    # data = artifacts.dataframes.get(data_url).dataframe  # handle this in the notebook
+
+    # Manipulate the dataframe
+    groups = get_unique_groups(data)
     perms = generate_permutations(groups)
     flat = flatten_dataset(perms)
     graph_df = pd.DataFrame(flat)
     weighted_df = get_weighted_dataframe(graph_df)
+
+    # Build graph
     graph = create_networkx_graph_from_df(weighted_df)
     community_graph = assign_partitions(graph)
     return community_graph
