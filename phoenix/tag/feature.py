@@ -7,7 +7,7 @@ Please update if it is changed.
 import pandas as pd
 
 from phoenix.common import artifacts
-from phoenix.tag import text_features_analyser
+from phoenix.tag import constants, text_features_analyser
 
 
 def features(given_df: pd.DataFrame, text_key: str = "clean_text") -> pd.DataFrame:
@@ -100,5 +100,5 @@ def get_features_to_label(exploded_features_df) -> pd.DataFrame:
     )
     all_feature_count = all_feature_count.rename(columns={"object_id": "number_of_objects"})
     all_feature_count.sort_values(by="features_count", inplace=True, ascending=False)
-    ten_percent = round(all_feature_count.shape[0] * 0.1)
+    ten_percent = min(constants.TO_LABEL_CSV_MAX, round(all_feature_count.shape[0] * 0.1))
     return all_feature_count[:ten_percent]
