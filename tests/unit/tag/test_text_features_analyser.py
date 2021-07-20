@@ -1,4 +1,6 @@
 """Test text_features_analyser."""
+import pandas as pd
+import pytest
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from snowballstemmer import stemmer
@@ -66,3 +68,33 @@ def test_StemmedCountVectorizer_common_words():
     }
 
     assert actual_word_dict == expected_word_dict
+
+
+@pytest.mark.skip(
+    "bug to be fixed: doesn't stem the first word of a bigram and the first 2 words of "
+    "a trigram"
+)
+def test_TextFeaturesAnalyser_features():
+    df_test = pd.DataFrame(
+        [("1", "succeeding in stemming removes the ends of words", "en")],
+        columns=["id", "clean_text", "language"],
+    )
+    text_analyser = tfa.create()
+    df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+
+    expected_3gram_feature_list = [
+        "succeed",
+        "stem",
+        "remov",
+        "end",
+        "word",
+        "succeed stem",
+        "stem remov",
+        "remov end",
+        "end word",
+        "succeed stem remov",
+        "stem remov end",
+        "remov end word",
+    ]
+
+    assert df_test["features"][0] == expected_3gram_feature_list
