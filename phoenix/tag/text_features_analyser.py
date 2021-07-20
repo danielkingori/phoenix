@@ -149,14 +149,14 @@ def create():
     default_params = {
         "ar": {
             "stemmer": stemmer("arabic"),
-            "stop_words": stopwords.words("arabic"),
+            "stop_words": get_stopwords(),
             "strip_accents": "unicode",
             "encoding": "utf-8",
         },
         "ar_izi": {"strip_accents": "unicode"},
         "en": {
             "stemmer": stemmer("english"),
-            "stop_words": stopwords.words("english"),
+            "stop_words": get_stopwords(),
             "strip_accents": "ascii",
             "encoding": "utf-8",
         },
@@ -204,3 +204,15 @@ def _features_index(row):
             [[(key,) + v for v in list(value.items())] for key, value in row.items()]
         )
     )
+
+
+def get_stopwords() -> List[str]:
+    """Gets stopwords for both arabic and english as languages can be mixed within objects.
+
+    The stopwords of the languages don't overlap so there is no danger of removing arabic
+    stopwords which are non-stopwords in english or vice versa.
+    """
+    stopwords_list = stopwords.words("arabic")
+    stopwords_list.extend(stopwords.words("english"))
+
+    return stopwords_list

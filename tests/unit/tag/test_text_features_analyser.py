@@ -70,6 +70,22 @@ def test_StemmedCountVectorizer_common_words():
     assert actual_word_dict == expected_word_dict
 
 
+def test_get_stopwords_has_english():
+    """Test get_stopwords list and that it contains at least the english stopwords."""
+    stopwords_list = stopwords.words("english")
+
+    actual_stopwords_list = tfa.get_stopwords()
+    assert set(stopwords_list).issubset(actual_stopwords_list)
+
+
+def test_get_stopwords_has_arabic():
+    """Test get_stopwords list and that it contains at least the arabic stopwords."""
+    stopwords_list = stopwords.words("arabic")
+
+    actual_stopwords_list = tfa.get_stopwords()
+    assert set(stopwords_list).issubset(actual_stopwords_list)
+
+
 @pytest.mark.skip(
     "bug to be fixed: doesn't stem the first word of a bigram and the first 2 words of "
     "a trigram"
