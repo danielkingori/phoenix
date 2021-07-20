@@ -34,51 +34,50 @@ This will persist the final data to s3. See notebooks for more details.
 ## Athena table
 Was initialised using the command:
 ```
-CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_posts_may (
+TODO: refactor to match the new facebook schema
+CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook (
 `phoenix_post_id` string,
-`page_name` string,
-`user_name` string,
-`page_admin_top_country` string,
-`page_description` string,
+`account_handle` string,
+`account_name` string,
+`account_platform_id` int,
+`account_page_category` string,
+`account_page_admin_top_country` string,
+`account_page_description` string,
+`account_url` string,
 `page_created` timestamp,
-`likes_at_posting` int,
-`followers_at_posting` int,
+`account_subscriber_count` int,
+`subscriber_count` int,
 `post_created` timestamp,
-`post_created_date` int,
-`post_created_time` string,
+`updated` timestamp,
+`file_timestamp` timestamp,
 `type` string,
-`total_interactions` bigint,
-`likes` bigint,
-`comments` bigint,
-`shares` bigint,
-`love` bigint,
-`wow` bigint,
-`haha` bigint,
-`sad` bigint,
-`angry` bigint,
-`care` bigint,
-`video_share_status` string,
-`is_video_owner` string,
-`post_views` bigint,
-`total_views` bigint,
-`total_views_for_all_crossposts` bigint,
-`video_length` string,
-`url` string,
+`statistics_actual_likes_count` bigint,
+`statistics_actual_comments_count` bigint,
+`statistics_actual_shares_count` bigint,
+`statistics_actual_love_count` bigint,
+`statistics_actual_wow_count` bigint,
+`statistics_actual_haha_count` bigint,
+`statistics_actual_sad_count` bigint,
+`statistics_actual_angry_count` bigint,
+`statistics_actual_care_count` bigint,
+`score` bigint,
+`platform_id` double,
+`video_length_ms` double,
+`id` string,
+`platform` string,
+`caption` string,
+`description` string,
+`post_url` string,
+TODO: change this in facebook schema
+`language_from_api` string,
 `message` string,
 `link` string,
-`final_link` string,
 `image_text` string,
-`link_text` string,
-`description` string,
-`sponsor_id` double,
-`sponsor_name` double,
-`sponsor_category` double,
-`overperforming_score` double,
 `scrape_url` string,
 `url_post_id` string,
 `clean_text` string,
 `language` string,
-`confidence` double,
+`language_confidence` double,
 `is_key_object` boolean,
 `features` array<string>,
 `features_count` array<int>
@@ -86,69 +85,66 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_posts_may (
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
 WITH SERDEPROPERTIES (
   'serialization.format' = '1'
-) LOCATION 's3://buildup-dev-us-tables/fb_posts/parquet_exports/fb_posts_may/'
+TODO: fix url
+) LOCATION 's3://buildup-dev-us-tables/facebook_posts/parquet_exports/facebook_posts/'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```
 If you need to make changes:
 ```
-DROP TABLE IF EXISTS buildup_dev.facebook_posts_may;
+DROP TABLE IF EXISTS buildup_dev.facebook_posts;
 ```
 ### Topics
 Athena table was created with the query:
 ```
-CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_posts_topics_may (
+CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_posts_topics (
 `phoenix_post_id` string,
-`page_name` string,
-`user_name` string,
-`page_admin_top_country` string,
-`page_description` string,
+`account_platform_id` int,
+`account_page_category` string,
+`account_page_admin_top_country` string,
+`account_page_description` string,
+`account_url` string,
 `page_created` timestamp,
-`likes_at_posting` int,
-`followers_at_posting` int,
+`account_subscriber_count` int,
+`subscriber_count` int,
 `post_created` timestamp,
-`post_created_date` int,
-`post_created_time` string,
+`updated` timestamp,
+`file_timestamp` timestamp,
 `type` string,
-`total_interactions` bigint,
-`likes` bigint,
-`comments` bigint,
-`shares` bigint,
-`love` bigint,
-`wow` bigint,
-`haha` bigint,
-`sad` bigint,
-`angry` bigint,
-`care` bigint,
-`video_share_status` string,
-`is_video_owner` string,
-`post_views` bigint,
-`total_views` bigint,
-`total_views_for_all_crossposts` bigint,
-`video_length` string,
-`url` string,
+`statistics_actual_likes_count` bigint,
+`statistics_actual_comments_count` bigint,
+`statistics_actual_shares_count` bigint,
+`statistics_actual_love_count` bigint,
+`statistics_actual_wow_count` bigint,
+`statistics_actual_haha_count` bigint,
+`statistics_actual_sad_count` bigint,
+`statistics_actual_angry_count` bigint,
+`statistics_actual_care_count` bigint,
+`score` bigint,
+`platform_id` double,
+`video_length_ms` double,
+`id` string,
+`platform` string,
+`caption` string,
+`description` string,
+`post_url` string,
+`language_from_api` string,
 `message` string,
 `link` string,
-`final_link` string,
 `image_text` string,
-`link_text` string,
-`description` string,
-`sponsor_id` double,
-`sponsor_name` double,
-`sponsor_category` double,
-`overperforming_score` double,
 `scrape_url` string,
 `url_post_id` string,
 `clean_text` string,
 `language` string,
-`confidence` double,
+`language_confidence` double,
 `is_key_object` boolean,
 `features` array<string>,
-`features_count` array<int>,
+`features_count` array<int>
 `topic` string
 )
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
 WITH SERDEPROPERTIES (
   'serialization.format' = '1'
-) LOCATION 's3://buildup-dev-us-tables/fb_posts/parquet_exports/fb_posts_topics_may/'
+TODO: fix this URL
+) LOCATION 's3://buildup-dev-us-tables/facebook_posts/parquet_exports/facebook_posts_topics/'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```

@@ -7,6 +7,7 @@ In general these relate to the data from crowdtangle API: https://github.com/Cro
 | Column name                            | dtype               | Description                                                                                                       | 
 |----------------------------------------|---------------------| ------------------------------------------------------------------------------------------------------------------|
 | phoenix_post_id                        | object              | Computed post id by phoenix. This is the account platform id and the message hash. |
+TODO: add `account_name` and `account_handle`
 | account_platform_id                    | int64               | The facebook id of the account. |
 | account_page_category                  | object              | The page category as submitted by the page.  |
 | account_page_admin_top_country         | object              | The ISO country code of the the country from where the plurality of page administrators operate. |
@@ -36,11 +37,12 @@ In general these relate to the data from crowdtangle API: https://github.com/Cro
 | caption                                | object              | The caption to a photo, if available. |
 | description                            | object              | Further details, if available. Associated with links or images across different platforms. |
 | post_url                               | object              | URL of the post |
+TODO: change this to `language_from_api`
 | langauge_code                          | object              | Language code from the API |
+TODO: change to `text`
 | message                                | object              | Text of the post |
 | link                                   | object              | Link in the post |
 | image_text                             | object              | Text of the image in the post if there is one |
-| description                            | object              | Further details, if available. Associated with links or images across different platforms. |
 | message_link                           | object              | Message or link if message is null  |
 | message_hash                           | object              | The hash of the message or link used for calculating the `phoenix_post_id` |
 | scrape_url                             | object              | The scrape url to be used |
