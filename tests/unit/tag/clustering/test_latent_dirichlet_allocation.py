@@ -1,8 +1,9 @@
 """Unit tests for LatentDirichletAllocator."""
+import mock
 import pandas as pd
 import scipy.sparse
 
-from phoenix.tag.clustering.latent_dirichlet_allocation import LatentDirichletAllocator
+from phoenix.tag.clustering import latent_dirichlet_allocation
 from tests.utils import assert_sparse_matrix_equal
 
 
@@ -11,7 +12,7 @@ def test_LatentDirichletAllocator_word_matrix():
         [("ID_1", "nice words"), ("ID_2", "test words")], columns=["id", "clean_text"]
     )
 
-    output_lda = LatentDirichletAllocator(input_df)
+    output_lda = latent_dirichlet_allocation.LatentDirichletAllocator(input_df)
 
     assert output_lda.vectorizers["all"]
     # the word matrix will sort by alphabetically, then create a matrix of the presence of that
@@ -32,7 +33,9 @@ def test_LatentDirichletAllocator_word_matrix_groups():
         columns=["id", "clean_text", "topic"],
     )
 
-    output_lda = LatentDirichletAllocator(input_df, grouping_column="topic")
+    output_lda = latent_dirichlet_allocation.LatentDirichletAllocator(
+        input_df, grouping_column="topic"
+    )
 
     assert output_lda.vectorizers["test"]
     assert output_lda.vectorizers["test2"]
@@ -45,3 +48,19 @@ def test_LatentDirichletAllocator_word_matrix_groups():
     assert_sparse_matrix_equal(
         output_lda.vectorizers["test2"]["word_matrix"], scipy.sparse.csr_matrix([[1, 1]])
     )
+
+
+@mock.patch("phoenix.tag.clustering.latent_dirichlet_allocation.GridSearchCV")
+def test_LatentDirichletAllocator_train(mock_search):
+
+    input_df = pd.DataFrame(
+        [("ID_1", "nice words"), ("ID_2", "test words")], columns=["id", "clean_text"]
+    )
+    output_lda = latent_dirichlet_allocation.LatentDirichletAllocator(input_df)
+
+    output_lda.train()
+    expected_search_params = {"n_components": [10, 20, 30, 40], "max_iter": [10, 20, 40]}
+
+    mock_search.assert_called_with(mock.ANY, cv=None, param_grid=expected_search_params)
+    mock_search.return_value.fit.assert_called_with(output_lda.vectorizers["all"]["word_matrix"])
+    assert output_lda.vectorizers["all"]["grid_search_model"] == mock_search.return_value

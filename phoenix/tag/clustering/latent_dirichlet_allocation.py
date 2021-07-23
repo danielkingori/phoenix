@@ -1,7 +1,9 @@
 """Implements Latent Dirichlet Allocation on data."""
-
+from typing import List, Optional
 
 import pandas as pd
+from sklearn.decomposition import LatentDirichletAllocation
+from sklearn.model_selection import GridSearchCV
 from snowballstemmer import stemmer
 
 from phoenix.tag.text_features_analyser import StemmedCountVectorizer, get_stopwords
@@ -45,3 +47,25 @@ class LatentDirichletAllocator:
             }
 
         return vectorizer_dict
+
+    def train(
+        self,
+        n_components_list: Optional[List[int]] = None,
+        max_iter_list: Optional[List[int]] = None,
+    ):
+        """Train the Latent Dirichlet Allocation model.
+
+        Args:
+            n_components_list(List[int]): list of number of components to try when searching for
+            the best model.
+            max_iter_list(List[int]): list of maximum iterations to try when searching for the
+            best model.
+        """
+        n_components = n_components_list if n_components_list else [10, 20, 30, 40]
+        max_iter = max_iter_list if max_iter_list else [10, 20, 40]
+        search_params = {"n_components": n_components, "max_iter": max_iter}
+
+        for vectorizer_name in self.vectorizers:
+            model = GridSearchCV(LatentDirichletAllocation(), cv=None, param_grid=search_params)
+            model.fit(self.vectorizers[vectorizer_name]["word_matrix"])
+            self.vectorizers[vectorizer_name]["grid_search_model"] = model
