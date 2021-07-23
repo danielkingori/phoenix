@@ -1,7 +1,9 @@
 """Unit tests for LatentDirichletAllocator."""
 import mock
+import numpy as np
 import pandas as pd
 import scipy.sparse
+from mock import MagicMock
 
 from phoenix.tag.clustering import latent_dirichlet_allocation
 from tests.utils import assert_sparse_matrix_equal
@@ -64,3 +66,24 @@ def test_LatentDirichletAllocator_train(mock_search):
     mock_search.assert_called_with(mock.ANY, cv=None, param_grid=expected_search_params)
     mock_search.return_value.fit.assert_called_with(output_lda.vectorizers["all"]["word_matrix"])
     assert output_lda.vectorizers["all"]["grid_search_model"] == mock_search.return_value
+
+
+def test_tag_dataframe():
+    input_df = pd.DataFrame(["nice words", "test words"], columns=["clean_text"])
+    output_lda = latent_dirichlet_allocation.LatentDirichletAllocator(input_df)
+
+    model = MagicMock()
+    model.best_estimator_.transform.return_value = np.array([[0.1, 0.2, 0.3], [0.4, 0.5, 0.3]])
+    # override grid search model with a mock
+    output_lda.vectorizers["all"]["grid_search_model"] = model
+
+    expected_df = pd.DataFrame(
+        [("nice words", "all", 3, 0.3), ("test words", "all", 2, 0.5)],
+        columns=["clean_text", "lda_name", "lda_cloud", "lda_cloud_confidence"],
+    )
+    output_lda.tag_dataframe()
+
+    pd.testing.assert_frame_equal(output_lda.dfs["all"], expected_df)
+    model.best_estimator_.transform.assert_called_with(
+        output_lda.vectorizers["all"]["word_matrix"]
+    )

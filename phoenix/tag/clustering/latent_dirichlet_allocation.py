@@ -3,6 +3,7 @@ from typing import List, Optional
 
 import arabic_reshaper
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import tentaclio
 from bidi.algorithm import get_display
@@ -117,3 +118,17 @@ class LatentDirichletAllocator:
             with tentaclio.open(f"{base_url}{DATASET_NAME}_lda_wordcloud.png", mode="wb") as w:
                 plt.savefig(w)
             plt.show()
+
+    def tag_dataframe(self):
+        """Write back LDA results to dataframes."""
+        for vectorizer_name in self.vectorizers:
+            if not self.vectorizers[vectorizer_name]["grid_search_model"]:
+                raise KeyError("model not found, please train the model first.")
+            model = self.vectorizers[vectorizer_name]["grid_search_model"].best_estimator_
+            word_matrix = self.vectorizers[vectorizer_name]["word_matrix"]
+            cloud_model_groups = model.transform(word_matrix)
+            # Get index of most confident grouping (plus 1 as humans start from 1, not 0)
+            self.dfs[vectorizer_name]["lda_name"] = vectorizer_name
+            self.dfs[vectorizer_name]["lda_cloud"] = np.argmax(cloud_model_groups, axis=1) + 1
+
+            self.dfs[vectorizer_name]["lda_cloud_confidence"] = np.amax(cloud_model_groups, axis=1)
