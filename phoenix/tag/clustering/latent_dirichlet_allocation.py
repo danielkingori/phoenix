@@ -1,7 +1,11 @@
 """Implements Latent Dirichlet Allocation on data."""
 from typing import List, Optional
 
+import arabic_reshaper
+import matplotlib.pyplot as plt
 import pandas as pd
+import tentaclio
+from bidi.algorithm import get_display
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.model_selection import GridSearchCV
 from snowballstemmer import stemmer
@@ -69,3 +73,47 @@ class LatentDirichletAllocator:
             model = GridSearchCV(LatentDirichletAllocation(), cv=None, param_grid=search_params)
             model.fit(self.vectorizers[vectorizer_name]["word_matrix"])
             self.vectorizers[vectorizer_name]["grid_search_model"] = model
+
+    def save_plot(self, base_url: str, n_top_words: int = 15, title: str = "Wordcloud Groupings"):
+        """Plot the LatentDirichletAllocation with the top defining words in the group.
+
+        Args:
+            base_url(str): base_url for saving the plot
+            n_top_words(int): Number of words per group to show
+            title(str): Title for the plots. Will be prepended with the groupings if any.
+        """
+        for vectorizer_name in self.vectorizers:
+            if not self.vectorizers[vectorizer_name]["grid_search_model"]:
+                raise KeyError("model not found, please train the model first.")
+
+            if vectorizer_name == "all":
+                DATASET_NAME = ""
+            else:
+                DATASET_NAME = vectorizer_name
+            model = self.vectorizers[vectorizer_name]["grid_search_model"].best_estimator_
+            feature_names = self.vectorizers[vectorizer_name][
+                "count_vectorizer"
+            ].get_feature_names()
+            fig, axes = plt.subplots(2, 5, figsize=(30, 15), sharex="all")
+            axes = axes.flatten()
+            for topic_idx, topic in enumerate(model.components_):
+                top_features_ind = topic.argsort()[: -n_top_words - 1 : -1]
+                top_features = [
+                    get_display(arabic_reshaper.reshape(feature_names[i]))
+                    for i in top_features_ind
+                ]
+                weights = topic[top_features_ind]
+
+                ax = axes[topic_idx]
+                ax.barh(top_features, weights, height=0.7)
+                ax.set_title(f"Cloud {topic_idx + 1}", fontdict={"fontsize": 30})
+                ax.invert_yaxis()
+                ax.tick_params(axis="both", which="major", labelsize=20)
+                for i in "top right left".split():
+                    ax.spines[i].set_visible(False)
+                fig.suptitle(f"{DATASET_NAME} {title}", fontsize=40)
+
+            plt.subplots_adjust(top=0.90, bottom=0.05, wspace=0.90, hspace=0.3)
+            with tentaclio.open(f"{base_url}{DATASET_NAME}_lda_wordcloud.png", mode="wb") as w:
+                plt.savefig(w)
+            plt.show()
