@@ -42,16 +42,16 @@ page_obj.json
 #### Comments
 `comment.as_dict` returns the following:
 -  `file_id`          : see `page.file_id` 
--  `date`             : date of post as found on FB when retrieved <_Tuesday at 3:27 PM_>
--  `date_utc`         : date of post normalized to UTC <_2020-07-07 17:27:48_>
--  `display_name`     : display name of the comment owner <_محمد عمر_>
+-  `date`             : date post or comment was made as found in timestamp on FB when retrieved <Tuesday at 3:27 PM>
+-  `date_utc`         :date of post or comment normalized to UTC <_2020-07-07 13:27:48_>
+-  `user_display_name`     : display name of the comment owner <_محمد عمر_>
 -  `fb_id`            : Facebook id of the specific comment <_616111729289804_>
 -  `parent`           : id of the object above (if it is the fb_id, it's a post) <_616103579290619_>
--  `reactions`        : number of reactions <_60_>
--  `sentiment`        : rough type of reactions reported in order from most to third-most <[_Like_, _Haha_, _Love_]>
+-  `reactions`        : number of reactions, if empty `self.reactions = 0` <_60_>
+-  `top_sentiment_reactions`: rough type of reactions reported in order from most to third-most <[_Like_, _Haha_, _Love_]>
 -  `text`             : post texts <_رد سريع وقاسي الله يبارك_>
--  `top_level_post_id`: top level post <_616103579290619_>
--  `username`         : username for navigating facebook - could be number or string <_100001749670760_> <_jacob.lefton_>
+-  `post_id`          : top level post <_616103579290619_>
+-  `user_name`         : username for navigating facebook - could be number or string <_100001749670760_> <_jacob.lefton_>
 - `images`            : a list of dictionaries containing image information if existing
 - `connections`       : a list of tags of users or hashtags (see below)
 - `position`          : is it a post, comment, or subcomment?

@@ -780,18 +780,19 @@ class Comment(object):
             # Sentiment order is important - highest, second highest, third highest
 
         self.position = self.analyze_position(page_type)
+        self.id = self.fb_id
 
         self.as_dict = {
-            "fb_id": self.fb_id,
-            "top_level_post_id": self.top_level_post_id,
+            "id": self.id,
+            "post_id": self.top_level_post_id,
             "parent": self.parent,
-            "display_name": self.display_name,
-            "username": self.username,
+            "user_display_name": self.display_name,
+            "user_name": self.username,
             "text": self.text,
             "date": self.date,
             "date_utc": self.date_utc,
             "reactions": self.reactions,
-            "sentiment": self.sentiment,
+            "top_sentiment_reactions": self.sentiment,
             "images": self.images,
             "connections": self.connections,
             "position": self.position,
