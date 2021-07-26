@@ -2,9 +2,11 @@
 import mock
 import numpy as np
 import pandas as pd
+import pytest
 import scipy.sparse
 from mock import MagicMock
 
+from phoenix.common.artifacts import dataframes
 from phoenix.tag.clustering import latent_dirichlet_allocation
 from tests.utils import assert_sparse_matrix_equal
 
@@ -86,4 +88,26 @@ def test_tag_dataframe():
     pd.testing.assert_frame_equal(output_lda.dfs["all"], expected_df)
     model.best_estimator_.transform.assert_called_with(
         output_lda.vectorizers["all"]["word_matrix"]
+    )
+
+
+@pytest.fixture()
+def expected_persist_df():
+    df = pd.DataFrame(
+        [("nice words", "all", 3, 0.3), ("test words", "all", 2, 0.5)],
+        columns=["clean_text", "lda_name", "lda_cloud", "lda_cloud_confidence"],
+    )
+    return df
+
+
+def test_persist(tmpdir, expected_persist_df):
+    input_df = pd.DataFrame(["nice words", "test words"], columns=["clean_text"])
+    output_lda = latent_dirichlet_allocation.LatentDirichletAllocator(input_df)
+    output_lda.dfs["all"] = expected_persist_df
+
+    dir_url = "file:" + str(tmpdir) + "/"
+    output_lda.persist(dir_url)
+    pd.testing.assert_frame_equal(
+        dataframes.get(dir_url + "all_latent_dirichlet_allocation.parquet").dataframe,
+        expected_persist_df,
     )

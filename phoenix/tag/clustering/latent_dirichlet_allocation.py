@@ -11,6 +11,7 @@ from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.model_selection import GridSearchCV
 from snowballstemmer import stemmer
 
+from phoenix.common.artifacts import dataframes
 from phoenix.tag.text_features_analyser import StemmedCountVectorizer, get_stopwords
 
 
@@ -132,3 +133,14 @@ class LatentDirichletAllocator:
             self.dfs[vectorizer_name]["lda_cloud"] = np.argmax(cloud_model_groups, axis=1) + 1
 
             self.dfs[vectorizer_name]["lda_cloud_confidence"] = np.amax(cloud_model_groups, axis=1)
+
+    def persist(self, output_dir_url: str):
+        """Persist dataframe tagged with LDA groupings."""
+        for vectorizer_name in self.vectorizers:
+            if "lda_name" not in self.dfs[vectorizer_name].columns:
+                raise KeyError(
+                    "Dataframe not tagged with LDA groupings, please run tag_dataframe."
+                )
+
+            url = dataframes.url(output_dir_url, f"{vectorizer_name}_latent_dirichlet_allocation")
+            dataframes.persist(url, self.dfs[vectorizer_name])
