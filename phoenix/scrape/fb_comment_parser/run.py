@@ -60,18 +60,18 @@ def parse_fb_page(contents, filename):
 
 def run_fb_page_parser(to_parse_url, parsed_url, fail_url):
     """Run the parser and return a list of parsed pages."""
-    pages_json = []
+    pages = []
     for contents, filename in get_files(to_parse_url):
         try:
             page = parse_fb_page(contents, filename)
-            pages_json.append(page.json)
+            pages.append(page.as_dict)
             move_processed_file(to_parse_url, parsed_url, filename)
         except Exception as e:
             # We want to save failed files but continue processing.
             logging.info(f"Failure: {e} from {filename}.")
             move_processed_file(to_parse_url, fail_url, filename)
             continue
-    return pages_json
+    return pages
 
 
 def save_pretty(soup, path, filename):

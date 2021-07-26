@@ -17,7 +17,9 @@ CURRENT_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
 TEST_FILE_DIRECTORY = f"file:///{CURRENT_DIRECTORY}/test_html_pages/"
 
 
-# TODO: Remove on tentaclio updates
+# Tenticlio seems to have a bug with the `listdir` function see issue:
+# link to the issue
+# This is a monkey patch so that it works in this test.
 def _from_os_dir_entry(original: os.DirEntry) -> fs.DirEntry:
     return fs.DirEntry(
         url=urls.URL("file:///" + os.path.abspath(original.path)),
