@@ -1,9 +1,12 @@
 """Unit tests for LatentDirichletAllocator."""
+import pickle
+
 import mock
 import numpy as np
 import pandas as pd
 import pytest
 import scipy.sparse
+import tentaclio
 from mock import MagicMock
 
 from phoenix.common.artifacts import dataframes
@@ -110,4 +113,23 @@ def test_persist(tmpdir, expected_persist_df):
     pd.testing.assert_frame_equal(
         dataframes.get(dir_url + "all_latent_dirichlet_allocation.parquet").dataframe,
         expected_persist_df,
+    )
+
+
+def test_persist_model(tmpdir, expected_persist_df):
+    input_df = pd.DataFrame(["nice words", "test words"], columns=["clean_text"])
+    output_lda = latent_dirichlet_allocation.LatentDirichletAllocator(input_df)
+    output_lda.dfs["all"] = expected_persist_df
+
+    dir_url = "file:" + str(tmpdir) + "/"
+    output_lda.persist_model(dir_url)
+    with tentaclio.open(f"{dir_url}latent_dirichlet_allocator_model.sav", "rb") as f:
+        loaded_lda = pickle.load(f)
+
+    pd.testing.assert_frame_equal(
+        loaded_lda.dfs["all"],
+        expected_persist_df,
+    )
+    assert_sparse_matrix_equal(
+        output_lda.vectorizers["all"]["word_matrix"], loaded_lda.vectorizers["all"]["word_matrix"]
     )

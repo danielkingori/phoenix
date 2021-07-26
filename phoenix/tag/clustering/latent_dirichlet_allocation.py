@@ -1,6 +1,8 @@
 """Implements Latent Dirichlet Allocation on data."""
 from typing import List, Optional
 
+import pickle
+
 import arabic_reshaper
 import matplotlib.pyplot as plt
 import numpy as np
@@ -144,3 +146,8 @@ class LatentDirichletAllocator:
 
             url = dataframes.url(output_dir_url, f"{vectorizer_name}_latent_dirichlet_allocation")
             dataframes.persist(url, self.dfs[vectorizer_name])
+
+    def persist_model(self, output_dir_url):
+        """Persist model."""
+        with tentaclio.open(f"{output_dir_url}latent_dirichlet_allocator_model.sav", "wb") as f:
+            pickle.dump(self, f)
