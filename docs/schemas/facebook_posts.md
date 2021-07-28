@@ -4,6 +4,8 @@ Final dataframe of facebook posts.
 
 In general these relate to the data from crowdtangle API: https://github.com/CrowdTangle/API/wiki/Post
 
+CrowdTangle glossary Link [https://help.crowdtangle.com/en/articles/1184978-crowdtangle-glossary](https://help.crowdtangle.com/en/articles/1184978-crowdtangle-glossary)
+
 | Column name                            | dtype               | Description                                                                                                       | 
 |----------------------------------------|---------------------| ------------------------------------------------------------------------------------------------------------------|
 | phoenix_post_id                        | object              | Computed post id by phoenix. This is the account platform id and the message hash. |
@@ -29,7 +31,10 @@ TODO: add `account_name` and `account_handle`
 | statistics_actual_sad_count            | int64               | No. sad reactions |
 | statistics_actual_angry_count          | int64               | No. angry reactions
 | statistics_actual_care_count           | int64               | No. care reactions |
-| score                                  | float64             | Score from crowdtangle. Phoenix sets this as `total_interactions`. See scraping crowdtangle code for more information. |
+| total_interactions                     | float64             | Set if API made request with `sortBy` as `total_interactions`. See glossary link. |
+| overperforming_score                   | float64             | Set if API made request with `sortBy` as `overperforming`. See glossary link. |
+| interaction_rate                       | float64             | Set if API made request with `sortBy` as `interaction_rate`. See glossary link. |
+| underperforming_score                  | float64             | Set if API made request with `sortBy` as `underperforming`. See glossary link. |
 | platform_id                            | float64             | Id of the post from facebook |
 | video_length_ms                        | float64             | The length of the video in milliseconds. |
 | id                                     | object              | Id of the post from crowdtangle |

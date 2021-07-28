@@ -3,9 +3,11 @@ import datetime
 import json
 import os
 
+import numpy as np
 import pandas as pd
 import tentaclio
 
+from phoenix.common import constants as common_constants
 from phoenix.tag.data_pull import constants, utils
 
 
@@ -73,6 +75,7 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
     df = df[~df["message"].isna()]
     df = utils.to_type("message", str, df)
     df = utils.to_type("type", str, df)
+    df = map_score(common_constants.FACEBOOK_POST_SORT_BY, df)
     df["post_created"] = df["date"].dt.tz_localize("UTC")
     df["updated"] = pd.to_datetime(df["updated"]).dt.tz_localize("UTC")
     # This will be hashed so that links are in the hash
@@ -99,6 +102,24 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
             "legacy_id",
         ]
     )
+
+
+def map_score(sort_by_api: str, df: pd.DataFrame) -> pd.DataFrame:
+    """Map score based on the sort by parameter of the request."""
+    all_scores_mapping = {
+        "total_interactions": "total_interactions",
+        "overperforming": "overperforming_score",
+        "interaction_rate": "interaction_rate",
+        "underperforming": "underperforming_score",
+    }
+    for sort_by_match, col in all_scores_mapping.items():
+        if sort_by_match == sort_by_api:
+            df.rename(columns={"score": col}, inplace=True)
+        else:
+            df[col] = np.nan
+        df[col] = df[col].astype(float)
+
+    return df
 
 
 def merge_flattened(df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
