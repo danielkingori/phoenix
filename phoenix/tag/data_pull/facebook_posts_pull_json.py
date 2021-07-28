@@ -50,10 +50,26 @@ def get_file_name_timestamp(url: str) -> datetime.datetime:
 
 
 def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
-    """Normalise the raw dataframe."""
+    """Normalise the raw dataframe.
+
+    The raw data is in JSON format and has a number of nested properties. As such
+    we process two versions of raw data.
+
+    1. raw_df: has the nested data, this uses `pd.read_json`
+    2. df_flattened: this has all of the nested data flattened using `pd.json_normalize`
+
+    The reason for this is ease of creating the final data structure:
+    - `raw_df` (`pd.read_json`) has better dtypes for the non nested properties
+    - `df_flattened` (`pd.json_normalize`) has the formatted columns for the nested data
+
+    Args:
+        raw_df: return of `pd.read_json` of the source file
+        df_flattened: return of `pd.json_normalize` of the source file
+    """
     df = raw_df.rename(utils.camel_to_snake, axis="columns")
     df_flattened = df_flattened.rename(utils.camel_to_snake, axis="columns")
     df_flattened.columns = df_flattened.columns.str.replace(".", "_")
+    df = merge_flattened(df, df_flattened)
     df = df[~df["message"].isna()]
     df = utils.to_type("message", str, df)
     df = utils.to_type("type", str, df)
@@ -70,9 +86,8 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
     # Still using the phoenix_post_id as this seems a good way of identifying posts
     # So we are making one from the account that posted it and a hash of the message
     df["phoenix_post_id"] = (
-        df_flattened["account_platform_id"].astype(str) + "-" + df["message_hash"].astype(str)
+        df["account_platform_id"].astype(str) + "-" + df["message_hash"].astype(str)
     ).astype(str)
-    df = merge_flattened(df, df_flattened)
     return df.drop(
         columns=[
             "account",
@@ -87,9 +102,18 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
 
 
 def merge_flattened(df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
-    """Merged to flattened dataframe with the non flattened.
+    """Merged flattened dataframe with the non flattened.
 
-    Doing this because the flattened dataframe has incorrect types.
+    1. df: has the nested data, this uses `pd.read_json`
+    2. df_flattened: this has all of the nested data flattened using `pd.json_normalize`
+
+    The reason for this is ease of creating the final data structure:
+    - `df` (`pd.read_json`) has better dtypes for the non nested properties
+    - `df_flattened` (`pd.json_normalize`) has the formatted columns for the nested data
+
+    Args:
+        df: return of `pd.read_json` of the source file
+        df_flattened: return of `pd.json_normalize` of the source file
     """
     to_add = [
         "account_platform_id",
