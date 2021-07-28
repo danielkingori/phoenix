@@ -142,7 +142,7 @@ def fb_comments(
     RUN_ISO_TIMESTAMP:
         Is the timestamp that will mark the artifacts that are created.
     """
-    RUN_DATE = utils.get_run_date(run_iso_timestamp)
+    RUN_DATE = utils.get_run_iso_datetime(run_iso_timestamp)
 
     parameters: dict = {}
 
