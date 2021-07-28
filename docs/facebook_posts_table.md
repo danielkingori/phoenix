@@ -34,12 +34,11 @@ This will persist the final data to s3. See notebooks for more details.
 ## Athena table
 Was initialised using the command:
 ```
-TODO: refactor to match the new facebook schema
-CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook (
+CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_posts_v1 (
 `phoenix_post_id` string,
 `account_handle` string,
 `account_name` string,
-`account_platform_id` int,
+`account_platform_id` bigint,
 `account_page_category` string,
 `account_page_admin_top_country` string,
 `account_page_description` string,
@@ -71,9 +70,8 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook (
 `caption` string,
 `description` string,
 `post_url` string,
-TODO: change this in facebook schema
 `language_from_api` string,
-`message` string,
+`text` string,
 `link` string,
 `image_text` string,
 `scrape_url` string,
@@ -88,8 +86,7 @@ TODO: change this in facebook schema
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
 WITH SERDEPROPERTIES (
   'serialization.format' = '1'
-TODO: fix url
-) LOCATION 's3://buildup-dev-us-tables/facebook_posts/parquet_exports/facebook_posts/'
+) LOCATION 's3://buildup-dev-us-tables/facebook_posts/parquet_exports/facebook_posts_v1/'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```
 If you need to make changes:
@@ -99,9 +96,11 @@ DROP TABLE IF EXISTS buildup_dev.facebook_posts;
 ### Topics
 Athena table was created with the query:
 ```
-CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_posts_topics (
+CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_posts_topics_v1 (
 `phoenix_post_id` string,
-`account_platform_id` int,
+`account_handle` string,
+`account_name` string,
+`account_platform_id` bigint,
 `account_page_category` string,
 `account_page_admin_top_country` string,
 `account_page_description` string,
@@ -122,7 +121,10 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_posts_topics (
 `statistics_actual_sad_count` bigint,
 `statistics_actual_angry_count` bigint,
 `statistics_actual_care_count` bigint,
-`score` bigint,
+`total_interactions` double,
+`overperforming_score` double,
+`interaction_rate` double,
+`underperforming_score` double,
 `platform_id` double,
 `video_length_ms` double,
 `id` string,
@@ -131,7 +133,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_posts_topics (
 `description` string,
 `post_url` string,
 `language_from_api` string,
-`message` string,
+`text` string,
 `link` string,
 `image_text` string,
 `scrape_url` string,
@@ -141,13 +143,12 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_posts_topics (
 `language_confidence` double,
 `is_key_object` boolean,
 `features` array<string>,
-`features_count` array<int>
+`features_count` array<int>,
 `topic` string
 )
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
 WITH SERDEPROPERTIES (
   'serialization.format' = '1'
-TODO: fix this URL
-) LOCATION 's3://buildup-dev-us-tables/facebook_posts/parquet_exports/facebook_posts_topics/'
+) LOCATION 's3://buildup-dev-us-tables/facebook_posts/parquet_exports/facebook_posts_topics_v1/'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```

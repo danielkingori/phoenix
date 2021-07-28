@@ -69,18 +69,19 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
         df_flattened: return of `pd.json_normalize` of the source file
     """
     df = raw_df.rename(utils.camel_to_snake, axis="columns")
+    df = df.rename(columns={"language_code": "language_from_api", "message": "text"})
     df_flattened = df_flattened.rename(utils.camel_to_snake, axis="columns")
     df_flattened.columns = df_flattened.columns.str.replace(".", "_")
     df = merge_flattened(df, df_flattened)
-    df = df[~df["message"].isna()]
-    df = utils.to_type("message", str, df)
+    df = df[~df["text"].isna()]
+    df = utils.to_type("text", str, df)
     df = utils.to_type("type", str, df)
     df = map_score(common_constants.FACEBOOK_POST_SORT_BY, df)
     df["post_created"] = df["date"].dt.tz_localize("UTC")
     df["updated"] = pd.to_datetime(df["updated"]).dt.tz_localize("UTC")
     # This will be hashed so that links are in the hash
-    df["message_link"] = df["message"] + "-" + df["link"].fillna("")
-    df["message_hash"] = df["message_link"].apply(utils.hash_message)
+    df["text_link"] = df["text"] + "-" + df["link"].fillna("")
+    df["text_hash"] = df["text_link"].apply(utils.hash_message)
     df["scrape_url"] = df["post_url"].str.replace(
         "https://www.facebook", "https://mbasic.facebook"
     )
@@ -89,7 +90,7 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
     # Still using the phoenix_post_id as this seems a good way of identifying posts
     # So we are making one from the account that posted it and a hash of the message
     df["phoenix_post_id"] = (
-        df["account_platform_id"].astype(str) + "-" + df["message_hash"].astype(str)
+        df["account_platform_id"].astype(str) + "-" + df["text_hash"].astype(str)
     ).astype(str)
     return df.drop(
         columns=[
@@ -137,6 +138,8 @@ def merge_flattened(df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFram
         df_flattened: return of `pd.json_normalize` of the source file
     """
     to_add = [
+        "account_name",
+        "account_handle",
         "account_platform_id",
         "account_page_category",
         "account_page_admin_top_country",
@@ -182,12 +185,9 @@ def for_tagging(given_df: pd.DataFrame):
 
     """
     df = given_df.copy()
-    df = df[["phoenix_post_id", "message"]]
-    column_with_lang_from_api = "langauge_code"
-    if column_with_lang_from_api in given_df.columns:
-        df["language_from_api"] = given_df[column_with_lang_from_api]
+    df = df[["phoenix_post_id", "text", "language_from_api"]]
 
-    df = df.rename(columns={"phoenix_post_id": "object_id", "message": "text"})
+    df = df.rename(columns={"phoenix_post_id": "object_id"})
     df = df.set_index(df["object_id"], verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_FACEBOOK_POST
     return df

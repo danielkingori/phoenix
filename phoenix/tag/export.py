@@ -27,11 +27,11 @@ def get_posts_to_scrape(posts_df: pd.DataFrame) -> pd.DataFrame:
     posts_to_scrape = posts_df[
         [
             "phoenix_post_id",
-            "page_name",
+            "account_name",
             "post_created",
-            "message",
+            "text",
             "total_interactions",
-            "url",
+            "post_url",
             "scrape_url",
         ]
     ]
