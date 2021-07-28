@@ -78,6 +78,8 @@ def test_get_rate_limits_env():
     assert rate_limit_seconds == 300
 
 
+@mock.patch.dict(os.environ, {"CT_RATE_LIMIT_CALLS": ""})
+@mock.patch.dict(os.environ, {"CT_RATE_LIMIT_SECONDS": ""})
 def test_get_rate_limits_default():
     """Test get_rate_limits for default values."""
     rate_limit_calls, rate_limit_seconds = crowdtangle.get_rate_limits()

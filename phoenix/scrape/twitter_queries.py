@@ -68,9 +68,9 @@ def get_tweets_since_days(query_type, query, since_days, num_items, api=None) ->
         api = connect_twitter_api()
     # Check query type
     logging.info(f"Query_type: {query_type} | Query: {query}")
-    if query_type == "users":
+    if query_type == "user":
         cursor_function = _get_user_tweet_cursor(api, query, num_items)
-    elif query_type == "keywords":
+    elif query_type == "keyword":
         cursor_function = _tweet_search_cursor(api, query, num_items)
     else:
         logging.info("Bad query.")

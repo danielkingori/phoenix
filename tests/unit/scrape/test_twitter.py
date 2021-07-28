@@ -18,7 +18,7 @@ def test_get_tweets_json(
     query = ["keyword1", "keyword2"]
     num_items = 1
     since_days = 1
-    query_type = "keywords"
+    query_type = "keyword"
     # API mocking
     tweet_mock = mock.Mock()
     mock_json = {"id": 1}
@@ -40,7 +40,7 @@ def test_get_tweets_json(
 def test_get_tweets(m_get_tweets_since_days):
     """Tests correct _get_tweets."""
     # Args input
-    query_type = "users"
+    query_type = "user"
     id_list = ["user1", "user2"]
     num_items = 1
     since_days = 1
@@ -68,8 +68,8 @@ def test_get_tweets_since_days_all_endpoints(
     """Tests correct get_user_tweets_dataframe. Also proves twitter_utilities.is_recent_tweet."""
     # Args input
     queries = [
-        {"query_type": "users", "query": "user1"},
-        {"query_type": "keywords", "query": "keyword"},
+        {"query_type": "user", "query": "user1"},
+        {"query_type": "keyword", "query": "keyword"},
     ]
     num_items = 1
     since_days = 1
