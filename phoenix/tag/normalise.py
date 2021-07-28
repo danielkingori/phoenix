@@ -23,7 +23,7 @@ def execute(given_df: pd.DataFrame, text_key: str = "text") -> pd.DataFrame:
     if "language_from_api" not in df.columns:
         df["language_from_api"] = None
     df["clean_text"] = clean_text(df[text_key])
-    df[["language", "confidence"]] = language.execute(df["clean_text"])
+    df[["language", "language_confidence"]] = language.execute(df["clean_text"])
     df["is_unofficial_retweet"] = is_unofficial_retweet(df["clean_text"])
     df["is_retweet"] = is_retweet(df)
     return df
@@ -37,7 +37,7 @@ def clean_text(text_ser) -> pd.Series:
 def language_distribution(normalised_df) -> pd.DataFrame:
     """Get a distribution of languages."""
     lang_dist = normalised_df.groupby("language").agg(
-        {"confidence": ["min", "max", "median", "skew", "mean"], "clean_text": "count"}
+        {"language_confidence": ["min", "max", "median", "skew", "mean"], "clean_text": "count"}
     )
     lang_dist = lang_dist.rename(columns={"clean_text": "number_of_items"})
     return lang_dist
