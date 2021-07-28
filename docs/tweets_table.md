@@ -33,12 +33,10 @@ This will persist the final data to s3. See notebooks for more details.
 ## Athena table
 Was initialised using the command:
 ```
-CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.tweets_may (
-  TODO: change to string
+CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.tweets_v1 (
   `id_str` string,
   `created_at` timestamp,
   `id` bigint,
-  TODO: change to `text`
   `text` string,
   `truncated` boolean,
   `source` string,
@@ -46,12 +44,10 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.tweets_may (
   `retweet_count` int,
   `favorite_count` int,
   `favorited` boolean,
-  TODO: change to `language_from_api`
   `language_from_api` string,
   `possibly_sensitive` double,
   `clean_text` string,
   `language` string,
-  TODO: change to `language_confidence`
   `language_confidence` double,
   `is_unofficial_retweet` boolean,
   `is_retweet` boolean,
@@ -62,8 +58,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.tweets_may (
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
 WITH SERDEPROPERTIES (
   'serialization.format' = '1'
-TODO: fix URL
-) LOCATION 's3://buildup-dev-us-tables/tweets/parquet_exports/tweets/'
+) LOCATION 's3://buildup-dev-us-tables/tweets/parquet_exports/tweets_v1/'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```
 If you need to make changes:
@@ -74,8 +69,7 @@ DROP TABLE IF EXISTS buildup_dev.tweets;
 ### Topics
 Athena table was created with the query:
 ```
-CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.tweets_topics (
-  TODO: Changes to match `tweets` table
+CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.tweets_topics_v1 (
   `id_str` string,
   `created_at` timestamp,
   `id` bigint,
@@ -101,7 +95,6 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.tweets_topics (
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
 WITH SERDEPROPERTIES (
   'serialization.format' = '1'
-TODO: fix URL
-) LOCATION 's3://buildup-dev-us-tables/tweets/parquet_exports/tweets_topics/'
+) LOCATION 's3://buildup-dev-us-tables/tweets/parquet_exports/tweets_topics_v1/'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```
