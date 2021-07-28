@@ -13,6 +13,8 @@ import time
 
 import requests
 
+from phoenix.common import constants
+
 
 POSTS_BASE_URL = "https://api.crowdtangle.com/posts"
 
@@ -65,7 +67,6 @@ def get_all_posts(
     start_date: datetime.datetime,
     end_date: datetime.datetime,
     list_ids: List[str],
-    sort_by="total_interactions",
 ):
     """Get all the posts for search params."""
     posts = []
@@ -73,7 +74,7 @@ def get_all_posts(
         "startDate": start_date.strftime("%Y-%m-%dT%H:%M:%S"),
         "endDate": end_date.strftime("%Y-%m-%dT%H:%M:%S"),
         "listIds": list_ids,
-        "sortBy": sort_by,
+        "sortBy": constants.FACEBOOK_POST_SORT_BY,
         "count": 100,
     }
 
