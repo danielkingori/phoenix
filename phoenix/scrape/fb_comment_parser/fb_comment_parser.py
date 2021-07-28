@@ -237,7 +237,7 @@ class Page(object):  # noqa
         for comment in self.comments:
             if comment.position == "post":
                 # only if the comment is a post! In replies this won't work, for sure.
-                name = comment.as_dict["username"]
+                name = comment.as_dict["user_name"]
             else:
                 pass
         return name
