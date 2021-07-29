@@ -1,5 +1,11 @@
 # Shared dependencies across project
+awswrangler
 pandas
+dask[complete]
+fastparquet
+s3fs
+# This is need to resolve versions on boto
+aiobotocore[awscli,boto3]
 tentaclio
 matplotlib
 pyarrow

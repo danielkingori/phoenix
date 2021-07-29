@@ -5,7 +5,6 @@ polyglot
 pyicu
 pycld2
 python-bidi
-dask[complete]
 nltk
 seaborn
 snowballstemmer
