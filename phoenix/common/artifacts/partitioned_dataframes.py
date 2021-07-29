@@ -7,6 +7,7 @@ from pathlib import Path
 import awswrangler as wr
 import pandas as pd
 import pyarrow as pa
+from dask import dataframe as dd
 
 from phoenix.common.artifacts import dtypes
 
@@ -38,13 +39,9 @@ def _partitioned_persit(
 ) -> None:
     """Private persist that will be mocked when testing."""
     url = artifacts_dataframe_url
-    df = dataframe
-    fs_to_use, path = pa.fs.FileSystem.from_uri(url)
-    if url.startswith("s3:"):
-        wr.s3.to_parquet(df, url, dataset=True, **to_parquet_params)
-    else:
-        table = pa.Table.from_pandas(df)
-        pa.parquet.write_to_dataset(table, root_path=path, **to_parquet_params)
+    npartitions = to_parquet_params.get("npartitions", 30)
+    df = dd.from_pandas(dataframe, npartitions)
+    dd.to_parquet(df, url, compute=True, **to_parquet_params)
 
 
 def get(
@@ -62,10 +59,10 @@ def get(
     url = artifacts_dataframe_url
     fs_to_use, path = pa.fs.FileSystem.from_uri(url)
     if url.startswith("s3:"):
-        df = wr.s3.read_parquet(url, dataset=True, **from_parquet_params)
+        ddf = dd.read_parquet(url, **from_parquet_params)
     else:
-        table = pa.parquet.read_table(path)
-        df = table.to_pandas()
+        ddf = dd.read_parquet(path, **from_parquet_params)
+    df = ddf.compute()
 
     return dtypes.ArtifactDataFrame(url=artifacts_dataframe_url, dataframe=df)
 
