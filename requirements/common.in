@@ -1,5 +1,9 @@
 # Shared dependencies across project
+awswrangler
 pandas
+dask[complete]
+fastparquet
+s3fs
 tentaclio
 matplotlib
 pyarrow

@@ -8,3 +8,7 @@ pytest
 pytest-mock
 mock
 jupyterlab
+
+# Types that need to be installed
+types-requests
+types-mock
