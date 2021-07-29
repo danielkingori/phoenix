@@ -57,11 +57,7 @@ def get(
         ArtifactDataFrame object
     """
     url = artifacts_dataframe_url
-    fs_to_use, path = pa.fs.FileSystem.from_uri(url)
-    if url.startswith("s3:"):
-        ddf = dd.read_parquet(url, **from_parquet_params)
-    else:
-        ddf = dd.read_parquet(path, **from_parquet_params)
+    ddf = dd.read_parquet(url, **from_parquet_params)
     df = ddf.compute()
 
     return dtypes.ArtifactDataFrame(url=artifacts_dataframe_url, dataframe=df)
