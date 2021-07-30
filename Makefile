@@ -30,13 +30,20 @@ lint:
 	mypy phoenix tests
 
 test:
-	pytest tests
+	pytest tests -m "not auth"
 
 integration:
-	pytest tests/integration
+	pytest tests/integration -m "not auth"
 
 unit:
 	pytest tests/unit
+
+test_auth:
+	pytest tests -m "auth"
+
+integration_auth:
+	pytest tests/integration -m "auth"
+
 
 validate:
 	pytest validation
