@@ -18,9 +18,7 @@ def test_dataframe_artifact_partitions(tmp_path):
     )
     df["group"] = df["group"].astype("category")
 
-    a_df = artifacts.partitioned_dataframes.persist(
-        artefact_url, df, {"partition_cols": ["group"]}
-    )
+    a_df = artifacts.partitioned_dataframes.persist(artefact_url, df, ["group"])
     e_url = f"{test_artefact_dir}{artefact_basename}"
     assert a_df.url == e_url
     pd.testing.assert_frame_equal(a_df.dataframe, df)

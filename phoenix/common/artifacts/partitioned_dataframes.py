@@ -1,5 +1,5 @@
 """Artifacts Partitioned DataFrame interface."""
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import shutil
 from pathlib import Path
@@ -13,21 +13,28 @@ from phoenix.common.artifacts import dtypes
 
 
 def persist(
-    artifacts_dataframe_url: str, dataframe: pd.DataFrame, to_parquet_params: Dict[str, Any] = {}
+    artifacts_dataframe_url: str,
+    dataframe: pd.DataFrame,
+    partition_cols: List[str],
+    npartitions: int = 1,
+    to_parquet_params: Dict[str, Any] = {},
 ) -> dtypes.ArtifactDataFrame:
-    """Persist a DataFrame creating a ArtifactDataFrame.
+    """Persist a DataFrame as a partitioned parquet creating a ArtifactDataFrame.
 
     Args:
         artifacts_dataframe_url (str): URL for the artifact DataFrame.
-            This must be a valid dataframe URL with the extension
-            defined in constants.DATAFRAME_ARTIFACT_FILE_EXTENSION.
         dataframe (DataFrame): pandas DataFrame to persist.
-        to_parquet_params (Dict[str, Any]): params to pass to the `to_parquet` function.
+        partition_cols (List[str]): list of columns to partition on.
+        npartitions (int): number of npartitions for `from_pandas`, default 1:
+            https://docs.dask.org/en/latest/generated/dask.dataframe.from_pandas.html
+        to_parquet_params: aux params to pass to the `to_parquet` function.
 
     Returns:
         ArtifactDataFrame object
     """
-    _partitioned_persit(artifacts_dataframe_url, dataframe, to_parquet_params)
+    _partitioned_persit(
+        artifacts_dataframe_url, dataframe, partition_cols, npartitions, to_parquet_params
+    )
     artifact_dataframe = dtypes.ArtifactDataFrame(
         url=artifacts_dataframe_url, dataframe=dataframe.copy()
     )
@@ -35,23 +42,25 @@ def persist(
 
 
 def _partitioned_persit(
-    artifacts_dataframe_url: str, dataframe: pd.DataFrame, to_parquet_params: Dict[str, Any] = {}
+    artifacts_dataframe_url: str,
+    dataframe: pd.DataFrame,
+    partition_cols: List[str],
+    npartitions: int = 1,
+    to_parquet_params: Dict[str, Any] = {},
 ) -> None:
     """Private persist that will be mocked when testing."""
     url = artifacts_dataframe_url
-    npartitions = to_parquet_params.get("npartitions", 30)
     df = dd.from_pandas(dataframe, npartitions)
-    dd.to_parquet(df, url, compute=True, **to_parquet_params)
+    dd.to_parquet(df, url, compute=True, partition_cols=partition_cols, **to_parquet_params)
 
 
 def get(
     artifacts_dataframe_url: str, from_parquet_params: Dict[str, Any] = {}
 ) -> dtypes.ArtifactDataFrame:
-    """Get a persisted dataframe.
+    """Get a persisted partitioned dataframe.
 
     Args:
         artifacts_dataframe_url (str): URL for the artifact DataFrame.
-            This must be a valid dataframe URL with the extension ".parquet"
 
     Returns:
         ArtifactDataFrame object
