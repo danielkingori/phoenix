@@ -9,6 +9,7 @@ from phoenix.common import constants
 from phoenix.common.artifacts import dataframes
 
 
+@pytest.mark.auth
 def test_dataframe_artifact(tmp_s3_dir):
     """Test full functionality of DataFrame artifacts.
 

@@ -5,6 +5,7 @@ import pytest
 from phoenix.common import artifacts
 
 
+@pytest.mark.auth
 def test_dataframe_artifact_partitions(tmp_s3_dir):
     """Test full functionality of DataFrame artifacts when partitioned.
 
