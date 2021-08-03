@@ -13,9 +13,13 @@ from typing import Callable, Dict, List
 import functools
 import itertools
 
+import arabic_reshaper
 import dask.dataframe as dd
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
+from bidi.algorithm import get_display
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from snowballstemmer import stemmer
@@ -42,6 +46,38 @@ class StemmedCountVectorizer(CountVectorizer):
 
         fn = functools.partial(stem_analyzer, self.stemmer, analyzer)
         return fn
+
+    def get_most_common_words(self, count_vector_matrix: pd.arrays.SparseArray) -> Dict[str, int]:
+        """Gets a dict of the most common words and their occurrence numbers.
+
+        Args:
+            count_vector_matrix (pd.arrays.SparseArray): sparse matrix of (n_samples,
+            n_features), returned value of self.fit_transform()
+        """
+        count_dict = zip(self.get_feature_names(), count_vector_matrix.sum(axis=0).tolist()[0])
+        count_dict = sorted(count_dict, key=lambda x: -x[1])  # type: ignore
+
+        return dict(count_dict)
+
+    def plot_most_common_words(self, count_vector_matrix: pd.arrays.SparseArray, n: int) -> None:
+        """Plot common words in the dataset in a bar graph.
+
+        Args:
+            count_vector_matrix (pd.arrays.SparseArray): sparse matrix of (n_samples,
+            n_features), returned value of self.fit_transform()
+            n (int): number of most common words yo be plotted
+        """
+        wordcount_dict = self.get_most_common_words(count_vector_matrix)
+        words = [get_display(arabic_reshaper.reshape(w)) for w in list(wordcount_dict)[0:n]]
+        counts = [word_count for word_count in list(wordcount_dict.values())[0:n]]
+        x_pos = np.arange(len(words))
+
+        sns.barplot(x_pos, counts)
+        plt.xticks(x_pos, words, rotation=80)
+        plt.xlabel("words", fontsize=13)
+        plt.ylabel("counts", fontsize=13)
+        plt.title(f"{n} most common words", fontsize=15)
+        plt.show()
 
 
 # Cannot be a method on object when used by dash.
@@ -137,14 +173,14 @@ def create():
     default_params = {
         "ar": {
             "stemmer": stemmer("arabic"),
-            "stop_words": stopwords.words("arabic"),
+            "stop_words": get_stopwords(),
             "strip_accents": "unicode",
             "encoding": "utf-8",
         },
         "ar_izi": {"strip_accents": "unicode"},
         "en": {
             "stemmer": stemmer("english"),
-            "stop_words": stopwords.words("english"),
+            "stop_words": get_stopwords(),
             "strip_accents": "ascii",
             "encoding": "utf-8",
         },
@@ -192,3 +228,15 @@ def _features_index(row):
             [[(key,) + v for v in list(value.items())] for key, value in row.items()]
         )
     )
+
+
+def get_stopwords() -> List[str]:
+    """Gets stopwords for both arabic and english as languages can be mixed within objects.
+
+    The stopwords of the languages don't overlap so there is no danger of removing arabic
+    stopwords which are non-stopwords in english or vice versa.
+    """
+    stopwords_list = stopwords.words("arabic")
+    stopwords_list.extend(stopwords.words("english"))
+
+    return stopwords_list
