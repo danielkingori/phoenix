@@ -1,6 +1,7 @@
 """Implements Latent Dirichlet Allocation on data."""
 from typing import List, Optional
 
+import logging
 import pickle
 
 import arabic_reshaper
@@ -15,6 +16,9 @@ from snowballstemmer import stemmer
 
 from phoenix.common.artifacts import dataframes
 from phoenix.tag.text_features_analyser import StemmedCountVectorizer, get_stopwords
+
+
+logger = logging.getLogger()
 
 
 class LatentDirichletAllocator:
@@ -60,6 +64,7 @@ class LatentDirichletAllocator:
         self,
         n_components_list: Optional[List[int]] = None,
         max_iter_list: Optional[List[int]] = None,
+        min_num_objects: int = 20,
     ):
         """Train the Latent Dirichlet Allocation model.
 
@@ -68,12 +73,20 @@ class LatentDirichletAllocator:
             the best model.
             max_iter_list(List[int]): list of maximum iterations to try when searching for the
             best model.
+            min_num_objects(int): minimum number of objects needed per group to try training a
+            model.
         """
         n_components = n_components_list if n_components_list else [10, 20, 30, 40]
         max_iter = max_iter_list if max_iter_list else [10, 20, 40]
         search_params = {"n_components": n_components, "max_iter": max_iter}
 
         for vectorizer_name in self.vectorizers:
+            logger.info(f"Training LDA for {vectorizer_name}")
+            if self.vectorizers[vectorizer_name]["word_matrix"].shape[0] < min_num_objects:
+                self.vectorizers[vectorizer_name]["grid_search_model"] = None
+                logger.warning(f"{vectorizer_name} does not have enough data to train a model")
+                continue
+
             model = GridSearchCV(LatentDirichletAllocation(), cv=None, param_grid=search_params)
             model.fit(self.vectorizers[vectorizer_name]["word_matrix"])
             self.vectorizers[vectorizer_name]["grid_search_model"] = model
@@ -87,8 +100,11 @@ class LatentDirichletAllocator:
             title(str): Title for the plots. Will be prepended with the groupings if any.
         """
         for vectorizer_name in self.vectorizers:
-            if not self.vectorizers[vectorizer_name]["grid_search_model"]:
-                raise KeyError("model not found, please train the model first.")
+            if not self.vectorizers[vectorizer_name].get("grid_search_model", "empty"):
+                logger.warning(f"{vectorizer_name} did not have enough data to train a model")
+                continue
+            if self.vectorizers[vectorizer_name].get("grid_search_model", "empty") == "empty":
+                raise KeyError(f"{vectorizer_name} model not found, please train the model first.")
 
             if vectorizer_name == "all":
                 DATASET_NAME = ""
@@ -125,8 +141,11 @@ class LatentDirichletAllocator:
     def tag_dataframe(self):
         """Write back LDA results to dataframes."""
         for vectorizer_name in self.vectorizers:
-            if not self.vectorizers[vectorizer_name]["grid_search_model"]:
-                raise KeyError("model not found, please train the model first.")
+            if not self.vectorizers[vectorizer_name].get("grid_search_model", "empty"):
+                logger.warning(f"{vectorizer_name} did not have enough data to train a model")
+                continue
+            if self.vectorizers[vectorizer_name].get("grid_search_model", "empty") == "empty":
+                raise KeyError(f"{vectorizer_name} model not found, please train the model first.")
             model = self.vectorizers[vectorizer_name]["grid_search_model"].best_estimator_
             word_matrix = self.vectorizers[vectorizer_name]["word_matrix"]
             cloud_model_groups = model.transform(word_matrix)
@@ -139,9 +158,13 @@ class LatentDirichletAllocator:
     def persist(self, output_dir_url: str):
         """Persist dataframe tagged with LDA groupings."""
         for vectorizer_name in self.vectorizers:
+            if not self.vectorizers[vectorizer_name].get("grid_search_model", "empty"):
+                logger.warning(f"{vectorizer_name} did not have enough data to train a model")
+                continue
             if "lda_name" not in self.dfs[vectorizer_name].columns:
                 raise KeyError(
-                    "Dataframe not tagged with LDA groupings, please run tag_dataframe."
+                    f"{vectorizer_name} dataframe not tagged with LDA groupings, please run "
+                    "tag_dataframe."
                 )
 
             url = dataframes.url(output_dir_url, f"{vectorizer_name}_latent_dirichlet_allocation")
