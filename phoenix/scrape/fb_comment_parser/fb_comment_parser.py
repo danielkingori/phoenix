@@ -1,4 +1,3 @@
-# type: ignore
 """Extract HTML elements from facbook pages.
 
 Script      : Soup Parser
@@ -8,13 +7,14 @@ Author(s)   : Jacob Lefton and Chris Orwa
 Version     : v1.2
 
 """
+from typing import Any, Dict, List, Optional
 
 import json
 import logging
 import re
 from urllib import parse
 
-# laod required libraries
+# load required libraries
 from bs4 import BeautifulSoup
 from bs4 import Comment as htmlComment
 
@@ -22,12 +22,6 @@ from bs4 import Comment as htmlComment
 from phoenix.scrape.fb_comment_parser.date_parser import get_retrieved_date
 from phoenix.scrape.fb_comment_parser.date_parser import main as date_parser_main
 from phoenix.scrape.fb_comment_parser.date_parser import return_datestring
-
-
-# TODO bring into line with mypy
-
-# def generate_random_id():
-#     return ''.join(random.choices(string.ascii_letters + string.digits, k=16))
 
 
 def test_is_file_mbasic(file, file_name):  # noqa
@@ -56,7 +50,7 @@ def test_is_file_mbasic(file, file_name):  # noqa
 class Page(object):  # noqa
 
     # initialize page class
-    def __init__(self, raw_file: str, file_name: str = None):
+    def __init__(self, raw_file: str, file_name: Optional[str] = None):
 
         if test_is_file_mbasic(raw_file, file_name):
             self.raw = raw_file
@@ -113,7 +107,7 @@ class Page(object):  # noqa
         self.post_id = None  # the id of this post if not reactions
         self.retrieved_utc = None  # timestamp of the download
         self.reactions = []  # accurate reactions, from a reactions page
-        self.comments = []
+        self.comments: List[Any] = []
 
         logging.debug(f"len(metadata_raw): {len(self.metadata_raw)}")
 
@@ -211,6 +205,9 @@ class Page(object):  # noqa
 
     def build_dict(self):
         """Build dictionary from object attributes."""
+        comments = []
+        for comment in self.comments:
+            comments.append(comment.as_dict)
         self.as_dict = {
             "page": {
                 "file_id": self.file_id,
@@ -224,10 +221,8 @@ class Page(object):  # noqa
                 "retrieved_utc": self.retrieved_utc,
                 "reactions": self.reactions,
             },
-            "comments": [],
+            "comments": comments,
         }
-        for comment in self.comments:
-            self.as_dict["comments"].append(comment.as_dict)
 
     def top_post_owner_username(self):
         """Get the top post owner username or page name."""
@@ -362,8 +357,8 @@ class Page(object):  # noqa
             # elif 'story.php' in path:
             #     self.parent_post = query['_ft_']['top_level_post_id']
         if not self.parent_post:
-            if "top_level_post_id" in self.metadata.keys():
-                self.parent_post = self.metadata["top_level_post_id"]
+            if "top_level_post_id" in self.metadata.keys():  # type: ignore
+                self.parent_post = self.metadata["top_level_post_id"]  # type: ignore
             elif "_ft_" in query.keys():
                 if "top_level_post_id" in query["_ft_"]:  # could be group post or reply
                     self.parent_post = query["_ft_"]["top_level_post_id"]
@@ -436,7 +431,7 @@ class Page(object):  # noqa
                         #       --> fragment='comment_form_148950081810015_840811325957217'
                         for frag in link_features.fragment.split("_"):
                             try:
-                                page_id = int(frag)
+                                page_id = int(frag)  # type: ignore
                                 break  # because the first fragment is the page_id
                             except ValueError:
                                 continue
@@ -451,7 +446,7 @@ class Page(object):  # noqa
             if self.page_type == "photos":
                 page_id = self.photos_rescue_ids()
             else:
-                page_id = self.metadata[0]["data-ft"]["page_id"]
+                page_id = self.metadata[0]["data-ft"]["page_id"]  # type: ignore
 
         if self.page_type == "replies" and page_id == "id":
             logging.debug("Edge case with not easily picking up an ID in replies page.")
@@ -993,7 +988,7 @@ class Comment(object):
             for comm in comment:  # comment is a list
                 links.extend(comm.find_all("a"))
 
-        connections = {
+        connections: Dict[str, List] = {
             "hashtags": [],
             "users": [],
             "links": [],

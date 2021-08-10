@@ -1,16 +1,9 @@
-# type: ignore
 """Functions for running the Facebook comment parsing process."""
 
 import logging
 import os
 
 from phoenix.scrape.fb_comment_parser import fb_comment_parser
-
-
-# import tentaclio
-
-
-# TODO bring into line with mypy
 
 
 def file_url_strip(path):

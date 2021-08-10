@@ -5,7 +5,7 @@ import os
 import tentaclio
 from tentaclio import fs, urls
 
-from phoenix.scrape.fb_comment_parser.run import parse_fb_page  # type:ignore
+from phoenix.scrape.fb_comment_parser.run import parse_fb_page
 
 
 # TODO: Remove the type:ignore above if better fix found, see:

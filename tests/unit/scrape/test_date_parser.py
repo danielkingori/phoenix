@@ -1,4 +1,3 @@
-# type: ignore
 """Test the FB Comment Parser date parser."""
 import datetime
 

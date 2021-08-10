@@ -1,4 +1,3 @@
-# type: ignore
 """Date parsing utilities for Facebook Comment parser.
 
 This script does the following:
@@ -17,8 +16,6 @@ from bs4 import Comment as bComment
 from dateutil.parser import parse
 
 
-# TODO: bring into line with mypy
-
 WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 TIMECODE = "%Y-%m-%d %H:%M:%S"
 
@@ -27,7 +24,7 @@ def get_retrieved_date(soup):
     """Finds and parses SingleFile comment at top of html doc."""
     m = soup.find(text=lambda text: isinstance(text, bComment))
     n = re.search(r"saved date:(.+?)\n", m)
-    clean_date = n.group(0)
+    clean_date = n.group(0)  # type: ignore
     retrieved_at_dt = parse(clean_date.strip(), fuzzy=True)
     return retrieved_at_dt
 
