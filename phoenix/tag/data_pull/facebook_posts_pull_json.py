@@ -3,9 +3,11 @@ import datetime
 import json
 import os
 
+import numpy as np
 import pandas as pd
 import tentaclio
 
+from phoenix.common import constants as common_constants
 from phoenix.tag.data_pull import constants, utils
 
 
@@ -50,18 +52,36 @@ def get_file_name_timestamp(url: str) -> datetime.datetime:
 
 
 def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
-    """Normalise the raw dataframe."""
+    """Normalise the raw dataframe.
+
+    The raw data is in JSON format and has a number of nested properties. As such
+    we process two versions of raw data.
+
+    1. raw_df: has the nested data, this uses `pd.read_json`
+    2. df_flattened: this has all of the nested data flattened using `pd.json_normalize`
+
+    The reason for this is ease of creating the final data structure:
+    - `raw_df` (`pd.read_json`) has better dtypes for the non nested properties
+    - `df_flattened` (`pd.json_normalize`) has the formatted columns for the nested data
+
+    Args:
+        raw_df: return of `pd.read_json` of the source file
+        df_flattened: return of `pd.json_normalize` of the source file
+    """
     df = raw_df.rename(utils.camel_to_snake, axis="columns")
+    df = df.rename(columns={"language_code": "language_from_api", "message": "text"})
     df_flattened = df_flattened.rename(utils.camel_to_snake, axis="columns")
     df_flattened.columns = df_flattened.columns.str.replace(".", "_")
-    df = df[~df["message"].isna()]
-    df = utils.to_type("message", str, df)
+    df = merge_flattened(df, df_flattened)
+    df = df[~df["text"].isna()]
+    df = utils.to_type("text", str, df)
     df = utils.to_type("type", str, df)
+    df = map_score(common_constants.FACEBOOK_POST_SORT_BY, df)
     df["post_created"] = df["date"].dt.tz_localize("UTC")
     df["updated"] = pd.to_datetime(df["updated"]).dt.tz_localize("UTC")
     # This will be hashed so that links are in the hash
-    df["message_link"] = df["message"] + "-" + df["link"].fillna("")
-    df["message_hash"] = df["message_link"].apply(utils.hash_message)
+    df["text_link"] = df["text"] + "-" + df["link"].fillna("")
+    df["text_hash"] = df["text_link"].apply(utils.hash_message)
     df["scrape_url"] = df["post_url"].str.replace(
         "https://www.facebook", "https://mbasic.facebook"
     )
@@ -70,9 +90,8 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
     # Still using the phoenix_post_id as this seems a good way of identifying posts
     # So we are making one from the account that posted it and a hash of the message
     df["phoenix_post_id"] = (
-        df_flattened["account_platform_id"].astype(str) + "-" + df["message_hash"].astype(str)
+        df["account_platform_id"].astype(str) + "-" + df["text_hash"].astype(str)
     ).astype(str)
-    df = merge_flattened(df, df_flattened)
     return df.drop(
         columns=[
             "account",
@@ -86,12 +105,41 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def merge_flattened(df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
-    """Merged to flattened dataframe with the non flattened.
+def map_score(sort_by_api: str, df: pd.DataFrame) -> pd.DataFrame:
+    """Map score based on the sort by parameter of the request."""
+    all_scores_mapping = {
+        "total_interactions": "total_interactions",
+        "overperforming": "overperforming_score",
+        "interaction_rate": "interaction_rate",
+        "underperforming": "underperforming_score",
+    }
+    for sort_by_match, col in all_scores_mapping.items():
+        if sort_by_match == sort_by_api:
+            df.rename(columns={"score": col}, inplace=True)
+        else:
+            df[col] = np.nan
+        df[col] = df[col].astype(float)
 
-    Doing this because the flattened dataframe has incorrect types.
+    return df
+
+
+def merge_flattened(df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
+    """Merged flattened dataframe with the non flattened.
+
+    1. df: has the nested data, this uses `pd.read_json`
+    2. df_flattened: this has all of the nested data flattened using `pd.json_normalize`
+
+    The reason for this is ease of creating the final data structure:
+    - `df` (`pd.read_json`) has better dtypes for the non nested properties
+    - `df_flattened` (`pd.json_normalize`) has the formatted columns for the nested data
+
+    Args:
+        df: return of `pd.read_json` of the source file
+        df_flattened: return of `pd.json_normalize` of the source file
     """
     to_add = [
+        "account_name",
+        "account_handle",
         "account_platform_id",
         "account_page_category",
         "account_page_admin_top_country",
@@ -137,12 +185,9 @@ def for_tagging(given_df: pd.DataFrame):
 
     """
     df = given_df.copy()
-    df = df[["phoenix_post_id", "message"]]
-    column_with_lang_from_api = "langauge_code"
-    if column_with_lang_from_api in given_df.columns:
-        df["language_from_api"] = given_df[column_with_lang_from_api]
+    df = df[["phoenix_post_id", "text", "language_from_api"]]
 
-    df = df.rename(columns={"phoenix_post_id": "object_id", "message": "text"})
+    df = df.rename(columns={"phoenix_post_id": "object_id"})
     df = df.set_index(df["object_id"], verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_FACEBOOK_POST
     return df

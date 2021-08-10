@@ -27,5 +27,5 @@ def camel_to_snake(name):
 
 
 def hash_message(message: str):
-    """Get the has of a message."""
+    """Get the hash of a message."""
     return hashlib.md5(bytes(message, "utf-8")).hexdigest()[:16]

@@ -47,7 +47,7 @@ This will persist the final data to S3. See notebooks for more details.
 ## Athena table
 Was initialised using the command:
 ```
-CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_comments_may (
+CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_comments_v1 (
 `id` bigint,
 `post_id` bigint,
 `file_id` string,
@@ -61,7 +61,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_comments_may (
 `position` string,
 `clean_text` string,
 `language` string,
-`confidence` double,
+`language_confidence` double,
 `is_key_object` boolean,
 `features` array<string>,
 `features_count` array<int>
@@ -69,18 +69,18 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_comments_may (
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
 WITH SERDEPROPERTIES (
   'serialization.format' = '1'
-) LOCATION 's3://buildup-dev-us-tables/fb_comments/parquet_exports/fb_comments_may/'
+) LOCATION 's3://buildup-dev-us-tables/facebook_comments/parquet_exports/facebook_comments_v1/'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```
 If you need to make changes:
 ```
-DROP TABLE IF EXISTS buildup_dev.facebook_comments_may;
+DROP TABLE IF EXISTS buildup_dev.facebook_comments;
 ```
 
 ### Topics
 Athena table created with query:
 ```
-CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_comments_topics_may (
+CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_comments_topics_v1 (
 `id` bigint,
 `post_id` bigint,
 `file_id` string,
@@ -94,7 +94,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_comments_topics_may (
 `position` string,
 `clean_text` string,
 `language` string,
-`confidence` double,
+`language_confidence` double,
 `is_key_object` boolean,
 `features` array<string>,
 `features_count` array<int>,
@@ -103,6 +103,6 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_comments_topics_may (
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
 WITH SERDEPROPERTIES (
   'serialization.format' = '1'
-) LOCATION 's3://buildup-dev-us-tables/fb_comments/parquet_exports/fb_comments_topics_may/'
+) LOCATION 's3://buildup-dev-us-tables/facebook_comments/parquet_exports/facebook_comments_topics_v1/'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```

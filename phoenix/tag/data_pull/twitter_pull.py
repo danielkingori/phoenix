@@ -23,6 +23,8 @@ def twitter_json(url_to_folder: str) -> pd.DataFrame:
 def normalise_json(raw_df: pd.DataFrame):
     """normalise_tweets raw dataframe."""
     df = utils.to_type("full_text", str, raw_df)
+    df = utils.to_type("id_str", str, raw_df)
+    df = df.rename(columns={"full_text": "text", "lang": "language_from_api"})
     # Dropping nested data for the moment
     df = df.drop(
         columns=[
@@ -51,15 +53,12 @@ def for_tagging(given_df: pd.DataFrame):
 
     """
     df = given_df.copy()
-    df = df[["id_str", "full_text"]]
-    # Twitter has a language column
-    if "lang" in given_df.columns:
-        df["language_from_api"] = given_df["lang"]
+    df = df[["id_str", "text", "language_from_api"]]
 
     if "retweeted" in given_df.columns:
         df["retweeted"] = given_df["retweeted"]
 
-    df = df.rename(columns={"id_str": "object_id", "full_text": "text"})
+    df = df.rename(columns={"id_str": "object_id"})
     df = df.set_index(df["object_id"], verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_TWEET
     return df

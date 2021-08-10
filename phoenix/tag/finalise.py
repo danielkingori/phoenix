@@ -23,7 +23,7 @@ def join_objects_to_facebook_comments(objects, facebook_comments):
 def join_objects_to_tweets(objects, tweets):
     """Join the objects to the tweets."""
     objects = objects.set_index("object_id")
-    objects = objects.drop(columns=["retweeted"])
+    objects = objects.drop(columns=["retweeted", "text", "language_from_api"])
     tweets["object_id"] = tweets["id_str"].astype(str)
     tweets = tweets.set_index("object_id")
     return tweets.join(objects)

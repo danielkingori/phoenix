@@ -7,7 +7,7 @@ import os
 import mock
 import pytest
 
-from phoenix.common import utils
+from phoenix.common import constants, utils
 from phoenix.scrape import crowdtangle
 
 
@@ -55,7 +55,7 @@ def test_get_all_posts(m_get_post, ct_data_with_next, ct_data_no_next):
                 "startDate": start_date.strftime("%Y-%m-%dT%H:%M:%S"),
                 "endDate": end_date.strftime("%Y-%m-%dT%H:%M:%S"),
                 "listIds": list_ids,
-                "sortBy": "total_interactions",
+                "sortBy": constants.FACEBOOK_POST_SORT_BY,
                 "count": 100,
             },
         ),

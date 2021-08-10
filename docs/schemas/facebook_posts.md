@@ -4,9 +4,13 @@ Final dataframe of facebook posts.
 
 In general these relate to the data from crowdtangle API: https://github.com/CrowdTangle/API/wiki/Post
 
+CrowdTangle glossary Link [https://help.crowdtangle.com/en/articles/1184978-crowdtangle-glossary](https://help.crowdtangle.com/en/articles/1184978-crowdtangle-glossary)
+
 | Column name                            | dtype               | Description                                                                                                       | 
 |----------------------------------------|---------------------| ------------------------------------------------------------------------------------------------------------------|
 | phoenix_post_id                        | object              | Computed post id by phoenix. This is the account platform id and the message hash. |
+| account_name                           | object              | The facebook account name. |
+| account_handle                         | object              | The facebook account handle. |
 | account_platform_id                    | int64               | The facebook id of the account. |
 | account_page_category                  | object              | The page category as submitted by the page.  |
 | account_page_admin_top_country         | object              | The ISO country code of the the country from where the plurality of page administrators operate. |
@@ -28,7 +32,10 @@ In general these relate to the data from crowdtangle API: https://github.com/Cro
 | statistics_actual_sad_count            | int64               | No. sad reactions |
 | statistics_actual_angry_count          | int64               | No. angry reactions
 | statistics_actual_care_count           | int64               | No. care reactions |
-| score                                  | float64             | Score from crowdtangle. Phoenix sets this as `total_interactions`. See scraping crowdtangle code for more information. |
+| total_interactions                     | float64             | Set if API made request with `sortBy` as `total_interactions`. See glossary link. |
+| overperforming_score                   | float64             | Set if API made request with `sortBy` as `overperforming`. See glossary link. |
+| interaction_rate                       | float64             | Set if API made request with `sortBy` as `interaction_rate`. See glossary link. |
+| underperforming_score                  | float64             | Set if API made request with `sortBy` as `underperforming`. See glossary link. |
 | platform_id                            | float64             | Id of the post from facebook |
 | video_length_ms                        | float64             | The length of the video in milliseconds. |
 | id                                     | object              | Id of the post from crowdtangle |
@@ -36,13 +43,12 @@ In general these relate to the data from crowdtangle API: https://github.com/Cro
 | caption                                | object              | The caption to a photo, if available. |
 | description                            | object              | Further details, if available. Associated with links or images across different platforms. |
 | post_url                               | object              | URL of the post |
-| langauge_code                          | object              | Language code from the API |
-| message                                | object              | Text of the post |
+| langauge_from_api                      | object              | Language code from the API, `language_code` |
+| text                                   | object              | Text of the post |
 | link                                   | object              | Link in the post |
 | image_text                             | object              | Text of the image in the post if there is one |
-| description                            | object              | Further details, if available. Associated with links or images across different platforms. |
-| message_link                           | object              | Message or link if message is null  |
-| message_hash                           | object              | The hash of the message or link used for calculating the `phoenix_post_id` |
+| text_link                              | object              | Text or link if text is null  |
+| text_hash                              | object              | The hash of the text or link used for calculating the `phoenix_post_id` |
 | scrape_url                             | object              | The scrape url to be used |
 | url_post_id                            | object              | The post id from the URL. |
 
