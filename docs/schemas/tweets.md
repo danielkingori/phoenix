@@ -7,7 +7,7 @@ Data is mapped from `objects`, `topics` and data from twitter API: https://devel
 | Column                    | dtype               | Description |
 |---------------------------|---------------------|-------------|
 | id_str                    | int64               | ID |
-| created_at                | datetime64[ns, UTC] | UTC timestame that the tweet was created |
+| created_at                | datetime64[ns, UTC] | UTC timestamp that the tweet was created |
 | id                        | int64               | ID |
 | full_text                 | object              | Text of tweets |
 | truncated                 | bool                | If the text has been truncated |
@@ -33,6 +33,11 @@ Data is mapped from `objects`, `topics` and data from twitter API: https://devel
 | quoted_status_id_str      | float64             | - |
 | quoted_status_permalink   | object              | - |
 | withheld_in_countries     | object              | - |
+| timestamp_filter          | datetime64[ns, UTC] | Normalised column for filtering by timestamp. UTC timestamp that the tweet was created |
+| date_filter               | object (date32[day] in parquet) | Normalised column for filtering by date. UTC timestamp that the tweet was created |
+| year_filter               | int64               | Normalised column for filtering by year. Year that the tweet was created |
+| month_filter              | int64               | Normalised column for filtering by month. Month that the tweet was created |
+| day_filter                | int64               | Normalised column for filtering by day. Day of the month that the tweet was created |
 | text                      | object              | The text that the tagging pipeline used  |
 | object_type               | object              | tweet |
 | language_from_api         | object              | repeat of lang |

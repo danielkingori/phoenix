@@ -38,6 +38,11 @@ Was initialised using the command:
 CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.tweets_v1 (
   `id_str` string,
   `created_at` timestamp,
+  `timestamp_filter` timestamp,
+  `date_filter` date,
+  `year_filter` int,
+  `month_filter` int,
+  `day_filter` int,
   `id` bigint,
   `text` string,
   `truncated` boolean,
@@ -74,6 +79,11 @@ Athena table was created with the query:
 CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.tweets_topics_v1 (
   `id_str` string,
   `created_at` timestamp,
+  `timestamp_filter` timestamp,
+  `date_filter` date,
+  `year_filter` int,
+  `month_filter` int,
+  `day_filter` int,
   `id` bigint,
   `text` string,
   `truncated` boolean,
