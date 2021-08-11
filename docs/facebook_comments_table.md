@@ -11,6 +11,8 @@ ARTIFACTS_BASE_URL = f"{artifacts.urls.get_local()}{RUN_DATE}/comments/"
 # Input
 FOR_TAGGING_ARTIFACTS_FOLDER = f"{ARTIFACTS_BASE_URL}comments_for_tagging/"
 ```
+- `phoenix/tag/topics.ipynb`
+- `phoenix/tag/tag_tensions.ipynb`
 - `phoenix/tag/facebook_comments_finalise.ipynb`
 
 

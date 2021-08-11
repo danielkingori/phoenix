@@ -4,6 +4,8 @@ Current the facebook posts table is initialised in athena by hand.
 Once the tagging pipeline has been run:
 - `phoenix/tag/data_pull/facebook_posts_pull_csv.ipynb`
 - `phoenix/tag/features.ipynb`
+- `phoenix/tag/topics.ipynb`
+- `phoenix/tag/tag_tensions.ipynb`
 - `phoenix/tag/twitter_facebook_posts_finalise.ipynb`
 
 
