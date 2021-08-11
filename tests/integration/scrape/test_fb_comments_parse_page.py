@@ -18,7 +18,7 @@ TEST_FILE_DIRECTORY = f"file:///{CURRENT_DIRECTORY}/test_html_pages/"
 
 
 # Tenticlio seems to have a bug with the `listdir` function see issue:
-# link to the issue
+# https://gitlab.com/howtobuildup/phoenix/-/issues/32
 # This is a monkey patch so that it works in this test.
 def _from_os_dir_entry(original: os.DirEntry) -> fs.DirEntry:
     return fs.DirEntry(
@@ -30,7 +30,6 @@ def _from_os_dir_entry(original: os.DirEntry) -> fs.DirEntry:
 
 def test_fb_comment_parser():
     """Test parsing of pages in fb_comment_parser."""
-    # pdb.set_trace()
     tentaclio.clients.local_fs_client._from_os_dir_entry = _from_os_dir_entry
     for filename in tentaclio.listdir(TEST_FILE_DIRECTORY):
 
