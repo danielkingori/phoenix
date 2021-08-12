@@ -9,6 +9,11 @@ Final facebook comments dataframe
 | file_id                 | object         | File that was saved at scrape time |
 | parent_id               | int64          | The parent comment or post id |
 | post_created            | datetime64[ns] | Timestamp of the create of the comment |
+| timestamp_filter        | datetime64[ns, UTC] | Normalised column for filtering by timestamp. The UTC timestamp of the creation of the comment |
+| date_filter             | object (date32[day] in parquet) | Normalised column for filtering by date. The UTC date on the creation of the comment |
+| year_filter             | int64          | Normalised column for filtering by year. The year of the creation of the comment |
+| month_filter            | int64          | Normalised column for filtering by month. The month of the creation of the comment |
+| day_filter              | int64          | Normalised column for filtering by day. The day of the creation of the comment |
 | text                    | object         | Text of the comment |
 | reactions               | int64          | Number of reactions |
 | top_sentiment_reactions | object         | rough type of reactions reported in order from most to third-most. eg [Like, Haha, Love] |
