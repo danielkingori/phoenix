@@ -57,6 +57,18 @@ Data is mapped from `objects`, `topics` and data from twitter API: https://devel
 | is_community_insecurity_tension| bool           | Community Insecurity tension flag |
 | is_geopolitics_tension    | bool                | Geopolitics tension flag |
 | is_intercommunity_relations_tension| bool       | Intercommunity relations tension flag |
+| user_id                   | int64               | User id that made the tweet |
+| user_id_str               | object              | User id string that made the tweet |
+| user_name                 | object              | User name that made the tweet |
+| user_screen_name          | object              | User screen name that made the tweet |
+| user_location             | object              | User location that made the tweet |
+| user_description          | object              | User description that made the tweet |
+| user_url                  | object              | User Url that made the tweet |
+| user_protected            | bool                | If the user that made the tweet is protected |
+| user_created_at           | datetime64[ns, UTC] | When the user that made the tweet was created  |
+| user_geo_enabled          | bool                | If the user that made the tweet has geo enabled |
+| user_verified             | bool                | If the user that made the tweet is verified |
+| user_lang                 | object              | The configured language of the user that made the tweet |
 
 # Tweets topics
 
