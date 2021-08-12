@@ -49,6 +49,14 @@ Data is mapped from `objects`, `topics` and data from twitter API: https://devel
 | is_key_object             | bool                | Does phoenix think the tweet is relevant |
 | features                  | object              | List of features of the text that phoenix calculated |
 | features_count            | object              | List of counts of the features that phoenix calculated |
+| is_economic_labour_tension| bool                | Economic labour tension flag |
+| is_sectarian_tension      | bool                | Sectarian tension flag |
+| is_environmental_tension  | bool                | Environmental tension flag |
+| is_political_tension      | bool                | Political tension flag |
+| is_service_related_tension| bool                | Service Related tension flag |
+| is_community_insecurity_tension| bool           | Community Insecurity tension flag |
+| is_geopolitics_tension    | bool                | Geopolitics tension flag |
+| is_intercommunity_relations_tension| bool       | Intercommunity relations tension flag |
 
 # Tweets topics
 
