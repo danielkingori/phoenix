@@ -30,6 +30,7 @@ def normalise_json(raw_df: pd.DataFrame):
     df["month_filter"] = df["created_at"].dt.month
     df["day_filter"] = df["created_at"].dt.day
     df = df.rename(columns={"full_text": "text", "lang": "language_from_api"})
+    df = user_normalise(df)
     # Dropping nested data for the moment
     df = df.drop(
         columns=[
@@ -42,6 +43,30 @@ def normalise_json(raw_df: pd.DataFrame):
         ]
     )
     return df
+
+
+def user_normalise(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalise the user."""
+    user_columns = [
+        "id",
+        "id_str",
+        "name",
+        "screen_name",
+        "location",
+        "description",
+        "url",
+        "protected",
+        "created_at",
+        "geo_enabled",
+        "verified",
+        "lang",
+    ]
+
+    user_df = pd.json_normalize(df["user"])
+    user_df = user_df[user_columns]
+    user_df["created_at"] = pd.to_datetime(df["created_at"])
+    user_df = user_df.add_prefix("user_")
+    return df.join(user_df)
 
 
 def for_tagging(given_df: pd.DataFrame):
