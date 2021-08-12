@@ -7,7 +7,7 @@ Data is mapped from `objects`, `topics` and data from twitter API: https://devel
 | Column                    | dtype               | Description |
 |---------------------------|---------------------|-------------|
 | id_str                    | int64               | ID |
-| created_at                | datetime64[ns, UTC] | UTC timestame that the tweet was created |
+| created_at                | datetime64[ns, UTC] | UTC timestamp that the tweet was created |
 | id                        | int64               | ID |
 | full_text                 | object              | Text of tweets |
 | truncated                 | bool                | If the text has been truncated |
@@ -33,6 +33,11 @@ Data is mapped from `objects`, `topics` and data from twitter API: https://devel
 | quoted_status_id_str      | float64             | - |
 | quoted_status_permalink   | object              | - |
 | withheld_in_countries     | object              | - |
+| timestamp_filter          | datetime64[ns, UTC] | Normalised column for filtering by timestamp. UTC timestamp that the tweet was created |
+| date_filter               | object (date32[day] in parquet) | Normalised column for filtering by date. UTC timestamp that the tweet was created |
+| year_filter               | int64               | Normalised column for filtering by year. Year that the tweet was created |
+| month_filter              | int64               | Normalised column for filtering by month. Month that the tweet was created |
+| day_filter                | int64               | Normalised column for filtering by day. Day of the month that the tweet was created |
 | text                      | object              | The text that the tagging pipeline used  |
 | object_type               | object              | tweet |
 | language_from_api         | object              | repeat of lang |
@@ -44,6 +49,14 @@ Data is mapped from `objects`, `topics` and data from twitter API: https://devel
 | is_key_object             | bool                | Does phoenix think the tweet is relevant |
 | features                  | object              | List of features of the text that phoenix calculated |
 | features_count            | object              | List of counts of the features that phoenix calculated |
+| is_economic_labour_tension| bool                | Economic labour tension flag |
+| is_sectarian_tension      | bool                | Sectarian tension flag |
+| is_environmental_tension  | bool                | Environmental tension flag |
+| is_political_tension      | bool                | Political tension flag |
+| is_service_related_tension| bool                | Service Related tension flag |
+| is_community_insecurity_tension| bool           | Community Insecurity tension flag |
+| is_geopolitics_tension    | bool                | Geopolitics tension flag |
+| is_intercommunity_relations_tension| bool       | Intercommunity relations tension flag |
 
 # Tweets topics
 

@@ -20,6 +20,11 @@ CrowdTangle glossary Link [https://help.crowdtangle.com/en/articles/1184978-crow
 | account_subscriber_count               | int64               | Number of follower or likes when data pulled. Whether it is followers or likes is set in the crowdtangle dashboard. Default followers.  |
 | subscriber_count                       | int64               | Number of follower or likes of account when post is created. Whether it is followers or likes is set in the crowdtangle dashboard. Default followers.  |
 | post_created                           | datetime64[ns, UTC] | The UTC timestamp on the creation of the post |
+| date_filter                            | object (date32[day] in parquet) | Normalised column for filtering by date. The UTC date on the creation of the post |
+| timestamp_filter                       | datetime64[ns, UTC] | Normalised column for filtering by timestamp. The UTC timestamp of the creation of the post |
+| year_filter                            | int64               | Normalised column for filtering by year. The year of the creation of the post |
+| month_filter                           | int64               | Normalised column for filtering by month. The month of the creation of the post |
+| day_filter                             | int64               | Normalised column for filtering by day. The day of the creation of the post |
 | updated                                | datetime64[ns, UTC] | The UTC timestamp of the moment the post was updated in CrowdTangle |
 | file_timestamp                         | datetime64[ns, UTC] | The timestamp that is on the source file. |
 | type                                   | object              | The type of the post. |
@@ -51,6 +56,14 @@ CrowdTangle glossary Link [https://help.crowdtangle.com/en/articles/1184978-crow
 | text_hash                              | object              | The hash of the text or link used for calculating the `phoenix_post_id` |
 | scrape_url                             | object              | The scrape url to be used |
 | url_post_id                            | object              | The post id from the URL. |
+| is_economic_labour_tension             | bool                | Economic labour tension flag |
+| is_sectarian_tension                   | bool                | Sectarian tension flag |
+| is_environmental_tension               | bool                | Environmental tension flag |
+| is_political_tension                   | bool                | Political tension flag |
+| is_service_related_tension             | bool                | Service Related tension flag |
+| is_community_insecurity_tension        | bool                | Community Insecurity tension flag |
+| is_geopolitics_tension                 | bool                | Geopolitics tension flag |
+| is_intercommunity_relations_tension    | bool                | Intercommunity relations tension flag |
 
 # Facebook posts topics
 

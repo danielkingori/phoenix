@@ -78,6 +78,11 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
     df = utils.to_type("type", str, df)
     df = map_score(common_constants.FACEBOOK_POST_SORT_BY, df)
     df["post_created"] = df["date"].dt.tz_localize("UTC")
+    df["timestamp_filter"] = df["post_created"]
+    df["date_filter"] = df["post_created"].dt.date
+    df["year_filter"] = df["post_created"].dt.year
+    df["month_filter"] = df["post_created"].dt.month
+    df["day_filter"] = df["post_created"].dt.day
     df["updated"] = pd.to_datetime(df["updated"]).dt.tz_localize("UTC")
     # This will be hashed so that links are in the hash
     df["text_link"] = df["text"] + "-" + df["link"].fillna("")
