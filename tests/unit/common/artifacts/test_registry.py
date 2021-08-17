@@ -7,7 +7,7 @@ import pytest
 from phoenix.common.artifacts import registry
 
 
-@mock.patch("phoenix.common.artifacts.registry.default_url_prefix")
+@mock.patch("phoenix.common.artifacts.registry_environment.default_url_prefix")
 def test_url_mapper(m_default_url_prefix):
     """Test source urls."""
     artifact_key: registry.ArifactKey = "source-posts"
@@ -22,7 +22,7 @@ def test_url_mapper(m_default_url_prefix):
     assert r_url == f"{default_url_prefix}suffix/RUN_DATE/file-RUN_ISO_TIMESTAMP.json"
 
 
-@mock.patch("phoenix.common.artifacts.registry.default_url_prefix")
+@mock.patch("phoenix.common.artifacts.registry_environment.default_url_prefix")
 def test_url_mapper_url_config_key_not_found(m_default_url_prefix):
     """Test source urls."""
     artifact_key: registry.ArifactKey = "source-posts"

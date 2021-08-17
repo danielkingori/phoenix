@@ -5,10 +5,7 @@ from typing_extensions import Literal, Protocol
 import datetime
 from functools import partial
 
-from phoenix.common.artifacts import urls
-
-
-DEFAULT_ENVIRONMENT_KEY = "local"
+from phoenix.common.artifacts import registry_environment
 
 
 ArifactKey = Literal[
@@ -33,7 +30,7 @@ class ArtifactURLMapper(Protocol):
         self,
         artifact_key: ArifactKey,
         url_config: Dict[str, Any],
-        environment_key: str = DEFAULT_ENVIRONMENT_KEY,
+        environment_key: str = registry_environment.DEFAULT_ENVIRONMENT_KEY,
     ) -> str:
         """Protocal for the artifactURLMapper."""
         ...
@@ -43,22 +40,12 @@ def url_mapper(
     format_str: str,
     artifact_key: ArifactKey,
     url_config: Dict[str, Any],
-    environment_key: str = DEFAULT_ENVIRONMENT_KEY,
+    environment_key: str = registry_environment.DEFAULT_ENVIRONMENT_KEY,
 ):
     """Generalised url mapper."""
-    prefix = default_url_prefix(artifact_key, url_config, environment_key)
+    prefix = registry_environment.default_url_prefix(artifact_key, url_config, environment_key)
     url_str_formated = format_str.format(**url_config)
     return f"{prefix}{url_str_formated}"
-
-
-def default_url_prefix(
-    artifact_key: str, url_config: Dict[str, Any], environment_key: str = DEFAULT_ENVIRONMENT_KEY
-):
-    """URL prefix for static artifacts."""
-    if environment_key == DEFAULT_ENVIRONMENT_KEY:
-        return f"{urls.get_local()}"
-
-    raise ValueError(f"No url for environment_key: {environment_key}")
 
 
 DEFAULT_MAPPERS: Dict[ArifactKey, ArtifactURLMapper] = {
@@ -102,7 +89,7 @@ class ArtifactURLRegistry:
     def __init__(
         self,
         run_datetime: datetime.datetime,
-        environment_key: str = DEFAULT_ENVIRONMENT_KEY,
+        environment_key: str = registry_environment.DEFAULT_ENVIRONMENT_KEY,
         mappers: Dict[ArifactKey, ArtifactURLMapper] = DEFAULT_MAPPERS,
     ):
         """Init ArtifactURLRegistry."""
