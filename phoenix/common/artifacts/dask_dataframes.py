@@ -1,11 +1,10 @@
-"""Artifacts Partitioned DataFrame interface."""
+"""Artifacts Dask DataFrame interface."""
 from typing import Any, Dict, List
 
 import shutil
 from pathlib import Path
 
 import awswrangler as wr
-import pandas as pd
 import pyarrow as pa
 from dask import dataframe as dd
 
@@ -14,69 +13,59 @@ from phoenix.common.artifacts import dtypes
 
 def persist(
     artifacts_dataframe_url: str,
-    dataframe: pd.DataFrame,
+    dataframe: dd.DataFrame,
     partition_cols: List[str],
-    npartitions: int = 1,
     to_parquet_params: Dict[str, Any] = {},
-) -> dtypes.ArtifactDataFrame:
+) -> dtypes.ArtifactDaskDataFrame:
     """Persist a DataFrame as a partitioned parquet creating a ArtifactDataFrame.
 
     Args:
         artifacts_dataframe_url (str): URL for the artifact DataFrame.
         dataframe (DataFrame): pandas DataFrame to persist.
-        partition_cols (List[str]): list of columns to partition on.
-        npartitions (int): number of npartitions for `from_pandas`, default 1:
-            https://docs.dask.org/en/latest/generated/dask.dataframe.from_pandas.html
         to_parquet_params: aux params to pass to the `to_parquet` function.
 
     Returns:
-        ArtifactDataFrame object
+        ArtifactDaskDataFrame object
     """
-    _partitioned_persit(
-        artifacts_dataframe_url, dataframe, partition_cols, npartitions, to_parquet_params
-    )
-    artifact_dataframe = dtypes.ArtifactDataFrame(
+    _persist(artifacts_dataframe_url, dataframe, to_parquet_params)
+    artifact_dataframe = dtypes.ArtifactDaskDataFrame(
         url=artifacts_dataframe_url, dataframe=dataframe.copy()
     )
     return artifact_dataframe
 
 
-def _partitioned_persit(
+def _persist(
     artifacts_dataframe_url: str,
-    dataframe: pd.DataFrame,
-    partition_cols: List[str],
-    npartitions: int = 1,
+    ddf: dd.DataFrame,
     to_parquet_params: Dict[str, Any] = {},
 ) -> None:
     """Private persist that will be mocked when testing."""
     url = artifacts_dataframe_url
-    df = dd.from_pandas(dataframe, npartitions)
-    dd.to_parquet(df, url, compute=True, partition_cols=partition_cols, **to_parquet_params)
+    dd.to_parquet(ddf, url, **to_parquet_params)
 
 
 def get(
     artifacts_dataframe_url: str, from_parquet_params: Dict[str, Any] = {}
-) -> dtypes.ArtifactDataFrame:
-    """Get a persisted partitioned dataframe.
+) -> dtypes.ArtifactDaskDataFrame:
+    """Get a persisted dask dataframe.
 
     Args:
-        artifacts_dataframe_url (str): URL for the artifact DataFrame.
+        artifacts_dataframe_url (str): URL for the artifact Dask DataFrame.
 
     Returns:
-        ArtifactDataFrame object
+        ArtifactDaskDataFrame object
     """
     url = artifacts_dataframe_url
     ddf = dd.read_parquet(url, **from_parquet_params)
-    df = ddf.compute()
 
-    return dtypes.ArtifactDataFrame(url=artifacts_dataframe_url, dataframe=df)
+    return dtypes.ArtifactDaskDataFrame(url=artifacts_dataframe_url, dataframe=ddf)
 
 
-def delete(artifact_dataframe: dtypes.ArtifactDataFrame) -> None:
+def delete(artifact_dataframe: dtypes.ArtifactDaskDataFrame) -> None:
     """Delete a persisted dataframe.
 
     Args:
-        artifact_dataframe (ArtifactDataFrame): ArtifactDataFrame that will be deleted
+        artifact_dataframe (ArtifactDaskDataFrame): ArtifactDaskDataFrame that will be deleted
     """
     url = artifact_dataframe.url
     fs_to_use, path = pa.fs.FileSystem.from_uri(url)

@@ -1,13 +1,14 @@
-"""Partitioned artifacts DataFrame functionality test on a cloud provider."""
+"""Dask artifacts DataFrame functionality test on a cloud provider."""
 import pandas as pd
 import pytest
+from dask import dataframe as dd
 
 from phoenix.common import artifacts
 
 
 @pytest.mark.auth
 def test_dataframe_artifact_partitions(tmp_s3_dir):
-    """Test full functionality of DataFrame artifacts when partitioned.
+    """Test full functionality of Dask DataFrame artifacts when partitioned.
 
     This test uses a real S3 bucket to persist DataFrames to.
     """
@@ -22,17 +23,19 @@ def test_dataframe_artifact_partitions(tmp_s3_dir):
     )
     df["id"] = df["id"].astype("Int64")
     df["group"] = df["group"].astype("category")
+    ddf = artifacts.utils.pandas_to_dask(df)
 
-    a_df = artifacts.partitioned_dataframes.persist(artefact_url, df, ["group"])
+    a_df = artifacts.dask_dataframes.persist(artefact_url, ddf, ["group"])
     e_url = f"{test_artefact_dir}{artefact_basename}"
     assert a_df.url == e_url
-    pd.testing.assert_frame_equal(a_df.dataframe, df)
+    pd.testing.assert_frame_equal(a_df.dataframe.compute(), df)
 
-    a_df_2 = artifacts.partitioned_dataframes.get(artefact_url)
+    a_df_2 = artifacts.dask_dataframes.get(artefact_url)
     assert a_df.url == a_df_2.url
-    pd.testing.assert_frame_equal(a_df.dataframe, a_df_2.dataframe)
+    pd.testing.assert_frame_equal(a_df.dataframe.compute(), a_df_2.dataframe.compute())
+    dd.utils.assert_eq(a_df.dataframe, a_df_2.dataframe)
 
-    artifacts.partitioned_dataframes.delete(a_df_2)
+    artifacts.dask_dataframes.delete(a_df_2)
 
     with pytest.raises(Exception):
-        artifacts.partitioned_dataframes.get(a_df_2.url)
+        artifacts.dask_dataframes.get(a_df_2.url)
