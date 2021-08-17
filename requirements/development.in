@@ -12,3 +12,4 @@ jupyterlab
 # Types that need to be installed
 types-requests
 types-mock
+types-python-dateutil
