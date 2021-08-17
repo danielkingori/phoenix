@@ -4,7 +4,7 @@ import datetime
 import mock
 import pytest
 
-from phoenix.common.artifacts import registry, registry_mappers
+from phoenix.common.artifacts import registry, registry_environment, registry_mappers
 
 
 @mock.patch("phoenix.common.artifacts.registry.ArtifactURLRegistry._build_url_config")
@@ -12,7 +12,7 @@ def test_artifact_url_registry(m_build_url_config):
     """Test ArtifactURLRegistry."""
     artifact_key: registry_mappers.ArifactKey = "source-posts"
     run_datetime = datetime.datetime.now()
-    environment_key = "local"
+    environment_key: registry_environment.Environments = "local"
     url_config = {"RAN": "ran"}
     m_source_mapper = mock.MagicMock(registry_mappers.ArtifactURLMapper)
     m_base_mapper = mock.MagicMock(registry_mappers.ArtifactURLMapper)
@@ -36,7 +36,7 @@ def test_artifact_url_registry_value_error(m_build_url_config):
     """Test ArtifactURLRegistry."""
     artifact_key: registry_mappers.ArifactKey = "source-posts"
     run_datetime = datetime.datetime.now()
-    environment_key = "local"
+    environment_key: registry_environment.Environments = "local"
     url_config = {"RAN": "ran"}
     m_source_mapper = mock.MagicMock(registry_mappers.ArtifactURLMapper)
     m_base_mapper = mock.MagicMock(registry_mappers.ArtifactURLMapper)
@@ -55,7 +55,7 @@ def test_artifact_build_url_config_default():
     """Test ArtifactURLRegistry._build_url_config."""
     url_config = {"RAN": "ran"}
     run_datetime = datetime.datetime.now()
-    environment_key = "local"
+    environment_key: registry_environment.Environments = "local"
     aur = registry.ArtifactURLRegistry(run_datetime, environment_key)
     r_url_config = aur._build_url_config(url_config)
     assert r_url_config == {
@@ -71,7 +71,7 @@ def test_artifact_build_url_config_non_default():
     """Test ArtifactURLRegistry._build_url_config."""
     url_config = {"RAN": "ran", "RUN_DATE": "RUN_DATE"}
     run_datetime = datetime.datetime.now()
-    environment_key = "local"
+    environment_key: registry_environment.Environments = "local"
     aur = registry.ArtifactURLRegistry(run_datetime, environment_key)
     r_url_config = aur._build_url_config(url_config)
     assert r_url_config == {
@@ -86,7 +86,7 @@ def test_artifact_build_url_config_non_default_all():
     """Test ArtifactURLRegistry._build_url_config."""
     url_config = {"RAN": "ran", "RUN_DATE": "RUN_DATE", "RUN_ISO_TIMESTAMP": "RUN_ISO_TIMESTAMP"}
     run_datetime = datetime.datetime.now()
-    environment_key = "local"
+    environment_key: registry_environment.Environments = "local"
     aur = registry.ArtifactURLRegistry(run_datetime, environment_key)
     r_url_config = aur._build_url_config(url_config)
     assert r_url_config == url_config

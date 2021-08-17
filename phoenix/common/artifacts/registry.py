@@ -3,20 +3,21 @@ from typing import Any, Dict
 
 import datetime
 
-from phoenix.common.artifacts import registry_environment, registry_mappers
+from phoenix.common.artifacts import registry_environment as reg_env
+from phoenix.common.artifacts import registry_mappers
 
 
 class ArtifactURLRegistry:
     """Registry of the artifact urls."""
 
-    environment_key: str
+    environment_key: reg_env.Environments
     run_datetime: datetime.datetime
     mappers: Dict[registry_mappers.ArifactKey, registry_mappers.ArtifactURLMapper]
 
     def __init__(
         self,
         run_datetime: datetime.datetime,
-        environment_key: str = registry_environment.DEFAULT_ENVIRONMENT_KEY,
+        environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
         mappers: Dict[
             registry_mappers.ArifactKey, registry_mappers.ArtifactURLMapper
         ] = registry_mappers.DEFAULT_MAPPERS,

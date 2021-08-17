@@ -4,7 +4,7 @@ from typing_extensions import Literal, Protocol
 
 from functools import partial
 
-from phoenix.common.artifacts import registry_environment
+from phoenix.common.artifacts import registry_environment as reg_env
 
 
 ArifactKey = Literal[
@@ -29,7 +29,7 @@ class ArtifactURLMapper(Protocol):
         self,
         artifact_key: ArifactKey,
         url_config: Dict[str, Any],
-        environment_key: str = registry_environment.DEFAULT_ENVIRONMENT_KEY,
+        environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
     ) -> str:
         """Protocal for the artifactURLMapper."""
         ...
@@ -39,10 +39,10 @@ def url_mapper(
     format_str: str,
     artifact_key: ArifactKey,
     url_config: Dict[str, Any],
-    environment_key: str = registry_environment.DEFAULT_ENVIRONMENT_KEY,
+    environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
 ):
     """Generalised url mapper."""
-    prefix = registry_environment.default_url_prefix(artifact_key, url_config, environment_key)
+    prefix = reg_env.default_url_prefix(artifact_key, url_config, environment_key)
     url_str_formated = format_str.format(**url_config)
     return f"{prefix}{url_str_formated}"
 

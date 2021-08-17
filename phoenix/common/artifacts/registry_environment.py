@@ -1,10 +1,15 @@
 """Artifact Registry Environment."""
 from typing import Any, Dict
+from typing_extensions import Literal
 
 from phoenix.common.artifacts import urls
 
 
-DEFAULT_ENVIRONMENT_KEY = "local"
+Environments = Literal[
+    "local",
+]
+
+DEFAULT_ENVIRONMENT_KEY: Environments = "local"
 
 
 def default_url_prefix(
