@@ -15,9 +15,9 @@ STATIC_CONFIG_PATH = pathlib.Path(__file__).parents[1] / "config"
 
 def get_local() -> str:
     """Get the URL of the local_artifacts."""
-    return "file:" + str(ARTIFACTS_PATH) + "/"
+    return "file://" + str(ARTIFACTS_PATH) + "/"
 
 
 def get_static_config() -> str:
     """Get the URL of the staic."""
-    return "file:" + str(STATIC_CONFIG_PATH) + "/"
+    return "file://" + str(STATIC_CONFIG_PATH) + "/"

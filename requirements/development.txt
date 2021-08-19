@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements/development.in
 #
-anyio==2.2.0
+anyio==3.3.0
     # via jupyter-server
 appdirs==1.4.4
     # via black
@@ -12,45 +12,47 @@ argon2-cffi==20.1.0
     # via
     #   jupyter-server
     #   notebook
-async-generator==1.10
-    # via nbclient
-attrs==20.3.0
+attrs==21.2.0
     # via
     #   jsonschema
     #   pytest
-babel==2.9.0
+babel==2.9.1
     # via jupyterlab-server
 backcall==0.2.0
     # via ipython
-black==20.8b1
+black==21.7b0
     # via -r requirements/development.in
-bleach==3.3.0
+bleach==4.0.0
     # via nbconvert
-certifi==2020.12.5
+certifi==2021.5.30
     # via requests
-cffi==1.14.5
+cffi==1.14.6
     # via argon2-cffi
-chardet==4.0.0
+charset-normalizer==2.0.4
     # via requests
-click==7.1.2
+click==8.0.1
     # via black
-decorator==4.4.2
+debugpy==1.4.1
+    # via ipykernel
+decorator==5.0.9
     # via ipython
 defusedxml==0.7.1
     # via nbconvert
 entrypoints==0.3
-    # via nbconvert
-flake8==3.9.0
+    # via
+    #   jupyterlab-server
+    #   nbconvert
+flake8==3.9.2
     # via -r requirements/development.in
-idna==2.10
+idna==3.2
     # via
     #   anyio
     #   requests
 iniconfig==1.1.1
     # via pytest
-ipykernel==5.5.0
+ipykernel==6.2.0
     # via notebook
-ipython==7.22.0
+ipython==7.26.0
     # via
     #   ipykernel
     #   jupyterlab
@@ -60,18 +62,18 @@ ipython-genutils==0.2.0
     #   nbformat
     #   notebook
     #   traitlets
-isort==5.8.0
+isort==5.9.3
     # via -r requirements/development.in
 jedi==0.18.0
     # via ipython
-jinja2==2.11.3
+jinja2==3.0.1
     # via
     #   jupyter-server
     #   jupyterlab
     #   jupyterlab-server
     #   nbconvert
     #   notebook
-json5==0.9.5
+json5==0.9.6
     # via jupyterlab-server
 jsonschema==3.2.0
     # via
@@ -91,42 +93,44 @@ jupyter-core==4.7.1
     #   nbconvert
     #   nbformat
     #   notebook
-jupyter-packaging==0.7.12
-    # via jupyterlab
-jupyter-server==1.5.1
+jupyter-server==1.10.2
     # via
     #   jupyterlab
     #   jupyterlab-server
     #   nbclassic
-jupyterlab==3.0.12
+jupyterlab==3.1.7
     # via -r requirements/development.in
 jupyterlab-pygments==0.1.2
     # via nbconvert
-jupyterlab-server==2.3.0
+jupyterlab-server==2.7.0
     # via jupyterlab
-markupsafe==1.1.1
+markupsafe==2.0.1
     # via jinja2
+matplotlib-inline==0.1.2
+    # via
+    #   ipykernel
+    #   ipython
 mccabe==0.6.1
     # via flake8
 mistune==0.8.4
     # via nbconvert
 mock==4.0.3
     # via -r requirements/development.in
-mypy==0.812
+mypy==0.910
     # via -r requirements/development.in
 mypy-extensions==0.4.3
     # via
     #   black
     #   mypy
-nbclassic==0.2.6
+nbclassic==0.3.1
     # via jupyterlab
-nbclient==0.5.3
+nbclient==0.5.4
     # via nbconvert
-nbconvert==6.0.7
+nbconvert==6.1.0
     # via
     #   jupyter-server
     #   notebook
-nbformat==5.1.2
+nbformat==5.1.3
     # via
     #   jupyter-server
     #   nbclient
@@ -134,20 +138,19 @@ nbformat==5.1.2
     #   notebook
 nest-asyncio==1.5.1
     # via nbclient
-notebook==6.3.0
+notebook==6.4.3
     # via nbclassic
-packaging==20.9
+packaging==21.0
     # via
     #   bleach
-    #   jupyter-packaging
     #   jupyterlab
     #   jupyterlab-server
     #   pytest
 pandocfilters==1.4.3
     # via nbconvert
-parso==0.8.1
+parso==0.8.2
     # via jedi
-pathspec==0.8.1
+pathspec==0.9.0
     # via black
 pexpect==4.8.0
     # via ipython
@@ -155,11 +158,11 @@ pickleshare==0.7.5
     # via ipython
 pluggy==0.13.1
     # via pytest
-prometheus-client==0.9.0
+prometheus-client==0.11.0
     # via
     #   jupyter-server
     #   notebook
-prompt-toolkit==3.0.18
+prompt-toolkit==3.0.19
     # via ipython
 ptyprocess==0.7.0
     # via
@@ -171,43 +174,47 @@ pycodestyle==2.7.0
     # via flake8
 pycparser==2.20
     # via cffi
-pydocstyle==6.0.0
+pydocstyle==6.1.1
     # via -r requirements/development.in
 pyflakes==2.3.1
     # via flake8
-pygments==2.8.1
+pygments==2.10.0
     # via
     #   ipython
     #   jupyterlab-pygments
     #   nbconvert
 pyparsing==2.4.7
     # via packaging
-pyrsistent==0.17.3
+pyrsistent==0.18.0
     # via jsonschema
-pytest==6.2.2
+pytest==6.2.4
     # via
     #   -r requirements/development.in
     #   pytest-mock
-pytest-mock==3.5.1
+pytest-mock==3.6.1
     # via -r requirements/development.in
-python-dateutil==2.8.1
+python-dateutil==2.8.2
     # via jupyter-client
 pytz==2021.1
     # via babel
-pyzmq==22.0.3
+pyzmq==22.2.1
     # via
     #   jupyter-client
     #   jupyter-server
     #   notebook
-regex==2021.3.17
+regex==2021.8.3
     # via black
-requests==2.25.1
-    # via jupyterlab-server
-send2trash==1.5.0
+requests==2.26.0
+    # via
+    #   jupyterlab-server
+    #   requests-unixsocket
+requests-unixsocket==0.2.0
+    # via jupyter-server
+send2trash==1.8.0
     # via
     #   jupyter-server
     #   notebook
-six==1.15.0
+six==1.16.0
     # via
     #   argon2-cffi
     #   bleach
@@ -217,16 +224,18 @@ sniffio==1.2.0
     # via anyio
 snowballstemmer==2.1.0
     # via pydocstyle
-terminado==0.9.3
+terminado==0.11.0
     # via
     #   jupyter-server
     #   notebook
-testpath==0.4.4
+testpath==0.5.0
     # via nbconvert
 toml==0.10.2
     # via
-    #   black
+    #   mypy
     #   pytest
+tomli==1.2.1
+    # via black
 tornado==6.1
     # via
     #   ipykernel
@@ -242,24 +251,29 @@ traitlets==5.0.5
     #   jupyter-client
     #   jupyter-core
     #   jupyter-server
+    #   matplotlib-inline
     #   nbclient
     #   nbconvert
     #   nbformat
     #   notebook
-typed-ast==1.4.2
+types-mock==0.1.5
+    # via -r requirements/development.in
+types-python-dateutil==0.1.6
+    # via -r requirements/development.in
+types-requests==2.25.6
+    # via -r requirements/development.in
+typing-extensions==3.10.0.0
+    # via mypy
+urllib3==1.26.6
     # via
-    #   black
-    #   mypy
-typing-extensions==3.7.4.3
-    # via
-    #   black
-    #   mypy
-urllib3==1.26.4
-    # via requests
+    #   requests
+    #   requests-unixsocket
 wcwidth==0.2.5
     # via prompt-toolkit
 webencodings==0.5.1
     # via bleach
+websocket-client==1.2.1
+    # via jupyter-server
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
