@@ -1,5 +1,6 @@
 """Data pulling for twitter."""
 import pandas as pd
+import logging
 import tentaclio
 
 from phoenix.tag.data_pull import constants, utils
@@ -9,12 +10,16 @@ def twitter_json(url_to_folder: str) -> pd.DataFrame:
     """Get all the csvs and return a dataframe with tweet data."""
     li = []
     for entry in tentaclio.listdir(url_to_folder):
+        logging.info(f"Processing file: {entry}")
+        file_timestamp = utils.get_file_name_timestamp(entry)
         with tentaclio.open(entry) as file_io:
             df = pd.read_json(file_io)
             li.append(df)
 
+        df["file_timestamp"] = file_timestamp
+
     df = pd.concat(li, axis=0, ignore_index=True)
-    # Get the most recent tweet
+    df = df.sort_values("file_timestamp")
     df = df.groupby("id_str").last()
     df = df.reset_index()
     return normalise_json(df)
