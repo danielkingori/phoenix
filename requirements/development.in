@@ -13,3 +13,4 @@ jupyterlab
 types-requests
 types-mock
 types-python-dateutil
+types-freezegun

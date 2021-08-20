@@ -565,6 +565,8 @@ traitlets==5.0.5
     #   notebook
 tweepy==3.10.0
     # via -r requirements/scrape.in
+types-freezegun==1.1.0
+    # via -r requirements/development.in
 types-mock==0.1.5
     # via -r requirements/development.in
 types-python-dateutil==0.1.6

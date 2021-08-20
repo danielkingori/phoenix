@@ -152,6 +152,8 @@ flask==2.0.1
     #   flask-compress
 flask-compress==1.10.1
     # via dash
+freezegun==1.1.0
+    # via -r requirements/tag.in
 fsspec==2021.7.0
     # via
     #   dask
@@ -471,6 +473,7 @@ python-dateutil==2.8.2
     # via
     #   bokeh
     #   botocore
+    #   freezegun
     #   jupyter-client
     #   matplotlib
     #   pandas
@@ -635,6 +638,8 @@ traitlets==5.0.5
     #   notebook
 tweepy==3.10.0
     # via -r requirements/scrape.in
+types-freezegun==1.1.0
+    # via -r requirements/development.in
 types-mock==0.1.5
     # via -r requirements/development.in
 types-python-dateutil==0.1.6

@@ -104,6 +104,8 @@ et-xmlfile==1.1.0
     # via openpyxl
 fastparquet==0.7.1
     # via -r requirements/common.in
+freezegun==1.1.0
+    # via -r requirements/tag.in
 fsspec==2021.7.0
     # via
     #   dask
@@ -301,6 +303,7 @@ python-dateutil==2.8.2
     # via
     #   bokeh
     #   botocore
+    #   freezegun
     #   jupyter-client
     #   matplotlib
     #   pandas
