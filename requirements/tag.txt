@@ -192,8 +192,10 @@ matplotlib==3.4.3
     # via
     #   -r requirements/common.in
     #   seaborn
-msgpack==1.0.2
-    # via distributed
+msgpack==0.6.0
+    # via
+    #   -r requirements/common.in
+    #   distributed
 multidict==5.1.0
     # via
     #   aiohttp

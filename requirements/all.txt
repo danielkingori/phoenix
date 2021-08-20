@@ -297,8 +297,10 @@ mistune==0.8.4
     # via nbconvert
 mock==4.0.3
     # via -r requirements/development.in
-msgpack==1.0.2
-    # via distributed
+msgpack==0.6.0
+    # via
+    #   -r requirements/common.in
+    #   distributed
 multidict==5.1.0
     # via
     #   aiohttp

@@ -2,6 +2,8 @@
 awswrangler
 pandas
 dask[complete]
+# Need for dask
+msgpack==0.6.0
 fastparquet
 s3fs
 # This is need to resolve versions on boto
