@@ -44,9 +44,10 @@ def get_posts_to_scrape(posts_df: pd.DataFrame) -> pd.DataFrame:
 def get_all_features_for_export(features_df: pd.DataFrame) -> pd.DataFrame:
     """Normalise and transform the features dataframe so it can be persisted correctly."""
     features_df["object_id"] = features_df["object_id"].astype(str)
-    features_df["language_from_api"] = features_df["language_from_api"].astype(str)
     features_df["features"] = features_df["features"].astype(str)
-    return features_df
+    return features_df[
+        ["object_id", "object_type", "features", "features_count", "is_key_feature"]
+    ]
 
 
 def get_objects_for_export(objects_df: pd.DataFrame) -> pd.DataFrame:
