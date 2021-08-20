@@ -92,7 +92,9 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
             "branded_content_sponsor",
             "live_video_status",
             "legacy_id",
-        ]
+        ],
+        # Using ignore as missing data is not imporant
+        errors="ignore",
     )
 
 
@@ -147,7 +149,9 @@ def merge_flattened(df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFram
         "statistics_actual_care_count",
     ]
     df[to_add] = df_flattened[to_add]
-    df["account_platform_id"] = df["account_platform_id"].astype(int)
+    # Some posts don't have an account this should be looked in to further
+    # https://gitlab.com/howtobuildup/phoenix/-/issues/47
+    df["account_platform_id"] = df["account_platform_id"].fillna(0).astype(int)
     df["account_page_created_date"] = pd.to_datetime(
         df["account_page_created_date"]
     ).dt.tz_localize("UTC")
