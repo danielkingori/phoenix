@@ -1,6 +1,7 @@
 """Data pulling for twitter."""
-import pandas as pd
 import logging
+
+import pandas as pd
 import tentaclio
 
 from phoenix.tag.data_pull import constants, utils
