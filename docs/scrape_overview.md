@@ -55,6 +55,9 @@ You must have a Twitter developer account.
 For more information on the Twitter API, see [Twitter API documentation](https://developer.twitter.com/en/docs).
 
 **Important!:** Phoenix is currently set up to use Twitter API V1. 
+Please follow all API guidance from Twitter to avoid any problems with your access.
+These tools are designed within the boundaries of the API guidelines, 
+and the Phoenix team is not responsible for any misuse.
 
 Set the following environment variables:
 
@@ -82,7 +85,6 @@ A source run collects the previous 3 days tweets.
 This is in line with our approach for Facebook.
 Our expectation is that most activity around individual tweets reduces after the first few days.
 
-
 The Twitter data will conform to the following [Tweet schema](docs/tweets_table.md).
 
 ## Facebook comments
@@ -105,5 +107,16 @@ following this tutorial on [collecting comments from Facebook pages](docs/facebo
 $ ./phoenix-cli fb-comments $(date --utc --iso-8601=seconds)
 ```
 
-**6. Send the structured comments data through the tagging pipeline** so that the heuristics about that data can also be found.
+**6. Send the structured comments data through the tagging pipeline** so that the heuristics about that data can also be found. 
+Here is [documentation on the Facebook Comments schema](docs/facebook_comments_table.md).
 
+### Disclaimer
+
+This approach to collecting Facebook comments is experimental and not officially sanctioned by Facebook. 
+Use your own discretion when following this methodology.
+If this approach is abused, it could result in blocked accounts or other forms of reprimand from Facebook.
+While we have tested this approach in our own projects and found it to be valuable and viable, 
+the Phoenix team is not responsible for blocked accounts. 
+
+## Data Protection
+It is up to you to follow the appropriate data protection guidelines as laid out in your jurisdiction. 

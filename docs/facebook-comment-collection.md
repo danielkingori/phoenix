@@ -50,7 +50,7 @@ On Windows, the profile will save files to your `Downloads/fb-comments/` folder 
 or simply `Downloads` if you didn't.
 
 #### 6. Upload files.
-Upload all the files you save to the proper folder in the cloud.
+Upload all the files you save to the proper folder for processing, in the cloud or locally.
 
 #### 7. Parse the comments.
 Next, run the facebook comment parsing script as per the [scrape overview](docs/scrape_overview.md).
