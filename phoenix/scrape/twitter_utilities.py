@@ -14,9 +14,17 @@ def find_hashtags_in_tweet_text(full_text) -> list:
 
 
 def is_tweet_a_retweet(tweet: tweepy.Status) -> bool:
-    """Check if tweet is a retweet."""
+    """Check if tweet is a retweet from tweepy status."""
     retweet_re = r"(RT @)"
     if re.match(retweet_re, tweet.full_text) or tweet.retweeted:
+        return True
+    return False
+
+
+def is_tweet_a_retweet_dict(tweet: dict) -> bool:
+    """Check if tweet is a retweet."""
+    retweet_re = r"(RT @)"
+    if re.match(retweet_re, tweet["full_text"]) or "retweeted_stats" in tweet.keys():
         return True
     return False
 
