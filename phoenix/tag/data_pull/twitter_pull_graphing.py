@@ -1,12 +1,22 @@
 """Data pulling for Twitter graphing."""
 
+import datetime
 import json
 import logging
 
 import pandas as pd
 import tentaclio
+from dateutil.parser import parse
 
 from phoenix.scrape import twitter_utilities
+from phoenix.tag.data_pull import utils
+
+
+def insert_file_timestamp(batch: list, file_timestamp: datetime.datetime) -> list:
+    """Inserts the file timestamp into each row."""
+    for tweet in batch:
+        tweet["file_timestamp"] = file_timestamp
+    return batch
 
 
 def twitter_json(url_to_folder: str) -> list:
@@ -14,25 +24,46 @@ def twitter_json(url_to_folder: str) -> list:
     tweets = []
     for entry in tentaclio.listdir(url_to_folder):
         logging.info(f"Processing file: {entry}")
-        # TODO: file_timestamp = utils.get_file_name_timestamp(entry)
+        file_timestamp = utils.get_file_name_timestamp(entry)
         with tentaclio.open(entry) as file_io:
-            tweets.extend(json.loads(file_io.read()))
-            # TODO: tweets[-1]['file_timestamp'] = file_timestamp
+            batch = json.loads(file_io.read())
+        batch = insert_file_timestamp(batch, file_timestamp)
+        tweets.extend(batch)
     return tweets
 
 
+def isolate_year(timestamp: str) -> int:
+    """Isolate year from timestamp."""
+    return parse(timestamp, fuzzy=True).year
+
+
+def isolate_month(timestamp: str) -> int:
+    """Isolate month from timestamp."""
+    return parse(timestamp, fuzzy=True).month
+
+
 def normalize_tweets_rt_graph(tweets: list) -> pd.DataFrame:
-    """Normalize tweets for the retweet graph."""
+    """Normalize tweets for the retweet graph.
+
+    Filter out tweets that are from any month not included in file timestamp.
+    """
     retweets = filter_retweets(tweets)
     # TODO: Filter out any tweet from the previous month.
     retweets_normalized = []
     for tweet in retweets:
-        retweets_normalized.append(
-            {
-                "original_screen_name": tweet["retweeted_status"]["user"]["screen_name"],
-                "retweet_screen_name": tweet["user"]["screen_name"],
-            }
-        )
+        tweet_year = isolate_year(tweet["created_at"])
+        tweet_month = isolate_month(tweet["created_at"])
+        if tweet["file_timestamp"].month == tweet_month:
+            retweets_normalized.append(
+                {
+                    "id_str": tweet["id_str"],
+                    "original_screen_name": tweet["retweeted_status"]["user"]["screen_name"],
+                    "retweet_screen_name": tweet["user"]["screen_name"],
+                    "file_timestamp": tweet["file_timestamp"],
+                    "tweet_year": tweet_year,
+                    "tweet_month": tweet_month,
+                }
+            )
     retweets_df = pd.DataFrame.from_dict(retweets_normalized)
     return retweets_df
 
@@ -44,6 +75,14 @@ def filter_retweets(tweets: list) -> list:
         if twitter_utilities.is_tweet_a_retweet_dict(tweet):
             retweets.append(tweet)
     return retweets
+
+
+def remove_duplicates(df: pd.DataFrame) -> pd.DataFrame:
+    """Remove duplicate tweets from dataframe, keeping the most recent versions."""
+    df = df.sort_values("file_timestamp")
+    df = df.groupby("id_str").last()
+    df = df.reset_index()
+    return df
 
 
 def calculate_weights_rt_graph(data: pd.DataFrame) -> pd.DataFrame:
@@ -67,6 +106,7 @@ def collect_tweets_rt_graph(url_to_folder: str, users: list) -> pd.DataFrame:
     """Collect the tweets data and organize it for graphing."""
     tweets = twitter_json(url_to_folder)
     retweets_df = normalize_tweets_rt_graph(tweets)
+    retweets_df = remove_duplicates(retweets_df)
     retweets_df = calculate_weights_rt_graph(retweets_df)
     retweets_df = compare_users(retweets_df, users)
     return retweets_df
