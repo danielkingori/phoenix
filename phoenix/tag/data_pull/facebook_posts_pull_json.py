@@ -154,6 +154,7 @@ def merge_flattened(df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFram
         "statistics_actual_like_count",
         "statistics_actual_comment_count",
         "statistics_actual_share_count",
+        "statistics_actual_love_count",
         "statistics_actual_wow_count",
         "statistics_actual_haha_count",
         "statistics_actual_sad_count",
