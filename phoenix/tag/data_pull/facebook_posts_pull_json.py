@@ -1,4 +1,6 @@
 """Data pulling for facebook posts."""
+from typing import Optional
+
 import json
 import logging
 
@@ -10,7 +12,9 @@ from phoenix.common import constants as common_constants
 from phoenix.tag.data_pull import constants, utils
 
 
-def from_json(url_to_folder: str) -> pd.DataFrame:
+def from_json(
+    url_to_folder: str, year_filter: Optional[int] = None, month_filter: Optional[int] = None
+) -> pd.DataFrame:
     """Get all the JSON files and return a normalised facebook posts."""
     li = []
     for entry in tentaclio.listdir(url_to_folder):
@@ -34,6 +38,10 @@ def from_json(url_to_folder: str) -> pd.DataFrame:
     df = df.sort_values("file_timestamp")
     df = df.groupby("phoenix_post_id").last()
     df = df.reset_index()
+    if year_filter:
+        df = df[df["year_filter"] == year_filter]
+    if month_filter:
+        df = df[df["month_filter"] == month_filter]
     return df
 
 
