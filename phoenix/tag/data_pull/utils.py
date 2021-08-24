@@ -45,9 +45,9 @@ def get_file_name_timestamp(url: str) -> datetime.datetime:
     if date_regex.match(file_name):
         return _process_timestamp(file_name)
 
-    slipt_file_name = file_name.split("-", 1)
-    if 1 < len(slipt_file_name) and date_regex.match(slipt_file_name[1]):
-        return _process_timestamp(slipt_file_name[1])
+    split_file_name = file_name.split("-", 1)
+    if 1 < len(split_file_name) and date_regex.match(split_file_name[1]):
+        return _process_timestamp(split_file_name[1])
 
     return datetime.datetime.now(datetime.timezone.utc)
 
