@@ -15,14 +15,16 @@ def get_data(url: str):
 
 def create_networkx_graph_from_df(df: pandas.DataFrame):
     """Create network graph from dataframe."""
-    df.rename(columns={'count': 'weight'}, inplace=True)
-    return nx.from_pandas_edgelist(df, "original_screen_name", "retweet_screen_name", edge_attr="weight")
+    df.rename(columns={"count": "weight"}, inplace=True)
+    return nx.from_pandas_edgelist(
+        df, "original_screen_name", "retweet_screen_name", edge_attr="weight"
+    )
 
 
 def assign_partitions(graph, partitions):
     """Assign partitions from community-louvain calculations."""
     for node in partitions:
-        graph.nodes[node]['community'] = partitions[node]
+        graph.nodes[node]["community"] = partitions[node]
     return graph
 
 
@@ -35,8 +37,8 @@ def create_visualization(graph: nx.Graph):
     web.display.linkStrength = 2
     web.display.charge = 10
     web.display.gravity = 0.2
-    web.display.colorBy = 'community'
-    web.display.sizeBy = 'degree'
+    web.display.colorBy = "community"
+    web.display.sizeBy = "degree"
     web.display.width = 1200
     web.display.height = 1200
     # web.show()
