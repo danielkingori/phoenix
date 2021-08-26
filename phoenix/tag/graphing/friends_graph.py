@@ -1,24 +1,38 @@
-"""Create a retweets network graph with Twitter data."""
+"""Create a friends network graph with Twitter data."""
 
 import community as community_louvain
 import networkx as nx
-import pandas
+import pandas as pd
 from webweb import Web
 
 from phoenix.common import artifacts
+from phoenix.tag.graphing.retweets_graph import get_data
 
 
-def get_data(url: str):
-    """Get dataframe from artifacts."""
-    return artifacts.dataframes.get(url).dataframe
+def create_networkx_graph_from_df(df: pd.DataFrame):
+    return nx.from_pandas_edgelist(df, "user_1", "user_2")
 
 
-def create_networkx_graph_from_df(df: pandas.DataFrame):
-    """Create network graph from dataframe."""
-    df.rename(columns={"count": "weight"}, inplace=True)
-    return nx.from_pandas_edgelist(
-        df, "original_screen_name", "retweet_screen_name", edge_attr="weight"
-    )
+def set_node_attrs(graph: nx.Graph, df: pd.DataFrame):
+    """Set seed_user attribute for coloring of seed users."""
+    attrs = {}
+    for user in list(set(df.user_2)):
+        attrs[user] = {}
+        attrs[user]["seed_user"] = False
+    for user in list(set(df.user_1)):
+        # This is a bit crude because it overwrites already written attrs.
+        attrs[user] = {}
+        attrs[user]["seed_user"] = True
+    nx.set_node_attributes(graph, attrs)
+    return graph
+
+
+def clean_single_edge_nodes(graph: nx.Graph):
+    """Remove nodes with a degree of 1 for a cleaner graph."""
+    to_be_removed = [x for x in graph.nodes() if graph.degree(x) <= 1]
+    for x in to_be_removed:
+        graph.remove_node(x)
+    return graph
 
 
 def assign_partitions(graph, partitions):
@@ -34,7 +48,7 @@ def create_visualization(graph: nx.Graph):
     web.display.scaleLinkWidth = True
     web.display.scaleLinkOpacity = True
     web.display.linkLength = 25
-    web.display.linkStrength = 1
+    web.display.linkStrength = 2
     web.display.charge = 10
     web.display.gravity = 0.2
     web.display.colorBy = "community"
@@ -51,8 +65,11 @@ def generate_graph_viz(url: str):
     df = get_data(url)
     # Create network graph & community calculations
     graph = create_networkx_graph_from_df(df)
+    graph = set_node_attrs(graph, df)
+    graph = clean_single_edge_nodes(graph)
     partitions = community_louvain.best_partition(graph)
     community_graph = assign_partitions(graph, partitions)
-    # Set up and configure visualization
     web = create_visualization(community_graph)
     return web
+
+
