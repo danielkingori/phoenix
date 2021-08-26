@@ -1,10 +1,15 @@
 """Process annotations of tensions."""
+import logging
 
 import pandas as pd
+
+logger = logging.getLogger()
+
 
 def process_annotations(df: pd.DataFrame) -> pd.DataFrame:
     """Process the raw annotations."""
     df = update_column_names(df)
+    df = clean_features(df)
 
     return df
 
@@ -56,5 +61,17 @@ def update_column_names(df: pd.DataFrame) -> pd.DataFrame:
     ]
 
     df.columns = column_names_annotations
+    df = df.where(df.isnull(), df.astype(str))
+
+    return df
+
+
+def clean_features(df: pd.DataFrame) -> pd.DataFrame:
+    """Clean any features from having symbols."""
+    features_cols = [col for col in df.columns if "features" in col]
+
+    for features_col in features_cols:
+        if df[features_col].dtype == object:
+            df[features_col] = df[features_col].str.replace(r"\n", "", regex=True)
 
     return df
