@@ -60,6 +60,13 @@ def _get_user_tweet_cursor(api, id, num_items) -> tweepy.Status:
     ).items(num_items)
 
 
+def _get_user_friends_tweet_cursor(api, screen_name, num_items) -> tweepy.Status:
+    """Manages cursor for Twitter api.friends endpoint."""
+    return tweepy.Cursor(api.friends, screen_name=screen_name, count=200, skip_status=True).items(
+        num_items
+    )
+
+
 def get_tweets_since_days(query_type, query, since_days, num_items, api=None) -> tweepy.Status:
     """Decides if query is for users or keywords, and checks \
     if the returns are within the since_days timeframe."""
@@ -103,11 +110,44 @@ def get_tweets_json(query_type: str, queries: list, num_items=0, since_days=1) -
     """Extracts json from returned tweets and puts them into a DataFrame."""
     api = connect_twitter_api()
     tweets = get_tweets(query_type, queries, num_items, since_days, api)
+    return extract_tweet_json(tweets)
+    # note: currently if no tweets are found, this crashes with an IndexError
+    # previously this was ->def get_tweets_dataframe():
+    #                       return pd.DataFrame(tweets_json, columns=tweets_json[0].keys())
+
+
+def extract_tweet_json(tweets):
+    """Extracts json element of tweet object."""
     if not tweets:
         tweets_json = []
     else:
         tweets_json = [tweet._json for tweet in tweets]
     return tweets_json
-    # note: currently if no tweets are found, this crashes with an IndexError
-    # previously this was ->def get_tweets_dataframe():
-    #                       return pd.DataFrame(tweets_json, columns=tweets_json[0].keys())
+
+
+def enrich_with_query_user(friend, query):
+    """Add the query user to return data."""
+    friend_json = friend._json
+    friend_json["query_user"] = query
+    return friend_json
+
+
+def get_friends(queries, num_items, api):
+    """Iterate through queries and call the api cursor function."""
+    for query in queries:
+        try:
+            for friend in _get_user_friends_tweet_cursor(api, query, num_items):
+                yield enrich_with_query_user(friend, query)
+        except tweepy.error.TweepError as e:
+            if e.response.status_code == 401:
+                logging.info(
+                    "401 Unauthorized: either bad api tokens or not \
+                    authorized to access the query due to a locked account"
+                )
+
+
+def get_friends_json(queries: list, num_items=0) -> list:
+    """Manage the friend collection process from Twitter."""
+    api = connect_twitter_api()
+    friends = get_friends(queries, num_items, api)
+    return [friend for friend in friends]

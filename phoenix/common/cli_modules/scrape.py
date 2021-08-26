@@ -79,8 +79,12 @@ def tw(
     """Run the twitter scrape script.
 
     Example commands:
-    ./phoenix-cli tw keyword
-    ./phoenix-cli tw user
+    ./phoenix-cli tw keyword $(date --utc --iso-8601=seconds)
+    ./phoenix-cli tw user $(date --utc --iso-8601=seconds)
+    ./phoenix-cli tw friends $(date --utc --iso-8601=seconds)
+
+    RUN_ISO_TIMESTAMP:
+        Is the timestamp that will mark the artifacts that are created.
     """
     run_dt = run_datetime.create_run_datetime_now()
     aur = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
@@ -93,6 +97,10 @@ def tw(
         input_nb_url = utils.get_input_notebook_path("scrape/twitter_keyword_search.ipynb")
         source_artifact_url = aur.get_url("source-keyword_tweets")
         output_nb_url = aur.get_url("source-twitter_keyword_notebook")
+    elif endpoint == "friends":
+        input_nb_url = utils.get_input_notebook_path("scrape/twitter_user_friends.ipynb")
+        source_artifact_url = aur.get_url("source-twitter_user_friends")
+        output_nb_url = aur.get_url("source-twitter_friends_notebook")
     else:
         raise ValueError(f"Not supported endpoint: {endpoint}")
 

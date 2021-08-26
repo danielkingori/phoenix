@@ -19,6 +19,10 @@ ArtifactKey = Literal[
     "source-twitter_keyword_notebook",
     "base-grouped_by_user_tweets",
     "base-grouped_by_keyword_tweets",
+    # Twitter friends
+    "source-twitter_friends_notebook",
+    "source-twitter_user_friends",
+    "base-to_process_twitter_user_friends",
 ]
 
 
@@ -90,5 +94,15 @@ DEFAULT_MAPPERS: Dict[ArtifactKey, ArtifactURLMapper] = {
             f"{YEAR_MONTH_FILTER_DIRS}"
             "keyword_tweets-{RUN_DATETIME}.json"
         ),
+    ),
+    # Twitter Friends
+    "source-twitter_friends_notebook": partial(
+        url_mapper, "source_runs/{RUN_DATE}/twitter_user_friends-{RUN_ISO_TIMESTAMP}.ipynb"
+    ),
+    "source-twitter_user_friends": partial(
+        url_mapper, "source_runs/{RUN_DATE}/twitter_user_friends-{RUN_ISO_TIMESTAMP}.json"
+    ),
+    "base-to_process_twitter_user_friends": partial(
+        url_mapper, "base/to_process/twitter/user_friends-{RUN_ISO_TIMESTAMP}.json"
     ),
 }
