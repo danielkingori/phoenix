@@ -5,17 +5,17 @@ import networkx as nx
 import pandas as pd
 from webweb import Web
 
-from phoenix.common import artifacts
 from phoenix.tag.graphing.retweets_graph import get_data
 
 
 def create_networkx_graph_from_df(df: pd.DataFrame):
+    """Create networkx graph from dataframe."""
     return nx.from_pandas_edgelist(df, "user_1", "user_2")
 
 
 def set_node_attrs(graph: nx.Graph, df: pd.DataFrame):
     """Set seed_user attribute for coloring of seed users."""
-    attrs = {}
+    attrs: dict = {}
     for user in list(set(df.user_2)):
         attrs[user] = {}
         attrs[user]["seed_user"] = False
@@ -71,5 +71,3 @@ def generate_graph_viz(url: str):
     community_graph = assign_partitions(graph, partitions)
     web = create_visualization(community_graph)
     return web
-
-
