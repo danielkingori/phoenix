@@ -3,6 +3,9 @@ import logging
 
 import pandas as pd
 
+from phoenix.custom_models import utils
+
+
 logger = logging.getLogger()
 
 
@@ -75,3 +78,38 @@ def clean_features(df: pd.DataFrame) -> pd.DataFrame:
             df[features_col] = df[features_col].str.replace(r"\n", "", regex=True)
 
     return df
+
+
+def get_feature_mapping(df: pd.DataFrame, feature_col: str, target_col: str) -> pd.DataFrame:
+    """Get a mapping from features to a target within a dataframe.
+
+    Args:
+        df: (pd.DataFrame) dataframe which needs to contain both the feature_col and target_col
+        feature_col: (str) column which houses the features
+        target_col: (str) column which houses the target(s)
+
+    Returns:
+        pd.DataFrame with two columns: feature and target
+    """
+    df = df.dropna()
+    # It's possible that there are no features in the feature column as there are targets that
+    # don't have a straightforward feature to target mappings. This turns the dtype into a float
+    # with NaN's. As it is normal behaviour that there are no features that map to targets we
+    # return an empty dataframe.
+    if df[feature_col].dtype != object:
+        return pd.DataFrame(columns=["feature", "target"])
+    df = utils.explode_str(df, feature_col, ",")
+    df = df.drop_duplicates()
+    df = df.rename(columns={feature_col: "feature", target_col: "target"})
+
+    return df
+
+
+def get_new_topics(df: pd.DataFrame) -> pd.DataFrame:
+    """Get new topics from annotations and their features."""
+    topics_df = df[["added_topics_analyst_with_features", "added_topic_features"]].copy()
+    topics_df = get_feature_mapping(
+        topics_df, "added_topic_features", "added_topics_analyst_with_features"
+    )
+
+    return topics_df
