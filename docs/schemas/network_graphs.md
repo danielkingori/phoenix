@@ -13,3 +13,12 @@ Dataframe for retweets graph.
 | original_listed      | bool     | `True` if original screen_name in user search parameters  |
 | retweet_listed       | bool     | `True` if retweeter screen_name in user search parameters |
 
+
+### Friends Graph
+Dataframe for friends graph
+
+| Column             | Datatype | Description                                               |
+|--------------------|----------|----------------------------------------------|
+| user_1  | object   | screen name of user account                             |
+| user_2  | object   | screen name of person followed by user                  |
+
