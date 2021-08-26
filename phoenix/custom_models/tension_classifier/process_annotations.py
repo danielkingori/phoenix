@@ -94,6 +94,14 @@ def clean_features(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def binarise_tensions_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Binarise tension columns from nans and analyst tags into 1's and 0's."""
+    df[TENSIONS_COLUMNS_LIST] = df[TENSIONS_COLUMNS_LIST].fillna(0)
+    df[TENSIONS_COLUMNS_LIST] = df[TENSIONS_COLUMNS_LIST].replace("x", 1)
+    df[TENSIONS_COLUMNS_LIST] = df[TENSIONS_COLUMNS_LIST].astype(int)
+    return df
+
+
 def get_feature_mapping(df: pd.DataFrame, feature_col: str, target_col: str) -> pd.DataFrame:
     """Get a mapping from features to a target within a dataframe.
 
