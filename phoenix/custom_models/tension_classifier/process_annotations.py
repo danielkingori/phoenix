@@ -1,4 +1,6 @@
 """Process annotations of tensions."""
+from typing import Dict
+
 import logging
 
 import pandas as pd
@@ -7,6 +9,18 @@ from phoenix.custom_models import utils
 
 
 logger = logging.getLogger()
+
+# List of tensions in annotation data
+TENSIONS_COLUMNS_LIST = [
+    "economic_labour_tensions",
+    "sectarian_tensions",
+    "environmental_tensions",
+    "political_tensions",
+    "service_related_tensions",
+    "community_insecurity_tensions",
+    "geopolitics_tensions",
+    "intercommunity_relations_tensions",
+]
 
 
 def process_annotations(df: pd.DataFrame) -> pd.DataFrame:
@@ -113,3 +127,14 @@ def get_new_topics(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     return topics_df
+
+
+def get_tension_feature_mapping(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
+    """Get features for tensions."""
+    tensions_dict = {}
+
+    for tension in TENSIONS_COLUMNS_LIST:
+        feature_df = df[[f"{tension}_features", tension]].copy()
+        tensions_dict[tension] = get_feature_mapping(feature_df, f"{tension}_features", tension)
+
+    return tensions_dict
