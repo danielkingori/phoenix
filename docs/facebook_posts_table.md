@@ -57,9 +57,9 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_posts_v1 (
 `updated` timestamp,
 `file_timestamp` timestamp,
 `type` string,
-`statistics_actual_likes_count` bigint,
-`statistics_actual_comments_count` bigint,
-`statistics_actual_shares_count` bigint,
+`statistics_actual_like_count` bigint,
+`statistics_actual_comment_count` bigint,
+`statistics_actual_share_count` bigint,
 `statistics_actual_love_count` bigint,
 `statistics_actual_wow_count` bigint,
 `statistics_actual_haha_count` bigint,
@@ -106,7 +106,7 @@ TBLPROPERTIES ('has_encrypted_data'='false');
 ```
 If you need to make changes:
 ```
-DROP TABLE IF EXISTS buildup_dev.facebook_posts;
+DROP TABLE IF EXISTS buildup_dev.facebook_posts_v1;
 ```
 ### Topics
 Athena table was created with the query:
@@ -132,9 +132,9 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_posts_topics_v1 (
 `updated` timestamp,
 `file_timestamp` timestamp,
 `type` string,
-`statistics_actual_likes_count` bigint,
-`statistics_actual_comments_count` bigint,
-`statistics_actual_shares_count` bigint,
+`statistics_actual_like_count` bigint,
+`statistics_actual_comment_count` bigint,
+`statistics_actual_share_count` bigint,
 `statistics_actual_love_count` bigint,
 `statistics_actual_wow_count` bigint,
 `statistics_actual_haha_count` bigint,
