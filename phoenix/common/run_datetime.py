@@ -5,6 +5,9 @@ This keeps datetimes consistent across projects.
 import datetime
 
 
+FILE_SAFE_FORMAT = "%Y%m%dT%H%M%S.%fZ"
+
+
 class RunDatetime:
     """RunDatetime is an interface for consistent datetimes."""
 
@@ -37,9 +40,16 @@ class RunDatetime:
 
         This is to make the persisting of files work with any file system; windows, cloud.
         """
-        return self.dt.strftime("%Y%m%dT%H%M%S.%fZ")
+        return self.dt.strftime(FILE_SAFE_FORMAT)
 
 
 def create_run_datetime_now() -> RunDatetime:
     """Create a run datetime for now."""
     return RunDatetime(datetime.datetime.now(datetime.timezone.utc))
+
+
+def from_file_safe_str(run_datetime_str: str) -> RunDatetime:
+    """Create a RunDatetime from a file safe str."""
+    dt = datetime.datetime.strptime(run_datetime_str, FILE_SAFE_FORMAT)
+    dt = dt.replace(tzinfo=datetime.timezone.utc)
+    return RunDatetime(dt)

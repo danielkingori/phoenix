@@ -67,3 +67,28 @@ def test_create_run_datetime_now():
     with freeze_time(dt):
         result = run_datetime.create_run_datetime_now()
         assert dt == result.dt
+
+
+@pytest.mark.parametrize(
+    "expected_timestamp, run_datetime_str",
+    [
+        (
+            datetime.datetime(2000, 1, 2, 3, 4, 5, 6, tzinfo=datetime.timezone.utc),
+            "20000102T030405.000006Z",
+        ),
+        # To show that micro seconds can be processed and are expected
+        # however Run datetimes should be
+        (
+            datetime.datetime(2000, 1, 2, 3, 4, 5, tzinfo=datetime.timezone.utc),
+            "20000102T030405.000000Z",
+        ),
+        (
+            datetime.datetime(2010, 11, 12, 13, 14, 15, 16, tzinfo=datetime.timezone.utc),
+            "20101112T131415.000016Z",
+        ),
+    ],
+)
+def test_from_file_safe_str(expected_timestamp, run_datetime_str):
+    """Test from_file_safe_str."""
+    result = run_datetime.from_file_safe_str(run_datetime_str)
+    assert expected_timestamp == result.dt
