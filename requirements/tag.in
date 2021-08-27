@@ -9,4 +9,3 @@ nltk
 seaborn
 snowballstemmer
 sklearn
-freezegun
