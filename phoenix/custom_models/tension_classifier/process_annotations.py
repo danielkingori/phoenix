@@ -1,5 +1,5 @@
 """Process annotations of tensions."""
-from typing import Dict
+from typing import Dict, Tuple
 
 import logging
 
@@ -23,12 +23,13 @@ TENSIONS_COLUMNS_LIST = [
 ]
 
 
-def process_annotations(df: pd.DataFrame) -> pd.DataFrame:
+def process_annotations(df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Process the raw annotations."""
     df = update_column_names(df)
     df = clean_features(df)
+    topic_df = get_new_topics(df)
 
-    return df
+    return df, topic_df
 
 
 def update_column_names(df: pd.DataFrame) -> pd.DataFrame:
