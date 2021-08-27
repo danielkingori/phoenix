@@ -28,3 +28,13 @@ class RunDatetime:
             raise ValueError("RunDatetime must have time zone UTC")
 
         self.dt = dt
+
+    def to_file_safe_str(self) -> str:
+        """Get the run datetime as a string that can be used as a file name.
+
+        This returns a basic iso format that only contains, number and letters.
+        https://en.wikipedia.org/wiki/ISO_8601
+
+        This is to make the persisting of files work with any file system; windows, cloud.
+        """
+        return self.dt.strftime("%Y%m%dT%H%M%S.%fZ")
