@@ -1,7 +1,6 @@
 """Data pulling for facebook posts."""
-import datetime
 import json
-import os
+import logging
 
 import numpy as np
 import pandas as pd
@@ -15,7 +14,8 @@ def from_json(url_to_folder: str) -> pd.DataFrame:
     """Get all the JSON files and return a normalised facebook posts."""
     li = []
     for entry in tentaclio.listdir(url_to_folder):
-        file_timestamp = get_file_name_timestamp(entry)
+        logging.info(f"Processing file: {entry}")
+        file_timestamp = utils.get_file_name_timestamp(entry)
         # Getting both the normalised and the read
         # This is because the read does a better job of typing
         # We are going to join them together in the normalisation
@@ -28,7 +28,6 @@ def from_json(url_to_folder: str) -> pd.DataFrame:
 
         df = normalise(df_read, df_flattened)
         df["file_timestamp"] = file_timestamp
-        df["file_timestamp"] = df["file_timestamp"].dt.tz_localize("UTC")
         li.append(df)
 
     df = pd.concat(li, axis=0, ignore_index=True)
@@ -36,19 +35,6 @@ def from_json(url_to_folder: str) -> pd.DataFrame:
     df = df.groupby("phoenix_post_id").last()
     df = df.reset_index()
     return df
-
-
-def get_file_name_timestamp(url: str) -> datetime.datetime:
-    """Get the timestamp in the file name."""
-    suffix = "posts-"
-    file_name, _ = os.path.splitext(os.path.basename(url))
-    if file_name.startswith(suffix):
-        timestamp_str = file_name[len(suffix) :]
-        # The files in google drive have : replaced with _
-        timestamp_str = timestamp_str.replace("_", ":")
-        return datetime.datetime.fromisoformat(timestamp_str)
-
-    return datetime.datetime.now()
 
 
 def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
@@ -106,7 +92,9 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
             "branded_content_sponsor",
             "live_video_status",
             "legacy_id",
-        ]
+        ],
+        # Using ignore as missing data is not imporant
+        errors="ignore",
     )
 
 
@@ -162,7 +150,9 @@ def merge_flattened(df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFram
         "statistics_actual_care_count",
     ]
     df[to_add] = df_flattened[to_add]
-    df["account_platform_id"] = df["account_platform_id"].astype(int)
+    # Some posts don't have an account this should be looked in to further
+    # https://gitlab.com/howtobuildup/phoenix/-/issues/47
+    df["account_platform_id"] = df["account_platform_id"].fillna(0).astype(int)
     df["account_page_created_date"] = pd.to_datetime(
         df["account_page_created_date"]
     ).dt.tz_localize("UTC")
