@@ -23,7 +23,7 @@ ArtifactKey = Literal[
 
 
 class ArtifactURLMapper(Protocol):
-    """Protocal for the artifactURLMapper."""
+    """Protocol for the artifactURLMapper."""
 
     def __call__(
         self,
@@ -31,7 +31,7 @@ class ArtifactURLMapper(Protocol):
         url_config: Dict[str, Any],
         environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
     ) -> str:
-        """Protocal for the artifactURLMapper."""
+        """Protocol for the artifactURLMapper."""
         ...
 
 
