@@ -38,3 +38,8 @@ class RunDatetime:
         This is to make the persisting of files work with any file system; windows, cloud.
         """
         return self.dt.strftime("%Y%m%dT%H%M%S.%fZ")
+
+
+def create_run_datetime_now() -> RunDatetime:
+    """Create a run datetime for now."""
+    return RunDatetime(datetime.datetime.now(datetime.timezone.utc))

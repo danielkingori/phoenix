@@ -2,6 +2,7 @@
 import datetime
 
 import pytest
+from freezegun import freeze_time
 
 from phoenix.common import run_datetime
 
@@ -58,3 +59,11 @@ def test_to_file_safe_str(dt, expected_str):
     """Test of the to_file_name_meta."""
     run_dt = run_datetime.RunDatetime(dt)
     assert run_dt.to_file_safe_str() == expected_str
+
+
+def test_create_run_datetime_now():
+    """Test create_run_datetime_now returns correct time."""
+    dt = datetime.datetime(2000, 1, 2, 3, 4, 5, tzinfo=datetime.timezone.utc)
+    with freeze_time(dt):
+        result = run_datetime.create_run_datetime_now()
+        assert dt == result.dt
