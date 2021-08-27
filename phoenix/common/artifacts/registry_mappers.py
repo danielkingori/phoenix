@@ -7,7 +7,7 @@ from functools import partial
 from phoenix.common.artifacts import registry_environment as reg_env
 
 
-ArifactKey = Literal[
+ArtifactKey = Literal[
     # Facebook posts
     "source-posts",
     "source-fb_post_source_api_notebook",
@@ -27,7 +27,7 @@ class ArtifactURLMapper(Protocol):
 
     def __call__(
         self,
-        artifact_key: ArifactKey,
+        artifact_key: ArtifactKey,
         url_config: Dict[str, Any],
         environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
     ) -> str:
@@ -37,7 +37,7 @@ class ArtifactURLMapper(Protocol):
 
 def url_mapper(
     format_str: str,
-    artifact_key: ArifactKey,
+    artifact_key: ArtifactKey,
     url_config: Dict[str, Any],
     environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
 ):
@@ -47,7 +47,7 @@ def url_mapper(
     return f"{prefix}{url_str_formated}"
 
 
-DEFAULT_MAPPERS: Dict[ArifactKey, ArtifactURLMapper] = {
+DEFAULT_MAPPERS: Dict[ArtifactKey, ArtifactURLMapper] = {
     # Facebook Posts
     "source-posts": partial(
         url_mapper, "source_runs/{RUN_DATE}/source-posts-{RUN_ISO_TIMESTAMP}.json"

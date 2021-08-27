@@ -10,7 +10,7 @@ from phoenix.common.artifacts import registry, registry_environment, registry_ma
 @mock.patch("phoenix.common.artifacts.registry.ArtifactURLRegistry._build_url_config")
 def test_artifact_url_registry(m_build_url_config):
     """Test ArtifactURLRegistry."""
-    artifact_key: registry_mappers.ArifactKey = "source-posts"
+    artifact_key: registry_mappers.ArtifactKey = "source-posts"
     run_datetime = datetime.datetime.now()
     environment_key: registry_environment.Environments = "local"
     url_config = {"RAN": "ran"}
@@ -34,7 +34,7 @@ def test_artifact_url_registry(m_build_url_config):
 @mock.patch("phoenix.common.artifacts.registry.ArtifactURLRegistry._build_url_config")
 def test_artifact_url_registry_value_error(m_build_url_config):
     """Test ArtifactURLRegistry."""
-    artifact_key: registry_mappers.ArifactKey = "source-posts"
+    artifact_key: registry_mappers.ArtifactKey = "source-posts"
     run_datetime = datetime.datetime.now()
     environment_key: registry_environment.Environments = "local"
     url_config = {"RAN": "ran"}

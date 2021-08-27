@@ -12,14 +12,14 @@ class ArtifactURLRegistry:
 
     environment_key: reg_env.Environments
     run_datetime: datetime.datetime
-    mappers: Dict[registry_mappers.ArifactKey, registry_mappers.ArtifactURLMapper]
+    mappers: Dict[registry_mappers.ArtifactKey, registry_mappers.ArtifactURLMapper]
 
     def __init__(
         self,
         run_datetime: datetime.datetime,
         environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
         mappers: Dict[
-            registry_mappers.ArifactKey, registry_mappers.ArtifactURLMapper
+            registry_mappers.ArtifactKey, registry_mappers.ArtifactURLMapper
         ] = registry_mappers.DEFAULT_MAPPERS,
     ):
         """Init ArtifactURLRegistry."""
@@ -36,7 +36,7 @@ class ArtifactURLRegistry:
         return self.run_datetime.strftime("%Y-%m-%d")
 
     def get_url(
-        self, artifact_key: registry_mappers.ArifactKey, url_config: Dict[str, Any] = {}
+        self, artifact_key: registry_mappers.ArtifactKey, url_config: Dict[str, Any] = {}
     ) -> str:
         """Get the URL for the artifact key."""
         url_config = self._build_url_config(url_config)
