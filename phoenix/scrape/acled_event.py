@@ -22,10 +22,11 @@ def from_csvs(url_to_csv_folder: str) -> pd.DataFrame:
 
 def normalise(event_data: pd.DataFrame) -> pd.DataFrame:
     """Normalise and transform event data."""
-    event_data["event_date_normalised"] = pd.to_datetime(
+    event_data["timestamp_filter"] = pd.to_datetime(
         event_data["event_date"], format="%d-%b-%y"
     ).dt.tz_localize("UTC")
-    event_data["year"] = event_data["event_date_normalised"].dt.year
-    event_data["month"] = event_data["event_date_normalised"].dt.month
-    event_data["day"] = event_data["event_date_normalised"].dt.day
+    event_data["date_filter"] = event_data["timestamp_filter"].dt.date
+    event_data["year_filter"] = event_data["timestamp_filter"].dt.year
+    event_data["month_filter"] = event_data["timestamp_filter"].dt.month
+    event_data["day_filter"] = event_data["timestamp_filter"].dt.day
     return event_data

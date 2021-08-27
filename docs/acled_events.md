@@ -41,7 +41,12 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.acled_events (
   `fatalities` int,
   `timestamp`	bigint,
   `iso4` string,
-  `event_date_normalised` TIMESTAMP
+  `timestamp_filter` TIMESTAMP,
+  `date_filter` date,
+  `year_filter` int,
+  `month_filter` int,
+  `day_filter` int,
+
 )
 ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe'
 WITH SERDEPROPERTIES (
