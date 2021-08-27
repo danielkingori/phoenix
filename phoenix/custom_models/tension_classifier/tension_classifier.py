@@ -1,6 +1,9 @@
 """Tension classifier."""
 from typing import List
 
+import pickle
+
+import tentaclio
 from sklearn.base import ClassifierMixin
 
 from phoenix.tag.text_features_analyser import StemmedCountVectorizer
@@ -15,6 +18,11 @@ class TensionClassifier:
 
     def __init__(self, classifier: ClassifierMixin):
         self.classifier = classifier
+
+    def persist_model(self, output_dir_url):
+        """Persist model."""
+        with tentaclio.open(f"{output_dir_url}tension_classifier_model.sav", "wb") as f:
+            pickle.dump(self, f)
 
 
 class CountVectorizerTensionClassifier(TensionClassifier):
@@ -36,3 +44,10 @@ class CountVectorizerTensionClassifier(TensionClassifier):
         super().__init__(classifier)
         self.count_vectorizer = count_vectorizer
         self.class_labels = class_labels
+
+    def persist_model(self, output_dir_url):
+        """Persist model."""
+        with tentaclio.open(
+                f"{output_dir_url}count_vectorizer_tension_classifier_model.sav", "wb"
+        ) as f:
+            pickle.dump(self, f)
