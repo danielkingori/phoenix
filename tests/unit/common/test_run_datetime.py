@@ -37,28 +37,32 @@ def test_disallowed_datetime_timezone_st():
 
 
 @pytest.mark.parametrize(
-    "dt,expected_str",
+    "dt,expected_str,date_str",
     [
         (
             datetime.datetime(2000, 1, 2, 3, 4, 5, 6, tzinfo=datetime.timezone.utc),
             "20000102T030405.000006Z",
+            "2000-01-02",
         ),
         # To show that micro seconds can be processed and are expected
         # however Run datetimes should be
         (
             datetime.datetime(2000, 1, 2, 3, 4, 5, tzinfo=datetime.timezone.utc),
             "20000102T030405.000000Z",
+            "2000-01-02",
         ),
         (
             datetime.datetime(2010, 11, 12, 13, 14, 15, 16, tzinfo=datetime.timezone.utc),
             "20101112T131415.000016Z",
+            "2010-11-12",
         ),
     ],
 )
-def test_to_file_safe_str(dt, expected_str):
+def test_to_file_safe_str(dt, expected_str, date_str):
     """Test of the to_file_name_meta."""
     run_dt = run_datetime.RunDatetime(dt)
     assert run_dt.to_file_safe_str() == expected_str
+    assert run_dt.to_run_date_str() == date_str
 
 
 def test_create_run_datetime_now():

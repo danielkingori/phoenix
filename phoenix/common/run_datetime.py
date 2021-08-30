@@ -42,6 +42,10 @@ class RunDatetime:
         """
         return self.dt.strftime(FILE_SAFE_FORMAT)
 
+    def to_run_date_str(self) -> str:
+        """Get the run date."""
+        return self.dt.strftime("%Y-%m-%d")
+
 
 def create_run_datetime_now() -> RunDatetime:
     """Create a run datetime for now."""
