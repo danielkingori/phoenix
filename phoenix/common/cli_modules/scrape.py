@@ -60,7 +60,6 @@ def fb(
 
 @scrape_cli.command()
 @click.argument("endpoint", nargs=1)
-@click.argument("run_iso_timestamp", envvar="RUN_ISO_TIMESTAMP")
 @click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
 @click.option(
     "--scrape_since_days",
@@ -73,7 +72,6 @@ def fb(
     help=("Maximum number of tweets to scrape." "Use 0 for no maximum."),
 )
 def tw(
-    run_iso_timestamp,
     endpoint,
     artifact_env,
     scrape_since_days,
@@ -82,14 +80,11 @@ def tw(
     """Run the twitter scrape script.
 
     Example commands:
-    ./phoenix-cli tw keyword $(date --utc --iso-8601=seconds)
-    ./phoenix-cli tw user $(date --utc --iso-8601=seconds)
-
-    RUN_ISO_TIMESTAMP:
-        Is the timestamp that will mark the artifacts that are created.
+    ./phoenix-cli tw keyword
+    ./phoenix-cli tw user
     """
-    run_iso_datetime = utils.get_run_iso_datetime(run_iso_timestamp)
-    aur = artifacts.registry.ArtifactURLRegistry(run_iso_datetime, artifact_env)
+    run_dt = run_datetime.create_run_datetime_now()
+    aur = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
     # Hard coding the artifact keys so that the mypy can check it easier.
     if endpoint == "user":
         input_nb_url = utils.get_input_notebook_path("scrape/twitter_user_timeline.ipynb")
@@ -105,8 +100,8 @@ def tw(
         raise ValueError(f"Not supported endpoint: {endpoint}")
 
     parameters = {
-        "RUN_ISO_TIMESTAMP": aur.get_run_iso_timestamp(),
-        "RUN_DATE": aur.get_run_date(),
+        "RUN_DATETIME": run_dt.to_file_safe_str(),
+        "RUN_DATE": run_dt.to_run_date_str(),
         "QUERY_TYPE": endpoint,
         "ARTIFACT_SOURCE_TWEETS_URL": source_artifact_url,
         "ARTIFACT_BASE_TWEETS_URL": base_artifact_url,
