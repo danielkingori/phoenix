@@ -116,19 +116,15 @@ def tw(
 
 
 @scrape_cli.command()
-@click.argument("run_iso_timestamp", envvar="RUN_ISO_TIMESTAMP")
-def fb_comments(
-    run_iso_timestamp,
-):
+def fb_comments():
     """Run the fb-comments parse script.
 
     Example command:
-    ./phoenix-cli fb_comments $(date --utc --iso-8601=seconds)
+    ./phoenix-cli fb_comments
 
-    RUN_ISO_TIMESTAMP:
-        Is the timestamp that will mark the artifacts that are created.
     """
-    RUN_DATE = utils.get_run_iso_datetime(run_iso_timestamp)
+    run_dt = run_datetime.create_run_datetime_now()
+    RUN_DATE = run_dt.to_run_date_str()
 
     parameters: dict = {}
 
