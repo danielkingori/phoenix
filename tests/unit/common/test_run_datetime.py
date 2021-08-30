@@ -2,6 +2,7 @@
 import datetime
 
 import pytest
+import pytz
 from freezegun import freeze_time
 
 from phoenix.common import run_datetime
@@ -23,7 +24,8 @@ def test_disallowed_datetime_no_timezone():
 
 def test_disallowed_datetime_timezone():
     """Test disallowed datetimes."""
-    dt = datetime.datetime.now().astimezone()
+    timezone = pytz.timezone("America/Los_Angeles")
+    dt = timezone.localize(datetime.datetime.now())
     with pytest.raises(ValueError):
         run_datetime.RunDatetime(dt)
 

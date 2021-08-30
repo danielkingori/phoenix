@@ -646,6 +646,8 @@ types-mock==0.1.5
     # via -r requirements/development.in
 types-python-dateutil==0.1.6
     # via -r requirements/development.in
+types-pytz==2021.1.2
+    # via -r requirements/development.in
 types-requests==2.25.6
     # via -r requirements/development.in
 typing-extensions==3.10.0.0
