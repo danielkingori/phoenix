@@ -1,4 +1,6 @@
 """Data pulling for twitter."""
+from typing import Optional
+
 import logging
 
 import pandas as pd
@@ -7,7 +9,9 @@ import tentaclio
 from phoenix.tag.data_pull import constants, utils
 
 
-def twitter_json(url_to_folder: str) -> pd.DataFrame:
+def twitter_json(
+    url_to_folder: str, year_filter: Optional[int] = None, month_filter: Optional[int] = None
+) -> pd.DataFrame:
     """Get all the csvs and return a dataframe with tweet data."""
     li = []
     for entry in tentaclio.listdir(url_to_folder):
@@ -23,7 +27,12 @@ def twitter_json(url_to_folder: str) -> pd.DataFrame:
     df = df.sort_values("file_timestamp")
     df = df.groupby("id_str").last()
     df = df.reset_index()
-    return normalise_json(df)
+    df = normalise_json(df)
+    if year_filter:
+        df = df[df["year_filter"] == year_filter]
+    if month_filter:
+        df = df[df["month_filter"] == month_filter]
+    return df
 
 
 def normalise_json(raw_df: pd.DataFrame):
