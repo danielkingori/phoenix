@@ -33,6 +33,8 @@ JOB_STATUS_FAILED: JobStatusType = "FAILED"
 JOB_STATUS_STOP_REQUESTED: JobStatusType = "STOP_REQUESTED"
 JOB_STATUS_STOPPED: JobStatusType = "STOPPED"
 
+DEFAULT_JOB_ARN = "not-given"
+
 
 @dataclasses.dataclass
 class AsyncJobMeta:

@@ -1,4 +1,6 @@
 """Start the sentiment analysis."""
+from typing import Any, Dict
+
 import boto3
 import pandas as pd
 
@@ -112,13 +114,31 @@ def _start_sentiment_detection_job(
         JobName=async_job_meta.job_name,
         LanguageCode=async_job_meta.language_code,
     )
+    return create_aws_started_job(job_dict, async_job_meta)
+
+
+def create_aws_started_job(
+    job_dict: Dict[Any, Any], async_job_meta: job_types.AsyncJobMeta
+) -> job_types.AWSStartedJob:
+    """Create the AWSStartedJob."""
     job_status = job_dict["JobStatus"]
     if job_status != job_types.JOB_STATUS_SUBMITTED:
-        raise RuntimeError(f"AWS job does not have correct status: {job_dict}")
+        raise RuntimeError(
+            f"Job Name: {async_job_meta.job_name}."
+            " AWS job does not have correct status: {job_dict}"
+        )
 
-    return job_types.AWSStartedJob(
-        job_id=job_dict["JobId"], job_arn=job_dict["JobArn"], job_status=job_status
-    )
+    job_id = job_dict.get("JobId", None)
+
+    if not job_id:
+        raise RuntimeError(
+            f"Job Name: {async_job_meta.job_name}. AWS job does not have id {job_dict}"
+        )
+
+    # It would seem that there is no JobArn when the job has just been submitted
+    job_arn = job_dict.get("JobArn", job_types.DEFAULT_JOB_ARN)
+
+    return job_types.AWSStartedJob(job_id=job_id, job_arn=job_arn, job_status=job_status)
 
 
 def persist_for_sentiment_analysis(url: str, objects_to_analyse: pd.DataFrame):
