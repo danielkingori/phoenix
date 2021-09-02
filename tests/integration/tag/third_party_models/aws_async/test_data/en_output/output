@@ -1,0 +1,2 @@
+{"File": "input.txt", "Line": 1, "Sentiment": "POSITIVE", "SentimentScore": {"Mixed": 0.009226193651556969, "Negative": 0.009583824314177036, "Neutral": 0.018520427867770195, "Positive": 0.9626695513725281}}
+{"File": "input.txt", "Line": 0, "Sentiment": "NEUTRAL", "SentimentScore": {"Mixed": 0.400110125541687, "Negative": 0.02046600729227066, "Neutral": 0.5565569996833801, "Positive": 0.022866878658533096}}
