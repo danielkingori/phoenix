@@ -1,12 +1,17 @@
 """Tension classifier."""
 from typing import List
 
+import logging
 import pickle
 
+import pandas as pd
 import tentaclio
 from sklearn.base import ClassifierMixin
 
 from phoenix.tag.text_features_analyser import StemmedCountVectorizer
+
+
+logger = logging.getLogger()
 
 
 class TensionClassifier:
@@ -48,6 +53,17 @@ class CountVectorizerTensionClassifier(TensionClassifier):
     def persist_model(self, output_dir_url):
         """Persist model."""
         with tentaclio.open(
-                f"{output_dir_url}count_vectorizer_tension_classifier_model.sav", "wb"
+            f"{output_dir_url}count_vectorizer_tension_classifier_model.sav", "wb"
         ) as f:
             pickle.dump(self, f)
+
+    def predict(self, df: pd.DataFrame, clean_text_col: str) -> pd.DataFrame:
+        """Predict and tag a dataframe based on its text column."""
+        logger.info("Starting word vectorization")
+        word_vectors = self.count_vectorizer.transform(df[clean_text_col])
+
+        logger.info("Starting classification")
+        classifications = self.classifier.predict(word_vectors)
+        logger.info(f"Writing the following classifications back: {self.class_labels}")
+        df[self.class_labels] = classifications
+        return df
