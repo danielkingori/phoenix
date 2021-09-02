@@ -88,6 +88,8 @@ cryptography==3.4.7
     # via paramiko
 cycler==0.10.0
     # via matplotlib
+dacite==1.6.0
+    # via -r requirements/tag.in
 dask[complete]==2021.08.0
     # via
     #   -r requirements/common.in
@@ -105,7 +107,9 @@ et-xmlfile==1.1.0
 fastparquet==0.7.1
     # via -r requirements/common.in
 freezegun==1.1.0
-    # via -r requirements/common.in
+    # via
+    #   -r requirements/common.in
+    #   -r requirements/tag.in
 fsspec==2021.7.0
     # via
     #   dask
