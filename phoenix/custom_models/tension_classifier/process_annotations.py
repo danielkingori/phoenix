@@ -10,17 +10,46 @@ from phoenix.custom_models import utils
 
 logger = logging.getLogger()
 
-# List of tensions in annotation data
-TENSIONS_COLUMNS_LIST = [
-    "economic_labour_tensions",
-    "sectarian_tensions",
-    "environmental_tensions",
-    "political_tensions",
-    "service_related_tensions",
-    "community_insecurity_tensions",
-    "geopolitics_tensions",
-    "intercommunity_relations_tensions",
+COLUMN_NAMES_ANNOTATIONS = [
+    "sheet_index",
+    "object_id",
+    "object_type",
+    "post_url",
+    "account_url",
+    "topics",
+    "matched_features",
+    "text",
+    "added_topics_without_features",
+    "added_topics_analyst_with_features",
+    "added_topic_features",
+    "is_economic_labour_tension",
+    "economic_labour_tension_features",
+    "economic_labour_tension_direction",
+    "is_sectarian_tension",
+    "sectarian_tension_features",
+    "sectarian_tension_direction",
+    "is_environmental_tension",
+    "environmental_tension_features",
+    "environmental_tension_direction",
+    "is_political_tension",
+    "political_tension_features",
+    "political_tension_direction",
+    "is_service_related_tension",
+    "service_related_tension_features",
+    "service_related_tension_direction",
+    "is_community_insecurity_tension",
+    "community_insecurity_tension_features",
+    "community_insecurity_tension_direction",
+    "is_geopolitics_tension",
+    "geopolitics_tension_features",
+    "geopolitics_tension_direction",
+    "is_intercommunity_relations_tension",
+    "intercommunity_relations_tension_features",
+    "intercommunity_relations_tension_direction",
 ]
+
+# List of tensions from annotation data
+TENSIONS_COLUMNS_LIST = COLUMN_NAMES_ANNOTATIONS[11::3]
 
 
 def process_annotations(df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
@@ -40,45 +69,7 @@ def update_column_names(df: pd.DataFrame) -> pd.DataFrame:
     """
     assert len(df.columns) == 35
 
-    column_names_annotations = [
-        "sheet_index",
-        "object_id",
-        "object_type",
-        "post_url",
-        "account_url",
-        "topics",
-        "matched_features",
-        "text",
-        "added_topics_without_features",
-        "added_topics_analyst_with_features",
-        "added_topic_features",
-        "economic_labour_tensions",
-        "economic_labour_tensions_features",
-        "economic_labour_tensions_direction",
-        "sectarian_tensions",
-        "sectarian_tensions_features",
-        "sectarian_tensions_direction",
-        "environmental_tensions",
-        "environmental_tensions_features",
-        "environmental_tensions_direction",
-        "political_tensions",
-        "political_tensions_features",
-        "political_tensions_direction",
-        "service_related_tensions",
-        "service_related_tensions_features",
-        "service_related_tensions_direction",
-        "community_insecurity_tensions",
-        "community_insecurity_tensions_features",
-        "community_insecurity_tensions_direction",
-        "geopolitics_tensions",
-        "geopolitics_tensions_features",
-        "geopolitics_tensions_direction",
-        "intercommunity_relations_tensions",
-        "intercommunity_relations_tensions_features",
-        "intercommunity_relations_tensions_direction",
-    ]
-
-    df.columns = column_names_annotations
+    df.columns = COLUMN_NAMES_ANNOTATIONS
     df = df.where(df.isnull(), df.astype(str))
 
     return df
@@ -143,7 +134,10 @@ def get_tension_feature_mapping(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
     tensions_dict = {}
 
     for tension in TENSIONS_COLUMNS_LIST:
-        feature_df = df[[f"{tension}_features", tension]].copy()
-        tensions_dict[tension] = get_feature_mapping(feature_df, f"{tension}_features", tension)
+        tension_name = tension[3:]
+        feature_df = df[[f"{tension_name}_features", tension]].copy()
+        tensions_dict[tension_name] = get_feature_mapping(
+            feature_df, f"{tension_name}_features", tension
+        )
 
     return tensions_dict
