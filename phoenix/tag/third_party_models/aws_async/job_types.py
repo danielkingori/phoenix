@@ -6,6 +6,7 @@ start and complete stages of the asynchronous analysis.
 from typing import Dict, List, Literal, cast
 
 import dataclasses
+import datetime
 import json
 import uuid
 
@@ -133,3 +134,15 @@ def are_jobs_equal(job_1, job_2):
     job_1_dict = dataclasses.asdict(job_1)
     job_2_dict = dataclasses.asdict(job_2)
     return json.dumps(job_1_dict, sort_keys=True) == json.dumps(job_2_dict, sort_keys=True)
+
+
+@dataclasses.dataclass
+class AWSDescribeJob:
+    """AWS describe job data."""
+
+    job_id: str
+    job_arn: str
+    job_status: JobStatusType
+    output_url: str
+    start_time: datetime.datetime
+    end_time: datetime.datetime
