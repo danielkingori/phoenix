@@ -17,16 +17,33 @@ def complete_sentiment_analysis(
 ) -> pd.DataFrame:
     """Complete the sentiment analysis."""
     objects = []
-    for async_job in async_job_group.async_jobs:
-        objects.append(complete_async_job(async_job))
+    for index, async_job in enumerate(async_job_group.async_jobs):
+        job_info = get_job_info_for_async_job(async_job, job_infos)
+        objects.append(complete_async_job(job_info, async_job))
 
     return pd.concat(objects, ignore_index=True)
 
 
-def complete_async_job(async_job: job_types.AsyncJob) -> pd.DataFrame:
+def get_job_info_for_async_job(
+    async_job: job_types.AsyncJob, job_infos: List[job_types.AWSDescribeJob]
+) -> job_types.AWSDescribeJob:
+    """Get the AWSDescribeJob for the AsyncJob."""
+    for job_info in job_infos:
+        if job_info.job_id == async_job.aws_started_job.job_id:
+            return job_info
+    raise RuntimeError(
+        "Job infos and AsyncJobs do not match."
+        " This is an expection that should not happen."
+        " Please run `get_job_infos` again for for the AsyncJobGroup."
+    )
+
+
+def complete_async_job(
+    job_info: job_types.AWSDescribeJob, async_job: job_types.AsyncJob
+) -> pd.DataFrame:
     """Complete the sentiment analysis for an async job."""
     objects = artifacts.dataframes.get(async_job.async_job_meta.objects_analysed_url).dataframe
-    aws_comprehend_output = aws_sentiment_data_from_output(async_job.async_job_meta.output_url)
+    aws_comprehend_output = aws_sentiment_data_from_output(job_info.output_url)
     objects = objects.set_index("aws_input_line_number")
     aws_comprehend_output = aws_comprehend_output.set_index("line")
     df = objects.merge(aws_comprehend_output, left_index=True, right_index=True)
