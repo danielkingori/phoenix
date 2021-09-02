@@ -9,6 +9,9 @@ from phoenix.tag.third_party_models import aws_utils
 from phoenix.tag.third_party_models.aws_async import job_types, text_documents_for_analysis
 
 
+VALID_LANGUAGE_CODES = ["en", "ar"]
+
+
 def start_sentiment_analysis_jobs(
     data_access_role_arn: str,
     bucket_url: str,
@@ -38,7 +41,11 @@ def start_sentiment_analysis_jobs(
     objects["text_bytes_truncate"] = aws_utils.text_bytes_truncate(objects["text"])
     async_job_group_meta = job_types.create_async_job_group_meta("sentiment_analysis", bucket_url)
     async_jobs = []
-    language_codes = objects["language"].unique()
+    language_codes = [
+        obj_lang_code
+        for obj_lang_code in objects["language"].unique()
+        if obj_lang_code in VALID_LANGUAGE_CODES
+    ]
     for language_code in language_codes:
         async_jobs.append(
             start_sentiment_analysis_job(

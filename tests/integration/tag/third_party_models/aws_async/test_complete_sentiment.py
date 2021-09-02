@@ -84,7 +84,10 @@ def test_complete_sentiment(
     assert info_sentiment.are_processable_jobs(job_infos)
 
     result = complete_sentiment.complete_sentiment_analysis(async_job_group_gotten, job_infos)
-    pd.testing.assert_frame_equal(result[aws_sentiment_objects.columns], aws_sentiment_objects)
+    processed_objects = aws_sentiment_objects[
+        aws_sentiment_objects["language"].isin(start_sentiment.VALID_LANGUAGE_CODES)
+    ]
+    pd.testing.assert_frame_equal(result[aws_sentiment_objects.columns], processed_objects)
     pd.testing.assert_frame_equal(
         result[["language_sentiment", "aws_input_line_number", "object_id"]],
         pd.DataFrame(
