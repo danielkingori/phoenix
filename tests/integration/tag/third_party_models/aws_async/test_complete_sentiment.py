@@ -2,9 +2,15 @@
 import datetime
 
 import mock
+import pandas as pd
 import pytest
 
-from phoenix.tag.third_party_models.aws_async import info_sentiment, job_types, start_sentiment
+from phoenix.tag.third_party_models.aws_async import (
+    complete_sentiment,
+    info_sentiment,
+    job_types,
+    start_sentiment,
+)
 
 
 @mock.patch(
@@ -76,3 +82,29 @@ def test_complete_sentiment(
     )
 
     assert info_sentiment.are_processable_jobs(job_infos)
+
+    result = complete_sentiment.complete_sentiment_analysis(async_job_group_gotten, job_infos)
+    pd.testing.assert_frame_equal(result[aws_sentiment_objects.columns], aws_sentiment_objects)
+    pd.testing.assert_frame_equal(
+        result[["language_sentiment", "aws_input_line_number", "object_id"]],
+        pd.DataFrame(
+            {
+                "language_sentiment": {
+                    0: "NEUTRAL",
+                    1: "POSITIVE",
+                    2: "NEGATIVE",
+                    3: "NEUTRAL",
+                    4: "POSITIVE",
+                },
+                "aws_input_line_number": {0: 0, 1: 1, 2: 2, 3: 0, 4: 1},
+                "object_id": {0: 1, 1: 2, 2: 3, 3: 4, 4: 5},
+            }
+        ),
+    )
+    expected_score_cols = [
+        "language_sentiment_score_mixed",
+        "language_sentiment_score_positive",
+        "language_sentiment_score_neutral",
+        "language_sentiment_score_negative",
+    ]
+    assert all([col in result.columns for col in expected_score_cols])
