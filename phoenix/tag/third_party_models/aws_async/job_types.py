@@ -3,10 +3,13 @@
 Typing the data that will be stored between the
 start and complete stages of the asynchronous analysis.
 """
-from typing import List, Literal
+from typing import Dict, List, Literal, cast
 
 import dataclasses
+import json
 import uuid
+
+import dacite
 
 from phoenix.common import artifacts
 
@@ -111,3 +114,22 @@ def create_async_job_meta(
         output_url=output_url,
         objects_analysed_url=objects_analysed_url,
     )
+
+
+def persist_json(url: str, async_job_group: AsyncJobGroup):
+    """Persist the AsyncJobGroup."""
+    return artifacts.json.persist(url, dataclasses.asdict(async_job_group))
+
+
+def get_json(url: str):
+    """Get the AsyncJobGroup."""
+    raw_dict = artifacts.json.get(url).obj
+    raw_dict = cast(Dict, raw_dict)  # casting type for mypy because we know it is correct
+    return dacite.from_dict(data=raw_dict, data_class=AsyncJobGroup)
+
+
+def are_jobs_equal(job_1, job_2):
+    """Are jobs equal."""
+    job_1_dict = dataclasses.asdict(job_1)
+    job_2_dict = dataclasses.asdict(job_2)
+    return json.dumps(job_1_dict, sort_keys=True) == json.dumps(job_2_dict, sort_keys=True)
