@@ -3,7 +3,6 @@ import abc
 
 import mock
 import pandas as pd
-import pytest
 
 from phoenix.common import artifacts
 from phoenix.tag.third_party_models.aws_async import (
@@ -11,18 +10,6 @@ from phoenix.tag.third_party_models.aws_async import (
     start_sentiment,
     text_documents_for_analysis,
 )
-
-
-@pytest.fixture
-def aws_sentiment_objects():
-    """Objects for AWS sentiment."""
-    return pd.DataFrame(
-        {
-            "object_id": [1, 2, 3, 4, 5],
-            "text": ["t1", "t2", "t3", "t4", "t5"],
-            "language": ["ar", "ar", "ar", "en", "en"],
-        }
-    )
 
 
 def Any(*cls):
