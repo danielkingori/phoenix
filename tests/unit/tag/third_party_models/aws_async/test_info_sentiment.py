@@ -11,10 +11,9 @@ def create_aws_describe_job(job_status):
     """Create an AWSDescribeJob."""
     return job_types.AWSDescribeJob(
         job_id="id",
-        job_arn="arn",
         job_status=job_status,
         output_url="url",
-        start_time=datetime.datetime.now(),
+        submit_time=datetime.datetime.now(),
         end_time=datetime.datetime.now(),
     )
 

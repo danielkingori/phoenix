@@ -143,8 +143,7 @@ class AWSDescribeJob:
     """AWS describe job data."""
 
     job_id: str
-    job_arn: str
     job_status: JobStatusType
     output_url: str
-    start_time: datetime.datetime
+    submit_time: datetime.datetime
     end_time: datetime.datetime

@@ -50,10 +50,9 @@ def test_complete_sentiment(
 
     m_describe.return_value = job_types.AWSDescribeJob(
         job_id="id",
-        job_arn="arn",
         job_status=job_types.JOB_STATUS_SUBMITTED,
         output_url="url",
-        start_time=datetime.datetime.now(),
+        submit_time=datetime.datetime.now(),
         end_time=datetime.datetime.now(),
     )
     job_infos = info_sentiment.get_job_infos(async_job_group_gotten, client)
@@ -63,11 +62,10 @@ def test_complete_sentiment(
         assert "not yet complete" in str(error.value)
 
     m_describe.return_value = job_types.AWSDescribeJob(
-        job_id="id",
-        job_arn="arn",
+        job_id=async_job_group_gotten.async_jobs[0].aws_started_job.job_id,
         job_status=job_types.JOB_STATUS_COMPLETED,
-        output_url="url",
-        start_time=datetime.datetime.now(),
+        output_url=aws_sentiment_ar_output_url,
+        submit_time=datetime.datetime.now(),
         end_time=datetime.datetime.now(),
     )
 
@@ -81,6 +79,23 @@ def test_complete_sentiment(
         ]
     )
 
+    # The AWSDescribeJob are match by the job id so we have to set the correct one
+    job_infos = [
+        job_types.AWSDescribeJob(
+            job_id=async_job_group_gotten.async_jobs[0].aws_started_job.job_id,
+            job_status=job_types.JOB_STATUS_COMPLETED,
+            output_url=aws_sentiment_ar_output_url,
+            submit_time=datetime.datetime.now(),
+            end_time=datetime.datetime.now(),
+        ),
+        job_types.AWSDescribeJob(
+            job_id=async_job_group_gotten.async_jobs[1].aws_started_job.job_id,
+            job_status=job_types.JOB_STATUS_COMPLETED,
+            output_url=aws_sentiment_en_output_url,
+            submit_time=datetime.datetime.now(),
+            end_time=datetime.datetime.now(),
+        ),
+    ]
     assert info_sentiment.are_processable_jobs(job_infos)
 
     result = complete_sentiment.complete_sentiment_analysis(async_job_group_gotten, job_infos)

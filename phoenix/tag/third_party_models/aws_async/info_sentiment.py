@@ -1,5 +1,5 @@
 """Complete the sentiment analysis."""
-from typing import List
+from typing import Any, Dict, List
 
 import boto3
 
@@ -23,14 +23,20 @@ def _describe_sentiment_analysis_job(async_job: job_types.AsyncJob, client=None)
     if client is None:
         client = boto3.client("comprehend")
 
-    job_dict = client.describe_sentiment_detection_job(async_job.aws_started_job.job_id)
+    job_dict = client.describe_sentiment_detection_job(JobId=async_job.aws_started_job.job_id)
+    return create_aws_describe_job(job_dict, async_job)
+
+
+def create_aws_describe_job(
+    job_dict: Dict[Any, Any], async_job: job_types.AsyncJob
+) -> job_types.AWSDescribeJob:
+    """Create AWSDescribeJob."""
     job_dict_main = job_dict["SentimentDetectionJobProperties"]
     return job_types.AWSDescribeJob(
         job_id=job_dict_main["JobId"],
-        job_arn=job_dict_main["JobArn"],
         job_status=job_dict_main["JobStatus"],
         output_url=job_dict_main["OutputDataConfig"]["S3Uri"],
-        start_time=job_dict_main["StartTime"],
+        submit_time=job_dict_main["SubmitTime"],
         end_time=job_dict_main["EndTime"],
     )
 
