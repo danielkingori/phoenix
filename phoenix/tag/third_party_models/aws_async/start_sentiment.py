@@ -113,7 +113,7 @@ def _start_sentiment_detection_job(
         LanguageCode=async_job_meta.language_code,
     )
     job_status = job_dict["JobStatus"]
-    if job_status != "SUBMITTED":
+    if job_status != job_types.JOB_STATUS_SUBMITTED:
         raise RuntimeError(f"AWS job does not have correct status: {job_dict}")
 
     return job_types.AWSStartedJob(

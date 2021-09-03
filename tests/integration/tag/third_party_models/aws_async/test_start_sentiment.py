@@ -45,7 +45,7 @@ def test_start_sentiment(m_aws_call, tmpdir_url, aws_sentiment_objects):
     client = mock.Mock()
     data_access_role_arn = "data_access_role_arn"
     m_aws_call.return_value = job_types.AWSStartedJob(
-        job_id="id", job_arn="arn", job_status="status"
+        job_id="id", job_arn="arn", job_status=job_types.JOB_STATUS_SUBMITTED
     )
     async_job_group = start_sentiment.start_sentiment_analysis_jobs(
         data_access_role_arn, tmpdir_url, aws_sentiment_objects, client

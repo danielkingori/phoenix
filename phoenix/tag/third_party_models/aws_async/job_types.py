@@ -3,12 +3,31 @@
 Typing the data that will be stored between the
 start and complete stages of the asynchronous analysis.
 """
-from typing import List
+from typing import List, Literal
 
 import dataclasses
 import uuid
 
 from phoenix.common import artifacts
+
+
+# TODO refactor so that the Literal is created from the constants
+JobStatusType = Literal[
+    "SUBMITTED",
+    "IN_PROGRESS",
+    "COMPLETED",
+    "FAILED",
+    "STOP_REQUESTED",
+    "STOPPED",
+]
+
+# JobStatus Constants
+JOB_STATUS_SUBMITTED: JobStatusType = "SUBMITTED"
+JOB_STATUS_IN_PROGRESS: JobStatusType = "IN_PROGRESS"
+JOB_STATUS_COMPLETED: JobStatusType = "COMPLETED"
+JOB_STATUS_FAILED: JobStatusType = "FAILED"
+JOB_STATUS_STOP_REQUESTED: JobStatusType = "STOP_REQUESTED"
+JOB_STATUS_STOPPED: JobStatusType = "STOPPED"
 
 
 @dataclasses.dataclass
@@ -33,7 +52,7 @@ class AWSStartedJob:
 
     job_id: str
     job_arn: str
-    job_status: str
+    job_status: JobStatusType
 
 
 @dataclasses.dataclass
