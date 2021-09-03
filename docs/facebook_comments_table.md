@@ -13,6 +13,10 @@ FOR_TAGGING_ARTIFACTS_FOLDER = f"{ARTIFACTS_BASE_URL}comments_for_tagging/"
 ```
 - `phoenix/tag/topics.ipynb`
 - `phoenix/tag/tag_tensions.ipynb`
+- `phoenix/tag/third_party_models/aws_async/start_sentiment.ipynb`
+- Wait for the AWS comprehend job to finish. See [docs/language_sentiment_aws_comprehend.md](docs/language_sentiment_aws_comprehend.md).
+- `phoenix/tag/third_party_models/aws_async/complete_sentiment.ipynb`
+- `phoenix/tag/twitter_facebook_posts_finalise.ipynb`
 - `phoenix/tag/facebook_comments_finalise.ipynb`
 
 
@@ -78,6 +82,11 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_comments_v1 (
 `is_community_insecurity_tension` boolean,
 `is_geopolitics_tension` boolean,
 `is_intercommunity_relations_tension` boolean,
+`language_sentiment` string,
+`language_sentiment_score_mixed` double,
+`language_sentiment_score_neutral` double,
+`language_sentiment_score_negative` double,
+`language_sentiment_score_positive` double,
 `features` array<string>,
 `features_count` array<int>
 )
@@ -124,6 +133,11 @@ CREATE EXTERNAL TABLE IF NOT EXISTS buildup_dev.facebook_comments_topics_v1 (
 `is_community_insecurity_tension` boolean,
 `is_geopolitics_tension` boolean,
 `is_intercommunity_relations_tension` boolean,
+`language_sentiment` string,
+`language_sentiment_score_mixed` double,
+`language_sentiment_score_neutral` double,
+`language_sentiment_score_negative` double,
+`language_sentiment_score_positive` double,
 `features` array<string>,
 `features_count` array<int>,
 `topic` string
