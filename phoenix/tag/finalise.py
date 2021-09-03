@@ -3,10 +3,20 @@
 This will join objects and topic data frames to respective data source dataframe.
 """
 
+LANGUAGE_SENTIMENT_COLUMNS = [
+    "language_sentiment",
+    "language_sentiment_score_mixed",
+    "language_sentiment_score_neutral",
+    "language_sentiment_score_negative",
+    "language_sentiment_score_positive",
+]
 
-def join_objects_to_facebook_posts(objects, facebook_posts):
+
+def join_objects_to_facebook_posts(objects, language_sentiment_objects, facebook_posts):
     """Join the objects to the facebook_posts."""
     objects = objects.set_index("object_id")
+    language_sentiment_objects = language_sentiment_objects.set_index("object_id")
+    objects = objects.join(language_sentiment_objects[LANGUAGE_SENTIMENT_COLUMNS])
     facebook_posts["object_id"] = facebook_posts["phoenix_post_id"].astype(str)
     facebook_posts = facebook_posts.set_index("object_id")
     return facebook_posts.join(objects, rsuffix="_objects")
