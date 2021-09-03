@@ -30,10 +30,12 @@ def join_objects_to_facebook_comments(objects, facebook_comments):
     return facebook_comments.join(objects, rsuffix="_objects")
 
 
-def join_objects_to_tweets(objects, tweets):
+def join_objects_to_tweets(objects, language_sentiment_objects, tweets):
     """Join the objects to the tweets."""
     objects = objects.set_index("object_id")
     objects = objects.drop(columns=["retweeted", "text", "language_from_api"])
+    language_sentiment_objects = language_sentiment_objects.set_index("object_id")
+    objects = objects.join(language_sentiment_objects[LANGUAGE_SENTIMENT_COLUMNS])
     tweets["object_id"] = tweets["id_str"].astype(str)
     tweets = tweets.set_index("object_id")
     return tweets.join(objects)
