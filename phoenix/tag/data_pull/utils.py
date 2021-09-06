@@ -1,10 +1,11 @@
 """Utils for pulling data."""
 import datetime
 import hashlib
-import os
 import re
 
 import pandas as pd
+
+from phoenix.common.artifacts import source_file_name_processing
 
 
 def to_type(column_name: str, astype, df: pd.DataFrame):
@@ -36,33 +37,19 @@ def hash_message(message: str):
 def get_file_name_timestamp(url: str) -> datetime.datetime:
     """From the file url get the timestamp.
 
+    Raises:
+        If there is no timestamp found.
+
     Returns
         datetime.datetime with aware UTC localization
-        If there is no timestamp found then return the current datetime.
     """
-    file_name, _ = os.path.splitext(os.path.basename(url))
-    date_regex = re.compile(r"^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])")
-    if date_regex.match(file_name):
-        return _process_timestamp(file_name)
-
-    split_file_name = file_name.split("-", 1)
-    if 1 < len(split_file_name) and date_regex.match(split_file_name[1]):
-        return _process_timestamp(split_file_name[1])
-
-    return datetime.datetime.now(datetime.timezone.utc)
-
-
-def _process_timestamp(timestamp_str) -> datetime.datetime:
-    """Get the timestamp in the file name."""
-    # Windows have some non defined chars
-    timestamp_str = timestamp_str.replace(u"\uf03a", ":")
-    # The files in google drive have : replaced with _
-    timestamp_str = timestamp_str.replace("_", ":")
-    dt = datetime.datetime.fromisoformat(timestamp_str)
-    if dt.tzinfo:
-        dt = dt.astimezone(datetime.timezone.utc)
-
-    if dt.tzinfo is None:
-        dt = dt.replace(tzinfo=datetime.timezone.utc)
-
-    return dt
+    source_file_name = source_file_name_processing.get_source_file_name(url)
+    if not source_file_name:
+        raise RuntimeError(
+            (
+                f"Unable to process file name {url}."
+                " You may need to add a timestamp to the file name."
+                " Check phoenix/common/run_datetime.py for format."
+            )
+        )
+    return source_file_name.run_dt.dt
