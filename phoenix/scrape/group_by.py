@@ -59,3 +59,14 @@ def persist(
         url = arch_reg.get_url(artifacts_key, dataclasses.asdict(group_filter))
         artifacts_json.append(artifacts.json.persist(url, objects))
     return artifacts_json
+
+
+def persist_facebook_posts(
+    arch_reg: artifacts.registry.ArtifactURLRegistry,
+    objects,
+    objects_scraped_since: datetime.datetime,
+    objects_scraped_till: datetime.datetime,
+) -> List[artifacts.dtypes.ArtifactJson]:
+    """Persist grouping by for facebook posts."""
+    artifacts_key: artifacts.registry_mappers.ArtifactKey = "base-grouped_by_posts"
+    return persist(arch_reg, artifacts_key, objects, objects_scraped_since, objects_scraped_till)

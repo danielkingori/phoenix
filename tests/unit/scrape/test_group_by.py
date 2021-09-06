@@ -66,3 +66,15 @@ def test_persist(m_json_persist, m_get_group_filter):
     arch_reg.get_url.assert_has_calls(calls)
     persist_calls = [mock.call(arch_reg.get_url.return_value, objects)] * 3
     m_json_persist.assert_has_calls(persist_calls)
+
+
+@mock.patch("phoenix.scrape.group_by.persist")
+def test_persist_facebook_posts(m_persist):
+    """Test persist facebook_posts."""
+    start_dt = mock.MagicMock(spec=datetime.datetime)
+    end_dt = mock.MagicMock(spec=datetime.datetime)
+    arch_reg = mock.MagicMock(spec=artifacts.registry.ArtifactURLRegistry)
+    objects = [{"objects": "objects"}]
+    group_by.persist_facebook_posts(arch_reg, objects, start_dt, end_dt)
+    expected_artifact_key: artifacts.registry_mappers.ArtifactKey = "base-grouped_by_posts"
+    m_persist.assert_called_once_with(arch_reg, expected_artifact_key, objects, start_dt, end_dt)
