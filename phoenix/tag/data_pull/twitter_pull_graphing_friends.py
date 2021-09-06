@@ -6,7 +6,7 @@ import pandas as pd
 import tentaclio
 
 
-def twitter_json(url_to_folder: str) -> list:
+def twitter_json(url_to_folder: str) -> dict:
     """Get last json file in the directory."""
     for entry in tentaclio.listdir(url_to_folder):
         pass
@@ -17,7 +17,7 @@ def twitter_json(url_to_folder: str) -> list:
     return friends
 
 
-def organize_users(friends: list) -> list:
+def organize_users(friends: dict) -> list:
     """Isolate the friends list."""
     relations = []
     for user in friends.keys():
