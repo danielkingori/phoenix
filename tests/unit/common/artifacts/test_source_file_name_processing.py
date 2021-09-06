@@ -159,3 +159,83 @@ def test_get_file_name_timestamp(url, expected_source_file_name):
     """Test get_file_name_timestamp."""
     result = source_file_name_processing.get_source_file_name(url)
     assert expected_source_file_name == result
+
+
+@pytest.mark.parametrize(
+    "source_file_name, non_legacy_file_name",
+    [
+        (
+            source_file_name_processing.SourceFileName(
+                is_legacy=True,
+                full_url="file:///host/dir/2021-05-25T17\uf03a39\uf03a04.914162.json",
+                folder_url="file:///host/dir",
+                timestamp_prefix=None,
+                timestamp_suffix=None,
+                extension=".json",
+                run_dt=run_datetime.RunDatetime(
+                    datetime.datetime(2021, 5, 25, 17, 39, 4, 914162, tzinfo=datetime.timezone.utc)
+                ),
+            ),
+            "20210525T173904.914162Z.json",
+        ),
+        (
+            source_file_name_processing.SourceFileName(
+                is_legacy=True,
+                full_url="file:///host/2021-05-25T17:39:04.914162.json",
+                folder_url="file:///host",
+                timestamp_prefix=None,
+                timestamp_suffix=None,
+                extension=".json",
+                run_dt=run_datetime.RunDatetime(
+                    datetime.datetime(2021, 5, 25, 17, 39, 4, 914162, tzinfo=datetime.timezone.utc)
+                ),
+            ),
+            "20210525T173904.914162Z.json",
+        ),
+        (
+            source_file_name_processing.SourceFileName(
+                is_legacy=True,
+                full_url="file:///host/prefix-2021-05-25T17:39:04.914162+04:00-suf.json",
+                folder_url="file:///host",
+                timestamp_prefix="prefix-",
+                timestamp_suffix="-suf",
+                extension=".json",
+                run_dt=run_datetime.RunDatetime(
+                    datetime.datetime(2021, 5, 25, 17, 39, 4, 914162, tzinfo=datetime.timezone.utc)
+                ),
+            ),
+            "prefix-20210525T173904.914162Z-suf.json",
+        ),
+        (
+            source_file_name_processing.SourceFileName(
+                is_legacy=True,
+                full_url="file:///host/prefix-2021-05-25T17:39:04.914162+04:00.json",
+                folder_url="file:///host",
+                timestamp_prefix="prefix-",
+                timestamp_suffix=None,
+                extension=".json",
+                run_dt=run_datetime.RunDatetime(
+                    datetime.datetime(2021, 5, 25, 13, 39, 4, 914162, tzinfo=datetime.timezone.utc)
+                ),
+            ),
+            "prefix-20210525T133904.914162Z.json",
+        ),
+        (
+            source_file_name_processing.SourceFileName(
+                is_legacy=True,
+                full_url="file:///host/2021-05-25T17:39:04.914162+04:00-suf.json",
+                folder_url="file:///host",
+                timestamp_prefix=None,
+                timestamp_suffix="-suf",
+                extension=".json",
+                run_dt=run_datetime.RunDatetime(
+                    datetime.datetime(2021, 5, 25, 13, 39, 4, 914162, tzinfo=datetime.timezone.utc)
+                ),
+            ),
+            "20210525T133904.914162Z-suf.json",
+        ),
+    ],
+)
+def test_non_legacy_file_name(source_file_name, non_legacy_file_name):
+    """None legacy file name test."""
+    assert source_file_name.non_legacy_file_name() == non_legacy_file_name

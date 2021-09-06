@@ -43,6 +43,16 @@ class SourceFileName:
     run_dt: run_datetime.RunDatetime
     extension: str
 
+    def non_legacy_file_name(self) -> str:
+        """Get the non legacy file name."""
+        prefix = ""
+        if self.timestamp_prefix:
+            prefix += self.timestamp_prefix
+        suffix = ""
+        if self.timestamp_suffix:
+            suffix += self.timestamp_suffix
+        return f"{prefix}" f"{self.run_dt.to_file_safe_str()}" f"{suffix}" f"{self.extension}"
+
 
 def get_source_file_name(url: str) -> Optional[SourceFileName]:
     """Get the source file name object from the URL."""
