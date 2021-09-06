@@ -1,8 +1,10 @@
 """Group source by functionality."""
-from typing import Iterator
+from typing import Iterator, List
 
 import dataclasses
 import datetime
+
+from phoenix.common import artifacts
 
 
 @dataclasses.dataclass
@@ -41,3 +43,19 @@ def get_group_filters(
         else:
             month += 1
     return []
+
+
+def persist(
+    arch_reg: artifacts.registry.ArtifactURLRegistry,
+    artifacts_key: artifacts.registry_mappers.ArtifactKey,
+    objects,
+    objects_scraped_since: datetime.datetime,
+    objects_scraped_till: datetime.datetime,
+) -> List[artifacts.dtypes.ArtifactJson]:
+    """Persist grouping by."""
+    group_filters = get_group_filters(objects_scraped_since, objects_scraped_till)
+    artifacts_json: List[artifacts.dtypes.ArtifactJson] = []
+    for group_filter in group_filters:
+        url = arch_reg.get_url(artifacts_key, dataclasses.asdict(group_filter))
+        artifacts_json.append(artifacts.json.persist(url, objects))
+    return artifacts_json
