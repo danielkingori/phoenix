@@ -17,16 +17,17 @@ def twitter_json(url_to_folder: str) -> list:
     return friends
 
 
-def isolate_users(friends: list) -> list:
+def organize_users(friends: list) -> list:
     """Isolate the friends list."""
     relations = []
-    for friend in friends:
-        relations.append(
-            {
-                "user_1": friend["query_user"],
-                "user_2": friend["screen_name"],
-            }
-        )
+    for user in friends.keys():
+        for friend in friends[user]:
+            relations.append(
+                {
+                    "user_1": user,
+                    "user_2": friend,
+                }
+            )
     return relations
 
 
@@ -38,5 +39,5 @@ def get_friends_dataframe(friends: list) -> pd.DataFrame:
 def get_friends(url: str) -> pd.DataFrame:
     """Run the data pull for twitter friends."""
     friends_raw = twitter_json(url)
-    friends = isolate_users(friends_raw)
+    friends = organize_users(friends_raw)
     return get_friends_dataframe(friends)
