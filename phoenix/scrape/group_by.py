@@ -1,10 +1,10 @@
 """Group source by functionality."""
-from typing import Iterator, List
+from typing import Iterator, List, Optional
 
 import dataclasses
 import datetime
 
-from phoenix.common import artifacts
+from phoenix.common import artifacts, constants, run_datetime
 
 
 @dataclasses.dataclass
@@ -69,4 +69,27 @@ def persist_facebook_posts(
 ) -> List[artifacts.dtypes.ArtifactJson]:
     """Persist grouping by for facebook posts."""
     artifacts_key: artifacts.registry_mappers.ArtifactKey = "base-grouped_by_posts"
+    return persist(arch_reg, artifacts_key, objects, objects_scraped_since, objects_scraped_till)
+
+
+def persist_tweets(
+    arch_reg: artifacts.registry.ArtifactURLRegistry,
+    tweets_type: constants.SCRAPE_RUN_TWEET_TYPES,
+    objects,
+    run_dt: run_datetime.RunDatetime,
+    scrape_since_days: int,
+) -> List[artifacts.dtypes.ArtifactJson]:
+    """Persist grouping by for tweets."""
+    artifacts_key: Optional[artifacts.registry_mappers.ArtifactKey] = None
+    if tweets_type == "user":
+        artifacts_key = "base-grouped_by_user_tweets"
+
+    if tweets_type == "keyword":
+        artifacts_key = "base-grouped_by_keyword_tweets"
+
+    if artifacts_key is None:
+        raise RuntimeError(f"Type of tweets is not supported {tweets_type}")
+
+    objects_scraped_till = run_dt.dt
+    objects_scraped_since = run_dt.dt - datetime.timedelta(days=scrape_since_days)
     return persist(arch_reg, artifacts_key, objects, objects_scraped_since, objects_scraped_till)

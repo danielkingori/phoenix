@@ -5,8 +5,9 @@ import datetime
 
 import mock
 import pytest
+from freezegun import freeze_time
 
-from phoenix.common import artifacts
+from phoenix.common import artifacts, run_datetime
 from phoenix.scrape import group_by
 
 
@@ -78,3 +79,41 @@ def test_persist_facebook_posts(m_persist):
     group_by.persist_facebook_posts(arch_reg, objects, start_dt, end_dt)
     expected_artifact_key: artifacts.registry_mappers.ArtifactKey = "base-grouped_by_posts"
     m_persist.assert_called_once_with(arch_reg, expected_artifact_key, objects, start_dt, end_dt)
+
+
+@freeze_time("2000-01-01 T01:01:01.000001Z")
+@pytest.mark.parametrize(
+    "tweets_type,expected_artifact_key",
+    [
+        ("user", "base-grouped_by_user_tweets"),
+        ("keyword", "base-grouped_by_keyword_tweets"),
+    ],
+)
+@mock.patch("phoenix.scrape.group_by.persist")
+def test_persist_tweets(m_persist, tweets_type, expected_artifact_key):
+    """Test persist facebook_posts."""
+    run_dt = run_datetime.create_run_datetime_now()
+    scrape_since_days = 5
+    arch_reg = mock.MagicMock(spec=artifacts.registry.ArtifactURLRegistry)
+    objects = [{"objects": "objects"}]
+    group_by.persist_tweets(arch_reg, tweets_type, objects, run_dt, scrape_since_days)
+    start_dt = run_dt.dt - datetime.timedelta(days=scrape_since_days)
+    m_persist.assert_called_once_with(
+        arch_reg, expected_artifact_key, objects, start_dt, run_dt.dt
+    )
+
+
+@freeze_time("2000-01-01 T01:01:01.000001Z")
+@mock.patch("phoenix.scrape.group_by.persist")
+def test_persist_tweets_invalid(m_persist):
+    """Test persist facebook_posts."""
+    run_dt = run_datetime.create_run_datetime_now()
+    scrape_since_days = 5
+    arch_reg = mock.MagicMock(spec=artifacts.registry.ArtifactURLRegistry)
+    objects = [{"objects": "objects"}]
+    invalid_tweet_type = "invalid"
+    with pytest.raises(RuntimeError):
+        group_by.persist_tweets(
+            arch_reg, invalid_tweet_type, objects, run_dt, scrape_since_days  # type: ignore
+        )
+        m_persist.assert_not_called()
