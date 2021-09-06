@@ -19,7 +19,8 @@ from phoenix.common.artifacts import source_file_name_processing
                 is_legacy=True,
                 full_url="file:///host/dir/2021-05-25T17\uf03a39\uf03a04.914162.json",
                 folder_url="file:///host/dir",
-                file_name_prefix=None,
+                timestamp_prefix=None,
+                timestamp_suffix=None,
                 extension=".json",
                 run_dt=run_datetime.RunDatetime(
                     datetime.datetime(2021, 5, 25, 17, 39, 4, 914162, tzinfo=datetime.timezone.utc)
@@ -32,7 +33,8 @@ from phoenix.common.artifacts import source_file_name_processing
                 is_legacy=True,
                 full_url="file:///host/2021-05-25T17:39:04.914162.json",
                 folder_url="file:///host",
-                file_name_prefix=None,
+                timestamp_prefix=None,
+                timestamp_suffix=None,
                 extension=".json",
                 run_dt=run_datetime.RunDatetime(
                     datetime.datetime(2021, 5, 25, 17, 39, 4, 914162, tzinfo=datetime.timezone.utc)
@@ -45,7 +47,8 @@ from phoenix.common.artifacts import source_file_name_processing
                 is_legacy=True,
                 full_url="file:///host/2021-05-25T17:39:04.914162+04:00.json",
                 folder_url="file:///host",
-                file_name_prefix=None,
+                timestamp_prefix=None,
+                timestamp_suffix=None,
                 extension=".json",
                 run_dt=run_datetime.RunDatetime(
                     datetime.datetime(2021, 5, 25, 13, 39, 4, 914162, tzinfo=datetime.timezone.utc)
@@ -58,7 +61,8 @@ from phoenix.common.artifacts import source_file_name_processing
                 is_legacy=True,
                 full_url="file:///host/2021-05-25T17:39:04.914162+00:00.json",
                 folder_url="file:///host",
-                file_name_prefix=None,
+                timestamp_prefix=None,
+                timestamp_suffix=None,
                 extension=".json",
                 run_dt=run_datetime.RunDatetime(
                     datetime.datetime(2021, 5, 25, 17, 39, 4, 914162, tzinfo=datetime.timezone.utc)
@@ -71,7 +75,8 @@ from phoenix.common.artifacts import source_file_name_processing
                 is_legacy=True,
                 full_url="file:///host/posts-2021-06-12T20_09_50.425433.json",
                 folder_url="file:///host",
-                file_name_prefix="posts-",
+                timestamp_prefix="posts-",
+                timestamp_suffix=None,
                 extension=".json",
                 run_dt=run_datetime.RunDatetime(
                     datetime.datetime(2021, 6, 12, 20, 9, 50, 425433, tzinfo=datetime.timezone.utc)
@@ -84,7 +89,8 @@ from phoenix.common.artifacts import source_file_name_processing
                 is_legacy=True,
                 full_url="file:///host/usr_tweets-2021-06-12T20_09_50.425433.json",
                 folder_url="file:///host",
-                file_name_prefix="usr_tweets-",
+                timestamp_prefix="usr_tweets-",
+                timestamp_suffix=None,
                 extension=".json",
                 run_dt=run_datetime.RunDatetime(
                     datetime.datetime(2021, 6, 12, 20, 9, 50, 425433, tzinfo=datetime.timezone.utc)
@@ -97,7 +103,8 @@ from phoenix.common.artifacts import source_file_name_processing
                 is_legacy=True,
                 full_url="file:///host/keyword_tweets-2021-06-12T20_09_50.425433.json",
                 folder_url="file:///host",
-                file_name_prefix="keyword_tweets-",
+                timestamp_prefix="keyword_tweets-",
+                timestamp_suffix=None,
                 extension=".json",
                 run_dt=run_datetime.RunDatetime(
                     datetime.datetime(2021, 6, 12, 20, 9, 50, 425433, tzinfo=datetime.timezone.utc)
@@ -110,7 +117,8 @@ from phoenix.common.artifacts import source_file_name_processing
                 is_legacy=False,
                 full_url="file:///host/posts-20210612T200950.425433Z.json",
                 folder_url="file:///host",
-                file_name_prefix="posts-",
+                timestamp_prefix="posts-",
+                timestamp_suffix=None,
                 extension=".json",
                 run_dt=run_datetime.RunDatetime(
                     datetime.datetime(2021, 6, 12, 20, 9, 50, 425433, tzinfo=datetime.timezone.utc)
@@ -123,7 +131,22 @@ from phoenix.common.artifacts import source_file_name_processing
                 is_legacy=False,
                 full_url="file:///host/usr_tweets-20210612T200950.425433Z.json",
                 folder_url="file:///host",
-                file_name_prefix="usr_tweets-",
+                timestamp_prefix="usr_tweets-",
+                timestamp_suffix=None,
+                extension=".json",
+                run_dt=run_datetime.RunDatetime(
+                    datetime.datetime(2021, 6, 12, 20, 9, 50, 425433, tzinfo=datetime.timezone.utc)
+                ),
+            ),
+        ),
+        (
+            "file:///host/usr_tweets-20210612T200950.425433Z-suf.json",
+            source_file_name_processing.SourceFileName(
+                is_legacy=False,
+                full_url="file:///host/usr_tweets-20210612T200950.425433Z-suf.json",
+                folder_url="file:///host",
+                timestamp_prefix="usr_tweets-",
+                timestamp_suffix="-suf",
                 extension=".json",
                 run_dt=run_datetime.RunDatetime(
                     datetime.datetime(2021, 6, 12, 20, 9, 50, 425433, tzinfo=datetime.timezone.utc)
