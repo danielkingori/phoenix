@@ -62,9 +62,9 @@ def _get_user_tweet_cursor(api, id, num_items) -> tweepy.Status:
 
 def _get_user_friends_tweet_cursor(api, screen_name, num_items) -> tweepy.Status:
     """Manages cursor for Twitter api.friends endpoint."""
-    return tweepy.Cursor(api.friends, screen_name=screen_name, count=200, skip_status=True).items(
-        num_items
-    )
+    return tweepy.Cursor(
+        api.friends_ids, screen_name=screen_name, count=200, skip_status=True
+    ).items(num_items)
 
 
 def get_tweets_since_days(query_type, query, since_days, num_items, api=None) -> tweepy.Status:
@@ -132,22 +132,30 @@ def enrich_with_query_user(friend, query):
     return friend_json
 
 
-def get_friends(queries, num_items, api):
+def get_friends(query, num_items, api):
     """Iterate through queries and call the api cursor function."""
+    try:
+        for friends in _get_user_friends_tweet_cursor(api, query, num_items):
+            yield friends
+    except tweepy.error.TweepError as e:
+        if e.response.status_code == 401:
+            logging.info(
+                "401 Unauthorized: either bad api tokens or not \
+                authorized to access the query due to a locked account"
+            )
+
+
+def get_friends_dict(queries: list, num_items, api):
+    """Organize friends list as a dictionary."""
+    friends_dict: dict = {}
     for query in queries:
-        try:
-            for friend in _get_user_friends_tweet_cursor(api, query, num_items):
-                yield enrich_with_query_user(friend, query)
-        except tweepy.error.TweepError as e:
-            if e.response.status_code == 401:
-                logging.info(
-                    "401 Unauthorized: either bad api tokens or not \
-                    authorized to access the query due to a locked account"
-                )
+        friends_dict[query] = []
+        friends_dict[query].extend(get_friends(query, num_items, api))
+    return friends_dict
 
 
 def get_friends_json(queries: list, num_items=0) -> list:
     """Manage the friend collection process from Twitter."""
     api = connect_twitter_api()
-    friends = get_friends(queries, num_items, api)
-    return [friend for friend in friends]
+    friends = get_friends_dict(queries, num_items, api)
+    return friends
