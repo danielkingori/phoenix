@@ -32,6 +32,9 @@ class RunDatetime:
 
         self.dt = dt
 
+    def __eq__(self, other):
+        return self.dt == other.dt
+
     def to_file_safe_str(self) -> str:
         """Get the run datetime as a string that can be used as a file name.
 
