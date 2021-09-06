@@ -104,6 +104,32 @@ from phoenix.common.artifacts import source_file_name_processing
                 ),
             ),
         ),
+        (
+            "file:///host/posts-20210612T200950.425433Z.json",
+            source_file_name_processing.SourceFileName(
+                is_legacy=False,
+                full_url="file:///host/posts-20210612T200950.425433Z.json",
+                folder_url="file:///host",
+                file_name_prefix="posts-",
+                extension=".json",
+                run_dt=run_datetime.RunDatetime(
+                    datetime.datetime(2021, 6, 12, 20, 9, 50, 425433, tzinfo=datetime.timezone.utc)
+                ),
+            ),
+        ),
+        (
+            "file:///host/usr_tweets-20210612T200950.425433Z.json",
+            source_file_name_processing.SourceFileName(
+                is_legacy=False,
+                full_url="file:///host/usr_tweets-20210612T200950.425433Z.json",
+                folder_url="file:///host",
+                file_name_prefix="usr_tweets-",
+                extension=".json",
+                run_dt=run_datetime.RunDatetime(
+                    datetime.datetime(2021, 6, 12, 20, 9, 50, 425433, tzinfo=datetime.timezone.utc)
+                ),
+            ),
+        ),
     ],
 )
 def test_get_file_name_timestamp(url, expected_source_file_name):
