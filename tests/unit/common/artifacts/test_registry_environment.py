@@ -45,3 +45,36 @@ def test_default_url_production_error(m_get_local):
 
     m_get_local.assert_not_called()
     assert registry_environment.PRODUCTION_ENV_VAR_KEY in str(excinfo.value)
+
+
+@mock.patch("phoenix.common.artifacts.urls.get_local")
+def test_default_url_set(m_get_local):
+    """Test default_url_prefix for set in the argument."""
+    url = "s3://bucket/"
+    result = registry_environment.default_url_prefix("key", {"a": "b"}, url)
+    m_get_local.assert_not_called()
+    assert result == url
+
+
+@mock.patch("phoenix.common.artifacts.urls.get_local")
+def test_default_url_production_schema_error(m_get_local):
+    """Test default_url_prefix for set in the argument not valid."""
+    url = "not://bucket/"
+    with pytest.raises(ValueError) as excinfo:
+        registry_environment.default_url_prefix("key", {"a": "b"}, url)
+
+    m_get_local.assert_not_called()
+    assert url in str(excinfo.value)
+    assert "schemas" in str(excinfo.value)
+
+
+@mock.patch("phoenix.common.artifacts.urls.get_local")
+def test_default_url_production_directory_error(m_get_local):
+    """Test default_url_prefix for set in the argument not valid."""
+    url = "s3://non_directory_bucket"
+    with pytest.raises(ValueError) as excinfo:
+        registry_environment.default_url_prefix("key", {"a": "b"}, url)
+
+    m_get_local.assert_not_called()
+    assert url in str(excinfo.value)
+    assert "directory" in str(excinfo.value)
