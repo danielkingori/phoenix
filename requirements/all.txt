@@ -334,6 +334,8 @@ nbformat==5.1.3
     #   papermill
 nest-asyncio==1.5.1
     # via nbclient
+networkx==2.6.2
+    # via python-louvain
 nltk==3.6.2
     # via -r requirements/tag.in
 notebook==6.4.3
@@ -347,9 +349,11 @@ numpy==1.21.2
     #   matplotlib
     #   pandas
     #   pyarrow
+    #   python-louvain
     #   scikit-learn
     #   scipy
     #   seaborn
+    #   webweb
 oauthlib==3.1.1
     # via requests-oauthlib
 openpyxl==3.0.7
@@ -483,6 +487,8 @@ python-dateutil==2.8.2
     #   jupyter-client
     #   matplotlib
     #   pandas
+python-louvain==0.15
+    # via -r requirements/tag.in
 pytz==2021.1
     # via
     #   babel
@@ -674,6 +680,8 @@ webencodings==0.5.1
     # via bleach
 websocket-client==1.2.1
     # via jupyter-server
+webweb==0.0.37
+    # via -r requirements/tag.in
 werkzeug==2.0.1
     # via flask
 wrapt==1.12.1
