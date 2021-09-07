@@ -36,7 +36,7 @@ def fb(
 
     ARTIFACT_ENV:
         The artifact environment that will be used. Default "local"
-
+        Can use "production" or a valid storage URL like "s3://my-phoenix-bucket/"
     """
     run_dt = run_datetime.create_run_datetime_now()
     aur = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
@@ -81,6 +81,10 @@ def tw(
     Example commands:
     ./phoenix-cli tw keyword
     ./phoenix-cli tw user
+
+    ARTIFACT_ENV:
+        The artifact environment that will be used. Default "local"
+        Can use "production" or a valid storage URL like "s3://my-phoenix-bucket/"
     """
     run_dt = run_datetime.create_run_datetime_now()
     aur = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
