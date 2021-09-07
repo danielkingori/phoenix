@@ -132,6 +132,8 @@ fastparquet==0.7.1
     # via -r requirements/common.in
 flake8==3.9.2
     # via -r requirements/development.in
+freezegun==1.1.0
+    # via -r requirements/common.in
 fsspec==2021.7.0
     # via
     #   dask
@@ -424,6 +426,7 @@ python-dateutil==2.8.2
     # via
     #   bokeh
     #   botocore
+    #   freezegun
     #   jupyter-client
     #   matplotlib
     #   pandas
@@ -572,6 +575,8 @@ types-freezegun==1.1.0
 types-mock==0.1.5
     # via -r requirements/development.in
 types-python-dateutil==0.1.6
+    # via -r requirements/development.in
+types-pytz==2021.1.2
     # via -r requirements/development.in
 types-requests==2.25.6
     # via -r requirements/development.in

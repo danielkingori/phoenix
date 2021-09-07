@@ -1,8 +1,7 @@
 """Artifact Registry."""
 from typing import Any, Dict
 
-import datetime
-
+from phoenix.common import run_datetime
 from phoenix.common.artifacts import registry_environment as reg_env
 from phoenix.common.artifacts import registry_mappers
 
@@ -11,12 +10,12 @@ class ArtifactURLRegistry:
     """Registry of the artifact urls."""
 
     environment_key: reg_env.Environments
-    run_datetime: datetime.datetime
+    run_dt: run_datetime.RunDatetime
     mappers: Dict[registry_mappers.ArtifactKey, registry_mappers.ArtifactURLMapper]
 
     def __init__(
         self,
-        run_datetime: datetime.datetime,
+        run_dt: run_datetime.RunDatetime,
         environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
         mappers: Dict[
             registry_mappers.ArtifactKey, registry_mappers.ArtifactURLMapper
@@ -24,16 +23,8 @@ class ArtifactURLRegistry:
     ):
         """Init ArtifactURLRegistry."""
         self.environment_key = environment_key
-        self.run_datetime = run_datetime
+        self.run_dt = run_dt
         self.mappers = mappers
-
-    def get_run_iso_timestamp(self) -> str:
-        """Get the run date."""
-        return self.run_datetime.isoformat()
-
-    def get_run_date(self) -> str:
-        """Get the run date."""
-        return self.run_datetime.strftime("%Y-%m-%d")
 
     def get_url(
         self, artifact_key: registry_mappers.ArtifactKey, url_config: Dict[str, Any] = {}
@@ -48,10 +39,10 @@ class ArtifactURLRegistry:
 
     def _build_url_config(self, url_config: Dict[str, Any]) -> Dict[str, Any]:
         """Build the url config."""
-        if "RUN_ISO_TIMESTAMP" not in url_config:
-            url_config["RUN_ISO_TIMESTAMP"] = self.get_run_iso_timestamp()
+        if "RUN_DATETIME" not in url_config:
+            url_config["RUN_DATETIME"] = self.run_dt.to_file_safe_str()
 
         if "RUN_DATE" not in url_config:
-            url_config["RUN_DATE"] = self.get_run_date()
+            url_config["RUN_DATE"] = self.run_dt.to_run_date_str()
 
         return url_config
