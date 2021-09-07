@@ -43,6 +43,7 @@ def fb(
     parameters = {
         "RUN_DATETIME": run_dt.to_file_safe_str(),
         "RUN_DATE": run_dt.to_run_date_str(),
+        "ARTIFACTS_ENVIRONMENT_KEY": artifact_env,
         "ARTIFACT_SOURCE_FB_POSTS_URL": aur.get_url("source-posts"),
     }
     if scrape_start_date:
@@ -101,6 +102,7 @@ def tw(
         raise ValueError(f"Not supported endpoint: {endpoint}")
 
     parameters = {
+        "ARTIFACTS_ENVIRONMENT_KEY": artifact_env,
         "RUN_DATETIME": run_dt.to_file_safe_str(),
         "RUN_DATE": run_dt.to_run_date_str(),
         "QUERY_TYPE": endpoint,
