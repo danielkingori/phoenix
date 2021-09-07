@@ -44,7 +44,6 @@ def fb(
         "RUN_DATETIME": run_dt.to_file_safe_str(),
         "RUN_DATE": run_dt.to_run_date_str(),
         "ARTIFACT_SOURCE_FB_POSTS_URL": aur.get_url("source-posts"),
-        "ARTIFACT_BASE_TO_PROCESS_FB_POSTS_URL": aur.get_url("base-to_process_posts"),
     }
     if scrape_start_date:
         parameters["SCRAPE_START_DATE"] = scrape_start_date
@@ -89,12 +88,10 @@ def tw(
     if endpoint == "user":
         input_nb_url = utils.get_input_notebook_path("scrape/twitter_user_timeline.ipynb")
         source_artifact_url = aur.get_url("source-user_tweets")
-        base_artifact_url = aur.get_url("base-to_process_user_tweets")
         output_nb_url = aur.get_url("source-twitter_user_notebook")
     elif endpoint == "keyword":
         input_nb_url = utils.get_input_notebook_path("scrape/twitter_keyword_search.ipynb")
         source_artifact_url = aur.get_url("source-keyword_tweets")
-        base_artifact_url = aur.get_url("base-to_process_keyword_tweets")
         output_nb_url = aur.get_url("source-twitter_keyword_notebook")
     else:
         raise ValueError(f"Not supported endpoint: {endpoint}")
@@ -104,7 +101,6 @@ def tw(
         "RUN_DATE": run_dt.to_run_date_str(),
         "QUERY_TYPE": endpoint,
         "ARTIFACT_SOURCE_TWEETS_URL": source_artifact_url,
-        "ARTIFACT_BASE_TWEETS_URL": base_artifact_url,
     }
     if scrape_since_days:
         parameters["SINCE_DAYS"] = scrape_since_days

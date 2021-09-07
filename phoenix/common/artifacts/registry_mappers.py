@@ -11,14 +11,14 @@ ArtifactKey = Literal[
     # Facebook posts
     "source-posts",
     "source-fb_post_source_api_notebook",
-    "base-to_process_posts",
+    "base-grouped_by_posts",
     # Tweets
     "source-user_tweets",
     "source-keyword_tweets",
     "source-twitter_user_notebook",
     "source-twitter_keyword_notebook",
-    "base-to_process_user_tweets",
-    "base-to_process_keyword_tweets",
+    "base-grouped_by_user_tweets",
+    "base-grouped_by_keyword_tweets",
 ]
 
 
@@ -47,13 +47,21 @@ def url_mapper(
     return f"{prefix}{url_str_formated}"
 
 
+YEAR_MONTH_FILTER_DIRS = "year_filter={YEAR_FILTER}/month_filter={MONTH_FILTER}/"
 DEFAULT_MAPPERS: Dict[ArtifactKey, ArtifactURLMapper] = {
     # Facebook Posts
     "source-posts": partial(url_mapper, "source_runs/{RUN_DATE}/source-posts-{RUN_DATETIME}.json"),
     "source-fb_post_source_api_notebook": partial(
         url_mapper, "source_runs/{RUN_DATE}/fb_post_source_api-{RUN_DATETIME}.ipynb"
     ),
-    "base-to_process_posts": partial(url_mapper, "base/to_process/posts-{RUN_DATETIME}.json"),
+    "base-grouped_by_posts": partial(
+        url_mapper,
+        (
+            "base/grouped_by_year_month/facebook_posts/"
+            f"{YEAR_MONTH_FILTER_DIRS}"
+            "posts-{RUN_DATETIME}.json"
+        ),
+    ),
     # Twitter Tweets
     "source-user_tweets": partial(
         url_mapper, "source_runs/{RUN_DATE}/source-user_tweets-{RUN_DATETIME}.json"
@@ -67,10 +75,20 @@ DEFAULT_MAPPERS: Dict[ArtifactKey, ArtifactURLMapper] = {
     "source-twitter_keyword_notebook": partial(
         url_mapper, "source_runs/{RUN_DATE}/twitter_keyword_search-{RUN_DATETIME}.ipynb"
     ),
-    "base-to_process_user_tweets": partial(
-        url_mapper, "base/to_process/twitter/user_tweets-{RUN_DATETIME}.json"
+    "base-grouped_by_user_tweets": partial(
+        url_mapper,
+        (
+            "base/grouped_by_year_month/tweets/"
+            f"{YEAR_MONTH_FILTER_DIRS}"
+            "user_tweets-{RUN_DATETIME}.json"
+        ),
     ),
-    "base-to_process_keyword_tweets": partial(
-        url_mapper, "base/to_process/twitter/keyword_tweets-{RUN_DATETIME}.json"
+    "base-grouped_by_keyword_tweets": partial(
+        url_mapper,
+        (
+            "base/grouped_by_year_month/tweets/"
+            f"{YEAR_MONTH_FILTER_DIRS}"
+            "keyword_tweets-{RUN_DATETIME}.json"
+        ),
     ),
 }
