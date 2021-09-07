@@ -98,3 +98,25 @@ def test_from_file_safe_str(expected_timestamp, run_datetime_str):
     """Test from_file_safe_str."""
     result = run_datetime.from_file_safe_str(run_datetime_str)
     assert expected_timestamp == result.dt
+
+
+def test_eq():
+    """Test equality."""
+    run_dt_1 = run_datetime.RunDatetime(
+        datetime.datetime(2010, 11, 12, 13, 14, 15, 16, tzinfo=datetime.timezone.utc)
+    )
+    run_dt_2 = run_datetime.RunDatetime(
+        datetime.datetime(2010, 11, 12, 13, 14, 15, 16, tzinfo=datetime.timezone.utc)
+    )
+    assert run_dt_1 == run_dt_2
+
+
+def test_eq_non():
+    """Test equality."""
+    run_dt_1 = run_datetime.RunDatetime(
+        datetime.datetime(2010, 11, 12, 13, 14, 15, 17, tzinfo=datetime.timezone.utc)
+    )
+    run_dt_2 = run_datetime.RunDatetime(
+        datetime.datetime(2010, 11, 12, 13, 14, 15, 16, tzinfo=datetime.timezone.utc)
+    )
+    assert run_dt_1 != run_dt_2
