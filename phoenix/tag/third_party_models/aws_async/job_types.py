@@ -3,7 +3,7 @@
 Typing the data that will be stored between the
 start and complete stages of the asynchronous analysis.
 """
-from typing import Dict, List, Literal, cast
+from typing import Dict, List, Literal, Optional, cast
 
 import dataclasses
 import datetime
@@ -146,4 +146,4 @@ class AWSDescribeJob:
     job_status: JobStatusType
     output_url: str
     submit_time: datetime.datetime
-    end_time: datetime.datetime
+    end_time: Optional[datetime.datetime]
