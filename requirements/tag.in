@@ -11,3 +11,5 @@ snowballstemmer
 sklearn
 freezegun
 dacite
+webweb
+python-louvain
