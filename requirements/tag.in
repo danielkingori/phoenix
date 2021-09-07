@@ -11,5 +11,7 @@ snowballstemmer
 sklearn
 freezegun
 dacite
+# Network graphing viz
 webweb
 python-louvain
+networkx
