@@ -5,8 +5,6 @@ import community as community_louvain
 import networkx as nx
 import pandas as pd
 
-from phoenix.common import artifacts
-
 
 def get_unique_groups(data):
     """Gets distinct users with topic attached."""
