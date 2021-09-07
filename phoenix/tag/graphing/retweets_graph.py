@@ -3,9 +3,10 @@
 import community as community_louvain
 import networkx as nx
 import pandas
-from webweb import Web
 
 from phoenix.common import artifacts
+from phoenix.tag.graphing import graph_utilities
+from phoenix.tag.graphing import webweb_visualition_configuration as viz_config
 
 
 def get_data(url: str):
@@ -28,31 +29,24 @@ def assign_partitions(graph, partitions):
     return graph
 
 
-def create_visualization(graph: nx.Graph):
-    """Create network graph visualization."""
-    web = Web(nx_G=graph)
-    web.display.scaleLinkWidth = True
-    web.display.scaleLinkOpacity = True
-    web.display.linkLength = 25
-    web.display.linkStrength = 2
-    web.display.charge = 10
-    web.display.gravity = 0.2
-    web.display.colorBy = "community"
-    web.display.sizeBy = "degree"
-    web.display.width = 1200
-    web.display.height = 1200
-    # web.show()
-    return web
+def graph_cleaner(graph):
+    """Remove nodes with low edge counts."""
+    clean_graph = graph_utilities.clean_n_edge_nodes(graph)
+    clean_graph = graph_utilities.clean_n_edge_nodes(clean_graph, n=0)
+    return clean_graph
 
 
-def generate_graph_viz(url: str):
+def generate_graph_viz(url: str, resolution=1.0):
     """Run the graph visualization process."""
     # Get data
     df = get_data(url)
     # Create network graph & community calculations
     graph = create_networkx_graph_from_df(df)
-    partitions = community_louvain.best_partition(graph)
-    community_graph = assign_partitions(graph, partitions)
+    # Remove nodes with one edge
+    clean_graph = graph_cleaner(graph)
+    # Find and implement partitions
+    partitions = community_louvain.best_partition(clean_graph, resolution=resolution)
+    community_graph = assign_partitions(clean_graph, partitions)
     # Set up and configure visualization
-    web = create_visualization(community_graph)
+    web = viz_config.create_retweet_visualization(community_graph)
     return web
