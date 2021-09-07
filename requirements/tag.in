@@ -9,3 +9,5 @@ nltk
 seaborn
 snowballstemmer
 sklearn
+freezegun
+dacite

@@ -111,6 +111,8 @@ cryptography==3.4.7
     # via paramiko
 cycler==0.10.0
     # via matplotlib
+dacite==1.6.0
+    # via -r requirements/tag.in
 dash==1.21.0
     # via -r requirements/report.in
 dash-core-components==1.17.1
@@ -153,7 +155,9 @@ flask==2.0.1
 flask-compress==1.10.1
     # via dash
 freezegun==1.1.0
-    # via -r requirements/common.in
+    # via
+    #   -r requirements/common.in
+    #   -r requirements/tag.in
 fsspec==2021.7.0
     # via
     #   dask

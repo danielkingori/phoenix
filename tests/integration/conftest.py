@@ -59,3 +59,9 @@ def tmp_s3_dir(request):
     bucket = s3.Bucket(s3_integration_bucket)
     for key in bucket.objects.filter(Prefix=tmp_dir):
         key.delete()
+
+
+@pytest.fixture
+def tmpdir_url(tmpdir):
+    """Return the tmpdir as a url."""
+    return f"file:///{tmpdir}"
