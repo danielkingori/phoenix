@@ -1,5 +1,5 @@
 """Process annotations of tensions."""
-from typing import Dict, Tuple
+from typing import Dict, List, Tuple
 
 import logging
 
@@ -141,3 +141,18 @@ def get_tension_feature_mapping(df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
         )
 
     return tensions_dict
+
+
+def get_tensions_with_enough_examples(
+    df: pd.DataFrame, minimum_num_examples: int
+) -> Tuple[List[str], List[Tuple]]:
+    """Get tensions with enough examples to make predictions."""
+    tensions_array = df[TENSIONS_COLUMNS_LIST].to_numpy()
+    tension_mask = tensions_array.sum(axis=0) >= minimum_num_examples
+    tension_counts = tensions_array.sum(axis=0)
+    accepted_tension_list = []
+    for tension, keep_tension in zip(TENSIONS_COLUMNS_LIST, tension_mask):
+        if keep_tension:
+            accepted_tension_list.append(tension)
+
+    return accepted_tension_list, list(zip(TENSIONS_COLUMNS_LIST, tension_counts, tension_mask))
