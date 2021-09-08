@@ -65,11 +65,6 @@ class CountVectorizerTensionClassifier(TensionClassifier):
             model_name = f"{model_name}_{suffix}"
         return model_name
 
-    def persist_model(self, output_dir_url):
-        """Persist model."""
-        with tentaclio.open(f"{output_dir_url}{self.get_model_name()}.pickle", "wb") as f:
-            pickle.dump(self, f)
-
     def predict(self, df: pd.DataFrame, clean_text_col: str) -> pd.DataFrame:
         """Predict and tag a dataframe based on its text column."""
         logger.info("Starting word vectorization")
