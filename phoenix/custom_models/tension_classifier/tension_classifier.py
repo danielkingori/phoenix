@@ -2,6 +2,7 @@
 from typing import List, Optional
 
 import logging
+import os
 import pickle
 
 import pandas as pd
@@ -34,6 +35,10 @@ class TensionClassifier:
 
     def persist_model(self, output_dir_url):
         """Persist model."""
+        if output_dir_url.startswith("file:"):
+            plain_url = output_dir_url[len("file:") :]
+            os.makedirs(os.path.dirname(plain_url), exist_ok=True)
+
         with tentaclio.open(f"{output_dir_url}{self.get_model_name()}.pickle", "wb") as f:
             pickle.dump(self, f)
 
