@@ -1,5 +1,5 @@
 """Tension classifier."""
-from typing import List
+from typing import List, Optional
 
 import logging
 import pickle
@@ -24,9 +24,17 @@ class TensionClassifier:
     def __init__(self, classifier: ClassifierMixin):
         self.classifier = classifier
 
+    @staticmethod
+    def get_model_name(suffix: Optional[str] = None) -> str:
+        """Get the model's name. Used for saving models."""
+        model_name = "tension_classifier_model"
+        if suffix:
+            model_name = f"{model_name}_{suffix}"
+        return model_name
+
     def persist_model(self, output_dir_url):
         """Persist model."""
-        with tentaclio.open(f"{output_dir_url}tension_classifier_model.sav", "wb") as f:
+        with tentaclio.open(f"{output_dir_url}{self.get_model_name()}.pickle", "wb") as f:
             pickle.dump(self, f)
 
 
@@ -45,16 +53,21 @@ class CountVectorizerTensionClassifier(TensionClassifier):
         classifier: ClassifierMixin,
         class_labels: List[str],
     ):
-
         super().__init__(classifier)
         self.count_vectorizer = count_vectorizer
         self.class_labels = class_labels
 
+    @staticmethod
+    def get_model_name(suffix: Optional[str] = None) -> str:
+        """Get the model's name. Used for saving models."""
+        model_name = "count_vectorizer_tension_classifier_model"
+        if suffix:
+            model_name = f"{model_name}_{suffix}"
+        return model_name
+
     def persist_model(self, output_dir_url):
         """Persist model."""
-        with tentaclio.open(
-            f"{output_dir_url}count_vectorizer_tension_classifier_model.sav", "wb"
-        ) as f:
+        with tentaclio.open(f"{output_dir_url}{self.get_model_name()}.pickle", "wb") as f:
             pickle.dump(self, f)
 
     def predict(self, df: pd.DataFrame, clean_text_col: str) -> pd.DataFrame:

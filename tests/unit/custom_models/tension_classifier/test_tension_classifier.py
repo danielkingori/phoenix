@@ -27,6 +27,31 @@ def test_count_vectorizer_tension_classifier_init():
     assert classifier.classifier == multi_target_forest
 
 
+def test_get_model_name():
+    assert tension_classifier.TensionClassifier.get_model_name() == "tension_classifier_model"
+
+
+def test_get_model_name_with_suffix():
+    assert (
+        tension_classifier.TensionClassifier.get_model_name("SEP_21")
+        == "tension_classifier_model_SEP_21"
+    )
+
+
+def test_get_model_name_count_vectorizer():
+    assert (
+        tension_classifier.CountVectorizerTensionClassifier.get_model_name()
+        == "count_vectorizer_tension_classifier_model"
+    )
+
+
+def test_get_model_name_count_vectorizer_with_suffix():
+    assert (
+        tension_classifier.CountVectorizerTensionClassifier.get_model_name("SEP_21")
+        == "count_vectorizer_tension_classifier_model_SEP_21"
+    )
+
+
 def test_persist_model(tmpdir):
     class_labels = ["is_economic_labour_tension"]
     vectorizer = StemmedCountVectorizer()
@@ -39,7 +64,7 @@ def test_persist_model(tmpdir):
 
     dir_url = "file:" + str(tmpdir) + "/"
     classifier.persist_model(dir_url)
-    with tentaclio.open(f"{dir_url}count_vectorizer_tension_classifier_model.sav", "rb") as f:
+    with tentaclio.open(f"{dir_url}count_vectorizer_tension_classifier_model.pickle", "rb") as f:
         loaded_model = pickle.load(f)
 
     assert loaded_model.class_labels == class_labels
