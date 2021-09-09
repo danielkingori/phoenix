@@ -19,7 +19,7 @@ def test_persist_model(tmpdir):
     multi_target_forest = MultiOutputClassifier(forest, n_jobs=-1)
 
     classifier = tension_classifier.CountVectorizerTensionClassifier(
-        vectorizer, multi_target_forest, class_labels
+        class_labels, vectorizer, multi_target_forest
     )
 
     dir_url = "file:" + str(tmpdir) + "/"
@@ -42,7 +42,7 @@ def test_predict():
     mock_classifier.predict.return_value = [[0, 1]]
 
     cv_tension_classifier = tension_classifier.CountVectorizerTensionClassifier(
-        mock_vectorizer, mock_classifier, class_labels
+        class_labels, mock_vectorizer, mock_classifier
     )
     # This tests that the columns in `class_labels` - the ones that we have a prediction for are
     # being overwritten by the predicted classifications. Any other tensions should not be

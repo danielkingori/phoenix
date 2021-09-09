@@ -22,8 +22,10 @@ class TensionClassifier:
         classifier: The sklearn classifier used to classify tensions
     """
 
-    def __init__(self, classifier: ClassifierMixin):
-        self.classifier = classifier
+    def __init__(self, classifier: Optional[ClassifierMixin] = None):
+        self.classifier: ClassifierMixin
+        if classifier:
+            self.classifier = classifier
 
     @staticmethod
     def get_model_name(suffix: Optional[str] = None) -> str:
@@ -54,13 +56,15 @@ class CountVectorizerTensionClassifier(TensionClassifier):
 
     def __init__(
         self,
-        count_vectorizer: StemmedCountVectorizer,
-        classifier: ClassifierMixin,
         class_labels: List[str],
+        count_vectorizer: Optional[StemmedCountVectorizer] = None,
+        classifier: Optional[ClassifierMixin] = None,
     ):
         super().__init__(classifier)
-        self.count_vectorizer = count_vectorizer
-        self.class_labels = class_labels
+        self.count_vectorizer: StemmedCountVectorizer
+        if count_vectorizer:
+            self.count_vectorizer = count_vectorizer
+        self.class_labels: List[str] = class_labels
 
     @staticmethod
     def get_model_name(suffix: Optional[str] = None) -> str:
