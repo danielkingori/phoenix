@@ -37,7 +37,7 @@ def create_aws_describe_job(
         job_status=job_dict_main["JobStatus"],
         output_url=job_dict_main["OutputDataConfig"]["S3Uri"],
         submit_time=job_dict_main["SubmitTime"],
-        end_time=job_dict_main["EndTime"],
+        end_time=job_dict_main.get("EndTime", None),
     )
 
 

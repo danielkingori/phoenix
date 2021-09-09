@@ -53,7 +53,7 @@ def test_complete_sentiment(
         job_status=job_types.JOB_STATUS_SUBMITTED,
         output_url="url",
         submit_time=datetime.datetime.now(),
-        end_time=datetime.datetime.now(),
+        end_time=None,
     )
     job_infos = info_sentiment.get_job_infos(async_job_group_gotten, client)
 
