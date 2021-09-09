@@ -74,3 +74,36 @@ def test_predict():
     pd.testing.assert_frame_equal(output_df, expected_df)
     mock_vectorizer.transform.assert_called()
     mock_classifier.predict.assert_called_with("returned_matrix")
+
+
+def test_CountVectorizerTensionClassifier_train():
+    """Simple integration test that model gets trained and assigns the expected class variables."""
+    input_corpus_df = pd.DataFrame({"text": ["hello", "world", "foo", "bar", "baz", "xyz"]})
+    input_training_df = pd.DataFrame(
+        {
+            "text": ["hello", "world", "foo", "bar", "baz", "xyz"] * 10,
+            "is_economic_labour_tension": [1, 0, 1, 0, 1, 0] * 10,
+            "is_sectarian_tension": [1, 1, 1, 1, 1, 1] * 10,
+            "is_environmental_tension": [1, 1, 1, 1, 1, 1] * 10,
+            "is_political_tension": [0, 0, 0, 0, 0, 0] * 10,
+        }
+    )
+
+    tensions_with_enough_labels = [
+        "is_economic_labour_tension",
+        "is_sectarian_tension",
+        "is_environmental_tension",
+    ]
+
+    count_vectorizer_classifier = tension_classifier.CountVectorizerTensionClassifier(
+        class_labels=tensions_with_enough_labels
+    )
+
+    count_vectorizer_classifier.train(input_corpus_df, input_training_df)
+
+    # Test that there are 15 (25% of the 60 rows) in the test set
+    assert len(count_vectorizer_classifier.X_test) == 15
+    # Test that there are exactly equal labels compared to the class_labels inputted
+    assert count_vectorizer_classifier.Y_test.shape == (15, len(tensions_with_enough_labels))
+    assert count_vectorizer_classifier.count_vectorizer is not None
+    assert count_vectorizer_classifier.classifier is not None
