@@ -11,6 +11,7 @@ import pandas as pd
 import tentaclio
 from sklearn.base import ClassifierMixin
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from snowballstemmer import stemmer
@@ -130,6 +131,28 @@ class CountVectorizerTensionClassifier(TensionClassifier):
 
         logger.info(f"Mean accuracy: {multi_target_forest.score(X_test, Y_test)}")
         self.classifier = multi_target_forest
+
+    def analyse(self):
+        """Analyse the trained model performance."""
+        if not hasattr(self, "classifier"):
+            raise ValueError("There is no classifier, please run train() first.")
+
+        if not hasattr(self, "X_test") or not hasattr(self, "Y_test"):
+            raise ValueError("There is no dataset, please add the dataset or run train() first.")
+
+        Y_hat = self.classifier.predict(self.X_test)
+        for i in range(self.Y_test.shape[1]):
+            logger.info(self.class_labels[i])
+            logger.info(f"\nROC AUC: {roc_auc_score(self.Y_test[:,i],Y_hat[:,i])}\n")
+            confusion_matrix = pd.crosstab(
+                self.Y_test[:, i],
+                Y_hat[:, i],
+                rownames=["True"],
+                colnames=["Predicted"],
+                margins=True,
+            )
+            logger.info(f"\nconfusion_matrix:\n{confusion_matrix}")
+            logger.info(classification_report(self.Y_test[:, i], Y_hat[:, i]))
 
     def predict(self, df: pd.DataFrame, clean_text_col: str) -> pd.DataFrame:
         """Predict and tag a dataframe based on its text column."""
