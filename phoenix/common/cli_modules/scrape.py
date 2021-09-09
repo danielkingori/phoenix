@@ -36,13 +36,14 @@ def fb(
 
     ARTIFACT_ENV:
         The artifact environment that will be used. Default "local"
-
+        Can use "production" or a valid storage URL like "s3://my-phoenix-bucket/"
     """
     run_dt = run_datetime.create_run_datetime_now()
     aur = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
     parameters = {
         "RUN_DATETIME": run_dt.to_file_safe_str(),
         "RUN_DATE": run_dt.to_run_date_str(),
+        "ARTIFACTS_ENVIRONMENT_KEY": artifact_env,
         "ARTIFACT_SOURCE_FB_POSTS_URL": aur.get_url("source-posts"),
     }
     if scrape_start_date:
@@ -81,6 +82,10 @@ def tw(
     Example commands:
     ./phoenix-cli tw keyword
     ./phoenix-cli tw user
+
+    ARTIFACT_ENV:
+        The artifact environment that will be used. Default "local"
+        Can use "production" or a valid storage URL like "s3://my-phoenix-bucket/"
     """
     run_dt = run_datetime.create_run_datetime_now()
     aur = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
@@ -97,6 +102,7 @@ def tw(
         raise ValueError(f"Not supported endpoint: {endpoint}")
 
     parameters = {
+        "ARTIFACTS_ENVIRONMENT_KEY": artifact_env,
         "RUN_DATETIME": run_dt.to_file_safe_str(),
         "RUN_DATE": run_dt.to_run_date_str(),
         "QUERY_TYPE": endpoint,
