@@ -47,7 +47,10 @@ def url_mapper(
     return f"{prefix}{url_str_formated}"
 
 
+# Shared URLs
 YEAR_MONTH_FILTER_DIRS = "year_filter={YEAR_FILTER}/month_filter={MONTH_FILTER}/"
+GROUP_BY_FACEBOOK_POSTS = "base/grouped_by_year_month/facebook_posts/" f"{YEAR_MONTH_FILTER_DIRS}"
+GROUP_BY_TWEETS = "base/grouped_by_year_month/tweets/" f"{YEAR_MONTH_FILTER_DIRS}"
 DEFAULT_MAPPERS: Dict[ArtifactKey, ArtifactURLMapper] = {
     # Facebook Posts
     "source-posts": partial(url_mapper, "source_runs/{RUN_DATE}/source-posts-{RUN_DATETIME}.json"),
@@ -55,12 +58,7 @@ DEFAULT_MAPPERS: Dict[ArtifactKey, ArtifactURLMapper] = {
         url_mapper, "source_runs/{RUN_DATE}/fb_post_source_api-{RUN_DATETIME}.ipynb"
     ),
     "base-grouped_by_posts": partial(
-        url_mapper,
-        (
-            "base/grouped_by_year_month/facebook_posts/"
-            f"{YEAR_MONTH_FILTER_DIRS}"
-            "posts-{RUN_DATETIME}.json"
-        ),
+        url_mapper, GROUP_BY_FACEBOOK_POSTS + "posts-{RUN_DATETIME}.json"
     ),
     # Twitter Tweets
     "source-user_tweets": partial(
@@ -76,19 +74,9 @@ DEFAULT_MAPPERS: Dict[ArtifactKey, ArtifactURLMapper] = {
         url_mapper, "source_runs/{RUN_DATE}/twitter_keyword_search-{RUN_DATETIME}.ipynb"
     ),
     "base-grouped_by_user_tweets": partial(
-        url_mapper,
-        (
-            "base/grouped_by_year_month/tweets/"
-            f"{YEAR_MONTH_FILTER_DIRS}"
-            "user_tweets-{RUN_DATETIME}.json"
-        ),
+        url_mapper, GROUP_BY_TWEETS + "user_tweets-{RUN_DATETIME}.json"
     ),
     "base-grouped_by_keyword_tweets": partial(
-        url_mapper,
-        (
-            "base/grouped_by_year_month/tweets/"
-            f"{YEAR_MONTH_FILTER_DIRS}"
-            "keyword_tweets-{RUN_DATETIME}.json"
-        ),
+        url_mapper, GROUP_BY_TWEETS + "keyword_tweets-{RUN_DATETIME}.json"
     ),
 }
