@@ -47,25 +47,36 @@ def normalize_tweets_rt_graph(tweets: list) -> pd.DataFrame:
 
     Filter out tweets that are from any month not included in file timestamp.
     """
-    retweets = filter_retweets(tweets)
     # TODO: Filter out any tweet from the previous month.
     retweets_normalized = []
-    for tweet in retweets:
+    for tweet in tweets:
         tweet_year = isolate_year(tweet["created_at"])
         tweet_month = isolate_month(tweet["created_at"])
+        # Sometimes there is a Key Error on tweet["retweeted_status"] and
+        # I can't figure out how to preemptively stop it anywhere else so
+        # I am catching it here. This is maybe 5-10% of retweets.
+
         if tweet["file_timestamp"].month == tweet_month:
-            retweets_normalized.append(
-                {
-                    "id_str": tweet["id_str"],
-                    "original_screen_name": tweet["retweeted_status"]["user"]["screen_name"],
-                    "retweet_screen_name": tweet["user"]["screen_name"],
-                    "file_timestamp": tweet["file_timestamp"],
-                    "tweet_year": tweet_year,
-                    "tweet_month": tweet_month,
-                }
-            )
-    retweets_df = pd.DataFrame.from_dict(retweets_normalized)
-    return retweets_df
+            try:
+                retweets_normalized.append(
+                    {
+                        "id_str": tweet["id_str"],
+                        "original_screen_name": tweet["retweeted_status"]["user"]["screen_name"],
+                        "retweet_screen_name": tweet["user"]["screen_name"],
+                        "file_timestamp": tweet["file_timestamp"],
+                        "tweet_year": tweet_year,
+                        "tweet_month": tweet_month,
+                    }
+                )
+            except KeyError as e:
+                # This is a retweeted tweet without "retweeted_status" in keys
+                pass
+    return retweets_normalized
+
+
+def create_retweets_df(retweets):
+    """Create a dataframe for retweets."""
+    return pd.DataFrame.from_dict(retweets)
 
 
 def filter_retweets(tweets: list) -> list:
@@ -102,10 +113,12 @@ def compare_users(df: pd.DataFrame, user_list: list) -> pd.DataFrame:
     return df
 
 
-def collect_tweets_rt_graph(url_to_folder: str, users: list) -> pd.DataFrame:
+def process_tweets_rt_graph(tweets: list, users: list) -> pd.DataFrame:
     """Collect the tweets data and organize it for graphing."""
-    tweets = twitter_json(url_to_folder)
-    retweets_df = normalize_tweets_rt_graph(tweets)
+    # tweets = twitter_json(url_to_folder)
+    retweets = filter_retweets(tweets)
+    normalized_retweets = normalize_tweets_rt_graph(retweets)
+    retweets_df = create_retweets_df(normalized_retweets)
     retweets_df = remove_duplicates(retweets_df)
     retweets_df = calculate_weights_rt_graph(retweets_df)
     retweets_df = compare_users(retweets_df, users)
