@@ -14,4 +14,8 @@ ArtifactKey = Literal[
     "source-twitter_keyword_notebook",
     "base-grouped_by_user_tweets",
     "base-grouped_by_keyword_tweets",
+    # Tagging facebook
+    "tagging_runs-facebook_posts_input",
+    "tagging_runs-facebook_posts_pulled",
+    "tagging_runs-facebook_posts_for_tagging",
 ]
