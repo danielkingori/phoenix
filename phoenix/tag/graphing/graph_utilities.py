@@ -24,3 +24,10 @@ def save_graph(graph, path):
     """Saves the webweb visualization to the specified path with Tentaclio."""
     with tentaclio.open(path, "w") as f:
         f.write(graph.html)
+
+
+# This function somehow was returning a None, so needs investigation.
+def assign_partitions(graph, partitions):
+    """Assign partitions from community-louvain calculations."""
+    graph = nx.set_node_attributes(graph, partitions, "community")
+    return graph
