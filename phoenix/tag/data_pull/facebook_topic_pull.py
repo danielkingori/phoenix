@@ -1,5 +1,6 @@
 """Facebook topics data pull."""
 import itertools
+
 import pandas as pd
 
 from phoenix.common import artifacts
@@ -61,5 +62,3 @@ def prepare_dataset(data):
     graph_df = pd.DataFrame(flat)
     weighted_df = get_weighted_dataframe(graph_df)
     return weighted_df
-
-

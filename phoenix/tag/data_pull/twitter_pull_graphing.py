@@ -68,7 +68,7 @@ def normalize_tweets_rt_graph(tweets: list) -> pd.DataFrame:
                         "tweet_month": tweet_month,
                     }
                 )
-            except KeyError as e:
+            except KeyError:
                 # This is a retweeted tweet without "retweeted_status" in keys
                 pass
     return retweets_normalized

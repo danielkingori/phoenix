@@ -4,8 +4,6 @@ import community as community_louvain
 import networkx as nx
 import pandas as pd
 
-
-from phoenix.tag.graphing import graph_utilities as graph_util
 from phoenix.tag.graphing import webweb_visualition_configuration as viz_config
 
 
@@ -26,7 +24,6 @@ def assign_partitions(graph):
 def generate_graph_viz(data: pd.DataFrame):
     """Run the graph visualization process."""
     graph = create_networkx_graph_from_df(data)
-    partitions = community_louvain.best_partition(graph)
     community_graph = assign_partitions(graph)
     web = viz_config.create_facebook_topic_to_topic_visualization(community_graph)
     return web
