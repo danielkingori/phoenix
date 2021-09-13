@@ -25,4 +25,7 @@ ArtifactKey = Literal[
     "tagging_runs-key_objects",
     "tagging_runs-objects",
     "tagging_runs-all_features",
+    "tagging_runs-topics",
+    "tagging_runs-objects_topics_csv",
+    "tagging_runs-topics_csv",
 ]

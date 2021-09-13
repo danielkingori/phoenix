@@ -34,4 +34,10 @@ MAPPERS: MapperDict = {
     "tagging_runs-all_features": partial(
         url_mapper, TAGGING_PIPELINE_BASE + "all_features.parquet"
     ),
+    # Topics
+    "tagging_runs-topics": partial(url_mapper, TAGGING_PIPELINE_BASE + "topics.parquet"),
+    "tagging_runs-objects_topics_csv": partial(
+        url_mapper, TAGGING_MANUALLY_USABLE_BASE + "objects_topics.csv"
+    ),
+    "tagging_runs-topics_csv": partial(url_mapper, TAGGING_MANUALLY_USABLE_BASE + "topics.csv"),
 }
