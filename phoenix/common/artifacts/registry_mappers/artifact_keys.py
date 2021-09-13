@@ -32,4 +32,6 @@ ArtifactKey = Literal[
     "tagging_runs-async_job_group",
     "tagging_runs-comprehend_base",
     "tagging_runs-language_sentiment_objects",
+    "tagging_runs-facebook_posts_final",
+    "tagging_runs-facebook_posts_to_scrape",
 ]
