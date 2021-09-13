@@ -1,5 +1,5 @@
 """Artifact Registry."""
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from phoenix.common import run_datetime
 from phoenix.common.artifacts import registry_environment as reg_env
@@ -17,11 +17,17 @@ class ArtifactURLRegistry:
         self,
         run_dt: run_datetime.RunDatetime,
         environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
-        mappers: registry_mappers.MapperDict = registry_mappers.DEFAULT_MAPPERS,
+        mappers: Optional[registry_mappers.MapperDict] = None,
     ):
         """Init ArtifactURLRegistry."""
         self.environment_key = environment_key
         self.run_dt = run_dt
+        # The default mappers are set via an initialisation rather then as a default
+        # parameter to help with the automatic reloading of changes, during a notebook session
+        # that are made to default mappers.
+        if not mappers:
+            mappers = registry_mappers.get_default_mappers()
+
         self.mappers = mappers
 
     def get_url(
