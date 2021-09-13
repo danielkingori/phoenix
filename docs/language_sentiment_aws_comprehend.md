@@ -15,6 +15,29 @@ For this to work you need to setup:
 Follow the instructions [here](https://docs.aws.amazon.com/comprehend/latest/dg/access-control-managing-permissions.html#auth-role-permissions).
 
 Make sure that your role has: "s3:GetObject", "s3:ListBucket", "s3:PutObject" for the buckets that you will persist your input data to.
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::my-bucket",
+                "arn:aws:s3:::my-bucket/*",
+            ]
+        }
+    ]
+}
+```
+
+
+BE AWARE!!!!! that the region of the bucket must be the same as the region that AWS Comprehend jobs are created in.
 
 ### Overview of phoenix process
 1. `phoenix/tag/third_party_models/aws_async/start_sentiment.ipynb`:
