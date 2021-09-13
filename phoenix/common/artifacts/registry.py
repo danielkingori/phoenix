@@ -11,15 +11,13 @@ class ArtifactURLRegistry:
 
     environment_key: reg_env.Environments
     run_dt: run_datetime.RunDatetime
-    mappers: Dict[registry_mappers.ArtifactKey, registry_mappers.ArtifactURLMapper]
+    mappers: registry_mappers.MapperDict
 
     def __init__(
         self,
         run_dt: run_datetime.RunDatetime,
         environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
-        mappers: Dict[
-            registry_mappers.ArtifactKey, registry_mappers.ArtifactURLMapper
-        ] = registry_mappers.DEFAULT_MAPPERS,
+        mappers: registry_mappers.MapperDict = registry_mappers.DEFAULT_MAPPERS,
     ):
         """Init ArtifactURLRegistry."""
         self.environment_key = environment_key

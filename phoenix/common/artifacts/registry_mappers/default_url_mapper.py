@@ -28,3 +28,6 @@ def url_mapper(
     prefix = reg_env.default_url_prefix(artifact_key, url_config, environment_key)
     url_str_formated = format_str.format(**url_config)
     return f"{prefix}{url_str_formated}"
+
+
+MapperDict = Dict[artifact_keys.ArtifactKey, ArtifactURLMapper]

@@ -1,16 +1,10 @@
 """Source mappers."""
-from typing import Dict
-
 from functools import partial
 
-from phoenix.common.artifacts.registry_mappers.artifact_keys import ArtifactKey
-from phoenix.common.artifacts.registry_mappers.default_url_mapper import (
-    ArtifactURLMapper,
-    url_mapper,
-)
+from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperDict, url_mapper
 
 
-MAPPERS: Dict[ArtifactKey, ArtifactURLMapper] = {
+MAPPERS: MapperDict = {
     # Facebook Posts
     "source-posts": partial(url_mapper, "source_runs/{RUN_DATE}/source-posts-{RUN_DATETIME}.json"),
     "source-fb_post_source_api_notebook": partial(
