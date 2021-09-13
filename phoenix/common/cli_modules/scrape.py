@@ -13,6 +13,14 @@ def scrape_cli():
 @scrape_cli.command()
 @click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
 @click.option(
+    "--scrape_since_days",
+    default=None,
+    help=(
+        "Number of days back from today you want to scrape."
+        " Will overwrite scrape_start_date and scrape_end_date."
+    ),
+)
+@click.option(
     "--scrape_start_date",
     default=None,
     help=("Define a start date of the scrape data (%Y-%m-%d)." "Default will be set in notebook."),
@@ -26,6 +34,7 @@ def scrape_cli():
 )
 def fb(
     artifact_env,
+    scrape_since_days,
     scrape_start_date,
     scrape_end_date,
 ):
@@ -46,6 +55,9 @@ def fb(
         "ARTIFACTS_ENVIRONMENT_KEY": artifact_env,
         "ARTIFACT_SOURCE_FB_POSTS_URL": aur.get_url("source-posts"),
     }
+    if scrape_since_days:
+        parameters["SINCE_DAYS"] = scrape_since_days
+
     if scrape_start_date:
         parameters["SCRAPE_START_DATE"] = scrape_start_date
 
