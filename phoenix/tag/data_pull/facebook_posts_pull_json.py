@@ -19,6 +19,9 @@ def from_json(
     li = []
     for entry in tentaclio.listdir(url_to_folder):
         logging.info(f"Processing file: {entry}")
+        if not utils.is_valid_file_name(entry):
+            logging.info(f"Skipping file with invalid filename: {entry}")
+            continue
         file_timestamp = utils.get_file_name_timestamp(entry)
         # Getting both the normalised and the read
         # This is because the read does a better job of typing

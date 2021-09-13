@@ -53,3 +53,8 @@ def get_file_name_timestamp(url: str) -> datetime.datetime:
             )
         )
     return source_file_name.run_dt.dt
+
+
+def is_valid_file_name(url: str) -> bool:
+    """Valid file name check."""
+    return url.endswith(".json")
