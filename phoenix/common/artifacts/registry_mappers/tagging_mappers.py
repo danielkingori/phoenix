@@ -40,4 +40,8 @@ MAPPERS: MapperDict = {
         url_mapper, TAGGING_MANUALLY_USABLE_BASE + "objects_topics.csv"
     ),
     "tagging_runs-topics_csv": partial(url_mapper, TAGGING_MANUALLY_USABLE_BASE + "topics.csv"),
+    # Tensions
+    "tagging_runs-objects_tensions": partial(
+        url_mapper, TAGGING_PIPELINE_BASE + "objects_tensions.parquet"
+    ),
 }
