@@ -15,5 +15,13 @@ MAPPERS: MapperDict = {
             f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
             "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
         ),
-    )
+    ),
+    "final-facebook_posts_topics": partial(
+        url_mapper,
+        (
+            FINAL_BASE + "facebook_posts_topics/"
+            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
+            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
+        ),
+    ),
 }

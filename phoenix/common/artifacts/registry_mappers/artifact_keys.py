@@ -37,4 +37,5 @@ ArtifactKey = Literal[
     "tagging_runs-facebook_posts_to_scrape",
     # Final
     "final-facebook_posts",
+    "final-facebook_posts_topics",
 ]
