@@ -10,6 +10,7 @@ FOR_TAGGING_SUFFIX = "for_tagging/"
 TAGGING_FACEBOOK_POSTS_FOR_TAGGING = TAGGING_FACEBOOK_POSTS + FOR_TAGGING_SUFFIX
 TAGGING_PIPELINE_BASE = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}" + "{OBJECT_TYPE}/"
 TAGGING_MANUALLY_USABLE_BASE = TAGGING_PIPELINE_BASE + "manually_usable/"
+TAGGING_SENTIMENT_BASE = TAGGING_PIPELINE_BASE + "sentiment_analysis/"
 
 MAPPERS: MapperDict = {
     # Facebook Posts
@@ -43,5 +44,12 @@ MAPPERS: MapperDict = {
     # Tensions
     "tagging_runs-objects_tensions": partial(
         url_mapper, TAGGING_PIPELINE_BASE + "objects_tensions.parquet"
+    ),
+    # Sentiment
+    "tagging_runs-async_job_group": partial(
+        url_mapper, TAGGING_SENTIMENT_BASE + "async_job_group.json"
+    ),
+    "tagging_runs-comprehend_base": partial(
+        url_mapper, TAGGING_SENTIMENT_BASE + "comprehend_jobs/"
     ),
 }
