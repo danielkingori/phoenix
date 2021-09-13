@@ -31,4 +31,5 @@ ArtifactKey = Literal[
     "tagging_runs-objects_tensions",
     "tagging_runs-async_job_group",
     "tagging_runs-comprehend_base",
+    "tagging_runs-language_sentiment_objects",
 ]

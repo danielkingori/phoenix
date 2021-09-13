@@ -52,4 +52,7 @@ MAPPERS: MapperDict = {
     "tagging_runs-comprehend_base": partial(
         url_mapper, TAGGING_SENTIMENT_BASE + "comprehend_jobs/"
     ),
+    "tagging_runs-language_sentiment_objects": partial(
+        url_mapper, TAGGING_PIPELINE_BASE + "language_sentiment_objects.parquet"
+    ),
 }
