@@ -6,7 +6,10 @@ from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperD
 
 
 TAGGING_FACEBOOK_POSTS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}facebook_posts/"
-TAGGING_FACEBOOK_POSTS_FOR_TAGGING = TAGGING_FACEBOOK_POSTS + "for_tagging/"
+FOR_TAGGING_SUFFIX = "for_tagging/"
+TAGGING_FACEBOOK_POSTS_FOR_TAGGING = TAGGING_FACEBOOK_POSTS + FOR_TAGGING_SUFFIX
+TAGGING_PIPELINE_BASE = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}" + "{OBJECT_TYPE}/"
+TAGGING_MANUALLY_USABLE_BASE = TAGGING_PIPELINE_BASE + "manually_usable/"
 
 MAPPERS: MapperDict = {
     # Facebook Posts
@@ -16,5 +19,19 @@ MAPPERS: MapperDict = {
     ),
     "tagging_runs-facebook_posts_for_tagging": partial(
         url_mapper, TAGGING_FACEBOOK_POSTS_FOR_TAGGING + "facebook_posts_for_tagging.parquet"
+    ),
+    # Utils
+    "tagging_runs-pipeline_base": partial(url_mapper, TAGGING_PIPELINE_BASE),
+    "tagging_runs-pipeline_manually_usable_base": partial(
+        url_mapper, TAGGING_MANUALLY_USABLE_BASE
+    ),
+    # Features
+    "tagging_runs-features_for_tagging": partial(
+        url_mapper, TAGGING_PIPELINE_BASE + FOR_TAGGING_SUFFIX
+    ),
+    "tagging_runs-key_objects": partial(url_mapper, TAGGING_PIPELINE_BASE + "key_objects.parquet"),
+    "tagging_runs-objects": partial(url_mapper, TAGGING_PIPELINE_BASE + "objects.parquet"),
+    "tagging_runs-all_features": partial(
+        url_mapper, TAGGING_PIPELINE_BASE + "all_features.parquet"
     ),
 }

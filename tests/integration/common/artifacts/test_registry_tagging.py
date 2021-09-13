@@ -31,6 +31,11 @@ from phoenix.common.artifacts import registry, registry_environment
                 "facebook_posts/for_tagging/facebook_posts_for_tagging.parquet"
             ),
         ),
+        (
+            "tagging_runs-pipeline_base",
+            {"YEAR_FILTER": 2021, "MONTH_FILTER": 1, "OBJECT_TYPE": "facebook_posts"},
+            "tagging_runs/year_filter=2021/month_filter=1/facebook_posts/",
+        ),
     ],
 )
 def test_tagging_runs_facebook_posts(artifact_key, url_config, expected_url):

@@ -18,4 +18,11 @@ ArtifactKey = Literal[
     "tagging_runs-facebook_posts_input",
     "tagging_runs-facebook_posts_pulled",
     "tagging_runs-facebook_posts_for_tagging",
+    # Tagging Pipeline
+    "tagging_runs-pipeline_base",
+    "tagging_runs-pipeline_manually_usable_base",
+    "tagging_runs-features_for_tagging",
+    "tagging_runs-key_objects",
+    "tagging_runs-objects",
+    "tagging_runs-all_features",
 ]
