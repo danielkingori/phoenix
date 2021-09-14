@@ -8,7 +8,7 @@ from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperD
 TAGGING_FACEBOOK_POSTS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}facebook_posts/"
 FOR_TAGGING_SUFFIX = "for_tagging/"
 TAGGING_FACEBOOK_POSTS_FOR_TAGGING = TAGGING_FACEBOOK_POSTS + FOR_TAGGING_SUFFIX
-TAGGING_PIPELINE_BASE = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}" + "{OBJECT_TYPE}/"
+TAGGING_PIPELINE_BASE = shared_urls.TAGGING_PIPELINE_BASE
 TAGGING_FOR_ANALYST_BASE = TAGGING_PIPELINE_BASE + "for_analyst/"
 TAGGING_SENTIMENT_BASE = TAGGING_PIPELINE_BASE + "sentiment_analysis/"
 
