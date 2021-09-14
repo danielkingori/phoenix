@@ -27,6 +27,9 @@ MAPPERS: MapperDict = {
     "tagging_runs-facebook_posts_to_scrape": partial(
         url_mapper, TAGGING_FACEBOOK_POSTS + "posts_to_scrape.csv"
     ),
+    "tagging_runs-facebook_posts_topics_final": partial(
+        url_mapper, TAGGING_FACEBOOK_POSTS + "facebook_posts_topics_final.parquet"
+    ),
     # Utils
     "tagging_runs-pipeline_base": partial(url_mapper, TAGGING_PIPELINE_BASE),
     "tagging_runs-pipeline_manually_usable_base": partial(
