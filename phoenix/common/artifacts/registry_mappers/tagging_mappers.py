@@ -9,7 +9,7 @@ TAGGING_FACEBOOK_POSTS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}face
 FOR_TAGGING_SUFFIX = "for_tagging/"
 TAGGING_FACEBOOK_POSTS_FOR_TAGGING = TAGGING_FACEBOOK_POSTS + FOR_TAGGING_SUFFIX
 TAGGING_PIPELINE_BASE = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}" + "{OBJECT_TYPE}/"
-TAGGING_MANUALLY_USABLE_BASE = TAGGING_PIPELINE_BASE + "manually_usable/"
+TAGGING_FOR_ANALYST_BASE = TAGGING_PIPELINE_BASE + "for_analyst/"
 TAGGING_SENTIMENT_BASE = TAGGING_PIPELINE_BASE + "sentiment_analysis/"
 
 MAPPERS: MapperDict = {
@@ -32,9 +32,7 @@ MAPPERS: MapperDict = {
     ),
     # Utils
     "tagging_runs-pipeline_base": partial(url_mapper, TAGGING_PIPELINE_BASE),
-    "tagging_runs-pipeline_manually_usable_base": partial(
-        url_mapper, TAGGING_MANUALLY_USABLE_BASE
-    ),
+    "tagging_runs-for_analyst_base": partial(url_mapper, TAGGING_FOR_ANALYST_BASE),
     # Features
     "tagging_runs-features_for_tagging": partial(
         url_mapper, TAGGING_PIPELINE_BASE + FOR_TAGGING_SUFFIX
@@ -47,9 +45,9 @@ MAPPERS: MapperDict = {
     # Topics
     "tagging_runs-topics": partial(url_mapper, TAGGING_PIPELINE_BASE + "topics.parquet"),
     "tagging_runs-objects_topics_csv": partial(
-        url_mapper, TAGGING_MANUALLY_USABLE_BASE + "objects_topics.csv"
+        url_mapper, TAGGING_FOR_ANALYST_BASE + "objects_topics.csv"
     ),
-    "tagging_runs-topics_csv": partial(url_mapper, TAGGING_MANUALLY_USABLE_BASE + "topics.csv"),
+    "tagging_runs-topics_csv": partial(url_mapper, TAGGING_FOR_ANALYST_BASE + "topics.csv"),
     # Tensions
     "tagging_runs-objects_tensions": partial(
         url_mapper, TAGGING_PIPELINE_BASE + "objects_tensions.parquet"

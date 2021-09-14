@@ -21,7 +21,7 @@ ArtifactKey = Literal[
     "tagging_runs-facebook_posts_topics_final",
     # Tagging Pipeline
     "tagging_runs-pipeline_base",
-    "tagging_runs-pipeline_manually_usable_base",
+    "tagging_runs-for_analyst_base",
     "tagging_runs-features_for_tagging",
     "tagging_runs-key_objects",
     "tagging_runs-objects",
