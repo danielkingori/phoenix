@@ -38,10 +38,10 @@ from phoenix.common.artifacts import registry, registry_environment
         ),
     ],
 )
-def test_tagging_runs_facebook_posts(artifact_key, url_config, expected_url):
-    """Test tagging runs facebook posts."""
+def test_tagging_runs_urls(artifact_key, url_config, expected_url):
+    """Test tagging runs urls."""
     run_dt = run_datetime.create_run_datetime_now()
     environment_key: registry_environment.Environments = "local"
-    aur = registry.ArtifactURLRegistry(run_dt, environment_key)
-    r_url = aur.get_url(artifact_key, url_config)
-    assert r_url.endswith(expected_url)
+    art_url_reg = registry.ArtifactURLRegistry(run_dt, environment_key)
+    result_url = art_url_reg.get_url(artifact_key, url_config)
+    assert result_url.endswith(expected_url)
