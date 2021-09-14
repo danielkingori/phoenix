@@ -24,6 +24,9 @@ def twitter_json(url_to_folder: str) -> list:
     tweets = []
     for entry in tentaclio.listdir(url_to_folder):
         logging.info(f"Processing file: {entry}")
+        if not utils.is_valid_file_name(entry):
+            logging.info(f"Skipping file with invalid filename: {entry}")
+            continue
         file_timestamp = utils.get_file_name_timestamp(entry)
         with tentaclio.open(entry) as file_io:
             batch = json.loads(file_io.read())
