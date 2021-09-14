@@ -5,6 +5,7 @@ This keeps datetimes consistent across projects.
 import datetime
 
 
+# Expected Format for RUN_DATETIME parameters in notebooks
 FILE_SAFE_FORMAT = "%Y%m%dT%H%M%S.%fZ"
 
 

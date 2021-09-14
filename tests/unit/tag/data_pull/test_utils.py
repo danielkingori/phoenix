@@ -67,3 +67,18 @@ def test_get_file_name_timestamp_none(url):
     with pytest.raises(RuntimeError) as error:
         utils.get_file_name_timestamp(url)
         assert url in str(error.value)
+
+
+@pytest.mark.parametrize(
+    "url, expected_result",
+    [
+        ("", False),
+        ("file:///host/2021-05-39T010204.914162/", False),
+        ("file:///host/source-keyword_tweets-20210612T200950.425433Z.parquet", False),
+        ("file:///host/source-keyword_tweets-20210612T200950.425433Z.json", True),
+        ("20210612T200950.425433Z.json", True),
+    ],
+)
+def test_valid_file_name(url, expected_result):
+    """Valid file name test"""
+    assert expected_result == utils.is_valid_file_name(url)
