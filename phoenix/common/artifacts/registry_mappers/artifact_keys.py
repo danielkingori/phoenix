@@ -3,6 +3,8 @@ from typing import Literal
 
 
 ArtifactKey = Literal[
+    # static
+    "static-twitter_users",
     # Facebook posts
     "source-posts",
     "source-fb_post_source_api_notebook",
