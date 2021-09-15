@@ -1,6 +1,7 @@
 """Functionality for processing single feature match topic config."""
 import pandas as pd
 import tentaclio
+from sklearn.feature_extraction.text import strip_accents_unicode
 
 from phoenix.common import artifacts
 from phoenix.tag.topic import constants
@@ -72,7 +73,8 @@ def committable_topic_config(topic_config: pd.DataFrame) -> pd.DataFrame:
         Persisted Topic Config:
             dataframe in the schema docs/schemas/persist_topic_config_csv
     """
-    df = topic_config.groupby("features", as_index=False).agg(
+    df = clean_diacritics(topic_config)
+    df = df.groupby("features", as_index=False).agg(
         {"topic": lambda x: ", ".join(sorted(x.dropna()))}
     )
     return df
@@ -117,3 +119,10 @@ def create_new_committable_topic_config(
         current_topic_config = merge_new_topic_config(current_topic_config, new_topic_config)
 
     return committable_topic_config(current_topic_config)
+
+
+def clean_diacritics(df: pd.DataFrame) -> pd.DataFrame:
+    """Clean diacritics from the topic config."""
+    df["features"] = df["features"].apply(strip_accents_unicode)
+
+    return df
