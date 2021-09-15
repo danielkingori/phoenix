@@ -48,3 +48,4 @@ This creates one schema for all sources that the tagging pipeline including the 
 | is_community_insecurity_tension     | bool    | phoenix thinks this object is about community insecurity tension                                         |
 | is_geopolitics_tension              | bool    | phoenix thinks this object is about geopolitics tension                                                  |
 | is_intercommunity_relations_tension | bool    | phoenix thinks this object is about intercommunity relation tension. This includes host-refugee tensions |
+| has_tension                         | bool    | phoenix thinks this object has one or more tensions |
