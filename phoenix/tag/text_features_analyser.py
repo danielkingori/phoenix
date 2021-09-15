@@ -172,7 +172,6 @@ def create():
     # Configuration is hard coded this can be changed at some point.
     default_params = {
         "ar": {
-            "stemmer": stemmer("arabic"),
             "stop_words": get_stopwords(),
             "strip_accents": "unicode",
             "encoding": "utf-8",
