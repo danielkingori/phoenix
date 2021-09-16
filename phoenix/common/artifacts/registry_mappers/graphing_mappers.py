@@ -14,4 +14,7 @@ MAPPERS: MapperDict = {
         url_mapper, GRAPHING_PIPELINE_BASE + "retweet_pulled.parquet"
     ),
     "graphing_runs-retweet_input": partial(url_mapper, shared_urls.GROUP_BY_TWEETS),
+    "graphing_runs-retweet_output_graph": partial(
+        url_mapper, GRAPHING_PIPELINE_BASE + "retweet_graph.html"
+    ),
 }
