@@ -22,4 +22,7 @@ MAPPERS: MapperDict = {
     "source-twitter_keyword_notebook": partial(
         url_mapper, "source_runs/{RUN_DATE}/twitter_keyword_search-{RUN_DATETIME}.ipynb"
     ),
+    "source-facebook_comments": partial(
+        url_mapper, "source_runs/{RUN_DATE}/source-facebook_comments-{RUN_DATETIME}.json"
+    ),
 }

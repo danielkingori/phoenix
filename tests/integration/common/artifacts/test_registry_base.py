@@ -34,6 +34,38 @@ from phoenix.common.artifacts import registry, registry_environment
                 "year_filter=2021/month_filter=1/keyword_tweets-20000101T010101.000001Z.json"
             ),
         ),
+        (
+            "base-grouped_by_facebook_comments",
+            {"YEAR_FILTER": 2021, "MONTH_FILTER": 1},
+            (
+                "base/grouped_by_year_month/facebook_comments/"
+                "year_filter=2021/month_filter=1/facebook_comments-20000101T010101.000001Z.json"
+            ),
+        ),
+        (
+            "base-facebook_comments_pages_to_parse",
+            {"YEAR_FILTER": 2021, "MONTH_FILTER": 1},
+            (
+                "base/grouped_by_year_month/facebook_comments_pages/"
+                "year_filter=2021/month_filter=1/to_parse/"
+            ),
+        ),
+        (
+            "base-facebook_comments_pages_successful_parse",
+            {"YEAR_FILTER": 2021, "MONTH_FILTER": 1},
+            (
+                "base/grouped_by_year_month/facebook_comments_pages/"
+                "year_filter=2021/month_filter=1/successful_parse/20000101T010101.000001Z/"
+            ),
+        ),
+        (
+            "base-facebook_comments_pages_failed_parse",
+            {"YEAR_FILTER": 2021, "MONTH_FILTER": 1},
+            (
+                "base/grouped_by_year_month/facebook_comments_pages/"
+                "year_filter=2021/month_filter=1/failed_parse/20000101T010101.000001Z/"
+            ),
+        ),
     ],
 )
 def test_base_grouped_by(artifact_key, url_config, expected_url):
