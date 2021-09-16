@@ -53,3 +53,9 @@ def create_folders_if_needed(url):
     parsed_url = tentaclio.urls.URL(url)
     if parsed_url.scheme == "file":
         os.makedirs(os.path.dirname(parsed_url.path), exist_ok=True)
+
+
+def copy(from_url, to_url):
+    """Copy file from one URL to another."""
+    create_folders_if_needed(to_url)
+    tentaclio.copy(from_url, to_url)
