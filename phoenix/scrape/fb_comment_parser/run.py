@@ -1,48 +1,46 @@
 """Functions for running the Facebook comment parsing process."""
+from typing import Tuple
 
 import logging
 import os
 
+import tentaclio
+
+from phoenix.common import artifacts
 from phoenix.scrape.fb_comment_parser import fb_comment_parser
 
 
-def file_url_strip(path):
-    """File adjustment to remove 'file:' where necessary."""
-    if path.startswith("file:"):
-        return path[len("file:") :]
-    else:
-        return path
-
-
-def get_files(url):
+def get_files(dir_url):
     """Get files from a folder."""
-    for filename in os.listdir(file_url_strip(url)):
-        logging.info(f"Processing {filename}...")
-        yield get_single_file(url, filename)
+    for url in tentaclio.listdir(dir_url):
+
+        logging.info(f"Processing {url}...")
+        yield get_single_file(url)
 
 
-def get_single_file(path, filename):
-    """Retrieve contents of a single file."""
-    file_url = f"{path}{filename}"
-    """Open single file and return the contents."""
-    logging.info(file_url)
-    # with tentaclio.open(file_url, mode="rb") as f:
-    with open(file_url_strip(file_url), mode="rb") as f:
+def get_single_file(file_url) -> Tuple[str, str]:
+    """Retrieve contents of a single file.
+
+    Open single file and return the contents.
+
+    Returns:
+        Tuple[contents, file name]
+    """
+    with tentaclio.open(file_url, mode="rb") as f:
         contents = f.read()
-    return contents, filename
+    parsed_url = tentaclio.urls.URL(file_url)
+    return contents, os.path.basename(parsed_url.path)
 
 
 def move_processed_file(from_path, to_path, filename):
-    """Move file from one folder to another."""
+    """Move processed files.
+
+    This is done so that it is clear which files throw errors.
+    """
     # Construct file urls
     from_url = f"{from_path}{filename}"
     to_url = f"{to_path}{filename}"
-    # Make a new directory if it's not there already
-    os.makedirs(os.path.dirname(file_url_strip(to_path)), exist_ok=True)
-
-    os.rename(file_url_strip(from_url), file_url_strip(to_url))
-    # tentaclio.copy(from_url, to_url)
-    # tentaclio.remove(from_url)
+    artifacts.utils.move(from_url, to_url)
     return
 
 
