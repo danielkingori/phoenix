@@ -22,5 +22,11 @@ def get_partitions_set(partitions):
 
 def save_graph(graph, path):
     """Saves the webweb visualization to the specified path with Tentaclio."""
-    with tentaclio.open(path, "w") as f:
+    parsed_url = tentaclio.urls.URL(path)
+    open_extra_args = {}
+    if parsed_url.scheme == "s3":
+        content_type = "text/html"
+        open_extra_args["upload_extra_args"] = {"ContentType": content_type}
+
+    with tentaclio.open(path, "w", **open_extra_args) as f:
         f.write(graph.html)
