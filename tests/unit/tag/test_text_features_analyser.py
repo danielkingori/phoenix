@@ -114,3 +114,23 @@ def test_TextFeaturesAnalyser_features():
     ]
 
     assert df_test["features"][0] == expected_3gram_feature_list
+
+
+def test_TextFeaturesAnalyser_hashtags_arabic():
+    """Test that the analyser handles hashtags as part of a word."""
+    featurizer = tfa.create()
+    arabic_text = " مبادرة #البابا_فرنسيس في يوم #لبنان "
+    expected_tokens = ["مبادرة", "#البابا_فرنسيس", "في", "يوم", "#لبنان"]
+    actual_tokens = featurizer.dict_countvectorizers["ar"][0].build_tokenizer()(arabic_text)
+
+    assert expected_tokens == actual_tokens
+
+
+def test_TextFeaturesAnalyser_hashtags_english():
+    """Test that the analyser handles hashtags as part of a word."""
+    featurizer = tfa.create()
+    english_text = "world# the #hello is here"
+    expected_tokens = ["world", "the", "#hello", "is", "here"]
+    actual_tokens = featurizer.dict_countvectorizers["ar"][0].build_tokenizer()(english_text)
+
+    assert expected_tokens == actual_tokens

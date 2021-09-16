@@ -170,12 +170,13 @@ def feature_apply(
 def create():
     """Create the TextFeaturesAnalyser."""
     # Configuration is hard coded this can be changed at some point.
+    # token_pattern is the default token pattern with the addition of a optional # before a word
     default_params = {
         "ar": {
-            "stemmer": stemmer("arabic"),
             "stop_words": get_stopwords(),
             "strip_accents": "unicode",
             "encoding": "utf-8",
+            "token_pattern": r"#?\b\w\w+\b",
         },
         "ar_izi": {"strip_accents": "unicode"},
         "en": {
@@ -183,6 +184,7 @@ def create():
             "stop_words": get_stopwords(),
             "strip_accents": "ascii",
             "encoding": "utf-8",
+            "token_pattern": r"#?\b\w\w+\b",
         },
     }
 

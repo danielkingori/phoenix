@@ -107,3 +107,12 @@ def test_create_new_committable_topic_config(
     m_commitable_topic_config.assert_called_once_with(m_merge_new_topic_config.return_value)
 
     assert result == m_commitable_topic_config.return_value
+
+
+def test_clean_diacritics():
+    input_df = pd.DataFrame({"features": ["helló", "#اسقطوا_الحصانات_الآن"], "topic": ["a", "a"]})
+    expected_df = pd.DataFrame(
+        {"features": ["hello", "#اسقطوا_الحصانات_الان"], "topic": ["a", "a"]}
+    )
+    output_df = sfm_topic_config.clean_diacritics(input_df)
+    pd.testing.assert_frame_equal(expected_df, output_df)
