@@ -43,3 +43,20 @@ def test_copy(tmp_path):
     artifacts.utils.copy(source_artefact_url, target_artefact_url)
     assert target_file.read_text() == CONTENT
     assert len(list(tmp_path.iterdir())) == 2
+
+
+def test_move(tmp_path):
+    """Test move."""
+    CONTENT = "content"
+    target_file = tmp_path / "target.txt"
+    target_artefact_url = f"file://{target_file.absolute()}"
+    source_dir = tmp_path
+    source_file = source_dir / "source.txt"
+    source_artefact_url = f"file://{source_file.absolute()}"
+    source_file.write_text(CONTENT)
+    assert source_file.read_text() == CONTENT
+    assert len(list(tmp_path.iterdir())) == 1
+    artifacts.utils.move(source_artefact_url, target_artefact_url)
+    assert target_file.read_text() == CONTENT
+    assert len(list(tmp_path.iterdir())) == 1
+    assert not source_file.exists()

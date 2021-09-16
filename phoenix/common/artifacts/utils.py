@@ -59,3 +59,10 @@ def copy(from_url, to_url):
     """Copy file from one URL to another."""
     create_folders_if_needed(to_url)
     tentaclio.copy(from_url, to_url)
+
+
+def move(from_url, to_url):
+    """Move file from one URL to another."""
+    create_folders_if_needed(to_url)
+    tentaclio.copy(from_url, to_url)
+    tentaclio.remove(from_url)
