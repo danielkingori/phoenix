@@ -2,7 +2,9 @@
 from phoenix.common.artifacts.registry_mappers import (
     base_mappers,
     final_mappers,
+    graphing_mappers,
     source_mappers,
+    static_mappers,
     tagging_mappers,
 )
 from phoenix.common.artifacts.registry_mappers.artifact_keys import ArtifactKey  # noqa: F401
@@ -15,6 +17,8 @@ from phoenix.common.artifacts.registry_mappers.default_url_mapper import (  # no
 
 # Shared URLs
 DEFAULT_MAPPERS: MapperDict = {
+    **graphing_mappers.MAPPERS,
+    **static_mappers.MAPPERS,
     **source_mappers.MAPPERS,
     **base_mappers.MAPPERS,
     **tagging_mappers.MAPPERS,

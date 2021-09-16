@@ -3,6 +3,8 @@ from typing import Literal
 
 
 ArtifactKey = Literal[
+    # static
+    "static-twitter_users",
     # Facebook posts
     "source-posts",
     "source-fb_post_source_api_notebook",
@@ -35,6 +37,11 @@ ArtifactKey = Literal[
     "tagging_runs-language_sentiment_objects",
     "tagging_runs-facebook_posts_final",
     "tagging_runs-facebook_posts_to_scrape",
+    # Graphing
+    "graphing_runs-retweet_pulled",
+    "graphing_runs-retweet_input",
+    "graphing_runs-retweet_output_graph",
+    "graphing_runs-retweet_dashboard_graph",
     # Final
     "final-facebook_posts",
     "final-facebook_posts_topics",
