@@ -82,7 +82,7 @@ def test_default_url_production_directory_error(m_get_local):
 
 
 @mock.patch("phoenix.common.artifacts.urls.get_local")
-def test_dashboard_url_prefrix_default(m_get_local):
+def test_dashboard_url_prefix_default(m_get_local):
     """Test dashboard_url_prefix for default."""
     result = registry_environment.dashboard_url_prefix("key", {"a": "b"})
     m_get_local.assert_not_called()
