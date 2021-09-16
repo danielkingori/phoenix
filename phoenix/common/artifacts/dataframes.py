@@ -2,7 +2,6 @@
 from typing import Any, Dict
 
 import functools
-import os
 
 import pandas as pd
 import pyarrow
@@ -39,11 +38,7 @@ def _persist(
     artifact_dataframe: dtypes.ArtifactDataFrame, to_parquet_params: Dict[str, Any]
 ) -> None:
     """Private persist that will be mocked when testing."""
-    url = artifact_dataframe.url
-    if url.startswith("file:"):
-        plain_url = url[len("file:") :]
-        os.makedirs(os.path.dirname(plain_url), exist_ok=True)
-
+    utils.create_folders_if_needed(artifact_dataframe.url)
     with tentaclio.open(artifact_dataframe.url, "wb") as file_io:
         artifact_dataframe.dataframe.reset_index(drop=True).to_parquet(
             file_io, index=False, compression="snappy", **to_parquet_params

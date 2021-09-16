@@ -4,6 +4,7 @@ from typing import Optional
 import os
 
 import pandas as pd
+import tentaclio
 from dask import dataframe as dd
 
 
@@ -42,3 +43,13 @@ def pandas_to_dask(df: pd.DataFrame, npartitions: Optional[int] = None) -> dd.Da
         npartitions = int(os.getenv("DEFAULT_NPARTITIONS", 1))
 
     return dd.from_pandas(df, npartitions=npartitions)
+
+
+def create_folders_if_needed(url):
+    """Create the folders for a URL if needed.
+
+    For local URLs we have to create the folders.
+    """
+    parsed_url = tentaclio.urls.URL(url)
+    if parsed_url.scheme == "file":
+        os.makedirs(os.path.dirname(parsed_url.path), exist_ok=True)
