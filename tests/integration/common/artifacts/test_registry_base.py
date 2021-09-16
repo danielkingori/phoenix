@@ -72,6 +72,6 @@ def test_base_grouped_by(artifact_key, url_config, expected_url):
     """Test base grouped by."""
     run_dt = run_datetime.create_run_datetime_now()
     environment_key: registry_environment.Environments = "local"
-    aur = registry.ArtifactURLRegistry(run_dt, environment_key)
-    r_url = aur.get_url(artifact_key, url_config)
-    assert r_url.endswith(expected_url)
+    art_url_reg = registry.ArtifactURLRegistry(run_dt, environment_key)
+    result_url = art_url_reg.get_url(artifact_key, url_config)
+    assert result_url.endswith(expected_url)
