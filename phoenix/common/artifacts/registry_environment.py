@@ -1,5 +1,5 @@
 """Artifact Registry Environment."""
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional, Union
 from typing_extensions import Literal
 
 import os
@@ -22,6 +22,7 @@ VALID_ENVIRONMENT_SCHEMAS = ["file", "s3", "gcp"]
 DEFAULT_ENVIRONMENT_KEY: Environments = "local"
 # The ENV variable name that will set the prefix when in production
 PRODUCTION_ENV_VAR_KEY = "PRODUCTION_ARTIFACTS_URL_PREFIX"
+PRODUCTION_DASHBOARD_ENV_VAR_KEY = "PRODUCTION_DASHBOARD_URL_PREFIX"
 
 
 def default_url_prefix(
@@ -41,13 +42,15 @@ def default_url_prefix(
     raise ValueError(f"No url for environment_key: {environment_key}")
 
 
-def from_env_var(variable_name: str) -> str:
+def from_env_var(variable_name: str, raise_if_not_found=True) -> Optional[str]:
     """Get the URL prefix from an environment variable."""
     result = os.getenv(variable_name)
     if result:
         return result
 
-    raise ValueError(f"No variable set in the current system for name: {variable_name}")
+    if raise_if_not_found:
+        raise ValueError(f"No variable set in the current system for name: {variable_name}")
+    return None
 
 
 def valid_cloud_storage_url(url: str) -> str:
@@ -70,3 +73,30 @@ def valid_cloud_storage_url(url: str) -> str:
         )
 
     return url
+
+
+def dashboard_url_prefix(
+    artifact_key: str, url_config: Dict[str, Any], environment_key: str = DEFAULT_ENVIRONMENT_KEY
+):
+    """URL prefix for public dashboard.
+
+    This is an extra URL prefix that is only used for dashboard artifacts.
+    Dashboard artifacts are stored in an other cloud point as they have different
+    permissions.
+
+    Default is to return None.
+    Production will use the env variable set in PRODUCTION_DASHBOARD_ENV_VAR_KEY.
+    See phoenix/common/artifacts/registry_environment.py.
+    """
+    if environment_key == DEFAULT_ENVIRONMENT_KEY:
+        return None
+
+    if environment_key == "production":
+        return from_env_var(PRODUCTION_DASHBOARD_ENV_VAR_KEY, raise_if_not_found=False)
+
+    raise ValueError(
+        (
+            f"No url for environment_key: {environment_key}."
+            " Be aware that the dashboard URL prefix must be set with an environment variable."
+        )
+    )

@@ -79,3 +79,32 @@ def test_default_url_production_directory_error(m_get_local):
     m_get_local.assert_not_called()
     assert url in str(excinfo.value)
     assert "directory" in str(excinfo.value)
+
+
+@mock.patch("phoenix.common.artifacts.urls.get_local")
+def test_dashboard_url_prefrix_default(m_get_local):
+    """Test dashboard_url_prefix for default."""
+    result = registry_environment.dashboard_url_prefix("key", {"a": "b"})
+    m_get_local.assert_not_called()
+    assert result is None
+
+
+@mock.patch("phoenix.common.artifacts.urls.get_local")
+def test_dashboard_url_production(m_get_local):
+    """Test dashboard_url_prefix for production."""
+    expected_result = "s3://bucket/"
+    with mock.patch.dict(
+        os.environ, {registry_environment.PRODUCTION_DASHBOARD_ENV_VAR_KEY: expected_result}
+    ):
+        result = registry_environment.dashboard_url_prefix("key", {"a": "b"}, "production")
+        m_get_local.assert_not_called()
+        assert result == expected_result
+
+
+@mock.patch("phoenix.common.artifacts.urls.get_local")
+def test_dashboard_url_production_not_set(m_get_local):
+    """Test dashboard_url_prefix for production if env not set."""
+    with mock.patch.dict(os.environ, {}, clear=True):
+        result = registry_environment.dashboard_url_prefix("key", {"a": "b"}, "production")
+        m_get_local.assert_not_called()
+        assert result is None
