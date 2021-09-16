@@ -10,6 +10,7 @@ MAPPERS: MapperDict = {
     "source-fb_post_source_api_notebook": partial(
         url_mapper, "source_runs/{RUN_DATE}/fb_post_source_api-{RUN_DATETIME}.ipynb"
     ),
+    # Tweets
     "source-user_tweets": partial(
         url_mapper, "source_runs/{RUN_DATE}/source-user_tweets-{RUN_DATETIME}.json"
     ),
