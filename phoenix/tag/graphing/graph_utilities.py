@@ -1,5 +1,7 @@
 """Utilities for graphing."""
 
+import logging
+
 import networkx as nx
 import tentaclio
 
@@ -30,3 +32,13 @@ def save_graph(graph, path):
 
     with tentaclio.open(path, "w", **open_extra_args) as f:
         f.write(graph.html)
+
+
+def save_dashboard_graph(graph, url):
+    """Save the dashboard graph if URL is set."""
+    if not url:
+        logging.info("Not saving graph to dashboard URL.")
+        return None
+
+    save_graph(graph, url)
+    logging.info(f"Saved graph to optional dashboard URL: {url}")
