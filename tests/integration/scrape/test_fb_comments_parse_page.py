@@ -1,40 +1,30 @@
 """Test pages in fb_comment_parser.py."""
+import logging
 
-import os
-
+import pytest
 import tentaclio
-from tentaclio import fs, urls
 
+from phoenix.common import utils
 from phoenix.scrape.fb_comment_parser.run import parse_fb_page
 
 
-# TODO: Remove the type:ignore above if better fix found, see:
-#  https://stackoverflow.com/questions/39382937/
-#  mypy-spurious-error-module-has-no-attribute-xpath-with-etree
+@pytest.fixture
+def test_html_pages_url():
+    """Get the test_html_pages."""
+    test_html_pages_path = utils.relative_path("./test_html_pages/", __file__)
+    return f"file://{test_html_pages_path}"
 
 
-CURRENT_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
-TEST_FILE_DIRECTORY = f"file:///{CURRENT_DIRECTORY}/test_html_pages/"
-
-
-# Tenticlio seems to have a bug with the `listdir` function see issue:
-# https://gitlab.com/howtobuildup/phoenix/-/issues/32
-# This is a monkey patch so that it works in this test.
-def _from_os_dir_entry(original: os.DirEntry) -> fs.DirEntry:
-    return fs.DirEntry(
-        url=urls.URL("file:///" + os.path.abspath(original.path)),
-        is_dir=bool(original.is_dir()),
-        is_file=bool(original.is_file()),
-    )
-
-
-def test_fb_comment_parser():
+def test_fb_comment_parser(test_html_pages_url):
     """Test parsing of pages in fb_comment_parser."""
-    tentaclio.clients.local_fs_client._from_os_dir_entry = _from_os_dir_entry
-    for filename in tentaclio.listdir(TEST_FILE_DIRECTORY):
+    logging.info(test_html_pages_url)
+    for filename in tentaclio.listdir(test_html_pages_url):
+        if not filename.endswith(".html"):
+            logging.info(f"Skipping invalid file: {filename}")
+            continue
 
+        logging.info(f"Processing: {filename}")
         with tentaclio.open(filename, "rb") as f:
-            print(filename)
             contents = f.read()
         page = parse_fb_page(contents, filename)
         assert page
