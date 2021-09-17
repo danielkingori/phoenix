@@ -6,6 +6,9 @@ ArtifactKey = Literal[
     # static
     "static-twitter_users",
     "static-custom_models_tension_classifier_base",
+    # Acled Events
+    "base-acled_events_input",
+    "final-acled_events",
     # Facebook posts
     "source-posts",
     "source-fb_post_source_api_notebook",

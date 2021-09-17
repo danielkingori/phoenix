@@ -8,6 +8,10 @@ from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperD
 FINAL_BASE = "final/"
 
 MAPPERS: MapperDict = {
+    "final-acled_events": partial(
+        url_mapper,
+        (FINAL_BASE + "acled_events/persisted.parquet"),
+    ),
     "final-facebook_posts": partial(
         url_mapper,
         (
