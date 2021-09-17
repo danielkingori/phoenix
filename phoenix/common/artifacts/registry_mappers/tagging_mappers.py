@@ -19,6 +19,10 @@ TAGGING_FACEBOOK_POSTS_FOR_TAGGING = TAGGING_FACEBOOK_POSTS + FOR_TAGGING_SUFFIX
 TAGGING_TWEETS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}tweets/"
 TAGGING_TWEETS_FOR_TAGGING = TAGGING_TWEETS + FOR_TAGGING_SUFFIX
 
+# Facebook Comments
+TAGGING_FACEBOOK_COMMENTS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}facebook_comments/"
+TAGGING_FACEBOOK_COMMENTS_FOR_TAGGING = TAGGING_FACEBOOK_COMMENTS + FOR_TAGGING_SUFFIX
+
 
 MAPPERS: MapperDict = {
     # Facebook Posts
@@ -47,6 +51,22 @@ MAPPERS: MapperDict = {
     "tagging_runs-tweets_final": partial(url_mapper, TAGGING_TWEETS + "tweets_final.parquet"),
     "tagging_runs-tweets_topics_final": partial(
         url_mapper, TAGGING_TWEETS + "tweets_topics_final.parquet"
+    ),
+    # Facebook Comments
+    "tagging_runs-facebook_comments_input": partial(
+        url_mapper, shared_urls.GROUP_BY_FACEBOOK_COMMENTS
+    ),
+    "tagging_runs-facebook_comments_pulled": partial(
+        url_mapper, TAGGING_FACEBOOK_COMMENTS + "facebook_comments_pulled.parquet"
+    ),
+    "tagging_runs-facebook_comments_for_tagging": partial(
+        url_mapper, TAGGING_FACEBOOK_COMMENTS_FOR_TAGGING + "facebook_comments_for_tagging.parquet"
+    ),
+    "tagging_runs-facebook_comments_final": partial(
+        url_mapper, TAGGING_FACEBOOK_COMMENTS + "facebook_comments_final.parquet"
+    ),
+    "tagging_runs-facebook_comments_topics_final": partial(
+        url_mapper, TAGGING_FACEBOOK_COMMENTS + "facebook_comments_topics_final.parquet"
     ),
     # Utils
     "tagging_runs-pipeline_base": partial(url_mapper, TAGGING_PIPELINE_BASE),

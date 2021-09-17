@@ -40,4 +40,20 @@ MAPPERS: MapperDict = {
             "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
         ),
     ),
+    "final-facebook_comments": partial(
+        url_mapper,
+        (
+            FINAL_BASE + "facebook_comments/"
+            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
+            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
+        ),
+    ),
+    "final-facebook_comments_topics": partial(
+        url_mapper,
+        (
+            FINAL_BASE + "facebook_comments_topics/"
+            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
+            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
+        ),
+    ),
 }
