@@ -32,6 +32,20 @@ def test_get_model_name():
     assert tension_classifier.TensionClassifier.get_model_name() == "tension_classifier_model"
 
 
+def test_get_model_url():
+    assert (
+        tension_classifier.TensionClassifier.get_model_url("file:///")
+        == "file:///tension_classifier_model.pickle"
+    )
+
+
+def test_get_model_url_suffix():
+    assert (
+        tension_classifier.TensionClassifier.get_model_url("file:///", "suf")
+        == "file:///tension_classifier_model_suf.pickle"
+    )
+
+
 def test_get_model_name_with_suffix():
     assert (
         tension_classifier.TensionClassifier.get_model_name("SEP_21")
@@ -43,6 +57,20 @@ def test_get_model_name_count_vectorizer():
     assert (
         tension_classifier.CountVectorizerTensionClassifier.get_model_name()
         == "count_vectorizer_tension_classifier_model"
+    )
+
+
+def test_get_model_url_count_vectorizer():
+    assert (
+        tension_classifier.CountVectorizerTensionClassifier.get_model_url("file:///")
+        == "file:///count_vectorizer_tension_classifier_model.pickle"
+    )
+
+
+def test_get_model_url_count_vectorizer_suffix():
+    assert (
+        tension_classifier.CountVectorizerTensionClassifier.get_model_url("file:///", "suf")
+        == "file:///count_vectorizer_tension_classifier_model_suf.pickle"
     )
 
 

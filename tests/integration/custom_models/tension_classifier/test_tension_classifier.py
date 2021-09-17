@@ -1,10 +1,7 @@
 """Integration tests for tension_classifier."""
 
-import pickle
-
 import mock
 import pandas as pd
-import tentaclio
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.multioutput import MultiOutputClassifier
 
@@ -23,9 +20,9 @@ def test_persist_model(tmpdir):
     )
 
     dir_url = "file:" + str(tmpdir) + "/"
-    classifier.persist_model(dir_url)
-    with tentaclio.open(f"{dir_url}{classifier.get_model_name()}.pickle", "rb") as f:
-        loaded_model = pickle.load(f)
+    url = classifier.persist_model(dir_url)
+    assert classifier.get_model_url(dir_url) == url
+    loaded_model = classifier.get_model(url)
 
     assert loaded_model.class_labels == class_labels
     # incomplete check as the objects are different and simple equality checks `==` fail
