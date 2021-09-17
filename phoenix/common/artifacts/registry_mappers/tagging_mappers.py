@@ -15,6 +15,10 @@ FOR_TAGGING_SUFFIX = "for_tagging/"
 TAGGING_FACEBOOK_POSTS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}facebook_posts/"
 TAGGING_FACEBOOK_POSTS_FOR_TAGGING = TAGGING_FACEBOOK_POSTS + FOR_TAGGING_SUFFIX
 
+# Tweets
+TAGGING_TWEETS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}tweets/"
+TAGGING_TWEETS_FOR_TAGGING = TAGGING_TWEETS + FOR_TAGGING_SUFFIX
+
 
 MAPPERS: MapperDict = {
     # Facebook Posts
@@ -33,6 +37,12 @@ MAPPERS: MapperDict = {
     ),
     "tagging_runs-facebook_posts_topics_final": partial(
         url_mapper, TAGGING_FACEBOOK_POSTS + "facebook_posts_topics_final.parquet"
+    ),
+    # Tweets
+    "tagging_runs-tweets_input": partial(url_mapper, shared_urls.GROUP_BY_TWEETS),
+    "tagging_runs-tweets_pulled": partial(url_mapper, TAGGING_TWEETS + "tweets_pulled.parquet"),
+    "tagging_runs-tweets_for_tagging": partial(
+        url_mapper, TAGGING_TWEETS_FOR_TAGGING + "tweets_for_tagging.parquet"
     ),
     # Utils
     "tagging_runs-pipeline_base": partial(url_mapper, TAGGING_PIPELINE_BASE),
