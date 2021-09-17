@@ -10,6 +10,7 @@ features,topic
 #الى_مزبلة_التاريخ,opposition to current government
 #انتفاضة_المحامين,opposition to current government
 #انفجار_بيروت,beirut port explosion
+#انهيار_لبنان,economic collapse
 #تراجع_يا_طارق,education
 #تراجع_يا_مجدوب,education
 #تفجير_مرفا_بيروت‬⁩,beirut port explosion
@@ -28,7 +29,11 @@ features,topic
 #فلتسقط_الحصانات,beirut port explosion
 #فلتسقط_كل_الحصانات,beirut port explosion
 #كلن_يعني_كلن,opposition to current government
+#لبنان_ينتفض,lebanese revolution
 #مافيات_وحاكمين,opposition to current government
+4 اب,beirut port explosion
+Arabie saoudite,foreign countries
+Banque du Liban,economic collapse
 Beirut blast investigation,beirut port explosion
 Beirut blast victims,beirut port explosion
 Covid,covid / vaccination
@@ -37,6 +42,7 @@ General security Lebanon,lebanese army/security forces
 Hamas' leader,occupied palestine
 Salim Sfeir,economic collapse
 Saudi arabia,foreign countries
+Sayrafa,economic collapse
 UN humanitarians,international organizations / UN
 United States,foreign countries
 WFP,international organizations / UN
@@ -44,6 +50,7 @@ army military,lebanese army/security forces
 army military beirut,lebanese army/security forces
 association of banks,economic collapse
 beirut,beirut
+depots des deposants,economic collapse
 economic collapse,economic collapse
 economy,economic collapse
 france,foreign countries
@@ -67,20 +74,26 @@ souriya,syria
 احترام حقوق التوقيف,police state
 احتلال الاسراييل,zionists / israeli government
 احقر سلطة سياسية,opposition to current government
+اذلال الـمـواطـنـيـن,economic collapse
+اذلال للمواطنين,economic collapse
 اراضي السورية,syria
 ارتفاع اسعار المحروقات,lebanese fuel crisis
 ارحلوا يا روساء العار,opposition to current government
 اردوغان,foreign countries
+ازمة المحروقات,lebanese fuel crisis
 استقلالية القضاء,lebanese judiciary
 اسد عاشت سوريا,asad regime
 اسراييل تاريخها تقتل,zionists / israeli government
 اسعار السلع الغذايية,economic collapse
+اسعار المواد الغذايية,economic collapse
 اسعار للمحروقات,lebanese fuel crisis
 اسعار نار,economic collapse
+اصحاب محطات الوقود,lebanese fuel crisis
 اعادة انتخاب,elections
 افغانستان,foreign countries
 اقتراع,elections
 اقتصاد,economic collapse
+الاحتياطي الالزامي,economic collapse
 الاقتصادية,economic collapse
 الامارات,foreign countries
 الامم المتحدة,international organizations / UN
@@ -88,14 +101,15 @@ souriya,syria
 الامن الداخلي اللبناني,lebanese army/security forces
 الانهيار الاقتصادي,economic collapse
 البابا فرنسيس,religious figure
+البطاقة التمويلية,economic collapse
 البطريرك الراعي,religious figure
 البطريرك_الراعي,religious figure
 البطريركية_المارونية,religious figure
 الترهيب,police state
 التفلت الامني,national safety and security
 التيار الوطني الحر,lebanese political party
+الثوار ,lebanese revolution
 الجزاير,foreign countries
-الجيش,lebanese army/security forces
 الجيش lebanesearmy,lebanese army/security forces
 الجيش lebanesearmy lebanese_army,lebanese army/security forces
 الجيش اللبناني,lebanese army/security forces
@@ -114,8 +128,10 @@ souriya,syria
 السلطة المافياوية,police state
 السودان,foreign countries
 الشركات المستوردة للنفط,lebanese fuel crisis
+الشهاد الصحية الاوروبية,covid / vaccination
 الشهادة الوطنية,education
 الشيوعيين,lebanese political party
+الصحة حمد حسن,lebanese healthcare system
 الضريبة الزهرية,violence against women
 العسكري السوري,asad regime
 العنف_الاسري في لبنان,violence against women
@@ -129,21 +145,26 @@ souriya,syria
 المانيا,foreign countries
 المتحور 'دلتا',covid / vaccination
 المجلس الاعلى للدفاع,lebanese army/security forces
+المخيمات الفلسطينة,refugees
 المديرية العامة للنفط,lebanese fuel crisis
 المساعدات الغذايية,aid
+المطالب التربوية,education
 المغرب,foreign countries
 المملكة العربية السعودية,foreign countries
+المواد المهربة الى,smuggling
 المولدات الخاصة,lebanese fuel crisis
 المولدات خارج الخدمة,lebanese fuel crisis
 الميليشيات,police state
+النظام الامني القمعي,police state
 النظام السوري,asad regime
-النظام القمعي اللبناني,police state
 الهند,foreign countries
 الهييات الاقتصادية,economic collapse
 الولايات المتحدة الامريكية,foreign countries
 اليابان,foreign countries
 اليمن,foreign countries
 امتحانات البكالوريا,education
+امتحانات الثانوية العامة,education
+امداد لبنان بالكهرباء,lebanese fuel crisis
 امريكا,foreign countries
 امم المتحدة,international organizations / UN
 اموال المودعين,economic collapse
@@ -154,6 +175,7 @@ souriya,syria
 اندونيسيا,foreign countries
 انزل_عالشارع,call for protest
 انفجار مرفا بيروت,beirut port explosion
+اهالي شهداء فوج,beirut port explosion
 اهالي شهداء مرفا,beirut port explosion
 اوسخ,offensive language
 اوقفت وحدات الجيش,arrest
@@ -167,12 +189,19 @@ souriya,syria
 بشار_الاسد,asad regime
 بشار_الاسد سوري,asad regime
 بطريرك لبنان,religious figure
+بعثات دبلوماسية,external affairs/diplomacy
+بغداد,foreign countries
 بقاع,bekaa
 بلاد الذل,opposition to current government
 بنغلاديش,foreign countries
 بيروت,beirut
+تجمع اصحاب الصيدليات,lebanese healtcare system
+تحرير الصهاريج,lebanese fuel crisis
 ترقبوا مسلسل,other
 تسعيرة المحروقات,lebanese fuel crisis
+تسعيرة جديدة للمحروقات,lebanese fuel crisis
+تعميم مصرف لبنان,economic collapse
+تفجير المرفا جريمة,beirut port explosion
 تكتل لبنان القوي,lebanese political party
 تنعي,ceremonial
 تهريب,smuggling
@@ -267,6 +296,7 @@ souriya,syria
 شهر رمضان,ceremonial
 شهر رمضان المبارك,ceremonial
 صدام حسين,Foreign countries
+صفر كهرباء,lebanese fuel crisis
 صناديق الاقتراع,elections
 صندوق #الامم_المتحدة,international organizations / UN
 صندوق النقد,international organizations / UN
@@ -279,6 +309,7 @@ souriya,syria
 طرابلس,north lebanon
 طلاب الشهادات الرسمية,education
 طوابير البنزين,lebanese fuel crisis
+طوابير الخبز,economic collapse
 طوابير الذل,lebanese fuel crisis
 طيلة شهر رمضان,ceremonial
 عااااشت سوريا الاسد,asad regime
@@ -309,6 +340,7 @@ souriya,syria
 قبرص,foreign countries
 قحبة,offensive language
 قدس,occupied palestine
+قطاع التربية,education
 قطيع,offensive language
 قومي السور,lebanese political party
 قيادة الجيش,lebanese army/security forces
@@ -340,8 +372,10 @@ souriya,syria
 متحور دلتا,covid / vaccination
 متوسط سعر البنزين,lebanese fuel crisis
 مجلس الامم المتحدة,international organizations / UN
+محاسبة المجرمين والسارقين,opposition to current government
 محافظة جبل لبنان,mount lebanon
 مخيم النازحين,refugees
+مخيم برج البراجنة,refugees
 مخيم سوريين,refugees
 مخيم نازحين,refugees
 مديرية الامن العام,lebanese army/security forces
@@ -354,6 +388,7 @@ souriya,syria
 معارك سوريا,syria
 معدة للتهريب,smuggling
 مقدمة هبة,aid
+من اموال الناس,economic collapse
 منظومة المافيات الحاكمة,opposition to current government
 مهرب,smuggling
 موقوفين باشراف,arrest
@@ -368,11 +403,15 @@ souriya,syria
 نظام السوري,asad regime
 نفاد البنزين,lebanese fuel crisis
 نفي نقيا قاطعا,false news
+نقابات المخابز والافران,economic collapse
 نقابة الاطباء,Lebanese healthcare system
+نقابة صيادلة لبنان,lebanese healthcare system
+نقيب اصحاب الافران,lebanese fuel crisis
 نقيب الاطباء,Lebanese healthcare system
 ننتخب,elections
 هبة      الى,aid
 واسراييل,zionists / israeli government
+واشنطن,foreign countries
 وحدات الجيش اللبناني,lebanese army/security forces
 وزارة الخارجية اللبنانية,external affairs/diplomacy
 وزير الصحة,Lebanese healthcare system
@@ -390,5 +429,7 @@ souriya,syria
 يلي قادر يساعد,community support
 ينتخب,elections
 ينفي خبرا كاذبا,false news
+يهرب المحروقات,smuggling
 يورو_2020,other
+يونيفيل ,international organizations / UN
 ‏⁧‫#الفساد_والفشل_يقتل,opposition to current government
