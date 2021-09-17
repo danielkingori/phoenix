@@ -44,6 +44,7 @@ MAPPERS: MapperDict = {
     "tagging_runs-tweets_for_tagging": partial(
         url_mapper, TAGGING_TWEETS_FOR_TAGGING + "tweets_for_tagging.parquet"
     ),
+    "tagging_runs-tweets_final": partial(url_mapper, TAGGING_TWEETS + "tweets_final.parquet"),
     # Utils
     "tagging_runs-pipeline_base": partial(url_mapper, TAGGING_PIPELINE_BASE),
     "tagging_runs-for_analyst_base": partial(url_mapper, TAGGING_FOR_ANALYST_BASE),
