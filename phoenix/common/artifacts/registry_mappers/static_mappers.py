@@ -6,7 +6,7 @@ from functools import partial
 from phoenix.common import artifacts
 from phoenix.common.artifacts import registry_environment as reg_env
 from phoenix.common.artifacts.registry_mappers import artifact_keys
-from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperDict
+from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperDict, url_mapper
 
 
 def static_url_mapper(
@@ -27,4 +27,8 @@ def static_url_mapper(
 MAPPERS: MapperDict = {
     # Retweet
     "static-twitter_users": partial(static_url_mapper, "twitter_query_users.csv"),
+    # Custom Models
+    "static-custom_models_tension_classifier_base": partial(
+        url_mapper, "custom_models/tension_classifier/"
+    ),
 }

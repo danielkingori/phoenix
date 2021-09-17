@@ -22,6 +22,12 @@ from phoenix.common.artifacts import registry, registry_environment
             "/phoenix/common/config/twitter_query_users.csv",
             "production",
         ),
+        (
+            "static-custom_models_tension_classifier_base",
+            {},
+            "/custom_models/tension_classifier/",
+            "local",
+        ),
     ],
 )
 def test_static(artifact_key, url_config, expected_url, environment):
