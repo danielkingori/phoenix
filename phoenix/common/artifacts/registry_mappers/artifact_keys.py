@@ -33,6 +33,7 @@ ArtifactKey = Literal[
     "tagging_runs-tweets_pulled",
     "tagging_runs-tweets_for_tagging",
     "tagging_runs-tweets_final",
+    "tagging_runs-tweets_topics_final",
     # Tagging Pipeline
     "tagging_runs-pipeline_base",
     "tagging_runs-for_analyst_base",
@@ -58,4 +59,5 @@ ArtifactKey = Literal[
     "final-facebook_posts",
     "final-facebook_posts_topics",
     "final-tweets",
+    "final-tweets_topics",
 ]

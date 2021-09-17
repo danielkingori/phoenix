@@ -32,4 +32,12 @@ MAPPERS: MapperDict = {
             "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
         ),
     ),
+    "final-tweets_topics": partial(
+        url_mapper,
+        (
+            FINAL_BASE + "tweets_topics/"
+            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
+            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
+        ),
+    ),
 }
