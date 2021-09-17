@@ -4,12 +4,16 @@ The ACLED events data is used to map events to social media interations.
 Information about the data source:
 https://acleddata.com/#/dashboard
 
+The documentation on acled events is not the best. Here are some resources that I found:
+- https://acleddata.com/resources/general-guides/
+- [Data Columns](https://acleddata.com/acleddatanew/wp-content/uploads/dlm_uploads/2019/04/ACLED-Data-Columns_Quick-Reference_FINAL.pdf)
+- [General Use](https://acleddata.com/acleddatanew/wp-content/uploads/dlm_uploads/2019/04/General-User-Guide_FINAL-1.pdf)
+
 ## How to
 - Download the csv: https://acleddata.com/data-export-tool/
-- Move the downloaded csv to the `s3://phoenix-data-lake-dev/base/acled_events/`
-- Remove all the data in `s3://buildup-dev-us-tables/acled_events/`: `aws s3 rm s3://buildup-dev-us-tables/acled_events --recursive`
-- Run the notebook this will then persist locally then you will have to copy it
-- : aws s3  `s3://buildup-dev-us-tables/acled_events/`
+- Move the downloaded csv to the `s3://phoenix-data-lake-prod/base/acled_events/`
+- Run the phoenix/scrape/acled_event_transform.ipynb notebook changing the `ARTIFACTS_ENVIRONMENT_KEY` to `production`
+- This will create the correct data and persisted to the correct URL
 
 Noted that this will partition by year and month, and is additive 
 It should be that the data is automatically added to athena.
