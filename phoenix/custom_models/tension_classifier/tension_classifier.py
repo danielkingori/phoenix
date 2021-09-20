@@ -2,7 +2,6 @@
 from typing import List, Optional
 
 import logging
-import os
 import pickle
 import random
 
@@ -16,6 +15,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from snowballstemmer import stemmer
 
+from phoenix.common import artifacts
 from phoenix.tag.text_features_analyser import StemmedCountVectorizer, get_stopwords
 
 
@@ -42,14 +42,28 @@ class TensionClassifier:
             model_name = f"{model_name}_{suffix}"
         return model_name
 
-    def persist_model(self, output_dir_url):
-        """Persist model."""
-        if output_dir_url.startswith("file:"):
-            plain_url = output_dir_url[len("file:") :]
-            os.makedirs(os.path.dirname(plain_url), exist_ok=True)
+    @staticmethod
+    def get_model(model_url):
+        """Get the persisted model."""
+        with tentaclio.open(model_url, "rb") as f:
+            loaded_model = pickle.load(f)
+        return loaded_model
 
-        with tentaclio.open(f"{output_dir_url}{self.get_model_name()}.pickle", "wb") as f:
+    @classmethod
+    def get_model_url(cls, output_dir_url, suffix: Optional[str] = None) -> str:
+        """Get the model URL."""
+        model_name = cls.get_model_name(suffix)
+        return f"{output_dir_url}{model_name}.pickle"
+
+    def persist_model(self, output_dir_url, suffix: Optional[str] = None) -> str:
+        """Persist model."""
+        url = self.get_model_url(output_dir_url, suffix)
+        artifacts.utils.create_folders_if_needed(url)
+
+        with tentaclio.open(url, "wb") as f:
             pickle.dump(self, f)
+
+        return url
 
 
 class CountVectorizerTensionClassifier(TensionClassifier):

@@ -15,3 +15,18 @@ def tag_object_has_tension(df: pd.DataFrame) -> pd.DataFrame:
     df["has_tension"] = df[TENSIONS_COLUMNS_LIST].isin([True]).any(1)
 
     return df
+
+
+def normalise_tension_cols(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalise the tension cols."""
+    for tension_col in TENSIONS_COLUMNS_LIST:
+        if tension_col not in df.columns:
+            df[tension_col] = False
+    df[TENSIONS_COLUMNS_LIST] = df[TENSIONS_COLUMNS_LIST].astype(bool)
+    return df
+
+
+def normalise(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalise the tensions."""
+    df = normalise_tension_cols(df)
+    return tag_object_has_tension(df)
