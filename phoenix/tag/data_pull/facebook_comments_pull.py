@@ -31,12 +31,18 @@ def get_comments_df(pages):
 
 def get_comments(page_json):
     """Get comments from page."""
-    page = json.loads(page_json)
+    # In an early version of the comment parser the output artifact
+    # had json within a json. This was a bug that has now been fixed.
+    # Here we are still supporting the processing of the legacy format.
+    if isinstance(page_json, str):
+        page = json.loads(page_json)
+    else:
+        page = page_json
     return [normalise_comment(comment, page) for comment in page["comments"]]
 
 
-def normalise_comment(comment, page):
-    """Normalise_comment."""
+def legacy_normalise_comment(comment, page):
+    """Legacy Normalise comment."""
     return {
         "id": comment["fb_id"],
         "post_id": comment["top_level_post_id"],
@@ -47,7 +53,26 @@ def normalise_comment(comment, page):
         "reactions": 0 if comment["reactions"] == "" else comment["reactions"],
         "top_sentiment_reactions": comment["sentiment"],
         "user_display_name": comment["display_name"],
-        "username": comment["username"],
+        "user_name": comment["username"],
+        "position": comment["position"],
+    }
+
+
+def normalise_comment(comment, page):
+    """Normalise comment."""
+    if "fb_id" in comment:
+        return legacy_normalise_comment(comment, page)
+    return {
+        "id": comment["id"],
+        "post_id": comment["post_id"],
+        "file_id": comment["file_id"],
+        "parent_id": comment["parent"],
+        "post_created": comment["date_utc"],
+        "text": comment["text"],
+        "reactions": 0 if comment["reactions"] == "" else comment["reactions"],
+        "top_sentiment_reactions": comment["top_sentiment_reactions"],
+        "user_display_name": comment["user_display_name"],
+        "user_name": comment["user_name"],
         "position": comment["position"],
     }
 
@@ -67,7 +92,7 @@ def normalise_comments_dataframe(df):
     df["text"] = df["text"].astype(str)
     df["reactions"] = df["reactions"].astype(int)
     df["user_display_name"] = df["user_display_name"].astype(str)
-    df["username"] = df["username"].astype(str)
+    df["user_name"] = df["user_name"].astype(str)
     df["position"] = df["position"].astype(str)
     return df
 
