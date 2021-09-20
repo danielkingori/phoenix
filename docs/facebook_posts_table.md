@@ -195,3 +195,31 @@ WITH SERDEPROPERTIES (
 ) LOCATION 's3://buildup-dev-us-tables/facebook_posts/parquet_exports/facebook_posts_topics_v1/'
 TBLPROPERTIES ('has_encrypted_data'='false');
 ```
+
+# Athena Views
+## Emotion view
+Creates a view that allows the dashboard to aggregate emoji reaction counts per topic.
+
+```
+CREATE OR REPLACE VIEW facebook_posts_topics_emotions AS
+ SELECT
+  t1.phoenix_post_id
+, t1.topic
+, t1.year_filter
+, t1.month_filter
+, t1.is_economic_labour_tension
+, t1.is_sectarian_tension
+, t1.is_environmental_tension
+, t1.is_political_tension
+, t1.is_service_related_tension
+, t1.is_community_insecurity_tension
+, t1.is_geopolitics_tension
+, t1.is_intercommunity_relations_tension
+, t1.has_tension
+, t1.language_sentiment
+, t2.emotion_key
+, t2.emotion_count
+FROM
+  (facebook_posts_topics_v1 t1
+CROSS JOIN UNNEST(ARRAY['angry','care','haha','like','love','sad','wow'], ARRAY[statistics_actual_angry_count,statistics_actual_care_count,statistics_actual_haha_count,statistics_actual_like_count,statistics_actual_love_count,statistics_actual_sad_count,statistics_actual_wow_count]) t2 (emotion_key, emotion_count))
+```
