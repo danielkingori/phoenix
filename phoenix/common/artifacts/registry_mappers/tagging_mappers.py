@@ -5,12 +5,20 @@ from phoenix.common.artifacts.registry_mappers import shared_urls
 from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperDict, url_mapper
 
 
-TAGGING_FACEBOOK_POSTS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}facebook_posts/"
-FOR_TAGGING_SUFFIX = "for_tagging/"
-TAGGING_FACEBOOK_POSTS_FOR_TAGGING = TAGGING_FACEBOOK_POSTS + FOR_TAGGING_SUFFIX
+# Base
 TAGGING_PIPELINE_BASE = shared_urls.TAGGING_PIPELINE_BASE
 TAGGING_FOR_ANALYST_BASE = TAGGING_PIPELINE_BASE + "for_analyst/"
 TAGGING_SENTIMENT_BASE = TAGGING_PIPELINE_BASE + "sentiment_analysis/"
+FOR_TAGGING_SUFFIX = "for_tagging/"
+
+# Facebook
+TAGGING_FACEBOOK_POSTS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}facebook_posts/"
+TAGGING_FACEBOOK_POSTS_FOR_TAGGING = TAGGING_FACEBOOK_POSTS + FOR_TAGGING_SUFFIX
+
+# Tweets
+TAGGING_TWEETS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}tweets/"
+TAGGING_TWEETS_FOR_TAGGING = TAGGING_TWEETS + FOR_TAGGING_SUFFIX
+
 
 MAPPERS: MapperDict = {
     # Facebook Posts
@@ -29,6 +37,16 @@ MAPPERS: MapperDict = {
     ),
     "tagging_runs-facebook_posts_topics_final": partial(
         url_mapper, TAGGING_FACEBOOK_POSTS + "facebook_posts_topics_final.parquet"
+    ),
+    # Tweets
+    "tagging_runs-tweets_input": partial(url_mapper, shared_urls.GROUP_BY_TWEETS),
+    "tagging_runs-tweets_pulled": partial(url_mapper, TAGGING_TWEETS + "tweets_pulled.parquet"),
+    "tagging_runs-tweets_for_tagging": partial(
+        url_mapper, TAGGING_TWEETS_FOR_TAGGING + "tweets_for_tagging.parquet"
+    ),
+    "tagging_runs-tweets_final": partial(url_mapper, TAGGING_TWEETS + "tweets_final.parquet"),
+    "tagging_runs-tweets_topics_final": partial(
+        url_mapper, TAGGING_TWEETS + "tweets_topics_final.parquet"
     ),
     # Utils
     "tagging_runs-pipeline_base": partial(url_mapper, TAGGING_PIPELINE_BASE),
