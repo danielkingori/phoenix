@@ -10,6 +10,7 @@ MAPPERS: MapperDict = {
     "source-fb_post_source_api_notebook": partial(
         url_mapper, "source_runs/{RUN_DATE}/fb_post_source_api-{RUN_DATETIME}.ipynb"
     ),
+    # Tweets
     "source-user_tweets": partial(
         url_mapper, "source_runs/{RUN_DATE}/source-user_tweets-{RUN_DATETIME}.json"
     ),
@@ -21,5 +22,8 @@ MAPPERS: MapperDict = {
     ),
     "source-twitter_keyword_notebook": partial(
         url_mapper, "source_runs/{RUN_DATE}/twitter_keyword_search-{RUN_DATETIME}.ipynb"
+    ),
+    "source-facebook_comments": partial(
+        url_mapper, "source_runs/{RUN_DATE}/source-facebook_comments-{RUN_DATETIME}.json"
     ),
 }

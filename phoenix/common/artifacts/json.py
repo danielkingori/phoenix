@@ -4,7 +4,6 @@ from typing import Any, Dict, List, Union
 import copy
 import functools
 import json
-import os
 
 import tentaclio
 
@@ -36,11 +35,7 @@ def _persist(
     artifact_json: dtypes.ArtifactJson,
 ) -> None:
     """Private persist that will be mocked when testing."""
-    url = artifact_json.url
-    if url.startswith("file:"):
-        plain_url = url[len("file:") :]
-        os.makedirs(os.path.dirname(plain_url), exist_ok=True)
-
+    utils.create_folders_if_needed(artifact_json.url)
     with tentaclio.open(artifact_json.url, "w") as file_io:
         json.dump(artifact_json.obj, file_io)
 

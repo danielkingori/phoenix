@@ -16,6 +16,12 @@ ArtifactKey = Literal[
     "source-twitter_keyword_notebook",
     "base-grouped_by_user_tweets",
     "base-grouped_by_keyword_tweets",
+    # Facebook Comments
+    "source-facebook_comments",
+    "base-facebook_comments_pages_to_parse",
+    "base-facebook_comments_pages_successful_parse",
+    "base-facebook_comments_pages_failed_parse",
+    "base-grouped_by_facebook_comments",
     # Tagging facebook
     "tagging_runs-facebook_posts_input",
     "tagging_runs-facebook_posts_pulled",

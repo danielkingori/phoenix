@@ -1,40 +1,53 @@
 """Test pages in fb_comment_parser.py."""
+import logging
 
-import os
-
+import mock
+import pytest
 import tentaclio
-from tentaclio import fs, urls
 
-from phoenix.scrape.fb_comment_parser.run import parse_fb_page
-
-
-# TODO: Remove the type:ignore above if better fix found, see:
-#  https://stackoverflow.com/questions/39382937/
-#  mypy-spurious-error-module-has-no-attribute-xpath-with-etree
+from phoenix.common import utils
+from phoenix.scrape.fb_comment_parser import run
 
 
-CURRENT_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
-TEST_FILE_DIRECTORY = f"file:///{CURRENT_DIRECTORY}/test_html_pages/"
+@pytest.fixture
+def test_html_pages_url():
+    """Get the test_html_pages."""
+    test_html_pages_path = utils.relative_path("./test_html_pages/", __file__)
+    return f"file://{test_html_pages_path}"
 
 
-# Tenticlio seems to have a bug with the `listdir` function see issue:
-# https://gitlab.com/howtobuildup/phoenix/-/issues/32
-# This is a monkey patch so that it works in this test.
-def _from_os_dir_entry(original: os.DirEntry) -> fs.DirEntry:
-    return fs.DirEntry(
-        url=urls.URL("file:///" + os.path.abspath(original.path)),
-        is_dir=bool(original.is_dir()),
-        is_file=bool(original.is_file()),
-    )
-
-
-def test_fb_comment_parser():
+def test_fb_comment_parser(test_html_pages_url):
     """Test parsing of pages in fb_comment_parser."""
-    tentaclio.clients.local_fs_client._from_os_dir_entry = _from_os_dir_entry
-    for filename in tentaclio.listdir(TEST_FILE_DIRECTORY):
+    logging.info(test_html_pages_url)
+    for filename in tentaclio.listdir(test_html_pages_url):
+        if not filename.endswith(".html"):
+            logging.info(f"Skipping invalid file: {filename}")
+            continue
 
+        logging.info(f"Processing: {filename}")
         with tentaclio.open(filename, "rb") as f:
-            print(filename)
             contents = f.read()
-        page = parse_fb_page(contents, filename)
+        page = run.parse_fb_page(contents, filename)
         assert page
+
+
+@mock.patch("phoenix.common.artifacts.utils.move")
+def test_get_files(m_move, test_html_pages_url):
+    """Test get files."""
+    logging.info(test_html_pages_url)
+    for content, filename in run.get_files(test_html_pages_url):
+        assert isinstance(content, bytes)
+        # Should be a base name and not a folder
+        assert "/" not in filename
+        assert filename.endswith(".html")
+
+
+@mock.patch("phoenix.common.artifacts.utils.move")
+def test_run_fb_page_parser(m_move, test_html_pages_url):
+    """Test run."""
+    logging.info(test_html_pages_url)
+    failed_url = "file:///failed/"
+    success_url = "file:///success/"
+    run.run_fb_page_parser(test_html_pages_url, success_url, failed_url)
+    for move_call in m_move.mock_calls:
+        assert move_call.startswith(success_url)
