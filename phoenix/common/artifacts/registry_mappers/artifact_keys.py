@@ -61,6 +61,7 @@ ArtifactKey = Literal[
     "graphing_runs-retweet_input",
     "graphing_runs-retweet_output_graph",
     "graphing_runs-retweet_dashboard_graph",
+    "graphing_runs-facebook_topics_graph_pulled",
     # Final
     "final-facebook_posts",
     "final-facebook_posts_topics",
