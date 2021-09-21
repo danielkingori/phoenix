@@ -30,8 +30,4 @@ MAPPERS: MapperDict = {
     "graphing_runs-facebook_topics_dashboard_graph": partial(
         shared_url_mapper.dashboard_url_mapper, GRAPHING_PIPELINE_BASE + "topics_graph.html"
     ),
-    # Twitter friends
-    "graphing_runs-twitter_friends_raw": partial(
-        url_mapper, GRAPHING_PIPELINE_BASE + "twitter_friends_raw.json"
-    ),
 }

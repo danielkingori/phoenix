@@ -1,7 +1,5 @@
 """Artifact keys."""
 from typing import Literal
-
-
 ArtifactKey = Literal[
     # static
     "static-twitter_users",
@@ -82,3 +80,5 @@ ArtifactKey = Literal[
     "final-facebook_comments",
     "final-facebook_comments_topics",
 ]
+
+
