@@ -1,5 +1,6 @@
 """Scrape package for twitter friends."""
 import logging
+
 import tweepy
 
 from phoenix.scrape.twitter_queries import _get_user_friends_tweet_cursor, connect_twitter_api
@@ -15,7 +16,7 @@ def get_friends(query, num_items, api):
             logging.info(
                 "401 Unauthorized: either bad api tokens or not \
                 authorized to access the query due to a locked account"
-                )
+            )
 
 
 def get_friends_dict(queries: list, num_items, api):

@@ -33,5 +33,5 @@ MAPPERS: MapperDict = {
     # Twitter friends
     "graphing_runs-twitter_friends_raw": partial(
         url_mapper, GRAPHING_PIPELINE_BASE + "twitter_friends_raw.json"
-        ),
+    ),
 }

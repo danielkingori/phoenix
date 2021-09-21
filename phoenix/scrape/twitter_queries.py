@@ -130,4 +130,3 @@ def enrich_with_query_user(friend, query):
     friend_json = friend._json
     friend_json["query_user"] = query
     return friend_json
-
