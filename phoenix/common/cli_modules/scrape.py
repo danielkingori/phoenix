@@ -2,15 +2,15 @@
 import click
 
 from phoenix.common import artifacts, run_datetime
-from phoenix.common.cli_modules import utils
+from phoenix.common.cli_modules import main_group, utils
 
 
-@click.group()
-def scrape_cli():
+@main_group.main_group.group()
+def scrape():
     """Scrape commands."""
 
 
-@scrape_cli.command()
+@scrape.command("facebook_posts")
 @click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
 @click.option(
     "--scrape_since_days",
@@ -48,14 +48,15 @@ def fb(
     scrape_end_date,
     scrape_list_id,
 ):
-    """Run the fb scrape script.
+    """Run scrape of facebook posts.
 
     Example command:
-    ./phoenix-cli fb
+    ./phoenix-cli scrape facebook_posts production
 
     ARTIFACT_ENV:
         The artifact environment that will be used. Default "local"
-        Can use "production" or a valid storage URL like "s3://my-phoenix-bucket/"
+        Can use "production" which will pick the artifact env from the env var.
+        Or a valid storage URL like "s3://my-phoenix-bucket/"
     """
     run_dt = run_datetime.create_run_datetime_now()
     aur = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
@@ -83,7 +84,7 @@ def fb(
     utils.run_notebooks(input_nb_url, output_nb_url, parameters)
 
 
-@scrape_cli.command()
+@scrape.command("tweets")
 @click.argument("endpoint", nargs=1)
 @click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
 @click.option(
@@ -102,15 +103,16 @@ def tw(
     scrape_since_days,
     num_items,
 ):
-    """Run the twitter scrape script.
+    """Run scrape of the tweets.
 
     Example commands:
-    ./phoenix-cli tw keyword
-    ./phoenix-cli tw user
+    ./phoenix-cli scrape tweets keyword production
+    ./phoenix-cli scrape tweets user production
 
     ARTIFACT_ENV:
         The artifact environment that will be used. Default "local"
-        Can use "production" or a valid storage URL like "s3://my-phoenix-bucket/"
+        Can use "production" which will pick the artifact env from the env var.
+        Or a valid storage URL like "s3://my-phoenix-bucket/"
     """
     run_dt = run_datetime.create_run_datetime_now()
     aur = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
@@ -142,13 +144,14 @@ def tw(
     utils.run_notebooks(input_nb_url, output_nb_url, parameters)
 
 
-@scrape_cli.command()
+@scrape.command("facebook_comments")
 def fb_comments():
-    """Run the fb-comments parse script.
+    """Run parse of facebook comments from facebook comment pages.
+
+    This is an incomplete CLI command DO NOT USE.
 
     Example command:
-    ./phoenix-cli fb_comments
-
+    ./phoenix-cli scrape facebook_comments
     """
     run_dt = run_datetime.create_run_datetime_now()
     RUN_DATE = run_dt.to_run_date_str()
