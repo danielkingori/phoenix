@@ -36,4 +36,6 @@ MAPPERS: MapperDict = {
     "base-facebook_comments_pages_failed_parse": partial(
         url_mapper, GROUP_BY_FACEBOOK_COMMENT_PAGES + "failed_parse/{RUN_DATETIME}/"
     ),
+    # Acled events
+    "base-acled_events_input": partial(url_mapper, shared_urls.BASE_BASE + "acled_events/"),
 }
