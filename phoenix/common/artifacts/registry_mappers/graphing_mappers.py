@@ -43,4 +43,14 @@ MAPPERS: MapperDict = {
     "graphing_runs-retweet_dashboard_graph": partial(
         dashboard_url_mapper, GRAPHING_PIPELINE_BASE + "retweet_graph.html"
     ),
+    # Facebook topics
+    "graphing_runs-facebook_topics_graph_pulled": partial(
+        url_mapper, GRAPHING_PIPELINE_BASE + "topics_graph_pulled.parquet"
+    ),
+    "graphing_runs-facebook_topics_output_graph": partial(
+        url_mapper, GRAPHING_PIPELINE_BASE + "topics_graph.html"
+    ),
+    "graphing_runs-facebook_topics_dashboard_graph": partial(
+        dashboard_url_mapper, GRAPHING_PIPELINE_BASE + "topics_graph.html"
+    ),
 }
