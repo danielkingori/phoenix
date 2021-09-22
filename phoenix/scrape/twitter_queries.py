@@ -63,7 +63,7 @@ def _get_user_tweet_cursor(api, id, num_items) -> tweepy.Status:
 def _get_user_friends_tweet_cursor(api, screen_name, num_items) -> tweepy.Status:
     """Manages cursor for Twitter api.friends endpoint."""
     return tweepy.Cursor(
-        api.friends_ids, screen_name=screen_name, count=200, skip_status=True
+        api.friends_ids, screen_name=screen_name, count=5000, skip_status=True
     ).items(num_items)
 
 
