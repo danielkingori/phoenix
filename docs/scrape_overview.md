@@ -111,18 +111,16 @@ Follow the [Twitter standard query guidelines](https://developer.twitter.com/en/
 If you search common keywords, you will end up with a _huge_ amount of data with a lot of noise.
 Your data gathering process will also take a long time.
 
-### Twitter Friends
-The Twitter `friends` script is there to facilitate creation of network maps of connections between accounts in your user list.
+## Twitter Friends
+The Twitter `twitter_user_friends.ipynb` script is there to facilitate creation of network maps of connections between accounts in your user list.
+This utility scrapes the `friends_id` list for each user in your query list.
+This means the graph will be the people that your user list *follows*, not their *followers*.
 You must have a `twitter_query_users.csv` set up as above for the user timeline data collection.
 
 Here is the command for the `friends` scrape:
 
-```bash
-$ ./phoenix-cli tw friends $(date --utc --iso-8601=seconds)
-```
-
-We intend this script to run infrequently, as the friends list does not change rapidly.
-This data gathering process takes a comparatively long time because of the rate limits in the [GET/friends endpoint](https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-friends-list). 
+We intend this script to run infrequently, perhaps once a month, as the friends list does not change rapidly.
+This data gathering process takes a comparatively long time because of the rate limits in the [GET/friends/ids endpoint](https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-friends-ids). 
 
 ## Facebook comments
 The facebook comments pipeline is more complex and includes a mix of manual and automatic processes.
