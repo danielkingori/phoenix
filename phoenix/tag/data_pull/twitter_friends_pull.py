@@ -1,6 +1,7 @@
 """Pull Twitter friends data and organize it for Graphing."""
 
 import json
+
 import pandas as pd
 import tentaclio
 
@@ -21,8 +22,8 @@ def organize_users(friends: dict) -> list:
                 {
                     "user_1": user,
                     "user_2": friend,
-                    }
-                )
+                }
+            )
     return relations
 
 
