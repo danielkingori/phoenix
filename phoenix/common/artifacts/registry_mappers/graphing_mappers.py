@@ -36,4 +36,10 @@ MAPPERS: MapperDict = {
     "graphing_runs-twitter_friends_pulled": partial(
         url_mapper, GRAPHING_PIPELINE_BASE + "twitter_friends.parquet"
     ),
+    "graphing_runs-twitter_friends_output_graph": partial(
+        url_mapper, GRAPHING_PIPELINE_BASE + "friends_graph.html"
+    ),
+    "graphing_runs-twitter_friends_dashboard_graph": partial(
+        dashboard_url_mapper, GRAPHING_PIPELINE_BASE + "friends_graph.html"
+        ),
 }
