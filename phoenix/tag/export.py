@@ -41,6 +41,21 @@ def get_posts_to_scrape(posts_df: pd.DataFrame) -> pd.DataFrame:
     return posts_to_scrape[:ten_percent]
 
 
+def persist_posts_to_scrape(
+    posts_to_scrape: pd.DataFrame, tagging_url: str, dashboard_url: Optional[str] = None
+):
+    """Persist the posts to scrape."""
+    with tentaclio.open(tagging_url, "w") as fb:
+        posts_to_scrape.to_csv(fb)
+
+    # The dashboard URL is optional
+    if not dashboard_url:
+        return
+
+    with tentaclio.open(dashboard_url, "w") as fb:
+        posts_to_scrape.to_csv(fb)
+
+
 def get_all_features_for_export(features_df: pd.DataFrame) -> pd.DataFrame:
     """Normalise and transform the features dataframe so it can be persisted correctly."""
     features_df["object_id"] = features_df["object_id"].astype(str)
