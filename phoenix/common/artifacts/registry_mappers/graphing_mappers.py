@@ -41,5 +41,5 @@ MAPPERS: MapperDict = {
     ),
     "graphing_runs-twitter_friends_dashboard_graph": partial(
         dashboard_url_mapper, GRAPHING_PIPELINE_BASE + "friends_graph.html"
-        ),
+    ),
 }

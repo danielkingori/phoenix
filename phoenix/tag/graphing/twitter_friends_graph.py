@@ -5,8 +5,8 @@ import networkx as nx
 import pandas as pd
 
 from phoenix.common import artifacts
-from phoenix.tag.graphing import webweb_visualition_configuration as webviz
 from phoenix.scrape import twitter_queries
+from phoenix.tag.graphing import webweb_visualition_configuration as webviz
 
 
 def get_data(url: str):
@@ -57,7 +57,7 @@ def _get_user_lookup(api, user_ids):
         user_ids=user_ids,
         include_entities=False,
         tweet_mode="compact",
-        )
+    )
 
 
 def get_user_lookup(api, query):
@@ -72,7 +72,7 @@ def get_user_list(graph: nx.Graph):
     api = twitter_queries.connect_twitter_api()
     users = []
     for n in range(0, len(node_list), 100):
-        users.extend(get_user_lookup(api, node_list[n:n+100]))
+        users.extend(get_user_lookup(api, node_list[n : n + 100]))
     return users
 
 
@@ -111,4 +111,4 @@ def generate_graph_viz(url: str, resolution=1.0):
     community_graph = assign_partitions(map_graph, partitions)
     # Build webweb visualization
     web = webviz.create_twitter_friends_visualization(community_graph)
-    return community_graph
+    return web
