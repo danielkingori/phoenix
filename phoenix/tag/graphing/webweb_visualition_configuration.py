@@ -40,3 +40,20 @@ def create_facebook_topic_to_topic_visualization(graph: nx.Graph):
     web.display.width = "1200"
     web.display.height = "1200"
     return web
+
+
+def create_twitter_friends_visualization(graph: nx.Graph):
+    """Create network graph visualization."""
+    web = Web(nx_G=graph)
+    web.display.scaleLinkWidth = True
+    web.display.scaleLinkOpacity = True
+    web.display.linkLength = 25
+    web.display.linkStrength = 2
+    web.display.charge = 10
+    web.display.gravity = 0.2
+    web.display.colorBy = "community"
+    web.display.sizeBy = "degree"
+    web.display.width = 1200
+    web.display.height = 1200
+    # web.show()
+    return web
