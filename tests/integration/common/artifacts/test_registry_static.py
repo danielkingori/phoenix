@@ -1,4 +1,7 @@
 """Test Artifact Registry returns correct URLs."""
+import os
+
+import mock
 import pytest
 from freezegun import freeze_time
 
@@ -6,6 +9,7 @@ from phoenix.common import run_datetime
 from phoenix.common.artifacts import registry, registry_environment
 
 
+@mock.patch.dict(os.environ, {registry_environment.PRODUCTION_ENV_VAR_KEY: "s3://bucket/"})
 @freeze_time("2000-01-01 T01:01:01.000001Z")
 @pytest.mark.parametrize(
     "artifact_key, url_config, expected_url, environment",
@@ -13,13 +17,13 @@ from phoenix.common.artifacts import registry, registry_environment
         (
             "static-twitter_users",
             {},
-            "/phoenix/common/config/twitter_query_users.csv",
+            "/local_artifacts/config/twitter_query_users.csv",
             "local",
         ),
         (
             "static-twitter_users",
             {},
-            "/phoenix/common/config/twitter_query_users.csv",
+            "s3://bucket/config/twitter_query_users.csv",
             "production",
         ),
         (
@@ -37,4 +41,3 @@ def test_static(artifact_key, url_config, expected_url, environment):
     art_url_reg = registry.ArtifactURLRegistry(run_dt, environment_key)
     result_url = art_url_reg.get_url(artifact_key, url_config)
     assert result_url.endswith(expected_url)
-    assert result_url.startswith("file")

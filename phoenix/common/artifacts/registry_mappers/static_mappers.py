@@ -24,9 +24,12 @@ def static_url_mapper(
     return f"{prefix}{url_str_formated}"
 
 
+CONFIG_BASE = "config/"
+
+
 MAPPERS: MapperDict = {
     # Retweet
-    "static-twitter_users": partial(static_url_mapper, "twitter_query_users.csv"),
+    "static-twitter_users": partial(url_mapper, CONFIG_BASE + "twitter_query_users.csv"),
     # Custom Models
     "static-custom_models_tension_classifier_base": partial(
         url_mapper, "custom_models/tension_classifier/"
