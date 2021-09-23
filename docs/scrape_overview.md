@@ -54,6 +54,15 @@ Tweets are pulled from the twitter APIs using the `user timeline` and `keyword` 
 You must have a Twitter developer account.
 For more information on the Twitter API, see [Twitter API documentation](https://developer.twitter.com/en/docs).
 
+### Configuration
+Two configuration CSV files are used for the scraping.
+
+1. `config/twitter_query_users.csv` - user handles to scrape, a new line per user handle
+2. `config/twitter_query_keywords.csv` - keywords to scrape, single or multiple keywords per line
+
+For local development these should be stored in `local_artifacts/config/`.
+For production these should be stored in `<production url>/config/`.
+
 **Important!:** Phoenix is currently set up to use Twitter API V1. 
 Please follow all API guidance from Twitter to avoid any problems with your access.
 These tools are designed within the boundaries of the API guidelines, 
