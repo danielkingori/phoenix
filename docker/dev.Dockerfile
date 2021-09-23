@@ -21,7 +21,7 @@ WORKDIR /src
 COPY requirements ./requirements
 RUN pip install -r requirements/all.txt
 # Install the nltk packages needs for analysis
-RUN python -m nltk.downloader popular
+RUN python -c "import nltk;nltk.download('popular')"
 
 COPY . ./
 
