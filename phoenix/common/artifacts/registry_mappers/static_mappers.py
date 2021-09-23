@@ -10,6 +10,7 @@ CONFIG_BASE = "config/"
 MAPPERS: MapperDict = {
     # Retweet
     "static-twitter_users": partial(url_mapper, CONFIG_BASE + "twitter_query_users.csv"),
+    "static-twitter_keywords": partial(url_mapper, CONFIG_BASE + "twitter_query_keywords.csv"),
     # Custom Models
     "static-custom_models_tension_classifier_base": partial(
         url_mapper, "custom_models/tension_classifier/"
