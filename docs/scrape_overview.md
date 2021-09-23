@@ -14,13 +14,17 @@ This guide does not cover how to get access to CrowdTangle.
 The Facebook post data will come from a `list` on Crowdtangle.
 Follow the Crowdtangle documentation to set up this list.
 We use the `list IDs` to identify which list to pull on Crowdtangle.
-These should be input in the array `SCRAPE_LIST_IDS` in the notebook [fb_post_source_api.ipynb](phoenix/scrape/fb_post_source_api.ipynb)
+These can be set as an environment variables `CROWDTANGLE_SCRAPE_LIST_ID` or through the `--scrape_list_id` option on the cli.
+The option will override the environment variables.
+If you want more than one id, use a comma separated list e.g. "id1,id2"
 
 Set the following environment variables:
 
 `CROWDTANGLE_API_TOKEN`
 
 `CT_RATE_LIMIT_CALLS` _(unless using default rate limit)_
+
+`CROWDTANGLE_SCRAPE_LIST_ID`
 
 
 To run the scrape, use the following command:
