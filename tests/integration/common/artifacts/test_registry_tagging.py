@@ -44,6 +44,16 @@ from phoenix.common.artifacts import registry, registry_environment
             "local",
             "tagging_runs/year_filter=2021/month_filter=1/facebook_posts/",
         ),
+        (
+            "tagging_runs-notebook_base",
+            {"YEAR_FILTER": 2021, "MONTH_FILTER": 1, "OBJECT_TYPE": "facebook_posts"},
+            "production",
+            (
+                "s3://data-lake/"
+                "tagging_runs/year_filter=2021/month_filter=1/facebook_posts/"
+                "output_notebooks/20000101T010101.000001Z/"
+            ),
+        ),
     ],
 )
 def test_tagging_runs_urls(artifact_key, url_config, environment_key, expected_url):
