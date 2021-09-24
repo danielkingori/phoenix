@@ -1,5 +1,5 @@
 """Tagging CLI commands."""
-from typing import Any, Dict
+from typing import List
 
 import click
 
@@ -13,10 +13,10 @@ def tagging():
 
 
 @tagging.command("run_phase")
-@click.argument("phase_number")
-@click.argument("object_type")
-@click.argument("year_filter")
-@click.argument("month_filter")
+@click.argument("phase_number", type=click.INT)
+@click.argument("object_type", type=click.STRING)
+@click.argument("year_filter", type=click.INT)
+@click.argument("month_filter", type=click.INT)
 @click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
 def run_phase(
     phase_number,
@@ -48,14 +48,7 @@ def run_phase(
     }
     parameters = {**utils.init_parameters(run_dt, art_url_reg), **extra_parameters}
 
-    # Phase 1 is currently only supported
-    notebooks = [
-        get_data_pull_notebook_key(object_type),
-        "tag/features.ipynb",
-        "tag/topics.ipynb",
-        "tag/tag_tensions.ipynb",
-        "tag/third_party_models/aws_async/start_sentiment.ipynb",
-    ]
+    notebooks = get_notebook_keys(phase_number, object_type)
 
     for notebook_key in notebooks:
         tagging_run_notebook(notebook_key, parameters, art_url_reg)
@@ -76,3 +69,30 @@ def tagging_run_notebook(
     )
 
     utils.run_notebooks(input_nb_url, output_nb_url, parameters)
+
+
+def get_finalisation_notebooks(object_type) -> List[str]:
+    """Get the finalisation notebooks for an object type."""
+    return [
+        f"tag/{object_type}_finalise.ipynb",
+        f"tag/{object_type}_finalise_topics.ipynb",
+    ]
+
+
+def get_notebook_keys(phase_number: int, object_type) -> List[str]:
+    """Get the notebooks keys for phase."""
+    if phase_number == 1:
+        return [
+            get_data_pull_notebook_key(object_type),
+            "tag/features.ipynb",
+            "tag/topics.ipynb",
+            "tag/tensions.ipynb",
+            "tag/third_party_models/aws_async/start_sentiment.ipynb",
+        ]
+
+    if phase_number == 2:
+        return [
+            "tag/third_party_models/aws_async/complete_sentiment.ipynb",
+        ] + get_finalisation_notebooks(object_type)
+
+    raise ValueError(f"Unknown phase number: {phase_number}")
