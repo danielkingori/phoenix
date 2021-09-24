@@ -28,7 +28,7 @@ ArtifactKey = Literal[
     "base-facebook_comments_pages_failed_parse",
     "base-grouped_by_facebook_comments",
     # Tagging notebooks
-    "tagging_runs-notebook_base",
+    "tagging_runs-output_notebook_base",
     # Tagging facebook
     "tagging_runs-facebook_posts_input",
     "tagging_runs-facebook_posts_pulled",

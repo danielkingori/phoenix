@@ -45,7 +45,7 @@ from phoenix.common.artifacts import registry, registry_environment
             "tagging_runs/year_filter=2021/month_filter=1/facebook_posts/",
         ),
         (
-            "tagging_runs-notebook_base",
+            "tagging_runs-output_notebook_base",
             {"YEAR_FILTER": 2021, "MONTH_FILTER": 1, "OBJECT_TYPE": "facebook_posts"},
             "production",
             (
