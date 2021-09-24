@@ -123,3 +123,65 @@ def get_notebook_keys(phase_number: int, object_type) -> List[str]:
         ] + get_finalisation_notebooks(object_type)
 
     raise ValueError(f"Unknown phase number: {phase_number}")
+
+
+@tagging.command(
+    "run_single",
+    context_settings=dict(
+        ignore_unknown_options=True,
+        allow_extra_args=True,
+    ),
+)
+@click.argument("notebook_root_path", type=click.STRING)
+@click.argument("object_type", type=click.STRING)
+@click.argument("year_filter", type=click.INT)
+@click.argument("month_filter", type=click.INT)
+@click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
+@click.pass_context
+def run_single(
+    ctx,
+    notebook_root_path,
+    object_type,
+    year_filter,
+    month_filter,
+    artifact_env,
+):
+    """Run tagging of facebook posts.
+
+    Example command:
+    ./phoenix-cli tagging run_single phoenix/tag/features.ipynb facebook_posts 2021 8 production
+
+    NOTEBOOK_ROOT_PATH: Use path from the project root:
+        e.g. phoenix/tag/features.ipynb
+    OBJECT_TYPE: facebook_posts, facebook_comments, tweets
+    YEAR_FILTER: year. E.g. 2021
+    MONTH_FILTER: month number. E.g. 8
+    ARTIFACT_ENV:
+        The artifact environment that will be used. Default "local"
+        Can use "production" which will pick the artifact env from the env var.
+        Or a valid storage URL like "s3://my-phoenix-bucket/"
+
+    Extra options will be added as parameters for all notebooks. E.g.
+    --SOME_URL='s3://other-bucket/` will be a parameter for all notebooks.
+    """
+    start_str = "phoenix/"
+    if not notebook_root_path.startswith(start_str):
+        raise ValueError(f"NOTEBOOK_ROOT_PATH does not start with '{start_str}'")
+
+    notebook_key = notebook_root_path[len(start_str) :]
+    run_dt = run_datetime.create_run_datetime_now()
+    art_url_reg = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
+    args_parameters = {
+        "OBJECT_TYPE": object_type,
+        "YEAR_FILTER": year_filter,
+        "MONTH_FILTER": month_filter,
+    }
+
+    extra_parameters = dict([item.strip("--").split("=") for item in ctx.args])
+    parameters = {
+        **utils.init_parameters(run_dt, art_url_reg),
+        **args_parameters,
+        **extra_parameters,
+    }
+
+    tagging_run_notebook(notebook_key, parameters, art_url_reg)
