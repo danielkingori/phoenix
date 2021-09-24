@@ -18,12 +18,18 @@ def tagging():
 @click.argument("year_filter", type=click.INT)
 @click.argument("month_filter", type=click.INT)
 @click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
+@click.option(
+    "--start_offset",
+    default=0,
+    help=("Start notebook from offset."),
+)
 def run_phase(
     phase_number,
     object_type,
     year_filter,
     month_filter,
     artifact_env,
+    start_offset,
 ):
     """Run tagging phase.
 
@@ -50,7 +56,11 @@ def run_phase(
 
     notebooks = get_notebook_keys(phase_number, object_type)
 
+    notebook_count = 0
     for notebook_key in notebooks:
+        notebook_count = notebook_count + 1
+        if notebook_count <= start_offset:
+            continue
         tagging_run_notebook(notebook_key, parameters, art_url_reg)
 
 
