@@ -1,10 +1,25 @@
 """Cli package utilities."""
+from typing import Any, Dict
+
 import datetime
 import os
 import pathlib
 
 import click
 import papermill as pm
+
+from phoenix.common import artifacts, run_datetime
+
+
+def init_parameters(
+    run_dt: run_datetime.RunDatetime, art_url_reg: artifacts.registry.ArtifactURLRegistry
+) -> Dict[str, Any]:
+    """Init the parameters for the cli commands."""
+    return {
+        "RUN_DATETIME": run_dt.to_file_safe_str(),
+        "RUN_DATE": run_dt.to_run_date_str(),
+        "ARTIFACTS_ENVIRONMENT_KEY": art_url_reg.environment_key,
+    }
 
 
 def get_run_iso_datetime(run_iso_timestamp):

@@ -60,12 +60,10 @@ def fb(
     """
     run_dt = run_datetime.create_run_datetime_now()
     aur = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
-    parameters = {
-        "RUN_DATETIME": run_dt.to_file_safe_str(),
-        "RUN_DATE": run_dt.to_run_date_str(),
-        "ARTIFACTS_ENVIRONMENT_KEY": artifact_env,
+    extra_parameters = {
         "ARTIFACT_SOURCE_FB_POSTS_URL": aur.get_url("source-posts"),
     }
+    parameters = {**utils.init_parameters(run_dt, aur), **extra_parameters}
     if scrape_since_days:
         parameters["SINCE_DAYS"] = scrape_since_days
 
@@ -128,13 +126,11 @@ def tw(
     else:
         raise ValueError(f"Not supported endpoint: {endpoint}")
 
-    parameters = {
-        "ARTIFACTS_ENVIRONMENT_KEY": artifact_env,
-        "RUN_DATETIME": run_dt.to_file_safe_str(),
-        "RUN_DATE": run_dt.to_run_date_str(),
+    extra_parameters = {
         "QUERY_TYPE": endpoint,
         "ARTIFACT_SOURCE_TWEETS_URL": source_artifact_url,
     }
+    parameters = {**utils.init_parameters(run_dt, aur), **extra_parameters}
     if scrape_since_days:
         parameters["SINCE_DAYS"] = scrape_since_days
 
