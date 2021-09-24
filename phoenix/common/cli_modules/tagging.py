@@ -12,7 +12,13 @@ def tagging():
     """Tagging commands."""
 
 
-@tagging.command("run_phase")
+@tagging.command(
+    "run_phase",
+    context_settings=dict(
+        ignore_unknown_options=True,
+        allow_extra_args=True,
+    ),
+)
 @click.argument("phase_number", type=click.INT)
 @click.argument("object_type", type=click.STRING)
 @click.argument("year_filter", type=click.INT)
@@ -23,7 +29,9 @@ def tagging():
     default=0,
     help=("Start notebook from offset."),
 )
+@click.pass_context
 def run_phase(
+    ctx,
     phase_number,
     object_type,
     year_filter,
@@ -44,15 +52,24 @@ def run_phase(
         The artifact environment that will be used. Default "local"
         Can use "production" which will pick the artifact env from the env var.
         Or a valid storage URL like "s3://my-phoenix-bucket/"
+
+    Extra options will be added as parameters for all notebooks. E.g.
+    --SOME_URL='s3://other-bucket/` will be a parameter for all notebooks.
     """
     run_dt = run_datetime.create_run_datetime_now()
     art_url_reg = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
-    extra_parameters = {
+    args_parameters = {
         "OBJECT_TYPE": object_type,
         "YEAR_FILTER": year_filter,
         "MONTH_FILTER": month_filter,
     }
-    parameters = {**utils.init_parameters(run_dt, art_url_reg), **extra_parameters}
+
+    extra_parameters = dict([item.strip("--").split("=") for item in ctx.args])
+    parameters = {
+        **utils.init_parameters(run_dt, art_url_reg),
+        **args_parameters,
+        **extra_parameters,
+    }
 
     notebooks = get_notebook_keys(phase_number, object_type)
 
