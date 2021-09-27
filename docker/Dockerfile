@@ -24,7 +24,12 @@ COPY phoenix/${PROJECT} ./phoenix/${PROJECT}
 # to add it here
 COPY tests/__init__.py ./tests/__init__.py
 COPY tests/unit/__init__.py ./tests/unit/__init__.py
+COPY tests/unit/common ./tests/unit/common
+COPY tests/unit/${PROJECT} ./tests/unit/${PROJECT}
 COPY tests/integration/__init__.py ./tests/integration/__init__.py
+COPY tests/integration/conftest.py ./tests/integration/conftest.py
+COPY tests/integration/common ./tests/integration/common
+COPY tests/integration/${PROJECT} ./tests/integration/${PROJECT}
 
 RUN pip install .
 
