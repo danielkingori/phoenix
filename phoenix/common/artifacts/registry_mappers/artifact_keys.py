@@ -5,6 +5,7 @@ from typing import Literal
 ArtifactKey = Literal[
     # static
     "static-twitter_users",
+    "static-twitter_keywords",
     "static-custom_models_tension_classifier_base",
     # Acled Events
     "base-acled_events_input",
