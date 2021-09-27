@@ -1,3 +1,8 @@
+## PRODUCTION Dockerfile
+# This Dockerfile should be used to build a production docker image
+# for a sub project.
+# PROJECT is then the sub project that you want to build the image for.
+
 # From the phoenix base
 FROM public.ecr.aws/a6e4n9u3/phoenix-base
 
