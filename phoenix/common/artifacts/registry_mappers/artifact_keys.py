@@ -31,6 +31,7 @@ ArtifactKey = Literal[
     "tagging_runs-facebook_posts_input",
     "tagging_runs-facebook_posts_pulled",
     "tagging_runs-facebook_posts_for_tagging",
+    "tagging_runs-facebook_posts_to_scrape_dashboard",
     "tagging_runs-facebook_posts_topics_final",
     # Tagging tweets
     "tagging_runs-tweets_input",

@@ -1,7 +1,7 @@
 """Registry Tagging mappers."""
 from functools import partial
 
-from phoenix.common.artifacts.registry_mappers import shared_urls
+from phoenix.common.artifacts.registry_mappers import shared_url_mapper, shared_urls
 from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperDict, url_mapper
 
 
@@ -38,6 +38,9 @@ MAPPERS: MapperDict = {
     ),
     "tagging_runs-facebook_posts_to_scrape": partial(
         url_mapper, TAGGING_FACEBOOK_POSTS + "posts_to_scrape.csv"
+    ),
+    "tagging_runs-facebook_posts_to_scrape_dashboard": partial(
+        shared_url_mapper.dashboard_url_mapper, TAGGING_FACEBOOK_POSTS + "posts_to_scrape.csv"
     ),
     "tagging_runs-facebook_posts_topics_final": partial(
         url_mapper, TAGGING_FACEBOOK_POSTS + "facebook_posts_topics_final.parquet"
