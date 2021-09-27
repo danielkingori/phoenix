@@ -52,3 +52,12 @@ format:
 	isort phoenix tests
 	black phoenix tests
 
+
+# Docker commands
+docker_base_build:
+	# Currently all is being used as they have all the requirements
+	docker build -t phoenix-base --build-arg PROJECT=all -f ./docker/base.Dockerfile .
+
+docker_base_push:
+	docker tag phoenix-base:latest public.ecr.aws/a6e4n9u3/phoenix-base
+	docker push public.ecr.aws/a6e4n9u3/phoenix-base
