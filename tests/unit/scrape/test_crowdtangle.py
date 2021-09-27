@@ -85,3 +85,26 @@ def test_get_rate_limits_default():
     rate_limit_calls, rate_limit_seconds = crowdtangle.get_rate_limits()
     assert rate_limit_calls == 6
     assert rate_limit_seconds == 60
+
+
+@pytest.mark.parametrize(
+    "scrape_list_id_arg,scrape_list_id_env,expected_result",
+    [
+        ("id", "envid", ["id"]),
+        (None, "envid", ["envid"]),
+        ("id,id1", "envid", ["id", "id1"]),
+        (None, "envid,envid1", ["envid", "envid1"]),
+    ],
+)
+def test_process_scrape_list_id(scrape_list_id_arg, scrape_list_id_env, expected_result):
+    """Test process_scrape_list_id."""
+    with mock.patch.dict(os.environ, {crowdtangle.SCRAPE_LIST_ID_ENV_NAME: scrape_list_id_env}):
+        result = crowdtangle.process_scrape_list_id(scrape_list_id_arg)
+        assert expected_result == result
+
+
+@mock.patch.dict(os.environ, {}, clear=True)
+def test_process_scrape_list_id_error():
+    """Test process_scrape_list_id raises if none found."""
+    with pytest.raises(RuntimeError):
+        crowdtangle.process_scrape_list_id()
