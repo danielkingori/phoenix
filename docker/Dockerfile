@@ -1,27 +1,14 @@
-# 3.9.2 is newest major version minus 1 on 29 Mar 2021
-FROM python:3.9.2-slim-buster
+## PRODUCTION Dockerfile
+# This Dockerfile should be used to build a production docker image
+# for a sub project.
+# PROJECT is then the sub project that you want to build the image for.
 
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN apt-get update \
-    && apt-get -yq dist-upgrade \
-    && apt-get install -yq --no-install-recommends \
-    make \
-    gcc \
-    build-essential \
-    unixodbc-dev \
-    python-numpy libicu-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN pip install --upgrade pip
+# From the phoenix base
+FROM public.ecr.aws/a6e4n9u3/phoenix-base
 
 WORKDIR /src
 
 ARG PROJECT
-
-# The scripts for the entrypoints and run commands
-COPY ./docker/entrypoints ./docker/entrypoints
-RUN chmod -R +x ./docker/entrypoints
 
 COPY setup.cfg ./setup.cfg
 COPY setup.py ./setup.py
@@ -42,7 +29,12 @@ COPY phoenix/${PROJECT} ./phoenix/${PROJECT}
 # to add it here
 COPY tests/__init__.py ./tests/__init__.py
 COPY tests/unit/__init__.py ./tests/unit/__init__.py
+COPY tests/unit/common ./tests/unit/common
+COPY tests/unit/${PROJECT} ./tests/unit/${PROJECT}
 COPY tests/integration/__init__.py ./tests/integration/__init__.py
+COPY tests/integration/conftest.py ./tests/integration/conftest.py
+COPY tests/integration/common ./tests/integration/common
+COPY tests/integration/${PROJECT} ./tests/integration/${PROJECT}
 
 RUN pip install .
 
