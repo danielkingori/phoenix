@@ -8,7 +8,7 @@ import random
 import numpy as np
 import pandas as pd
 import tentaclio
-from sklearn.base import ClassifierMixin
+from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, roc_auc_score
 from sklearn.model_selection import train_test_split
@@ -178,3 +178,28 @@ class CountVectorizerTensionClassifier(TensionClassifier):
         logger.info(f"Writing the following classifications back: {self.class_labels}")
         df[self.class_labels] = classifications
         return df
+
+
+class CategoricalColumns(BaseEstimator, TransformerMixin):
+    """CategoricalColumns is a One Hot Encoder transformer for the topics column."""
+
+    def fit(self, df, y=None):
+        """Fit model to the data."""
+        topics = self._to_array(df["topics"])
+        columns = topics.explode().unique()
+        self.columns = [c.strip() for c in columns]
+        return self
+
+    def transform(self, df):
+        """Transform data to trained model."""
+        out = {}
+        for col in self.columns:
+            out[col] = df["topics"].map(str).str.contains(col).astype(int)
+        return pd.DataFrame(out)
+
+    def _to_array(self, series):
+        """Clean up a series with a str(list) to get an array."""
+        remove = ["[", "]", "'"]
+        for char in remove:
+            series = series.str.replace(char, "", regex=False)
+        return series.str.split(",")
