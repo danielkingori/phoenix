@@ -1,14 +1,19 @@
 version: "3.7"
+x-phoenix-bind:
+  &default-bind
+  type: bind
+  source: ../
+  target: /src
+  consistency: cached
+
 services:
   phoenix-dev:
     build:
       context: ../
       dockerfile: ./docker/dev.Dockerfile
+    image: phoenix-dev
     volumes:
-      - type: bind
-        source: ../
-        target: /src
-        consistency: cached
+      - *default-bind
     # See .jupyter/jupyter_notebook_config.py for setting
     command: ["jupyter","lab"]
     environment:
