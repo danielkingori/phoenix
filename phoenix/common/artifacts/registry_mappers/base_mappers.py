@@ -39,7 +39,7 @@ MAPPERS: MapperDict = {
     # Twitter Friends
     "base-twitter_friends_raw": partial(
         url_mapper,
-        shared_urls.GROUP_BY_TWITTER_FRIENDS + "twitter_friends_raw-{RUN_DATETIME}.json",
+        shared_urls.GROUP_BY_TWITTER_FRIENDS + "twitter_friends_raw.json",
     ),
     # Acled events
     "base-acled_events_input": partial(url_mapper, shared_urls.BASE_BASE + "acled_events/"),

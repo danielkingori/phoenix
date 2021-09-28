@@ -19,17 +19,11 @@ def get_friends(query, num_items, api):
             )
 
 
-def get_friends_dict(queries: list, num_items, api):
+def get_friends_dict(queries: list, num_items: int = 0):
     """Organize friends list as a dictionary."""
+    api = connect_twitter_api()
     friends_dict: dict = {}
     for query in queries:
         friends_dict[query] = []
         friends_dict[query].extend(get_friends(query, num_items, api))
     return friends_dict
-
-
-def get_friends_json(queries: list, num_items=0) -> list:
-    """Manage the friend collection process from Twitter."""
-    api = connect_twitter_api()
-    friends = get_friends_dict(queries, num_items, api)
-    return friends

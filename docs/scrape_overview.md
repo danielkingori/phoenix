@@ -102,8 +102,17 @@ The Twitter data will conform to the following [Tweet schema](docs/tweets_table.
 
 ### Config
 In order to gather data from user timelines and do keyword searches, you need to set up your search parameters.
-Please refer to `phoenix/common/config/twitter_query_keywords.csv` and `phoenix/common/config/twitter_query_users.csv`
-to see how to set them up properly.
+Please add the config file to `local_artifacts/config/` or the cloud bucket you are working on.
+
+The file is a .csv called `twitter_query_users.csv` with the following format:
+
+|cell | data            | 
+|---- |----------------------|
+|A1 |screen name 1|
+|A2 |screen name 2|
+|A3 |screen name 3|
+|...|....|
+
 
 Follow the [Twitter standard query guidelines](https://developer.twitter.com/en/docs/twitter-api/v1/rules-and-filtering/search-operators) when setting up your keyword queries.
 

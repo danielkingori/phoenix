@@ -10,4 +10,4 @@ GROUP_BY_FACEBOOK_COMMENTS = (
     f"{BASE_BASE}grouped_by_year_month/facebook_comments/{YEAR_MONTH_FILTER_DIRS}"
 )
 TAGGING_PIPELINE_BASE = f"tagging_runs/{YEAR_MONTH_FILTER_DIRS}" + "{OBJECT_TYPE}/"
-GROUP_BY_TWITTER_FRIENDS = "base/twitter_friends/"
+GROUP_BY_TWITTER_FRIENDS = f"base/twitter_friends/{YEAR_MONTH_FILTER_DIRS}"
