@@ -26,4 +26,8 @@ MAPPERS: MapperDict = {
     "source-facebook_comments": partial(
         url_mapper, "source_runs/{RUN_DATE}/source-facebook_comments-{RUN_DATETIME}.json"
     ),
+    # Twitter friends
+    "source_runs-twitter_friends_raw": partial(
+        url_mapper, "source_runs/{RUN_DATE}/source-twitter_friends_raw-{RUN_DATETIME}.json"
+    ),
 }

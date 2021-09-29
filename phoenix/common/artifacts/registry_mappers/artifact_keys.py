@@ -68,7 +68,7 @@ ArtifactKey = Literal[
     "graphing_runs-facebook_topics_output_graph",
     "graphing_runs-facebook_topics_dashboard_graph",
     "base-twitter_friends_raw",
-    "graphing_runs-twitter_friends_raw",
+    "source_runs-twitter_friends_raw",
     "graphing_runs-twitter_friends_graph_pulled",
     "graphing_runs-twitter_friends_output_graph",
     "graphing_runs-twitter_friends_dashboard_graph",
