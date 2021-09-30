@@ -56,6 +56,27 @@ def run_phase(
     Extra options will be added as parameters for all notebooks. E.g.
     --SOME_URL='s3://other-bucket/` will be a parameter for all notebooks.
     """
+    _run_phase(
+        ctx,
+        phase_number,
+        object_type,
+        year_filter,
+        month_filter,
+        artifact_env,
+        start_offset,
+    )
+
+
+def _run_phase(
+    ctx,
+    phase_number,
+    object_type,
+    year_filter,
+    month_filter,
+    artifact_env,
+    start_offset,
+):
+    """Private function for running the tagging phase."""
     run_dt = run_datetime.create_run_datetime_now()
     art_url_reg = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
     args_parameters = {
