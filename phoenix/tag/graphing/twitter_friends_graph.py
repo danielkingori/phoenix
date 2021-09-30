@@ -36,9 +36,9 @@ def set_node_attrs(graph: nx.Graph, df: pd.DataFrame):
     return graph
 
 
-def clean_single_edge_nodes(graph: nx.Graph):
+def clean_single_edge_nodes(graph: nx.Graph, degrees):
     """Remove nodes with a degree of 1 for a cleaner graph."""
-    to_be_removed = [x for x in graph.nodes() if graph.degree(x) <= 1]
+    to_be_removed = [x for x in graph.nodes() if graph.degree(x) <= degrees]
     for x in to_be_removed:
         graph.remove_node(x)
     return graph
@@ -96,19 +96,20 @@ def create_mapped_graph(graph):
     return map_nodes(graph, mapper)
 
 
-def generate_graph_viz(url: str, resolution=1.0):
+def generate_graph_viz(url: str, resolution=1.0, degrees=1):
     """Run the graph visualization process."""
     # Get data
     df = get_data(url)
     # Create network graph & community calculations
     graph = create_networkx_graph_from_df(df)
-    graph = clean_single_edge_nodes(graph)
+    graph = clean_single_edge_nodes(graph, degrees)
     # Create mapped graph with new names
     map_graph = create_mapped_graph(graph)
     map_graph = set_node_attrs(map_graph, df)
     # Calculate and create partitions
     partitions = community_louvain.best_partition(map_graph, resolution=resolution)
     community_graph = assign_partitions(map_graph, partitions)
+    ## TODO Find solution that is not webweb because this graph is too large for the package
     # Build webweb visualization
-    web = webviz.create_twitter_friends_visualization(community_graph)
-    return web
+    # web = webviz.create_twitter_friends_visualization(community_graph)
+    return community_graph
