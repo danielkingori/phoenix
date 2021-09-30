@@ -40,6 +40,6 @@ MAPPERS: MapperDict = {
         url_mapper, GRAPHING_PIPELINE_BASE + "friends_graph.html"
     ),
     "graphing_runs-twitter_friends_dashboard_graph": partial(
-        dashboard_url_mapper, GRAPHING_PIPELINE_BASE + "friends_graph.html"
+        shared_url_mapper.dashboard_url_mapper, GRAPHING_PIPELINE_BASE + "friends_graph.html"
     ),
 }
