@@ -11,6 +11,7 @@ def test_join_topics_to_facebook_posts():
             "object_id": ["o1", "o1", "o2", "o3"],
             "topic": ["o1", "o1", "o2", "o3"],
             "matched_features": ["mf", "mf", "mf", "mf"],
+            "has_topic": [True, True, True, True],
         }
     )
 
@@ -30,6 +31,7 @@ def test_join_topics_to_facebook_posts():
                 "object_id": ["o1", "o1", "o2"],
                 "topic": ["o1", "o1", "o2"],
                 "matched_features": ["mf", "mf", "mf"],
+                "has_topic": [True, True, True],
                 "phoenix_post_id": ["o1", "o1", "o2"],
                 "object_type": ["ot", "ot", "ot"],
                 "url": ["url1", "url1", "url2"],
@@ -45,6 +47,7 @@ def test_join_topics_to_tweets():
             "object_id": ["1", "1", "2", "3"],
             "topic": ["o1", "o1", "o2", "o2"],
             "matched_features": ["mf", "mf", "mf", "mf"],
+            "has_topic": [True, True, True, True],
         }
     )
 
@@ -65,6 +68,7 @@ def test_join_topics_to_tweets():
                 "object_id": ["1", "1", "2"],
                 "topic": ["o1", "o1", "o2"],
                 "matched_features": ["mf", "mf", "mf"],
+                "has_topic": [True, True, True],
                 "id_str": [1, 1, 2],
                 "url": ["url1", "url1", "url2"],
                 "object_type": ["ot", "ot", "ot"],
@@ -80,6 +84,7 @@ def test_join_topics_to_facebook_comments():
             "object_id": ["1", "1", "2", "3"],
             "topic": ["o1", "o1", "o2", "o2"],
             "matched_features": ["mf", "mf", "mf", "mf"],
+            "has_topic": [True, True, True, True],
         }
     )
 
@@ -99,6 +104,7 @@ def test_join_topics_to_facebook_comments():
                 "object_id": ["1", "1", "2"],
                 "topic": ["o1", "o1", "o2"],
                 "matched_features": ["mf", "mf", "mf"],
+                "has_topic": [True, True, True],
                 "id": [1, 1, 2],
                 "url": ["url1", "url1", "url2"],
                 "object_type": ["ot", "ot", "ot"],
