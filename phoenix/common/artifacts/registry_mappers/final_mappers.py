@@ -12,6 +12,10 @@ MAPPERS: MapperDict = {
         url_mapper,
         (FINAL_BASE + "acled_events/persisted.parquet"),
     ),
+    "final-undp_events": partial(
+        url_mapper,
+        (FINAL_BASE + "undp_events/persisted.parquet"),
+    ),
     "final-facebook_posts": partial(
         url_mapper,
         (
