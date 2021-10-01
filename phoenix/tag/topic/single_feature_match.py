@@ -29,12 +29,14 @@ def get_topics(topic_config, features_df) -> pd.DataFrame:
         .agg({"features": list})
         .rename(columns={"features": "matched_features"})
     )
+    topics_df["has_topic"] = True
     # Adding the FILL_TOPIC to all the objects that don't have a topic
     no_topic = no_topic[~no_topic.index.isin(topics_df.index.get_level_values(0))]
     no_topic = no_topic.reset_index()
     no_topic = no_topic[["object_id", "object_type"]].drop_duplicates()
     no_topic["topic"] = FILL_TOPIC
     no_topic["matched_features"] = None
+    no_topic["has_topic"] = False
     topics_df = topics_df.reset_index()
 
     return pd.concat([topics_df, no_topic], ignore_index=True)

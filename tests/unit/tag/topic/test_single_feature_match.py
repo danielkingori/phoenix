@@ -29,6 +29,7 @@ def test_get_topics():
                 "topic": ["t1", "t2", "t1", "t2", sfm.FILL_TOPIC],
                 "object_type": ["ot1", "ot1", "ot1", "ot1", "ot2"],
                 "matched_features": [["f1"], ["f1", "f2"], ["f1"], ["f1"], None],
+                "has_topic": [True, True, True, True, False],
             }
         ),
     )
