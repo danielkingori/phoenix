@@ -9,6 +9,7 @@ import pandas as pd
 import tentaclio
 
 from phoenix.common import constants as common_constants
+from phoenix.common import pd_utils
 from phoenix.tag.data_pull import constants, utils
 
 
@@ -65,9 +66,9 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
         raw_df: return of `pd.read_json` of the source file
         df_flattened: return of `pd.json_normalize` of the source file
     """
-    df = raw_df.rename(utils.camel_to_snake, axis="columns")
+    df = raw_df.rename(pd_utils.camel_to_snake, axis="columns")
     df = df.rename(columns={"language_code": "language_from_api", "message": "text"})
-    df_flattened = df_flattened.rename(utils.camel_to_snake, axis="columns")
+    df_flattened = df_flattened.rename(pd_utils.camel_to_snake, axis="columns")
     df_flattened.columns = df_flattened.columns.str.replace(".", "_")
     df = merge_flattened(df, df_flattened)
     df = df[~df["text"].isna()]
