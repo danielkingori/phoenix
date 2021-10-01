@@ -1,7 +1,7 @@
 """Init topic."""
 
 
-def get_object_topics(topics_df):
+def get_object_topics(topics_df, objects_df):
     """Get the objects topic dataframe.
 
     Parameters:
@@ -10,12 +10,25 @@ def get_object_topics(topics_df):
         object_type: object_type
         topic: string
         matched_features: List[string]
+    objects_df:
+        see docs/schemas/objects.md
 
     Returns:
     objects topics:
-        object_id: object_id
-        object_type: object_type
+        columns in objects ....
         topics: List[string]
+        has_topics: boolean
     """
     df = topics_df.groupby(["object_id", "object_type"])
-    return df.agg({"topic": list}).rename(columns={"topic": "topics"})
+    has_topics_df = (
+        topics_df[topics_df["has_topic"].isin([True])]
+        .groupby(["object_id", "object_type"])
+        .first()
+        .rename(columns={"has_topic": "has_topics"})
+    )
+    df = df.agg({"topic": list}).rename(columns={"topic": "topics"})
+    df = df.join(has_topics_df["has_topics"]).fillna(False)
+    objects_df = objects_df.set_index("object_id", drop=False)
+    df = df.droplevel(["object_type"])
+    df = objects_df.join(df)
+    return df.reset_index(drop=True)
