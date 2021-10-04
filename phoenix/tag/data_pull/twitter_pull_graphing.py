@@ -61,6 +61,20 @@ def normalize_tweets_rt_graph(tweets: list, year_filter: int, month_filter: int)
         if tweet_month != month_filter:
             continue
 
+        # This is a quick fix to remove un-official reteets
+        # It might be possible to do a RegEx match on the user name
+        # that was retweeted.
+        if "retweeted_status" not in tweet:
+            logging.info(
+                (
+                    f"Skipping tweet with id: {tweet['id_str']}.\n"
+                    "The tweet has no 'retweeted_status'.\n"
+                    "Text of tweet.\n"
+                    f"{tweet['full_text']}"
+                )
+            )
+            continue
+
         retweets_normalized.append(
             {
                 "id_str": tweet["id_str"],
