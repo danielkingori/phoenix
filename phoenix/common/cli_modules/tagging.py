@@ -146,6 +146,10 @@ def _run_phase(
         **extra_parameters,
     }
 
+    return _run_tagging_notebooks(phase_number, object_type, parameters, art_url_reg, start_offset)
+
+
+def _run_tagging_notebooks(phase_number, object_type, parameters, art_url_reg, start_offset):
     notebooks = get_notebook_keys(phase_number, object_type)
 
     notebook_count = 0
