@@ -138,22 +138,3 @@ def tw(
         parameters["NUM_ITEMS"] = num_items
 
     utils.run_notebooks(input_nb_url, output_nb_url, parameters)
-
-
-@scrape.command("facebook_comments")
-def fb_comments():
-    """Run parse of facebook comments from facebook comment pages.
-
-    This is an incomplete CLI command DO NOT USE.
-
-    Example command:
-    ./phoenix-cli scrape facebook_comments
-    """
-    run_dt = run_datetime.create_run_datetime_now()
-    RUN_DATE = run_dt.to_run_date_str()
-
-    parameters: dict = {}
-
-    nb_name = "fb_comments_parse.ipynb"
-
-    utils.run_notebooks(RUN_DATE, parameters, nb_name)
