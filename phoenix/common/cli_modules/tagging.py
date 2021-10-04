@@ -2,7 +2,6 @@
 from typing import List
 
 import click
-from dateutil.relativedelta import relativedelta
 
 from phoenix.common import artifacts, run_datetime
 from phoenix.common.cli_modules import main_group, utils
@@ -110,9 +109,7 @@ def run_phase_month_offset(
     --SOME_URL='s3://other-bucket/` will be a parameter for all notebooks.
     """
     run_dt = run_datetime.create_run_datetime_now()
-    offset_dt = run_dt.dt + relativedelta(months=month_offset)
-    year_filter = offset_dt.year
-    month_filter = offset_dt.month
+    year_filter, month_filter = utils.get_year_month_for_offset(run_dt, month_offset)
     _run_phase(
         ctx,
         phase_number,
