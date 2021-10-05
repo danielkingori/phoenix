@@ -40,6 +40,12 @@ def normalise(raw_df: pd.DataFrame) -> pd.DataFrame:
     event_data["day_filter"] = event_data["timestamp_filter"].dt.day
     event_data["day"] = event_data["day"].astype("Int64")
     event_data["serial_number"] = event_data["serial_number"].astype("Int64")
+    # These are type so that we check that the export is correct
+    # In some what the validate that these columns are able to become ints
+    # If they are not an error will be thrown
+    # It is not perfect but is a simple and easy solution
+    event_data["fatalities"] = event_data["fatalities"].astype("Int64")
+    event_data["casualties"] = event_data["casualties"].astype("Int64")
     return event_data
 
 
