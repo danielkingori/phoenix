@@ -10,6 +10,9 @@ ArtifactKey = Literal[
     # Acled Events
     "base-acled_events_input",
     "final-acled_events",
+    # UNDP Events
+    "base-undp_events_input",
+    "final-undp_events",
     # Facebook posts
     "source-posts",
     "source-fb_post_source_api_notebook",

@@ -7,8 +7,7 @@ import tarfile
 import pandas as pd
 import tentaclio
 
-from phoenix.common import artifacts
-from phoenix.tag.data_pull import utils
+from phoenix.common import artifacts, pd_utils
 from phoenix.tag.third_party_models.aws_async import job_types
 
 
@@ -83,7 +82,7 @@ def process_output_file(fileobj) -> pd.DataFrame:
 
 def normalise_output(joined_lines: pd.DataFrame) -> pd.DataFrame:
     """Normalise the comprehend output."""
-    df = joined_lines.rename(utils.camel_to_snake, axis="columns")
+    df = joined_lines.rename(pd_utils.camel_to_snake, axis="columns")
     df_nested = pd.json_normalize(df["sentiment_score"])
     df_nested = df_nested.rename(lambda x: f"language_sentiment_score_{x.lower()}", axis="columns")
     df = df.drop(columns=["file", "sentiment_score"])

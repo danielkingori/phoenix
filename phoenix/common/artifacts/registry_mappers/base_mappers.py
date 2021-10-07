@@ -38,4 +38,5 @@ MAPPERS: MapperDict = {
     ),
     # Acled events
     "base-acled_events_input": partial(url_mapper, shared_urls.BASE_BASE + "acled_events/"),
+    "base-undp_events_input": partial(url_mapper, shared_urls.BASE_BASE + "undp_events/"),
 }
