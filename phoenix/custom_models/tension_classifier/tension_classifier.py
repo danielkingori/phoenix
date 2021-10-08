@@ -220,6 +220,14 @@ class VectorizerTopicsTensionClassifier(TensionClassifier):
         self.expected_input_cols: List[str] = ["text", "topics"]
         self.expected_cols = self.expected_input_cols + self.class_labels
 
+    @staticmethod
+    def get_model_name(suffix: Optional[str] = None) -> str:
+        """Get the model's name. Used for saving models."""
+        model_name = "count_vectorizer_topics_tension_classifier_model"
+        if suffix:
+            model_name = f"{model_name}_{suffix}"
+        return model_name
+
     def check_expected_train_cols(self, df: pd.DataFrame) -> bool:
         """Checks that the train df has the correct columns."""
         for col in self.expected_cols:
