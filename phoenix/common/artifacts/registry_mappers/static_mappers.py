@@ -15,4 +15,5 @@ MAPPERS: MapperDict = {
     "static-custom_models_tension_classifier_base": partial(
         url_mapper, "custom_models/tension_classifier/"
     ),
+    "static-custom_models_tension_classifier_data": partial(url_mapper, CONFIG_BASE),
 }
