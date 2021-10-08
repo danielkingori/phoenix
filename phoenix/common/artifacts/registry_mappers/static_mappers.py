@@ -15,5 +15,8 @@ MAPPERS: MapperDict = {
     "static-custom_models_tension_classifier_base": partial(
         url_mapper, "custom_models/tension_classifier/"
     ),
+    "static-custom_models_tension_classifier_data": partial(
+        url_mapper, CONFIG_BASE + "tension_classifier_data/"
+    ),
     "static-youtube_channels": partial(url_mapper, CONFIG_BASE + "youtube_channels.csv"),
 }
