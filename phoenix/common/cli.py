@@ -1,12 +1,14 @@
-"""CLI tool for phoenix."""
-import click
-
-from phoenix.common.cli_modules import facebook_comments_pages, scrape
-
-
-cli = click.CommandCollection(
-    sources=[scrape.scrape_cli, facebook_comments_pages.facebook_comments_pages_cli]
+"""Scrape init."""
+# Importing the non used cli_modules
+# So that the CLI is correctly initialised
+from phoenix.common.cli_modules import (  # noqa: F401
+    facebook_comments_pages,
+    main_group,
+    scrape,
+    tagging,
+    utils,
 )
 
+
 if __name__ == "__main__":
-    cli()
+    main_group.main_group()

@@ -70,7 +70,7 @@ def dask_global_init():
     ```
     python
     from dask.distributed import LocalCluster
-    cluster = LocalCluster()
+    cluster = LocalCluster(scheduler_port=8786)
     cluster.scheduler.address
     ```
     This will print out the URL of the cluster

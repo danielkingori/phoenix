@@ -25,6 +25,10 @@ TAGGING_FACEBOOK_COMMENTS_FOR_TAGGING = TAGGING_FACEBOOK_COMMENTS + FOR_TAGGING_
 
 
 MAPPERS: MapperDict = {
+    # Notebooks
+    "tagging_runs-output_notebook_base": partial(
+        url_mapper, TAGGING_PIPELINE_BASE + "output_notebooks/{RUN_DATETIME}/"
+    ),
     # Facebook Posts
     "tagging_runs-facebook_posts_input": partial(url_mapper, shared_urls.GROUP_BY_FACEBOOK_POSTS),
     "tagging_runs-facebook_posts_pulled": partial(

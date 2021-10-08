@@ -1,23 +1,32 @@
 """Data pulling for facebook comments."""
 import itertools
 import json
+import logging
 
 import pandas as pd
 import tentaclio
 
-from phoenix.tag.data_pull import constants
+from phoenix.tag.data_pull import constants, utils
 
 
 def from_json(url_to_folder: str) -> pd.DataFrame:
     """Get all the jsons and return a normalised facebook comments."""
     comment_li = []
     for entry in tentaclio.listdir(url_to_folder):
+        logging.info(f"Processing file: {entry}")
+        if not utils.is_valid_file_name(entry):
+            logging.info(f"Skipping file with invalid filename: {entry}")
+            continue
+        file_timestamp = utils.get_file_name_timestamp(entry)
         with tentaclio.open(entry) as file_io:
             pages = json.load(file_io)
             comments_df = get_comments_df(pages)
-            comment_li.append(comments_df)
+
+        comments_df["file_timestamp"] = file_timestamp
+        comment_li.append(comments_df)
 
     df = pd.concat(comment_li, axis=0, ignore_index=True)
+    df = df.sort_values("file_timestamp")
     df = df.groupby("id").last()
     df = df.reset_index()
     return normalise_comments_dataframe(df)
