@@ -2,14 +2,15 @@
 import click
 
 from phoenix.common import artifacts, run_datetime
+from phoenix.common.cli_modules import main_group
 
 
-@click.group()
-def facebook_comments_pages_cli():
+@main_group.main_group.group()
+def facebook_comments_pages():
     """facebook_comments_pages commands."""
 
 
-@facebook_comments_pages_cli.command()
+@facebook_comments_pages.command("aws_copy_command")
 @click.argument("input_directory")
 @click.argument("year_filter")
 @click.argument("month_filter")
