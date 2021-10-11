@@ -12,7 +12,6 @@ from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, roc_auc_score
-from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.pipeline import FeatureUnion, Pipeline
 from snowballstemmer import stemmer
@@ -111,32 +110,23 @@ class CountVectorizerTensionClassifier(TensionClassifier):
 
     def train(
         self,
-        corpus_df: pd.DataFrame,
         training_df: pd.DataFrame,
+        test_df: pd.DataFrame,
         random_state_int: int = random.randint(0, 999999),
     ) -> None:
         """Train a count_vectorizer based tension classifier model."""
-        logger.info("Training StemmedCountVectorizer on full corpus")
+        logger.info("Training StemmedCountVectorizer training dataset.")
         count_vectorizer = StemmedCountVectorizer(stemmer("arabic"), stop_words=get_stopwords())
-        _ = count_vectorizer.fit_transform(corpus_df["text"])
+
+        X_train = count_vectorizer.fit_transform(training_df["text"])
         self.count_vectorizer = count_vectorizer
+        Y_train = training_df[self.class_labels].to_numpy()
 
-        logger.info("Transforming training text data into word vectors.")
-        X = count_vectorizer.transform(training_df["text"].values)
-        Y = training_df[self.class_labels].to_numpy()
+        logger.info("Preparing test dataset.")
 
-        logger.info("Splitting train and test sets.")
-        # There aren't enough examples of unique combinations of these tensions,
-        # so we're stratifying the split based on the lowest count of tensions
-        lowest_tension_count_index = Y.sum(axis=0).argmin()
-        X_train, X_test, Y_train, Y_test = train_test_split(
-            X.toarray(),
-            Y,
-            stratify=Y[:, lowest_tension_count_index],
-            random_state=random_state_int,
-        )
-        self.X_test = X_test
-        self.Y_test = Y_test
+        self.X_test = count_vectorizer.transform(test_df["text"])
+        self.Y_test = test_df[self.class_labels].to_numpy()
+
         # We're assuming that there are no weird interactions from using the same random_state
         # for train_test_split as the random_state for the classifier.
         forest = RandomForestClassifier(random_state=random_state_int, class_weight="balanced")
@@ -145,7 +135,7 @@ class CountVectorizerTensionClassifier(TensionClassifier):
         logger.info("Fitting Multi Output Random Forest Classifier.")
         multi_target_forest.fit(X_train, Y_train)
 
-        logger.info(f"Mean accuracy: {multi_target_forest.score(X_test, Y_test)}")
+        logger.info(f"Mean accuracy: {multi_target_forest.score(self.X_test, self.Y_test)}")
         self.classifier = multi_target_forest
 
     def analyse(self):
@@ -170,7 +160,7 @@ class CountVectorizerTensionClassifier(TensionClassifier):
             logger.info(f"\nconfusion_matrix:\n{confusion_matrix}")
             logger.info(classification_report(self.Y_test[:, i], Y_hat[:, i]))
 
-    def predict(self, df: pd.DataFrame, clean_text_col: str) -> pd.DataFrame:
+    def predict(self, df: pd.DataFrame, clean_text_col: str = "text") -> pd.DataFrame:
         """Predict and tag a dataframe based on its text column."""
         logger.info("Starting word vectorization")
         word_vectors = self.count_vectorizer.transform(df[clean_text_col])
