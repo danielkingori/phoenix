@@ -103,14 +103,14 @@ def join_topics_to_facebook_comments(topics, facebook_comments):
 
 
 def inherit_facebook_comment_topics_from_facebook_posts_topics_df(
-    posts_df: pd.DataFrame,
+    posts_topics_df: pd.DataFrame,
     comments_df: pd.DataFrame,
     inherit_every_row_per_id: bool = False,
     extra_inherited_cols: Optional[List[str]] = None,
 ) -> pd.DataFrame:
     """Joins comments to their parent posts and inherits tensions and topic(s) from parents.
 
-    posts_df (pd.DataFrame): posts with columns to inherit.
+    posts_topics_df (pd.DataFrame): fb_posts dataframe with topics and other columns to inherit.
     comments_df (pd.DataFrame) base comments which inherit certain characteristics from parents.
     inherit_every_row_per_id (bool): If there are multiple rows per post_id (eg two `topic`s
         for a post), should we inherit each of those rows.
@@ -122,7 +122,7 @@ def inherit_facebook_comment_topics_from_facebook_posts_topics_df(
         inherited_columns = COMMENT_INHERITED_COLUMNS
 
     for col in inherited_columns:
-        if col not in posts_df.columns:
+        if col not in posts_topics_df.columns:
             raise Exception(f"Column {col} not found in posts dataframe.")
     if "post_id" not in comments_df.columns:
         raise Exception("Column 'post_id' not found in comments dataframe.")
@@ -132,17 +132,17 @@ def inherit_facebook_comment_topics_from_facebook_posts_topics_df(
     # Remove any duplicate comment_ids from any other processing step.
     comments_df = comments_df.groupby("id").first().reset_index()
 
-    posts_df = posts_df[["url_post_id"] + inherited_columns]
-    posts_df["url_post_id"] = posts_df["url_post_id"].astype(int)
+    posts_topics_df = posts_topics_df[["url_post_id"] + inherited_columns]
+    posts_topics_df["url_post_id"] = posts_topics_df["url_post_id"].astype(int)
 
     # only take the last one if you're only interested in the aggregated columns in
     # COMMENT_INHERITED_COLUMNS. If there are multiple rows per post (multiple `topic`s per
     # post) that need to be inherited, turn this flag on.
     if not inherit_every_row_per_id:
-        posts_df = posts_df.groupby("url_post_id").last().reset_index()
+        posts_topics_df = posts_topics_df.groupby("url_post_id").last().reset_index()
 
     comments_df = pd.merge(
-        comments_df, posts_df, left_on="post_id", right_on="url_post_id", how="left"
+        comments_df, posts_topics_df, left_on="post_id", right_on="url_post_id", how="left"
     ).drop("url_post_id", axis=1)
 
     return comments_df
