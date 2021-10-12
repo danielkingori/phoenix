@@ -105,12 +105,15 @@ def join_topics_to_facebook_comments(topics, facebook_comments):
 def inherit_facebook_comment_topics_from_facebook_posts_topics_df(
     posts_df: pd.DataFrame,
     comments_df: pd.DataFrame,
+    inherit_every_row_per_id: bool = False,
     extra_inherited_cols: Optional[List[str]] = None,
 ) -> pd.DataFrame:
     """Joins comments to their parent posts and inherits tensions and topic(s) from parents.
 
     posts_df (pd.DataFrame): posts with columns to inherit.
     comments_df (pd.DataFrame) base comments which inherit certain characteristics from parents.
+    inherit_every_row_per_id (bool): If there are multiple rows per post_id (eg two `topic`s
+        for a post), should we inherit each of those rows.
     extra_inherited_cols (Optional[List[str]]) extra columns to overwrite with posts information.
     """
     if extra_inherited_cols:
@@ -124,14 +127,22 @@ def inherit_facebook_comment_topics_from_facebook_posts_topics_df(
     if "post_id" not in comments_df.columns:
         raise Exception("Column 'post_id' not found in comments dataframe.")
 
+    comments_df = comments_df.drop(inherited_columns, axis=1, errors="ignore")
+
+    # Remove any duplicate comment_ids from any other processing step.
+    comments_df = comments_df.groupby("id").first().reset_index()
+
     posts_df = posts_df[["url_post_id"] + inherited_columns]
     posts_df["url_post_id"] = posts_df["url_post_id"].astype(int)
-    posts_df = posts_df.groupby("url_post_id").last()
 
-    comments_df = comments_df.drop(inherited_columns, axis=1, errors="ignore")
+    # only take the last one if you're only interested in the aggregated columns in
+    # COMMENT_INHERITED_COLUMNS. If there are multiple rows per post (multiple `topic`s per
+    # post) that need to be inherited, turn this flag on.
+    if not inherit_every_row_per_id:
+        posts_df = posts_df.groupby("url_post_id").last().reset_index()
 
     comments_df = pd.merge(
         comments_df, posts_df, left_on="post_id", right_on="url_post_id", how="left"
-    )
+    ).drop("url_post_id", axis=1)
 
     return comments_df
