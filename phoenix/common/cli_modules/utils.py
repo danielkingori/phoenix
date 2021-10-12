@@ -1,5 +1,5 @@
 """Cli package utilities."""
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 
 import datetime
 import os
@@ -7,6 +7,7 @@ import pathlib
 
 import click
 import papermill as pm
+from dateutil.relativedelta import relativedelta
 
 from phoenix.common import artifacts, run_datetime
 
@@ -61,3 +62,16 @@ def get_input_notebook_path(nb_phoenix_path: str):
     nb = f"../../{nb_phoenix_path}"
     cwd = os.getcwd()
     return relative_path(nb, __file__).relative_to(pathlib.Path(cwd))
+
+
+def get_year_month_for_offset(
+    run_dt: run_datetime.RunDatetime, month_offset: int
+) -> Tuple[int, int]:
+    """Year and month for the offset.
+
+    Return:
+        Tuple[year, month]
+        e.g. (2021, 8)
+    """
+    offset_dt = run_dt.dt + relativedelta(months=month_offset)
+    return (offset_dt.year, offset_dt.month)

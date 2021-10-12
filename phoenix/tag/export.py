@@ -8,6 +8,7 @@ from typing import Optional
 import pandas as pd
 import tentaclio
 
+from phoenix.common import artifacts
 from phoenix.tag import constants, feature, object_filters
 
 
@@ -45,6 +46,7 @@ def persist_posts_to_scrape(
     posts_to_scrape: pd.DataFrame, tagging_url: str, dashboard_url: Optional[str] = None
 ):
     """Persist the posts to scrape."""
+    artifacts.utils.create_folders_if_needed(tagging_url)
     with tentaclio.open(tagging_url, "w") as fb:
         posts_to_scrape.to_csv(fb)
 
@@ -52,6 +54,7 @@ def persist_posts_to_scrape(
     if not dashboard_url:
         return
 
+    artifacts.utils.create_folders_if_needed(tagging_url)
     with tentaclio.open(dashboard_url, "w") as fb:
         posts_to_scrape.to_csv(fb)
 
