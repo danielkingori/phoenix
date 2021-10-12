@@ -2,6 +2,7 @@
 from typing import List
 
 import click
+from dateutil.relativedelta import relativedelta
 
 from phoenix.common import artifacts, run_datetime
 from phoenix.common.cli_modules import main_group, utils
@@ -56,6 +57,83 @@ def run_phase(
     Extra options will be added as parameters for all notebooks. E.g.
     --SOME_URL='s3://other-bucket/` will be a parameter for all notebooks.
     """
+    _run_phase(
+        ctx,
+        phase_number,
+        object_type,
+        year_filter,
+        month_filter,
+        artifact_env,
+        start_offset,
+    )
+
+
+@tagging.command(
+    "run_phase_month_offset",
+    context_settings=dict(
+        ignore_unknown_options=True,
+        allow_extra_args=True,
+    ),
+)
+@click.argument("phase_number", type=click.INT)
+@click.argument("object_type", type=click.STRING)
+@click.argument("month_offset", type=click.INT, default=0)
+@click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
+@click.option(
+    "--start_offset",
+    default=0,
+    help=("Start notebook from offset."),
+)
+@click.pass_context
+def run_phase_month_offset(
+    ctx,
+    phase_number,
+    object_type,
+    month_offset,
+    artifact_env,
+    start_offset,
+):
+    """Run tagging of offsetting the month and year to the current month and year.
+
+    Example command:
+    ./phoenix-cli tagging run_phase_month_offset 1 facebook_posts -1 production
+
+    PHASE_NUMBER: 1 or 2
+    OBJECT_TYPE: facebook_posts, facebook_comments, tweets
+    MONTH_OFFSET: Number of months to offset by. E.g. 0 is current month, -1 is previous month.
+    ARTIFACT_ENV:
+        The artifact environment that will be used. Default "local"
+        Can use "production" which will pick the artifact env from the env var.
+        Or a valid storage URL like "s3://my-phoenix-bucket/"
+
+    Extra options will be added as parameters for all notebooks. E.g.
+    --SOME_URL='s3://other-bucket/` will be a parameter for all notebooks.
+    """
+    run_dt = run_datetime.create_run_datetime_now()
+    offset_dt = run_dt.dt + relativedelta(months=month_offset)
+    year_filter = offset_dt.year
+    month_filter = offset_dt.month
+    _run_phase(
+        ctx,
+        phase_number,
+        object_type,
+        year_filter,
+        month_filter,
+        artifact_env,
+        start_offset,
+    )
+
+
+def _run_phase(
+    ctx,
+    phase_number,
+    object_type,
+    year_filter,
+    month_filter,
+    artifact_env,
+    start_offset,
+):
+    """Private function for running the tagging phase."""
     run_dt = run_datetime.create_run_datetime_now()
     art_url_reg = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
     args_parameters = {
