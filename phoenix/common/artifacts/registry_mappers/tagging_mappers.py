@@ -89,6 +89,9 @@ MAPPERS: MapperDict = {
     ),
     # Topics
     "tagging_runs-topics": partial(url_mapper, TAGGING_PIPELINE_BASE + "topics.parquet"),
+    "tagging_runs-objects_topics": partial(
+        url_mapper, TAGGING_PIPELINE_BASE + "objects_topics.parquet"
+    ),
     "tagging_runs-objects_topics_csv": partial(
         url_mapper, TAGGING_FOR_ANALYST_BASE + "objects_topics.csv"
     ),
