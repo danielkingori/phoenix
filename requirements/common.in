@@ -1,9 +1,11 @@
 # Shared dependencies across project
 awswrangler
-pandas
-dask[complete]
+dask[complete]==2021.09.1
 # Need for dask
-msgpack==0.6.0
+msgpack==1.0.2
+lz4==3.1.3
+cloudpickle==2.0.0
+blosc==1.10.2
 fastparquet
 s3fs
 # This is need to resolve versions on boto
