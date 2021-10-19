@@ -120,6 +120,7 @@ ENV/
 env.bak/
 venv.bak/
 creds.sh
+.phoenix-sheet-integration-SA-key.json
 
 # Spyder project settings
 .spyderproject
