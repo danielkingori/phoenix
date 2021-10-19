@@ -16,7 +16,7 @@ class GoogleDriveInterface:
             creds_loc = "../../../.phoenix-sheet-integration-SA-key.json"
         self.creds = Credentials.from_service_account_file(creds_loc, scopes=SCOPES)
         self.drive_service = build("drive", "v3", credentials=self.creds)
-        self.sheet_service = build("sheets", "v4", credentials=self.creds)
+        self.sheet_service = build("sheets", "v4", credentials=self.creds).spreadsheets()
 
     def get_files_in_folder(self, folder_id) -> Dict[str, str]:
         """Get the files in a folder with name and id."""
@@ -27,3 +27,9 @@ class GoogleDriveInterface:
             name_to_id_dict[file.get("name")] = file.get("id")
 
         return name_to_id_dict
+
+    def get_sheet_data(self, spreadsheet_id: str, range: str):
+        """Get a spreadsheet by its id."""
+        query = self.sheet_service.values().get(spreadsheetId=spreadsheet_id, range=range)
+        result = query.execute()
+        return result
