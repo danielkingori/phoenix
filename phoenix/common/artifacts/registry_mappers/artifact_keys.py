@@ -6,6 +6,7 @@ ArtifactKey = Literal[
     # static
     "static-twitter_users",
     "static-twitter_keywords",
+    "static-g_sheet_folder_ids",
     "static-custom_models_tension_classifier_base",
     # Acled Events
     "base-acled_events_input",
