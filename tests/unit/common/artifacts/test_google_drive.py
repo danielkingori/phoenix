@@ -57,3 +57,17 @@ def test_get_sheet_metadata():
 
     actual_dict = mock_gdi_obj.get_sheet_metadata("mock_id")
     assert actual_dict == expected_metadata_dict
+
+
+def test_convert_row_col_to_range_default():
+    """Test the conversion of rows and columns into a range understandable by Google Sheets."""
+    expected_value = "MySheet!R1C1:R25C16"
+    actual_value = google_drive.convert_row_col_to_range("MySheet", 25, 16)
+    assert actual_value == expected_value
+
+
+def test_convert_row_col_to_range():
+    """Test the conversion of rows and columns into a range understandable by Google Sheets."""
+    expected_value = "MySheet!R2C3:R25C16"
+    actual_value = google_drive.convert_row_col_to_range("MySheet", 25, 16, 2, 3)
+    assert actual_value == expected_value

@@ -52,3 +52,23 @@ class GoogleDriveInterface:
         query = self.sheet_service.values().get(spreadsheetId=spreadsheet_id, range=range)
         result = query.execute()
         return result
+
+
+def convert_row_col_to_range(
+    sheet_name: str, max_row: int, max_col: int, min_row: int = 1, min_col: int = 1
+) -> str:
+    """Converts number of rows and columns to R1C1 notation.
+
+    Google sheets natively uses letters for column coordinates, R1C1 notation allows us to pick
+    a range of rows and columns using numbers only.
+
+    Args:
+        sheet_name (str): name of the sheet within the spreadsheet - can be one of multiple sheets
+            under a spreadsheet.
+        max_row (int): max row to pull
+        max_col (int): max column to pull
+        min_row (int): First row to pull, defaults to 1
+        min_col (int): First column to pull, defaults to 1
+    """
+    range = f"{sheet_name}!R{min_row}C{min_col}:R{max_row}C{max_col}"
+    return range
