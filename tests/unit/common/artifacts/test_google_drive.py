@@ -23,3 +23,37 @@ def test_google_drive_interface_get_files_in_folder():
 
     actual_name_to_id_dict = mock_gdi_obj.get_files_in_folder("mock_id")
     assert expected_name_to_id_dict == actual_name_to_id_dict
+
+
+def test_get_sheet_metadata():
+    """Test that get_sheet_metadata returns correct metadata."""
+    query_result = {
+        "spreadsheetId": "1-VVofuTrtw24sysmTtIH5RjgcN_CRmIhK-bWzsxfeUU",
+        "properties": {
+            "title": "test_sheets_phoenix",
+            "locale": "en_GB",
+            "autoRecalc": "ON_CHANGE",
+            "timeZone": "Europe/Paris",
+            "defaultFormat": {"backgroundColor": {"red": 1, "green": 1, "blue": 1}},
+        },
+        "sheets": [
+            {
+                "properties": {
+                    "sheetId": 0,
+                    "title": "Sheet1",
+                    "index": 0,
+                    "sheetType": "GRID",
+                    "gridProperties": {"rowCount": 999, "columnCount": 26},
+                }
+            }
+        ],
+        "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1-VVofuTrtw24sysmTtIH5RjgcN_CRmIhK-bWzsxfeUU/edit",  # noqa
+    }
+    mock_gdi_obj = MockGoogleDriveInterface()
+    expected_metadata_dict = {
+        "Sheet1": {"canonical_parent_name": "test_sheets_phoenix", "len_rows": 999, "len_cols": 26}
+    }
+    mock_gdi_obj.sheet_service.get().execute.return_value = query_result
+
+    actual_dict = mock_gdi_obj.get_sheet_metadata("mock_id")
+    assert actual_dict == expected_metadata_dict

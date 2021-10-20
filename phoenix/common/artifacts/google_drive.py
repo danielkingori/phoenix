@@ -28,6 +28,25 @@ class GoogleDriveInterface:
 
         return name_to_id_dict
 
+    def get_sheet_metadata(self, spreadsheet_id: str) -> Dict:
+        """Get a spreadsheet's metadata."""
+        query = self.sheet_service.get(spreadsheetId=spreadsheet_id)
+        result = query.execute()
+        sheet_property_list = result.get("sheets", [])
+        metadata_dict = {}
+        for sheet in sheet_property_list:
+            title = result.get("properties", {}).get("title", "")
+            sheet_name = sheet.get("properties", {}).get("title", "")
+            row_count = sheet.get("properties", {}).get("gridProperties", {}).get("rowCount")
+            col_count = sheet.get("properties", {}).get("gridProperties", {}).get("columnCount")
+            metadata_dict[sheet_name] = {
+                "canonical_parent_name": title,
+                "len_rows": row_count,
+                "len_cols": col_count,
+            }
+
+        return metadata_dict
+
     def get_sheet_data(self, spreadsheet_id: str, range: str):
         """Get a spreadsheet by its id."""
         query = self.sheet_service.values().get(spreadsheetId=spreadsheet_id, range=range)
