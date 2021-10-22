@@ -180,3 +180,44 @@ def test__df_to_call_body():
 
     actual_body = google_drive.GoogleDriveInterface._df_to_call_body(input_df, sheet_name)
     assert actual_body == expected_body
+
+
+def test_update_sheet_with_df():
+    mock_gdi = MockGoogleDriveInterface()
+
+    metadata_dict = {
+        "Sheet1": {"canonical_parent_name": "test_sheets_phoenix", "len_rows": 999, "len_cols": 26}
+    }
+    mock_get_sheet_data = mock.MagicMock()
+    mock_get_sheet_data.return_value = metadata_dict
+    # https://github.com/python/mypy/issues/2427 - mypy has problems with assigning functions to
+    # MagicMock
+    mock_gdi.get_sheet_metadata = mock_get_sheet_data  # type: ignore
+
+    call_body = {"range": "some_range", "values": "list_of_values"}
+    mock__df_to_call_body = mock.MagicMock()
+    mock__df_to_call_body.return_value = call_body
+    # https://github.com/python/mypy/issues/2427 - mypy has problems with assigning functions to
+    # MagicMock
+    mock_gdi._df_to_call_body = mock__df_to_call_body  # type: ignore
+
+    input_df = pd.DataFrame(
+        {
+            "index": ["0", "1"],
+            "object_id": ["100044142351096-13f3e41944a37145", "999999"],
+            "object_type": ["facebook_post", "facebook_post"],
+        }
+    )
+    input_spreadsheet_id = "some_id"
+    mock_gdi.update_sheet_with_df(input_df, input_spreadsheet_id)
+
+    mock_get_sheet_data.assert_called_with("some_id")
+    mock__df_to_call_body.assert_called_with(input_df, "Sheet1", True)
+    mock_gdi.sheet_service.values().batchUpdate.assert_called_with(
+        spreadsheetId="some_id",
+        body={
+            "value_input_option": "USER_ENTERED",
+            "data": {"range": "some_range", "values": "list_of_values"},
+        },
+    )
+    mock_gdi.sheet_service.values().batchUpdate().execute.assert_called_once()

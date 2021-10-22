@@ -120,6 +120,49 @@ class GoogleDriveInterface:
         }
         return body
 
+    def update_sheet_with_df(
+        self,
+        df: pd.DataFrame,
+        spreadsheet_id: str,
+        sheet_name: Optional[str] = None,
+        clear_sheet: bool = False,
+        col_name_as_first_row: bool = True,
+    ):
+        """Updates a google sheet by using a DataFrame.
+
+        Args:
+            df (pd.DataFrame): Dataframe you want to use to update a gsheet.
+            spreadsheet_id (str): ID of the spreadsheet you want to update.
+            sheet_name (Optional[str]): If the spreadsheet contains multiple.
+            clear_sheet (bool): Clear the sheet of all other data before updating. default False.
+            col_name_as_first_row (bool): Use the dataframe's columns as first row. default True.
+        """
+        metadata_dict = self.get_sheet_metadata(spreadsheet_id)
+        if not sheet_name:
+            # Take the first sheet found if no sheet name is provided.
+            sheet_name = next(iter(metadata_dict))
+        sheet_metadata = metadata_dict[sheet_name]
+
+        if clear_sheet:
+            clear_range = convert_row_col_to_range(
+                sheet_name, sheet_metadata["len_rows"], sheet_metadata["len_cols"]  # type: ignore
+            )
+            self.sheet_service.values().clear(
+                spreadsheetId=spreadsheet_id, range=clear_range
+            ).execute()
+
+        batch_update_values_request_body = {
+            "value_input_option": "USER_ENTERED",
+            "data": self._df_to_call_body(df, sheet_name, col_name_as_first_row),  # type: ignore
+        }
+
+        request = self.sheet_service.values().batchUpdate(
+            spreadsheetId=spreadsheet_id, body=batch_update_values_request_body
+        )
+
+        response = request.execute()
+        return response
+
 
 def convert_row_col_to_range(
     sheet_name: str, max_row: int, max_col: int, min_row: int = 1, min_col: int = 1
