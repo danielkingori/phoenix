@@ -157,3 +157,26 @@ def test_convert_row_col_to_range():
     expected_value = "MySheet!R2C3:R25C16"
     actual_value = google_drive.convert_row_col_to_range("MySheet", 25, 16, 2, 3)
     assert actual_value == expected_value
+
+
+def test__df_to_call_body():
+    input_df = pd.DataFrame(
+        {
+            "index": ["0", "1"],
+            "object_id": ["100044142351096-13f3e41944a37145", "999999"],
+            "object_type": ["facebook_post", "facebook_post"],
+        }
+    )
+    sheet_name = "test_sheet"
+
+    expected_body = {
+        "range": "test_sheet!R1C1:R3C4",
+        "values": [
+            ["index", "object_id", "object_type"],
+            ["0", "100044142351096-13f3e41944a37145", "facebook_post"],
+            ["1", "999999", "facebook_post"],
+        ],
+    }
+
+    actual_body = google_drive.GoogleDriveInterface._df_to_call_body(input_df, sheet_name)
+    assert actual_body == expected_body

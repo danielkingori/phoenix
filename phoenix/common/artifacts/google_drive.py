@@ -1,5 +1,5 @@
 """Artifacts Google Sheets interface."""
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 import pandas as pd
 from google.oauth2.service_account import Credentials
@@ -78,6 +78,47 @@ class GoogleDriveInterface:
             raise ValueError(f"Unable to make dataframe: Sheet only had {num_rows} rows.")
 
         return df
+
+    @staticmethod
+    def _df_to_call_body(
+        df: pd.DataFrame,
+        sheet_name: str,
+        col_name_as_first_row: bool = True,
+        offset_row: int = 0,
+        offset_col: int = 0,
+    ) -> Dict[str, Any]:
+        """Create the body of a GSheet api call.
+
+        Args:
+            df (pd.DataFrame): dataframe to get data from
+            sheet_name (str): Name of the sheet to update on -can be one of multiple sheets
+                under a spreadsheet.
+            col_name_as_first_row (bool): Use the dataframe's columns as first row. default True.
+            offset_row (int): Start inputting data from an offset from the first row. default 0
+            offset_col (int): Start inputting data from an offset from the first column. default 0
+        """
+        rows, cols = df.shape
+        # Add any offsets
+        rows += offset_row
+        cols += offset_col
+        if col_name_as_first_row:
+            rows += 1
+            cols += 1
+        offset_row += 1
+        offset_col += 1
+        sheet_range = convert_row_col_to_range(sheet_name, rows, cols, offset_row, offset_col)
+
+        data_values = df.values.tolist()
+        if col_name_as_first_row:
+            data_col_names = [df.columns.values.tolist()]
+            data_col_names.extend(data_values)
+            data_values = data_col_names
+
+        body = {
+            "range": sheet_range,
+            "values": data_values,
+        }
+        return body
 
 
 def convert_row_col_to_range(
