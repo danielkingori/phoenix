@@ -1,6 +1,7 @@
 """Artifacts Google Sheets interface."""
 from typing import Dict, Optional
 
+import pandas as pd
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
@@ -52,6 +53,31 @@ class GoogleDriveInterface:
         query = self.sheet_service.values().get(spreadsheetId=spreadsheet_id, range=range)
         result = query.execute()
         return result
+
+    def get_sheet_data_as_df(
+        self, spreadsheet_id: str, range: str, use_top_row_as_col_names: bool = True
+    ) -> pd.DataFrame:
+        """Gets a google sheet and returns it as a DataFrame.
+
+        Args:
+            spreadsheet_id (str): ID of the spreadsheet to pull.
+            range (str): range of columns and rows to pull from the spreadsheet.
+            use_top_row_as_col_names (bool): Use the first row of data as column names in df.
+        """
+        sheet_data = self.get_sheet_data(spreadsheet_id, range)
+        vals = sheet_data.get("values", [])
+        num_rows = len(vals)
+
+        if use_top_row_as_col_names and num_rows > 1:
+            df = pd.DataFrame(vals)
+            df.columns = df.iloc[0]
+            df = df[1:].reset_index(drop=True)
+        elif not use_top_row_as_col_names and num_rows > 0:
+            df = pd.DataFrame(vals)
+        else:
+            raise ValueError(f"Unable to make dataframe: Sheet only had {num_rows} rows.")
+
+        return df
 
 
 def convert_row_col_to_range(

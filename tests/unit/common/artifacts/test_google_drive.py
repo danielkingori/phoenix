@@ -1,5 +1,6 @@
 """Google Drive artifacts."""
 import mock
+import pandas as pd
 
 from phoenix.common.artifacts import google_drive
 
@@ -57,6 +58,91 @@ def test_get_sheet_metadata():
 
     actual_dict = mock_gdi_obj.get_sheet_metadata("mock_id")
     assert actual_dict == expected_metadata_dict
+
+
+def test_get_sheet_data_as_df_infer_col_name():
+    """Test conversion of sheet data to dataframe."""
+    mock_gdi_obj = MockGoogleDriveInterface()
+    sheet_data = {
+        "range": "Sheet1!A1:R2",
+        "majorDimension": "ROWS",
+        "values": [
+            [
+                "index",
+                "object_id",
+                "object_type",
+            ],
+            [
+                "0",
+                "100044142351096-13f3e41944a37145",
+                "facebook_post",
+            ],
+        ],
+    }
+    mock_get_sheet_data = mock.MagicMock()
+    mock_get_sheet_data.return_value = sheet_data
+    # https://github.com/python/mypy/issues/2427 - mypy has problems with assigning functions to
+    # MagicMock
+    mock_gdi_obj.get_sheet_data = mock_get_sheet_data  # type: ignore
+
+    expected_df = pd.DataFrame(
+        {
+            "index": ["0"],
+            "object_id": ["100044142351096-13f3e41944a37145"],
+            "object_type": ["facebook_post"],
+        }
+    )
+    actual_df = mock_gdi_obj.get_sheet_data_as_df("mock_id", "some_range")
+    # check_names=False is needed because in creating the expected df, the column names are
+    # ["index", "object_id", "object_type"], but expected_df.columns.names = None, whereas the
+    # method used in get_sheet_data_as_df sets the actual_df.columns.names = 0. This has no
+    # impact on the working of the function.
+    pd.testing.assert_frame_equal(actual_df, expected_df, check_names=False)
+    mock_get_sheet_data.assert_called_with("mock_id", "some_range")
+
+
+def test_get_sheet_data_as_df_no_col_name():
+    """Test conversion of sheet data to dataframe."""
+    mock_gdi_obj = MockGoogleDriveInterface()
+    sheet_data = {
+        "range": "Sheet1!A1:R2",
+        "majorDimension": "ROWS",
+        "values": [
+            [
+                "index",
+                "object_id",
+                "object_type",
+            ],
+            [
+                "0",
+                "100044142351096-13f3e41944a37145",
+                "facebook_post",
+            ],
+        ],
+    }
+    mock_get_sheet_data = mock.MagicMock()
+    mock_get_sheet_data.return_value = sheet_data
+    # https://github.com/python/mypy/issues/2427 - mypy has problems with assigning functions to
+    # MagicMock
+    mock_gdi_obj.get_sheet_data = mock_get_sheet_data  # type: ignore
+
+    expected_df = pd.DataFrame(
+        [
+            [
+                "index",
+                "object_id",
+                "object_type",
+            ],
+            [
+                "0",
+                "100044142351096-13f3e41944a37145",
+                "facebook_post",
+            ],
+        ]
+    )
+    actual_df = mock_gdi_obj.get_sheet_data_as_df("mock_id", "some_range", False)
+    pd.testing.assert_frame_equal(actual_df, expected_df)
+    mock_get_sheet_data.assert_called_with("mock_id", "some_range")
 
 
 def test_convert_row_col_to_range_default():
