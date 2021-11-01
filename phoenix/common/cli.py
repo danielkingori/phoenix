@@ -3,6 +3,7 @@
 # So that the CLI is correctly initialised
 from phoenix.common.cli_modules import (  # noqa: F401
     comments,
+    events,
     facebook_comments_pages,
     main_group,
     scrape,
