@@ -95,10 +95,16 @@ def for_tagging(given_df: pd.DataFrame):
         object_id: String, dtype: string
         text: String, dtype: string
         object_type: "tweet", dtype: String
+        created_at: datetime
+        object_url: String, dtype: string
+        object_user_url: String, dtype: string
 
     """
     df = given_df.copy()
-    df = df[["id_str", "text", "language_from_api"]]
+    df = df[["id_str", "text", "language_from_api", "created_at", "user_screen_name"]]
+    df["object_user_url"] = "https://twitter.com/" + df["user_screen_name"].astype(str)
+    df["object_url"] = "https://twitter.com/i/web/status/" + df["id_str"].astype(str)
+    df = df.drop("user_screen_name", axis=1)
 
     if "retweeted" in given_df.columns:
         df["retweeted"] = given_df["retweeted"]
