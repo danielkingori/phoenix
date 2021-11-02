@@ -8,9 +8,11 @@ ArtifactKey = Literal[
     "static-twitter_keywords",
     "static-custom_models_tension_classifier_base",
     # Acled Events
+    "source-acled_events_notebook",
     "base-acled_events_input",
     "final-acled_events",
     # UNDP Events
+    "source-undp_events_notebook",
     "base-undp_events_input",
     "final-undp_events",
     # Facebook posts
