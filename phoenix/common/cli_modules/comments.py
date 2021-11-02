@@ -175,12 +175,10 @@ def tag_phase_2(
     TAGGING_RUNS_URL_ASYNC_JOB_GROUP = art_url_reg.get_url(
         "tagging_runs-async_job_group", parameters
     )
-    try:
-        tentaclio.open(TAGGING_RUNS_URL_ASYNC_JOB_GROUP, mode="r")
-    except FileNotFoundError:
+    if not utils.file_exists(
+        TAGGING_RUNS_URL_ASYNC_JOB_GROUP, silence_no_files_to_process_exception
+    ):
         message = f"There is no file from phase 1: {TAGGING_RUNS_URL_ASYNC_JOB_GROUP}"
-        if not silence_no_files_to_process_exception:
-            raise RuntimeError(message)
         click.echo(message)
         return
 
