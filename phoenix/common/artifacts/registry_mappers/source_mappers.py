@@ -6,10 +6,10 @@ from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperD
 
 MAPPERS: MapperDict = {
     "source-undp_events_notebook": partial(
-        url_mapper, "source_runs/{RUN_DATE}/undp_events-{RUN_DATETIME}.json"
+        url_mapper, "source_runs/{RUN_DATE}/undp_events-{RUN_DATETIME}.ipynb"
     ),
     "source-acled_events_notebook": partial(
-        url_mapper, "source_runs/{RUN_DATE}/acled_events-{RUN_DATETIME}.json"
+        url_mapper, "source_runs/{RUN_DATE}/acled_events-{RUN_DATETIME}.ipynb"
     ),
     # Facebook Posts
     "source-posts": partial(url_mapper, "source_runs/{RUN_DATE}/source-posts-{RUN_DATETIME}.json"),
