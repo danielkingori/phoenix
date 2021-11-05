@@ -16,3 +16,4 @@ pyarrow
 papermill
 click
 freezegun
+gspread
