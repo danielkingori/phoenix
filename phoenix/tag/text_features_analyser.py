@@ -103,14 +103,17 @@ class StemmedCountVectorizer(CountVectorizer):
 # Cannot be a method on object when used by dash.
 def stem_analyzer(stemmer, analyzer, doc):
     """Stem_analyzer."""
-    li = []
-    for w in filter(None, analyzer(doc)):  # type: ignore
-        if w:
+    li: List[str] = []
+    if not doc:
+        return li
+    for token in filter(None, analyzer(doc)):  # type: ignore
+        if token:
             try:
-                li.append(stemmer.stemWord(w))
+                words_list = [stemmer.stemWord(w) for w in token.split(" ")]
+                li.append(" ".join(words_list))
             except IndexError:
                 # Index Errors causes problems
-                li.append(w)
+                li.append(token)
     return li
 
 
