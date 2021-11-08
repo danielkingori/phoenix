@@ -151,7 +151,11 @@ def _run_phase(
 
 def _run_tagging_notebooks(phase_number, object_type, parameters, art_url_reg, start_offset):
     notebooks = get_notebook_keys(phase_number, object_type)
+    return _run_notebooks(notebooks, parameters, art_url_reg, start_offset)
 
+
+def _run_notebooks(notebooks, parameters, art_url_reg, start_offset):
+    """Run the tagging notebooks."""
     notebook_count = 0
     for notebook_key in notebooks:
         notebook_count = notebook_count + 1

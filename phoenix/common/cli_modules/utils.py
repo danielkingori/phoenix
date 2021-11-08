@@ -7,6 +7,7 @@ import pathlib
 
 import click
 import papermill as pm
+import tentaclio
 from dateutil.relativedelta import relativedelta
 
 from phoenix.common import artifacts, run_datetime
@@ -75,3 +76,16 @@ def get_year_month_for_offset(
     """
     offset_dt = run_dt.dt + relativedelta(months=month_offset)
     return (offset_dt.year, offset_dt.month)
+
+
+def file_exists(url, silence=False):
+    """Check that a file exists."""
+    try:
+        tentaclio.open(url, mode="r")
+    except FileNotFoundError:
+        message = f"File does not exists at: {url}"
+        if not silence:
+            raise RuntimeError(message)
+        return False
+
+    return True
