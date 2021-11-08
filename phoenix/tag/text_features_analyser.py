@@ -38,14 +38,34 @@ class StemmedCountVectorizer(CountVectorizer):
         else:
             self.stemmer = None
 
-    def build_analyzer(self):
-        """Build the analyzer with the stemmer."""
+    def build_analyzer(self, use_ngrams=True):
+        """Build the analyzer with the stemmer. Optionally can build analyzer without ngrams."""
+        if not use_ngrams:
+            self._word_ngrams = self._no_ngram_word_ngram_processor
         analyzer = super(StemmedCountVectorizer, self).build_analyzer()
         if not self.stemmer:
             return analyzer
 
         fn = functools.partial(stem_analyzer, self.stemmer, analyzer)
         return fn
+
+    def _no_ngram_word_ngram_processor(self, tokens, stop_words=None):
+        """Override of the CountVectorizer._word_ngrams which doesn't split text into ngrams.
+
+        Args:
+            tokens: list of tokens in text
+            stop_words: list of str: stopwords
+
+        This override is needed as the original _analyze function of the CountVectorizer only
+        removes stopwords if a _word_ngram processor is available. By overriding this, we can get
+        the full analysis pipeline of preprocessing, tokenization, and stop word removal follow the
+        CountVectorizer method without ngram.
+        """
+        # handle stop words
+        if stop_words is not None:
+            tokens = [w for w in tokens if w not in stop_words]
+
+        return tokens
 
     def get_most_common_words(self, count_vector_matrix: pd.arrays.SparseArray) -> Dict[str, int]:
         """Gets a dict of the most common words and their occurrence numbers.
@@ -104,7 +124,7 @@ class TextFeaturesAnalyser:
     dict_countvectorizers: Dict = {}
     dict_analyser: Dict = {}
 
-    def __init__(self, languages, ngram_ranges, default_params):
+    def __init__(self, languages, ngram_ranges, use_ngrams, default_params):
         """Init the text features Analyser."""
         for lang in languages:
             lang_default_params = {}
@@ -120,16 +140,16 @@ class TextFeaturesAnalyser:
             )
             self.column_return_count = len(countvectorizers)
             self.dict_countvectorizers[lang] = countvectorizers
-            self.dict_analyser[lang] = self._create_analyser(countvectorizers)
+            self.dict_analyser[lang] = self._create_analyser(countvectorizers, use_ngrams)
 
     def _build_meta_return(self):
         """Build the meta return."""
         return [(i, "object") for i in range(self.column_return_count)]
 
-    def _create_analyser(self, countvectorizers: List):
+    def _create_analyser(self, countvectorizers: List, use_ngrams: bool):
         # cast to a list is needed otherwise will not
         # be able to analyse more then one row.
-        return list(map(lambda obj: obj.build_analyzer(), countvectorizers))
+        return list(map(lambda obj: obj.build_analyzer(use_ngrams), countvectorizers))
 
     def features(self, df: pd.DataFrame, message_key: str = "message"):
         """Build feature grams."""
@@ -167,7 +187,7 @@ def feature_apply(
     raise ValueError(f"Language {lang} is not supported. Supported keys: {keys}")
 
 
-def create():
+def create(use_ngrams=True):
     """Create the TextFeaturesAnalyser."""
     # Configuration is hard coded this can be changed at some point.
     # token_pattern is the default token pattern with the addition of a optional # before a word
@@ -192,6 +212,7 @@ def create():
         languages=list(default_params.keys()),
         default_params=default_params,
         ngram_ranges=[(1, 3)],
+        use_ngrams=use_ngrams,
     )
 
 

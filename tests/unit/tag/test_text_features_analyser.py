@@ -116,6 +116,25 @@ def test_TextFeaturesAnalyser_features():
     assert df_test["features"][0] == expected_3gram_feature_list
 
 
+def test_TextFeaturesAnalyser_features_no_ngrams():
+    df_test = pd.DataFrame(
+        [("1", "succeeding in stemming removes the ends of words", "en")],
+        columns=["id", "clean_text", "language"],
+    )
+    text_analyser = tfa.create(use_ngrams=False)
+    df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+
+    expected_feature_list = [
+        "succeed",
+        "stem",
+        "remov",
+        "end",
+        "word",
+    ]
+
+    assert df_test["features"][0] == expected_feature_list
+
+
 def test_TextFeaturesAnalyser_hashtags_arabic():
     """Test that the analyser handles hashtags as part of a word."""
     featurizer = tfa.create()
