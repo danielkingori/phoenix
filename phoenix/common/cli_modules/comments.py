@@ -2,10 +2,10 @@
 from typing import List
 
 import click
-import tentaclio
 
 from phoenix.common import artifacts, run_datetime
 from phoenix.common.cli_modules import main_group, tagging, utils
+from phoenix.scrape.fb_comment_parser import run
 
 
 @main_group.main_group.group()
@@ -15,12 +15,7 @@ def comments():
 
 def get_files_to_process(url_to_folder) -> List[str]:
     """Get the list of raw HTML files to process."""
-    result = []
-    for entry in tentaclio.listdir(url_to_folder):
-        if entry.endswith(".html"):
-            result.append(entry)
-
-    return result
+    return list(run.get_files(url_to_folder))
 
 
 @comments.command(
