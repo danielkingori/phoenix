@@ -13,7 +13,11 @@ from phoenix.scrape.fb_comment_parser import fb_comment_parser
 def get_files(dir_url):
     """Get files that can be processed from a folder recursively."""
     for entry in tentaclio.scandir(dir_url):
-        # This is very string but it has problems with "#" in file names
+        # There is a extremly strange behaviour in tentaclio
+        # that URLs with a # are cut at the hash tag.
+        # Sometime the automatically generated files of
+        # facebook_comments_pages have a # in
+        # https://gitlab.com/howtobuildup/phoenix/-/issues/65
         url_str = str(entry.url)
         logging.info(entry.url)
         if url_str.endswith(".html"):
