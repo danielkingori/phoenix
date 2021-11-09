@@ -72,28 +72,25 @@ Please follow all API guidance from Twitter to avoid any problems with your acce
 These tools are designed within the boundaries of the API guidelines, 
 and the Phoenix team is not responsible for any misuse.
 
-Set the following environment variables:
+### Authentication
+There are two methods of authentication. As suggested in the `tweepy` documentation found [here](https://docs.tweepy.org/en/stable/auth_tutorial.html) use OAuth 1 or 2.
 
-`TWITTER_CONSUMER_KEY`
+For OAuth 1 use environment variables:
+-`TWITTER_CONSUMER_KEY`
+-`TWITTER_CONSUMER_SECRET`
+-`TWITTER_OAUTH_ACCESS_TOKEN`
+-`TWITTER_OAUTH_ACCESS_SECRET`
 
-`TWITTER_CONSUMER_SECRET`
+For OAuth 2 use environment variables:
+- `TWITTER_APPLICATION_KEY`
+- `TWITTER_APPLICATION_SECRET`
 
-`TWITTER_APPLICATION_TOKEN`
+### CLI
+To see information on cli:
+`./phoenix-cli scrape tweets --help`
 
-`TWITTER_APPLICATION_SECRET`
 
-The Twitter engine uses two config CSV files for different types of Twitter queries.
-Keywords are managed in the `twitter_query_keywords.csv`. 
-Users are managed in the `twitter_query_users.csv`
-Both of these are found in the `phoenix/common/config/` directory.
-
-The following terminal commands run the `user` and `keyword` scrapes:
-
-```bash
-$ ./phoenix-cli tw keyword $(date --utc --iso-8601=seconds)
-$ ./phoenix-cli tw user $(date --utc --iso-8601=seconds)
-```
-
+### General
 A source run collects the previous 3 days tweets.
 This is in line with our approach for Facebook.
 Our expectation is that most activity around individual tweets reduces after the first few days.
