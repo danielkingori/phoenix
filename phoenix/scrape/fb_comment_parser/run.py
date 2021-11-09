@@ -1,5 +1,5 @@
 """Functions for running the Facebook comment parsing process."""
-from typing import Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import logging
 import os
@@ -11,42 +11,40 @@ from phoenix.scrape.fb_comment_parser import fb_comment_parser
 
 
 def get_files(dir_url):
-    """Get files from a folder recursively."""
+    """Get files that can be processed from a folder recursively."""
     for entry in tentaclio.scandir(dir_url):
         url_str = str(entry.url)
         logging.info(entry.url)
         if url_str.endswith(".html"):
             logging.info(f"Processing {url_str}...")
-            yield get_single_file(url_str)
+            yield url_str
 
         if entry.is_dir:
             logging.info("Folder found {url_str}")
             yield from get_files(url_str)
 
 
-def get_single_file(file_url) -> Tuple[str, str, str]:
+def get_single_file(file_url) -> Tuple[str, str]:
     """Retrieve contents of a single file.
 
     Open single file and return the contents.
 
     Returns:
-        Tuple[contents, directory_url, file name]
+        Tuple[contents, file name]
     """
     with tentaclio.open(file_url, mode="rb") as f:
         contents = f.read()
     parsed_url = tentaclio.urls.URL(file_url)
     basename = os.path.basename(parsed_url.path)
-    directory = file_url[: 0 - len(basename)]
-    return contents, directory, basename
+    return contents, basename
 
 
-def move_processed_file(from_path, to_path, filename):
+def move_processed_file(file_url, to_path, filename):
     """Move processed files.
 
     This is done so that it is clear which files throw errors.
     """
-    # Construct file urls
-    from_url = f"{from_path}{filename}"
+    from_url = file_url
     to_url = f"{to_path}{filename}"
     artifacts.utils.move(from_url, to_url)
     return
@@ -57,19 +55,31 @@ def parse_fb_page(contents, filename):
     return fb_comment_parser.Page(contents, filename)
 
 
-def run_fb_page_parser(to_parse_url, parsed_url, fail_url):
+def process_single_file(file_url, parsed_url, fail_url) -> Optional[Dict[Any, Any]]:
+    """Process a single file."""
+    contents, basename = get_single_file(file_url)
+    try:
+        page = parse_fb_page(contents, basename)
+        move_processed_file(file_url, parsed_url, basename)
+        # Parsed status False means that it can't be processed but there are
+        # no errors
+        if page.parse_status:
+            return page.as_dict
+        return None
+    except Exception as e:
+        # We want to save failed files but continue processing.
+        logging.info(f"Failure: {e} from {basename}.")
+        move_processed_file(file_url, fail_url, basename)
+        return None
+
+
+def run_fb_page_parser(file_url, parsed_url, fail_url):
     """Run the parser and return a list of parsed pages."""
     pages = []
-    for contents, directory, basename in get_files(to_parse_url):
-        try:
-            page = parse_fb_page(contents, basename)
-            pages.append(page.as_dict)
-            move_processed_file(directory, parsed_url, basename)
-        except Exception as e:
-            # We want to save failed files but continue processing.
-            logging.info(f"Failure: {e} from {basename}.")
-            move_processed_file(directory, fail_url, basename)
-            continue
+    for file_url in get_files(file_url):
+        page = process_single_file(file_url, parsed_url, fail_url)
+        if page is not None:
+            pages.append(page)
     return pages
 
 

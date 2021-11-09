@@ -22,16 +22,19 @@ def test_get_files_url():
     return f"file://{test_html_pages_path}"
 
 
-def test_fb_comment_parser(test_html_pages_url):
+@mock.patch("phoenix.common.artifacts.utils.move")
+def test_fb_comment_parser(m_move, test_html_pages_url):
     """Test parsing of pages in fb_comment_parser."""
     logging.info(test_html_pages_url)
-    for contents, directory, filename in run.get_files(test_html_pages_url):
-        if not filename.endswith(".html"):
-            logging.info(f"Skipping invalid file: {filename}")
+    for file_url in run.get_files(test_html_pages_url):
+        # Filter for testing
+        if not file_url.endswith("failed8.html"):
             continue
 
-        logging.info(f"Processing: {filename}")
-        page = run.parse_fb_page(contents, filename)
+        logging.info(f"Processing: {file_url}")
+        contents, basename = run.get_single_file(file_url)
+        page = run.parse_fb_page(contents, basename)
+        # All pages should be processable
         assert page
 
 
@@ -43,36 +46,15 @@ def test_get_files(m_move, test_get_files_url):
     the director of the files are also correct
     """
     logging.info(test_get_files_url)
-    file_names = []
-    directories = []
-    for content, directory, filename in run.get_files(test_get_files_url):
-        assert isinstance(content, bytes)
-        # Should be a base name and not a folder
-        assert "/" not in filename
-        assert filename.endswith(".html")
-        assert directory.endswith("/")
-        file_names.append(filename)
-        directories.append(directory)
+    result = run.get_files(test_get_files_url)
 
     # Ordering can vary for different operating systems. Sorting solves this.
-    assert sorted(file_names) == sorted(["6.html", "4.html", "1.html", "2.html"])
-    expected_directories_endswith = [
-        "/test_get_files/nested/nested_2/",
-        "/test_get_files/nested/",
-        "/test_get_files/",
-        "/test_get_files/",
+    expected_fileurls_endswith = [
+        "/test_get_files/nested/nested_2/6.html",
+        "/test_get_files/nested/4.html",
+        "/test_get_files/2.html",
+        "/test_get_files/1.html",
     ]
-    sorted_directories = sorted(directories)
-    for index, expected in enumerate(sorted(expected_directories_endswith)):
-        assert sorted_directories[index].endswith(expected)
-
-
-@mock.patch("phoenix.common.artifacts.utils.move")
-def test_run_fb_page_parser(m_move, test_html_pages_url):
-    """Test run."""
-    logging.info(test_html_pages_url)
-    failed_url = "file:///failed/"
-    success_url = "file:///success/"
-    run.run_fb_page_parser(test_html_pages_url, success_url, failed_url)
-    for move_call in m_move.mock_calls:
-        assert move_call.startswith(success_url)
+    sorted_result = sorted(result)
+    for index, expected in enumerate(sorted(expected_fileurls_endswith)):
+        assert sorted_result[index].endswith(expected)
