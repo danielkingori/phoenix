@@ -11,25 +11,33 @@ from phoenix.scrape.fb_comment_parser import fb_comment_parser
 
 
 def get_files(dir_url):
-    """Get files from a folder."""
-    for url in tentaclio.listdir(dir_url):
+    """Get files from a folder recursively."""
+    for entry in tentaclio.scandir(dir_url):
+        url_str = str(entry.url)
+        logging.info(entry.url)
+        if url_str.endswith(".html"):
+            logging.info(f"Processing {url_str}...")
+            yield get_single_file(url_str)
 
-        logging.info(f"Processing {url}...")
-        yield get_single_file(url)
+        if entry.is_dir:
+            logging.info("Folder found {url_str}")
+            yield from get_files(url_str)
 
 
-def get_single_file(file_url) -> Tuple[str, str]:
+def get_single_file(file_url) -> Tuple[str, str, str]:
     """Retrieve contents of a single file.
 
     Open single file and return the contents.
 
     Returns:
-        Tuple[contents, file name]
+        Tuple[contents, directory_url, file name]
     """
     with tentaclio.open(file_url, mode="rb") as f:
         contents = f.read()
     parsed_url = tentaclio.urls.URL(file_url)
-    return contents, os.path.basename(parsed_url.path)
+    basename = os.path.basename(parsed_url.path)
+    directory = file_url[: 0 - len(basename)]
+    return contents, directory, basename
 
 
 def move_processed_file(from_path, to_path, filename):
@@ -52,15 +60,15 @@ def parse_fb_page(contents, filename):
 def run_fb_page_parser(to_parse_url, parsed_url, fail_url):
     """Run the parser and return a list of parsed pages."""
     pages = []
-    for contents, filename in get_files(to_parse_url):
+    for contents, directory, basename in get_files(to_parse_url):
         try:
-            page = parse_fb_page(contents, filename)
+            page = parse_fb_page(contents, basename)
             pages.append(page.as_dict)
-            move_processed_file(to_parse_url, parsed_url, filename)
+            move_processed_file(directory, parsed_url, basename)
         except Exception as e:
             # We want to save failed files but continue processing.
-            logging.info(f"Failure: {e} from {filename}.")
-            move_processed_file(to_parse_url, fail_url, filename)
+            logging.info(f"Failure: {e} from {basename}.")
+            move_processed_file(directory, fail_url, basename)
             continue
     return pages
 

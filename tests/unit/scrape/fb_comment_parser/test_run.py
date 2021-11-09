@@ -13,11 +13,11 @@ def test_run_fb_page_parser(m_get_files, m_parse_fb_page, m_move):
     file_name_2 = "file2.txt"
     contents_1 = "contents1"
     contents_2 = "contents2"
-    m_get_files.return_value = [
-        (contents_1, file_name_1),
-        (contents_2, file_name_2),
-    ]
     to_parse_url = "file:///d/"
+    m_get_files.return_value = [
+        (contents_1, to_parse_url, file_name_1),
+        (contents_2, to_parse_url, file_name_2),
+    ]
     parsed_url = "file:///parsed/"
     fail_url = "file:///failed/"
 
@@ -46,11 +46,11 @@ def test_run_fb_page_parser_errors(m_get_files, m_parse_fb_page, m_move):
     file_name_2 = "file2.txt"
     contents_1 = "contents1"
     contents_2 = "contents2"
-    m_get_files.return_value = [
-        (contents_1, file_name_1),
-        (contents_2, file_name_2),
-    ]
     to_parse_url = "file:///d/"
+    m_get_files.return_value = [
+        (contents_1, to_parse_url, file_name_1),
+        (contents_2, to_parse_url, file_name_2),
+    ]
     parsed_url = "file:///parsed/"
     fail_url = "file:///failed/"
     m_parse_fb_page.side_effect = KeyError("foo")
