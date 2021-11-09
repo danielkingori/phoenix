@@ -13,6 +13,7 @@ from phoenix.scrape.fb_comment_parser import fb_comment_parser
 def get_files(dir_url):
     """Get files that can be processed from a folder recursively."""
     for entry in tentaclio.scandir(dir_url):
+        # This is very string but it has problems with "#" in file names
         url_str = str(entry.url)
         logging.info(entry.url)
         if url_str.endswith(".html"):
