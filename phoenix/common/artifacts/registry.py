@@ -9,19 +9,24 @@ from phoenix.common.artifacts import registry_mappers
 class ArtifactURLRegistry:
     """Registry of the artifact urls."""
 
+    tenant_id: str
     environment_key: reg_env.Environments
     run_dt: run_datetime.RunDatetime
     mappers: registry_mappers.MapperDict
 
     def __init__(
         self,
+        tenant_id: str,
         run_dt: run_datetime.RunDatetime,
         environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
         mappers: Optional[registry_mappers.MapperDict] = None,
     ):
         """Init ArtifactURLRegistry."""
+        self.tenant_id = tenant_id
         self.environment_key = environment_key
         self.run_dt = run_dt
+        if not self.tenant_id:
+            raise ValueError(f"Invalid Tenant ID: {tenant_id}")
         # The default mappers are set via an initialisation rather then as a default
         # parameter to help with the automatic reloading of changes, during a notebook session
         # that are made to default mappers.
@@ -48,5 +53,8 @@ class ArtifactURLRegistry:
 
         if "RUN_DATE" not in url_config:
             url_config["RUN_DATE"] = self.run_dt.to_run_date_str()
+
+        if "TENANT_ID" not in url_config:
+            url_config["TENANT_ID"] = self.tenant_id
 
         return url_config

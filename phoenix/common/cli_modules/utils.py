@@ -20,6 +20,7 @@ def init_parameters(
     return {
         "RUN_DATETIME": run_dt.to_file_safe_str(),
         "RUN_DATE": run_dt.to_run_date_str(),
+        "TENANT_ID": art_url_reg.tenant_id,
         "ARTIFACTS_ENVIRONMENT_KEY": art_url_reg.environment_key,
     }
 

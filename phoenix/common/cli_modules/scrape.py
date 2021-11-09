@@ -11,6 +11,7 @@ def scrape():
 
 
 @scrape.command("facebook_posts")
+@click.argument("tenant_id")
 @click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
 @click.option(
     "--scrape_since_days",
@@ -42,6 +43,7 @@ def scrape():
     ),
 )
 def fb(
+    tenant_id,
     artifact_env,
     scrape_since_days,
     scrape_start_date,
@@ -51,15 +53,16 @@ def fb(
     """Run scrape of facebook posts.
 
     Example command:
-    ./phoenix-cli scrape facebook_posts production
+    ./phoenix-cli scrape facebook_posts tenant_id production
 
+    TENANT_ID: ID of the tenant of phoenix
     ARTIFACT_ENV:
         The artifact environment that will be used. Default "local"
         Can use "production" which will pick the artifact env from the env var.
         Or a valid storage URL like "s3://my-phoenix-bucket/"
     """
     run_dt = run_datetime.create_run_datetime_now()
-    aur = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
+    aur = artifacts.registry.ArtifactURLRegistry(tenant_id, run_dt, artifact_env)
     extra_parameters = {
         "ARTIFACT_SOURCE_FB_POSTS_URL": aur.get_url("source-posts"),
     }
