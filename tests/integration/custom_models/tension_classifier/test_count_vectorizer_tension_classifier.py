@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.multioutput import MultiOutputClassifier
 
-from phoenix.custom_models.tension_classifier import tension_classifier
+from phoenix.custom_models.tension_classifier import count_vectorizer_tension_classifier
 from phoenix.tag.text_features_analyser import StemmedCountVectorizer
 
 
@@ -15,7 +15,7 @@ def test_persist_model(tmpdir):
     forest = RandomForestClassifier(random_state=1)
     multi_target_forest = MultiOutputClassifier(forest, n_jobs=-1)
 
-    classifier = tension_classifier.CountVectorizerTensionClassifier(
+    classifier = count_vectorizer_tension_classifier.CountVectorizerTensionClassifier(
         class_labels, vectorizer, multi_target_forest
     )
 
@@ -38,7 +38,7 @@ def test_predict():
     mock_classifier = mock.MagicMock()
     mock_classifier.predict.return_value = [[0, 1]]
 
-    cv_tension_classifier = tension_classifier.CountVectorizerTensionClassifier(
+    cv_tension_classifier = count_vectorizer_tension_classifier.CountVectorizerTensionClassifier(
         class_labels, mock_vectorizer, mock_classifier
     )
     # This tests that the columns in `class_labels` - the ones that we have a prediction for are
@@ -101,8 +101,10 @@ def test_CountVectorizerTensionClassifier_train():
         }
     )
 
-    count_vectorizer_classifier = tension_classifier.CountVectorizerTensionClassifier(
-        class_labels=tensions_with_enough_labels
+    count_vectorizer_classifier = (
+        count_vectorizer_tension_classifier.CountVectorizerTensionClassifier(
+            class_labels=tensions_with_enough_labels
+        )
     )
 
     count_vectorizer_classifier.train(input_training_df, input_test_df)
