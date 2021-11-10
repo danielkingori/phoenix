@@ -24,6 +24,9 @@ EXPECTED_COLUMNS_LABELING_SHEET = [
     "label_4_features",
     "label_5",
     "label_5_features",
+    "account_label_1",
+    "account_label_2",
+    "account_label_3",
 ]
 
 
