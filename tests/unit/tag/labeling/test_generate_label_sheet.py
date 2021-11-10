@@ -29,3 +29,22 @@ def test_create_new_labeling_sheet():
     actual_df = generate_label_sheet.create_new_labeling_sheet_df(df)
 
     pd.testing.assert_frame_equal(actual_df, expected_df)
+
+
+def test_get_goal_number_rows():
+    input_df = pd.DataFrame(
+        data={
+            "data_col": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+            "stratify_col": ["a", "a", "a", "a", "a", "b", "b", "b", "b", "c"],
+        }
+    )
+    expected_df = pd.DataFrame(
+        data={
+            "data_col": ["1", "3", "4", "6", "9"],
+            "stratify_col": ["a", "a", "a", "b", "b"],
+        },
+        index=[0, 2, 3, 5, 8],
+    )
+    excluded_df, actual_df = generate_label_sheet.get_goal_number_rows(input_df, "stratify_col", 5)
+
+    pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
