@@ -26,7 +26,7 @@ PRODUCTION_DASHBOARD_ENV_VAR_KEY = "PRODUCTION_DASHBOARD_URL_PREFIX"
 
 
 def default_url_prefix(
-    artifact_key: str, url_config: Dict[str, Any], environment_key: str = DEFAULT_ENVIRONMENT_KEY
+    artifact_key: str, url_config: Dict[str, Any], environment_key: Environments
 ):
     """URL prefix for static artifacts."""
     if environment_key == DEFAULT_ENVIRONMENT_KEY:
@@ -76,7 +76,7 @@ def valid_cloud_storage_url(url: str) -> str:
 
 
 def dashboard_url_prefix(
-    artifact_key: str, url_config: Dict[str, Any], environment_key: str = DEFAULT_ENVIRONMENT_KEY
+    artifact_key: str, url_config: Dict[str, Any], environment_key: Environments
 ):
     """URL prefix for public dashboard.
 

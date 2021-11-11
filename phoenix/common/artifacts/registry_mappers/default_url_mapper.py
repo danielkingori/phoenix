@@ -12,7 +12,7 @@ class ArtifactURLMapper(Protocol):
         self,
         artifact_key: artifact_keys.ArtifactKey,
         url_config: Dict[str, Any],
-        environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
+        environment_key: reg_env.Environments,
     ) -> str:
         """Protocol for the artifactURLMapper."""
         ...
@@ -22,7 +22,7 @@ def url_mapper(
     format_str: str,
     artifact_key: artifact_keys.ArtifactKey,
     url_config: Dict[str, Any],
-    environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
+    environment_key: reg_env.Environments,
 ):
     """Generalised url mapper."""
     prefix = reg_env.default_url_prefix(artifact_key, url_config, environment_key)

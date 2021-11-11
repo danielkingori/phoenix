@@ -15,8 +15,8 @@ class ArtifactURLRegistry:
 
     def __init__(
         self,
+        environment_key: reg_env.Environments,
         run_dt: run_datetime.RunDatetime,
-        environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
         mappers: Optional[registry_mappers.MapperDict] = None,
     ):
         """Init ArtifactURLRegistry."""

@@ -5,8 +5,8 @@ import mock
 import pytest
 from freezegun import freeze_time
 
-from phoenix.common import run_datetime
-from phoenix.common.artifacts import registry, registry_environment
+from phoenix.common.artifacts import registry_environment
+from tests.integration.common.artifacts import conftest
 
 
 @freeze_time("2000-01-01 T01:01:01.000001Z")
@@ -58,7 +58,6 @@ from phoenix.common.artifacts import registry, registry_environment
 )
 def test_tagging_runs_urls(artifact_key, url_config, environment_key, expected_url):
     """Test tagging runs urls."""
-    run_dt = run_datetime.create_run_datetime_now()
-    art_url_reg = registry.ArtifactURLRegistry(run_dt, environment_key)
+    art_url_reg = conftest.create_test_art_url_reg(environment_key)
     result_url = art_url_reg.get_url(artifact_key, url_config)
     assert result_url.endswith(expected_url)
