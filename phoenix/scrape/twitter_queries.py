@@ -7,10 +7,15 @@ import tweepy
 from phoenix.scrape import twitter_utilities
 
 
-ENV_C_KEY = "TWITTER_CONSUMER_KEY"
-ENV_C_SECRET = "TWITTER_CONSUMER_SECRET"
-ENV_A_TOKEN = "TWITTER_APPLICATION_TOKEN"
-ENV_A_SECRET = "TWITTER_APPLICATION_SECRET"
+# User authentication OAuth 1
+ENV_CONSUMER_KEY = "TWITTER_CONSUMER_KEY"
+ENV_CONSUMER_SECRET = "TWITTER_CONSUMER_SECRET"
+ENV_OAUTH_ACCESS_TOKEN = "TWITTER_OAUTH_ACCESS_TOKEN"
+ENV_OAUTH_ACCESS_SECRET = "TWITTER_OAUTH_ACCESS_SECRET"
+
+# Application authentication OAuth 2
+ENV_APPLICATION_KEY = "TWITTER_APPLICATION_KEY"
+ENV_APPLICATION_SECRET = "TWITTER_APPLICATION_SECRET"
 
 
 QUERY = ""  # Default query for tweet_search(api, q)
@@ -19,22 +24,33 @@ NUM_ITEMS = None  # Instructs the cursor how many items to retrieve. \
 # Different results for different API calls that have different rate limits
 
 
-def get_key(key_name) -> str:
-    """Get given key name from environment."""
-    key = os.getenv(key_name)
-    if not key:
-        raise ValueError(f"No key found for env {key_name}")
-    return key
+def get_auth_handler() -> tweepy.auth.AuthHandler:
+    """Get the auth handler based on environment variables."""
+    access_token_key = os.getenv(ENV_OAUTH_ACCESS_TOKEN)
+    access_token_secret = os.getenv(ENV_OAUTH_ACCESS_SECRET)
+    consumer_key = os.getenv(ENV_CONSUMER_KEY)
+    consumer_secret = os.getenv(ENV_CONSUMER_SECRET)
+    if consumer_key and consumer_secret and access_token_key and access_token_secret:
+        logging.info("Using OAuthHandler for tweepy authentication.")
+        auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+        auth.set_access_token(
+            access_token_key,
+            access_token_secret,
+        )
+        return auth
+
+    applicaton_key = os.getenv(ENV_APPLICATION_KEY)
+    applicaton_secret = os.getenv(ENV_APPLICATION_SECRET)
+    if applicaton_secret and applicaton_key:
+        logging.info("Using App authentication for tweepy authentication.")
+        return tweepy.AppAuthHandler(applicaton_key, applicaton_secret)
+
+    raise RuntimeError("Authentication for Twitter is not correctly configured.")
 
 
 def connect_twitter_api() -> tweepy.API:
     """Connect to twitter API v1."""
-    auth = tweepy.OAuthHandler(get_key(ENV_C_KEY), get_key(ENV_C_SECRET))
-    auth.set_access_token(
-        get_key(ENV_A_TOKEN),
-        get_key(ENV_A_SECRET),
-    )
-
+    auth = get_auth_handler()
     api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
     return api
 
