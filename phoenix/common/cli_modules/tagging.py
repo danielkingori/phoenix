@@ -3,7 +3,7 @@ from typing import List
 
 import click
 
-from phoenix.common import artifacts, run_datetime
+from phoenix.common import artifacts, run_datetime, run_params
 from phoenix.common.cli_modules import main_group, utils
 
 
@@ -19,11 +19,12 @@ def tagging():
         allow_extra_args=True,
     ),
 )
+@click.argument("artifact_env")
+@click.argument("tenant_id")
 @click.argument("phase_number", type=click.INT)
 @click.argument("object_type", type=click.STRING)
 @click.argument("year_filter", type=click.INT)
 @click.argument("month_filter", type=click.INT)
-@click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
 @click.option(
     "--start_offset",
     default=0,
@@ -32,37 +33,40 @@ def tagging():
 @click.pass_context
 def run_phase(
     ctx,
+    artifact_env,
+    tenant_id,
     phase_number,
     object_type,
     year_filter,
     month_filter,
-    artifact_env,
     start_offset,
 ):
     """Run tagging phase.
 
     Example command:
-    ./phoenix-cli tagging run_phase 1 facebook_posts 2021 8 production
+    ./phoenix-cli tagging run_phase production tenant 1 facebook_posts 2021 8
 
+    ARTIFACT_ENV:
+        The artifact environment that will be used.
+        Can use "production" which will pick the artifact env from the env var.
+        Or a valid storage URL like "s3://my-phoenix-bucket/"
+    TENANT_ID: The id of the tenant to run phoenix for.
     PHASE_NUMBER: 1 or 2
     OBJECT_TYPE: facebook_posts, facebook_comments, tweets
     YEAR_FILTER: year. E.g. 2021
     MONTH_FILTER: month number. E.g. 8
-    ARTIFACT_ENV:
-        The artifact environment that will be used. Default "local"
-        Can use "production" which will pick the artifact env from the env var.
-        Or a valid storage URL like "s3://my-phoenix-bucket/"
 
     Extra options will be added as parameters for all notebooks. E.g.
     --SOME_URL='s3://other-bucket/` will be a parameter for all notebooks.
     """
     _run_phase(
         ctx,
+        artifact_env,
+        tenant_id,
         phase_number,
         object_type,
         year_filter,
         month_filter,
-        artifact_env,
         start_offset,
     )
 
@@ -74,10 +78,11 @@ def run_phase(
         allow_extra_args=True,
     ),
 )
+@click.argument("artifact_env")
+@click.argument("tenant_id")
 @click.argument("phase_number", type=click.INT)
 @click.argument("object_type", type=click.STRING)
 @click.argument("month_offset", type=click.INT, default=0)
-@click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
 @click.option(
     "--start_offset",
     default=0,
@@ -87,23 +92,25 @@ def run_phase(
 def run_phase_month_offset(
     ctx,
     phase_number,
+    artifact_env,
+    tenant_id,
     object_type,
     month_offset,
-    artifact_env,
     start_offset,
 ):
     """Run tagging of offsetting the month and year to the current month and year.
 
     Example command:
-    ./phoenix-cli tagging run_phase_month_offset 1 facebook_posts -1 production
+    ./phoenix-cli tagging run_phase_month_offset production tenant 1 facebook_posts -1
 
+    ARTIFACT_ENV:
+        The artifact environment that will be used.
+        Can use "production" which will pick the artifact env from the env var.
+        Or a valid storage URL like "s3://my-phoenix-bucket/"
+    TENANT_ID: The id of the tenant to run phoenix for.
     PHASE_NUMBER: 1 or 2
     OBJECT_TYPE: facebook_posts, facebook_comments, tweets
     MONTH_OFFSET: Number of months to offset by. E.g. 0 is current month, -1 is previous month.
-    ARTIFACT_ENV:
-        The artifact environment that will be used. Default "local"
-        Can use "production" which will pick the artifact env from the env var.
-        Or a valid storage URL like "s3://my-phoenix-bucket/"
 
     Extra options will be added as parameters for all notebooks. E.g.
     --SOME_URL='s3://other-bucket/` will be a parameter for all notebooks.
@@ -112,27 +119,28 @@ def run_phase_month_offset(
     year_filter, month_filter = utils.get_year_month_for_offset(run_dt, month_offset)
     _run_phase(
         ctx,
+        artifact_env,
+        tenant_id,
         phase_number,
         object_type,
         year_filter,
         month_filter,
-        artifact_env,
         start_offset,
     )
 
 
 def _run_phase(
     ctx,
+    artifact_env,
+    tenant_id,
     phase_number,
     object_type,
     year_filter,
     month_filter,
-    artifact_env,
     start_offset,
 ):
     """Private function for running the tagging phase."""
-    run_dt = run_datetime.create_run_datetime_now()
-    art_url_reg = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
+    cur_run_params = run_params.general.create(artifact_env, tenant_id)
     args_parameters = {
         "OBJECT_TYPE": object_type,
         "YEAR_FILTER": year_filter,
@@ -141,12 +149,14 @@ def _run_phase(
 
     extra_parameters = dict([item.strip("--").split("=") for item in ctx.args])
     parameters = {
-        **utils.init_parameters(run_dt, art_url_reg),
+        **utils.init_parameters(cur_run_params.run_dt, cur_run_params.art_url_reg),
         **args_parameters,
         **extra_parameters,
     }
 
-    return _run_tagging_notebooks(phase_number, object_type, parameters, art_url_reg, start_offset)
+    return _run_tagging_notebooks(
+        phase_number, object_type, parameters, cur_run_params.art_url_reg, start_offset
+    )
 
 
 def _run_tagging_notebooks(phase_number, object_type, parameters, art_url_reg, start_offset):
@@ -215,35 +225,38 @@ def get_notebook_keys(phase_number: int, object_type) -> List[str]:
         allow_extra_args=True,
     ),
 )
+@click.argument("artifact_env")
+@click.argument("tenant_id")
 @click.argument("notebook_root_path", type=click.STRING)
 @click.argument("object_type", type=click.STRING)
 @click.argument("year_filter", type=click.INT)
 @click.argument("month_filter", type=click.INT)
-@click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
 @click.pass_context
 def run_single(
     ctx,
+    artifact_env,
+    tenant_id,
     notebook_root_path,
     object_type,
     year_filter,
     month_filter,
-    artifact_env,
 ):
     """Run tagging of facebook posts.
 
     Example command:
-    ./phoenix-cli tagging run_single phoenix/tag/features.ipynb facebook_posts 2021 8 production
+    ./phoenix-cli tagging run_single \
+            production tenant phoenix/tag/features.ipynb facebook_posts 2021 8
 
+    ARTIFACT_ENV:
+        The artifact environment that will be used.
+        Can use "production" which will pick the artifact env from the env var.
+        Or a valid storage URL like "s3://my-phoenix-bucket/"
+    TENANT_ID: The id of the tenant to run phoenix for.
     NOTEBOOK_ROOT_PATH: Use path from the project root:
         e.g. phoenix/tag/features.ipynb
     OBJECT_TYPE: facebook_posts, facebook_comments, tweets
     YEAR_FILTER: year. E.g. 2021
     MONTH_FILTER: month number. E.g. 8
-    ARTIFACT_ENV:
-        The artifact environment that will be used. Default "local"
-        Can use "production" which will pick the artifact env from the env var.
-        Or a valid storage URL like "s3://my-phoenix-bucket/"
-
     Extra options will be added as parameters for all notebooks. E.g.
     --SOME_URL='s3://other-bucket/` will be a parameter for all notebooks.
     """
@@ -252,8 +265,7 @@ def run_single(
         raise ValueError(f"NOTEBOOK_ROOT_PATH does not start with '{start_str}'")
 
     notebook_key = notebook_root_path[len(start_str) :]
-    run_dt = run_datetime.create_run_datetime_now()
-    art_url_reg = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
+    cur_run_params = run_params.general.create(artifact_env, tenant_id)
     args_parameters = {
         "OBJECT_TYPE": object_type,
         "YEAR_FILTER": year_filter,
@@ -262,9 +274,9 @@ def run_single(
 
     extra_parameters = dict([item.strip("--").split("=") for item in ctx.args])
     parameters = {
-        **utils.init_parameters(run_dt, art_url_reg),
+        **utils.init_parameters(cur_run_params.run_dt, cur_run_params.art_url_reg),
         **args_parameters,
         **extra_parameters,
     }
 
-    tagging_run_notebook(notebook_key, parameters, art_url_reg)
+    tagging_run_notebook(notebook_key, parameters, cur_run_params.art_url_reg)
