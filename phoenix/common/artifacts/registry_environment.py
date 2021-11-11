@@ -26,10 +26,9 @@ PRODUCTION_DASHBOARD_ENV_VAR_KEY = "PRODUCTION_DASHBOARD_URL_PREFIX"
 
 
 def default_url_prefix(
-    artifact_key: str, url_config: Dict[str, Any], environment_key: str = DEFAULT_ENVIRONMENT_KEY
+    artifact_key: str, url_config: Dict[str, Any], environment_key: str, tenant_id: str
 ):
     """URL prefix for static artifacts."""
-    tenant_id = url_config["TENANT_ID"]
     base_url = _get_url_from_environment_key(environment_key)
     return f"{base_url}{tenant_id}/"
 
