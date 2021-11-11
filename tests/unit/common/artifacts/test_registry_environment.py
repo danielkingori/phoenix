@@ -18,9 +18,9 @@ def test_default_url_prefrix_error(m_get_local):
 
 
 @mock.patch("phoenix.common.artifacts.urls.get_local")
-def test_default_url_prefrix_default(m_get_local):
-    """Test default_url_prefix for default."""
-    result = registry_environment.default_url_prefix("key", {"a": "b"})
+def test_default_url_prefrix_local(m_get_local):
+    """Test default_url_prefix for local."""
+    result = registry_environment.default_url_prefix("key", {"a": "b"}, "local")
     m_get_local.assert_called_once_with()
     assert result == str(m_get_local.return_value)
 
@@ -82,9 +82,9 @@ def test_default_url_production_directory_error(m_get_local):
 
 
 @mock.patch("phoenix.common.artifacts.urls.get_local")
-def test_dashboard_url_prefix_default(m_get_local):
-    """Test dashboard_url_prefix for default."""
-    result = registry_environment.dashboard_url_prefix("key", {"a": "b"})
+def test_dashboard_url_prefix_local(m_get_local):
+    """Test dashboard_url_prefix for local."""
+    result = registry_environment.dashboard_url_prefix("key", {"a": "b"}, "local")
     m_get_local.assert_not_called()
     assert result is None
 
