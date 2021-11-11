@@ -17,7 +17,9 @@ def test_create(m_run_dt_str, m_run_dt_now, m_art_url_reg, m_tenant_config):
     m_run_dt_str.assert_called_once_with(run_datetime_str)
     m_run_dt_now.assert_not_called()
     m_tenant_config.assert_called_once_with(tenant_id)
-    m_art_url_reg.assert_called_once_with(environment_key, m_run_dt_str.return_value)
+    m_art_url_reg.assert_called_once_with(
+        environment_key, m_tenant_config.return_value, m_run_dt_str.return_value
+    )
     assert isinstance(cur_run_params, general.GeneralRunParams)
     assert cur_run_params.art_url_reg == m_art_url_reg.return_value
     assert cur_run_params.tenant_config == m_tenant_config.return_value
@@ -36,7 +38,9 @@ def test_create_none_run_dt(m_run_dt_str, m_run_dt_now, m_art_url_reg, m_tenant_
     m_run_dt_now.assert_called_once_with()
     m_run_dt_str.assert_not_called()
     m_tenant_config.assert_called_once_with(tenant_id)
-    m_art_url_reg.assert_called_once_with(environment_key, m_run_dt_now.return_value)
+    m_art_url_reg.assert_called_once_with(
+        environment_key, m_tenant_config.return_value, m_run_dt_now.return_value
+    )
     assert isinstance(cur_run_params, general.GeneralRunParams)
     assert cur_run_params.art_url_reg == m_art_url_reg.return_value
     assert cur_run_params.tenant_config == m_tenant_config.return_value
