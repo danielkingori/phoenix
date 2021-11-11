@@ -4,23 +4,27 @@ from typing import Any, Dict, Optional
 from phoenix.common import run_datetime
 from phoenix.common.artifacts import registry_environment as reg_env
 from phoenix.common.artifacts import registry_mappers
+from phoenix.common.config import tenant
 
 
 class ArtifactURLRegistry:
     """Registry of the artifact urls."""
 
     environment_key: reg_env.Environments
+    tenant_config: tenant.TenantConfig
     run_dt: run_datetime.RunDatetime
     mappers: registry_mappers.MapperDict
 
     def __init__(
         self,
         environment_key: reg_env.Environments,
+        tenant_config: tenant.TenantConfig,
         run_dt: run_datetime.RunDatetime,
         mappers: Optional[registry_mappers.MapperDict] = None,
     ):
         """Init ArtifactURLRegistry."""
         self.environment_key = environment_key
+        self.tenant_config = tenant_config
         self.run_dt = run_dt
         # The default mappers are set via an initialisation rather then as a default
         # parameter to help with the automatic reloading of changes, during a notebook session
