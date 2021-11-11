@@ -28,5 +28,5 @@ def create(
 
     tenant_config = tenant.TenantConfig(tenant_id)
 
-    art_url_reg = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
+    art_url_reg = artifacts.registry.ArtifactURLRegistry(artifact_env, run_dt)
     return GeneralRunParams(run_dt=run_dt, tenant_config=tenant_config, art_url_reg=art_url_reg)
