@@ -20,6 +20,7 @@ class DataclassTwo:
 
     id: str
     param_2: int
+    dc_one: DataclassOne
 
 
 @pytest.mark.parametrize(
@@ -34,12 +35,12 @@ class DataclassTwo:
             DataclassOne(id="id_2", param_1=1),
         ),
         (
-            DataclassTwo("id_1", 1),
-            DataclassTwo("id_1", 1),
+            DataclassTwo("id_1", 1, DataclassOne("id", 1)),
+            DataclassTwo("id_1", 1, DataclassOne("id", 1)),
         ),
         (
-            DataclassTwo(id="id_2", param_2=1),
-            DataclassTwo(id="id_2", param_2=1),
+            DataclassTwo(id="id_2", param_2=1, dc_one=DataclassOne("id", 1)),
+            DataclassTwo(id="id_2", param_2=1, dc_one=DataclassOne("id", 1)),
         ),
     ],
 )
@@ -68,20 +69,36 @@ def test_equal(d1, d2):
             DataclassOne(id="id_2", param_1=2),
         ),
         (
-            DataclassTwo("id_1", 1),
-            DataclassTwo("id_1", 2),
+            DataclassTwo("id_1", 1, DataclassOne("id_1", 1)),
+            DataclassTwo("id_1", 2, DataclassOne("id_1", 1)),
         ),
         (
-            DataclassTwo("id_2", 1),
-            DataclassTwo("id_1", 1),
+            DataclassTwo("id_2", 1, DataclassOne("id_1", 1)),
+            DataclassTwo("id_1", 1, DataclassOne("id_1", 1)),
         ),
         (
-            DataclassTwo(id="id_2", param_2=2),
-            DataclassTwo(id="id_2", param_2=1),
+            DataclassTwo("id_1", 1, DataclassOne("id_1", 1)),
+            DataclassTwo("id_1", 1, DataclassOne("id_2", 1)),
         ),
         (
-            DataclassTwo(id="id_2", param_2=1),
-            DataclassTwo(id="id_1", param_2=1),
+            DataclassTwo("id_1", 1, DataclassOne("id_1", 2)),
+            DataclassTwo("id_1", 1, DataclassOne("id_1", 1)),
+        ),
+        (
+            DataclassTwo(id="id_1", param_2=1, dc_one=DataclassOne("id", 1)),
+            DataclassTwo(id="id_2", param_2=1, dc_one=DataclassOne("id", 1)),
+        ),
+        (
+            DataclassTwo(id="id_1", param_2=2, dc_one=DataclassOne("id", 1)),
+            DataclassTwo(id="id_1", param_2=1, dc_one=DataclassOne("id", 1)),
+        ),
+        (
+            DataclassTwo(id="id_2", param_2=1, dc_one=DataclassOne("id_1", 1)),
+            DataclassTwo(id="id_2", param_2=1, dc_one=DataclassOne("id", 1)),
+        ),
+        (
+            DataclassTwo(id="id_2", param_2=1, dc_one=DataclassOne("id", 1)),
+            DataclassTwo(id="id_2", param_2=1, dc_one=DataclassOne("id", 2)),
         ),
     ],
 )
