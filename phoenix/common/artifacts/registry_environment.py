@@ -49,7 +49,19 @@ def _get_url_from_environment_key(environment_key: Environments):
 
 
 def from_env_var(variable_name: str, raise_if_not_found=True) -> Optional[str]:
-    """Get the URL prefix from an environment variable."""
+    """Get the URL prefix from an env variable.
+
+    Arguments:
+        variable_name (str): the name of the env to get URL prefix.
+        raise_if_not_found (bool): suppress the exception if the env variable is not set
+
+    Raises:
+        ValueError: If the env variable is set as if not valid.
+            This occurs even if the raise_if_not_found is True.
+
+    Returns:
+        URL prefix as a string or None.
+    """
     result = os.getenv(variable_name)
     if result:
         valid_cloud_storage_url(result, variable_name)
