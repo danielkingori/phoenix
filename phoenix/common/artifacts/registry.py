@@ -41,7 +41,7 @@ class ArtifactURLRegistry:
         url_config = self._build_url_config(url_config)
         for mapper_key, url_fn in self.mappers.items():
             if artifact_key == mapper_key:
-                return url_fn(artifact_key, url_config, self.environment_key)
+                return url_fn(artifact_key, url_config, self.environment_key, self.tenant_config)
 
         raise ValueError(f"No url for artifact key: {artifact_key}")
 
