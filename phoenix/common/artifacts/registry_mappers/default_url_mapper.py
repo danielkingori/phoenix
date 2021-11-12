@@ -28,7 +28,9 @@ def url_mapper(
     tenant_config: tenant.TenantConfig,
 ):
     """Generalised url mapper."""
-    prefix = reg_env.default_url_prefix(artifact_key, url_config, environment_key)
+    prefix = reg_env.default_url_prefix(
+        artifact_key, url_config, environment_key, tenant_config.id
+    )
     url_str_formated = format_str.format(**url_config)
     return f"{prefix}{url_str_formated}"
 
