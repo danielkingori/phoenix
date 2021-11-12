@@ -4,13 +4,6 @@ import pytest
 
 from phoenix.common import run_datetime
 from phoenix.common.artifacts import registry, registry_environment, registry_mappers
-from phoenix.common.config import tenant
-
-
-@pytest.fixture
-def tenant_config():
-    """Create a tenant config for testing."""
-    return tenant.TenantConfig(id="id")
 
 
 @mock.patch("phoenix.common.artifacts.registry_mappers.get_default_mappers")
@@ -57,7 +50,7 @@ def test_artifact_url_registry(m_build_url_config, tenant_config):
     r_url = aur.get_url(artifact_key, url_config)
     m_build_url_config.assert_called_once_with(url_config)
     m_source_mapper.assert_called_once_with(
-        artifact_key, m_build_url_config.return_value, environment_key
+        artifact_key, m_build_url_config.return_value, environment_key, tenant_config
     )
     m_base_mapper.assert_not_called()
 
