@@ -52,21 +52,27 @@ def from_env_var(variable_name: str, raise_if_not_found=True) -> Optional[str]:
     """Get the URL prefix from an environment variable."""
     result = os.getenv(variable_name)
     if result:
+        valid_cloud_storage_url(result, variable_name)
         return result
 
     if raise_if_not_found:
         raise ValueError(f"No variable set in the current system for name: {variable_name}")
+
     return None
 
 
-def valid_cloud_storage_url(url: str) -> str:
+def valid_cloud_storage_url(url: str, env_variable_name: Optional[str] = None) -> str:
     """Check is the url is a valid url."""
     parsed_url = urllib.parse.urlparse(url)
+    error_suffix = ""
+    if env_variable_name:
+        error_suffix = f"For environment variable: {env_variable_name}."
     if parsed_url.scheme not in VALID_ENVIRONMENT_SCHEMAS:
         raise ValueError(
             (
                 f"Environment is not a valid url: {url}."
                 f" Please use URLs with schemas: {VALID_ENVIRONMENT_SCHEMAS}"
+                f" {error_suffix}"
             )
         )
 
@@ -75,6 +81,7 @@ def valid_cloud_storage_url(url: str) -> str:
             (
                 f"Environment is not a valid url directory: {url}."
                 f" Please add a / and make sure the URL is a directory."
+                f" {error_suffix}"
             )
         )
 
