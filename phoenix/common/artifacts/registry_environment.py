@@ -26,9 +26,15 @@ PRODUCTION_DASHBOARD_ENV_VAR_KEY = "PRODUCTION_DASHBOARD_URL_PREFIX"
 
 
 def default_url_prefix(
-    artifact_key: str, url_config: Dict[str, Any], environment_key: str = DEFAULT_ENVIRONMENT_KEY
+    artifact_key: str, url_config: Dict[str, Any], environment_key: Environments, tenant_id: str
 ):
     """URL prefix for static artifacts."""
+    base_url = _get_url_from_environment_key(environment_key)
+    return f"{base_url}{tenant_id}/"
+
+
+def _get_url_from_environment_key(environment_key: Environments):
+    """Get URL from the environment_key."""
     if environment_key == DEFAULT_ENVIRONMENT_KEY:
         return f"{urls.get_local()}"
 
@@ -43,24 +49,42 @@ def default_url_prefix(
 
 
 def from_env_var(variable_name: str, raise_if_not_found=True) -> Optional[str]:
-    """Get the URL prefix from an environment variable."""
+    """Get the URL prefix from an env variable.
+
+    Arguments:
+        variable_name (str): the name of the env to get URL prefix.
+        raise_if_not_found (bool): suppress the exception if the env variable is not set
+
+    Raises:
+        ValueError: If the env variable is set as if not valid.
+            This occurs even if the raise_if_not_found is True.
+
+    Returns:
+        URL prefix as a string or None.
+    """
     result = os.getenv(variable_name)
     if result:
+        valid_cloud_storage_url(result, variable_name)
         return result
 
     if raise_if_not_found:
         raise ValueError(f"No variable set in the current system for name: {variable_name}")
+
     return None
 
 
-def valid_cloud_storage_url(url: str) -> str:
+def valid_cloud_storage_url(url: str, env_variable_name: Optional[str] = None) -> str:
     """Check is the url is a valid url."""
     parsed_url = urllib.parse.urlparse(url)
+    error_suffix = ""
+    if env_variable_name:
+        error_suffix = f"For environment variable: {env_variable_name}."
     if parsed_url.scheme not in VALID_ENVIRONMENT_SCHEMAS:
         raise ValueError(
             (
                 f"Environment is not a valid url: {url}."
                 f" Please use URLs with schemas: {VALID_ENVIRONMENT_SCHEMAS}"
+                f" {error_suffix}"
             )
         )
 
@@ -69,6 +93,7 @@ def valid_cloud_storage_url(url: str) -> str:
             (
                 f"Environment is not a valid url directory: {url}."
                 f" Please add a / and make sure the URL is a directory."
+                f" {error_suffix}"
             )
         )
 
@@ -76,7 +101,7 @@ def valid_cloud_storage_url(url: str) -> str:
 
 
 def dashboard_url_prefix(
-    artifact_key: str, url_config: Dict[str, Any], environment_key: str = DEFAULT_ENVIRONMENT_KEY
+    artifact_key: str, url_config: Dict[str, Any], environment_key: Environments, tenant_id: str
 ):
     """URL prefix for public dashboard.
 
@@ -88,6 +113,14 @@ def dashboard_url_prefix(
     Production will use the env variable set in PRODUCTION_DASHBOARD_ENV_VAR_KEY.
     See phoenix/common/artifacts/registry_environment.py.
     """
+    url = _get_dashboard_url_from_environment(environment_key)
+    if not url:
+        return url
+    return f"{url}{tenant_id}/"
+
+
+def _get_dashboard_url_from_environment(environment_key: Environments):
+    """Get the dashboard URL from the environment."""
     if environment_key == DEFAULT_ENVIRONMENT_KEY:
         return None
 
