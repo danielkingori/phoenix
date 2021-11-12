@@ -18,7 +18,7 @@ def from_csvs(url_to_csv_folder: str) -> pd.DataFrame:
             continue
         logging.info(f"Processing file: {entry}")
         with tentaclio.open(entry) as file_io:
-            df = pd.read_csv(file_io, sep=";", index_col=None, header=0)
+            df = pd.read_csv(file_io, sep=",", index_col=None, header=0)
             li.append(df)
 
     df = pd.concat(li, axis=0, ignore_index=True)
