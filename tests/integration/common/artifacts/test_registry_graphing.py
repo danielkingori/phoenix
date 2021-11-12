@@ -35,29 +35,31 @@ def test_graphing(artifact_key, url_config, expected_url):
     os.environ, {registry_environment.PRODUCTION_DASHBOARD_ENV_VAR_KEY: "s3://dashboard/"}
 )
 @pytest.mark.parametrize(
-    "artifact_key, url_config, environment, expected_url",
+    "artifact_key, url_config, environment, tenant_id, expected_url",
     [
         (
             # For local we do not save to the dashbard
             "graphing_runs-retweet_dashboard_graph",
             {"YEAR_FILTER": 2021, "MONTH_FILTER": 1, "OBJECT_TYPE": "tweets"},
             "local",
+            "test_tenant",
             None,
         ),
         (
             "graphing_runs-retweet_dashboard_graph",
             {"YEAR_FILTER": 2021, "MONTH_FILTER": 1, "OBJECT_TYPE": "tweets"},
             "production",
+            "test_tenant",
             (
-                "s3://dashboard/"
+                "s3://dashboard/test_tenant/"
                 "tagging_runs/year_filter=2021/month_filter=1/"
                 "tweets/graphing/retweet_graph.html"
             ),
         ),
     ],
 )
-def test_graphing_dashboard(artifact_key, url_config, environment, expected_url):
+def test_graphing_dashboard(artifact_key, url_config, environment, tenant_id, expected_url):
     """Test graphing."""
-    art_url_reg = conftest.create_test_art_url_reg(environment)
+    art_url_reg = conftest.create_test_art_url_reg(environment, tenant_id)
     result_url = art_url_reg.get_url(artifact_key, url_config)
     assert result_url == expected_url
