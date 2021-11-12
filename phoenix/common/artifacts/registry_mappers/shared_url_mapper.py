@@ -3,13 +3,15 @@ from typing import Any, Dict
 
 from phoenix.common.artifacts import registry_environment as reg_env
 from phoenix.common.artifacts.registry_mappers import artifact_keys
+from phoenix.common.config import tenant
 
 
 def dashboard_url_mapper(
     format_str: str,
     artifact_key: artifact_keys.ArtifactKey,
     url_config: Dict[str, Any],
-    environment_key: reg_env.Environments = reg_env.DEFAULT_ENVIRONMENT_KEY,
+    environment_key: reg_env.Environments,
+    tenant_config: tenant.TenantConfig,
 ):
     """Dashboard url mapper.
 
