@@ -1,0 +1,35 @@
+"""Utils for youtube."""
+from typing import Optional
+
+import os
+
+from googleapiclient import discovery
+from googleapiclient.http import HttpMock
+
+
+YOUTUBE_API_SERVICE_NAME = "youtube"
+YOUTUBE_API_VERSION = "v3"
+API_KEY_ENV_NAME = "YOUTUBE_API_KEY"
+
+
+def get_client(http_mock: Optional[HttpMock] = None) -> discovery.Resource:
+    """Get the client.
+
+    Arguments:
+        http_mock (HttpMock): used to mock the client.
+
+    Returns:
+        youtube resource
+    """
+    api_key = get_api_key_from_env()
+    return discovery.build(
+        YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=api_key, http=http_mock
+    )
+
+
+def get_api_key_from_env():
+    """Get the api key from the env."""
+    key = os.getenv(API_KEY_ENV_NAME)
+    if not key:
+        raise RuntimeError(f"No key found for env {API_KEY_ENV_NAME}")
+    return key
