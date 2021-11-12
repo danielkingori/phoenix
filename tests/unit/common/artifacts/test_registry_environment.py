@@ -45,7 +45,7 @@ def test_default_url_production(m_get_local):
 def test_default_url_production_error(m_get_local):
     """Test default_url_prefix for production if env not set."""
     with mock.patch.dict(os.environ, {}, clear=True):
-        with pytest.raises(Exception) as excinfo:
+        with pytest.raises(ValueError) as excinfo:
             registry_environment.default_url_prefix("key", {"a": "b"}, "production", "test_tenant")
 
     m_get_local.assert_not_called()
