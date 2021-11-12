@@ -82,7 +82,7 @@ def valid_cloud_storage_url(url: str) -> str:
 
 
 def dashboard_url_prefix(
-    artifact_key: str, url_config: Dict[str, Any], environment_key: Environments
+    artifact_key: str, url_config: Dict[str, Any], environment_key: Environments, tenant_id: str
 ):
     """URL prefix for public dashboard.
 
@@ -94,6 +94,14 @@ def dashboard_url_prefix(
     Production will use the env variable set in PRODUCTION_DASHBOARD_ENV_VAR_KEY.
     See phoenix/common/artifacts/registry_environment.py.
     """
+    url = _get_dashboard_url_from_environment(environment_key)
+    if not url:
+        return url
+    return f"{url}{tenant_id}/"
+
+
+def _get_dashboard_url_from_environment(environment_key: Environments):
+    """Get the dashboard URL from the environment."""
     if environment_key == DEFAULT_ENVIRONMENT_KEY:
         return None
 

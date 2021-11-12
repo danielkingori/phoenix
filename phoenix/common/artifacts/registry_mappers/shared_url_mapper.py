@@ -20,7 +20,9 @@ def dashboard_url_mapper(
     See phoenix/common/artifacts/registry_environment.py::dashboard_url_prefix
     for more information.
     """
-    prefix = reg_env.dashboard_url_prefix(artifact_key, url_config, environment_key)
+    prefix = reg_env.dashboard_url_prefix(
+        artifact_key, url_config, environment_key, tenant_config.id
+    )
     if not prefix:
         return None
     url_str_formated = format_str.format(**url_config)
