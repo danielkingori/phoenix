@@ -184,3 +184,51 @@ def test_patched_open(tmp_google_drive_folder_id, tmp_google_drive_folder_id_2):
     out_df_2 = google_sheets.get(client, tmp_google_drive_folder_id_2, sheet_name, worksheet_name)
     pd.testing.assert_frame_equal(out_df, in_df)
     pd.testing.assert_frame_equal(out_df_2, in_df_2)
+
+
+@pytest.mark.auth
+def test_persist_preserves_sheet_formatting(tmp_google_drive_folder_id):
+    """Test persisting (and getting) a dataframe to (and from) a Sheet preserves Sheet formatting.
+
+    This test uses the real Google Drive to persist Sheets to.
+    """
+    in_df = pd.DataFrame(
+        {
+            "col A": [1, 2],
+            "col B": ["a", "b"],
+        }
+    )
+    client = google_sheets.get_client()
+    sheet_name = "test_sheet"
+    worksheet_name = "test_worksheet"
+    google_sheets.create_sheet(client, tmp_google_drive_folder_id, sheet_name, [worksheet_name])
+    google_sheets.persist(client, tmp_google_drive_folder_id, sheet_name, worksheet_name, in_df)
+
+    worksheet = google_sheets._get_worksheet(
+        client, tmp_google_drive_folder_id, sheet_name, worksheet_name
+    )
+    worksheet.format("A1:B1", {"textFormat": {"bold": True}})
+
+    in_df = pd.DataFrame(
+        {
+            "col A": [1, 2, 3],
+            "col B": ["a", "b", "c"],
+            "col C": [-1, -2, -3],
+        }
+    )
+    google_sheets.persist(client, tmp_google_drive_folder_id, sheet_name, worksheet_name, in_df)
+
+    sheet_id = client.list_spreadsheet_files(sheet_name, tmp_google_drive_folder_id)[0]["id"]
+
+    sheets_service = discovery.build("sheets", "v4")
+    response = (
+        sheets_service.spreadsheets()
+        .get(spreadsheetId=sheet_id, ranges=[f"{worksheet_name}!A1:A2"], includeGridData=True)
+        .execute()
+    )
+    assert response["sheets"][0]["data"][0]["rowData"][0]["values"][0]["userEnteredFormat"][
+        "textFormat"
+    ]["bold"]
+
+    out_df = google_sheets.get(client, tmp_google_drive_folder_id, sheet_name, worksheet_name)
+    pd.testing.assert_frame_equal(out_df, in_df)
