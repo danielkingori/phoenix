@@ -107,6 +107,7 @@ def test_persist_google_sheet(tmp_google_drive_folder_id):
     client = google_sheets.get_client()
     sheet_name = "test_sheet"
     worksheet_name = "test_worksheet"
+    google_sheets.create_sheet(client, tmp_google_drive_folder_id, sheet_name, [worksheet_name])
     google_sheets.persist(client, tmp_google_drive_folder_id, sheet_name, worksheet_name, in_df)
 
     out_df = google_sheets.get(client, tmp_google_drive_folder_id, sheet_name, worksheet_name)
@@ -127,6 +128,7 @@ def test_persist_overwrite_google_sheet(tmp_google_drive_folder_id):
     client = google_sheets.get_client()
     sheet_name = "test_sheet"
     worksheet_name = "test_worksheet"
+    google_sheets.create_sheet(client, tmp_google_drive_folder_id, sheet_name, [worksheet_name])
     google_sheets.persist(client, tmp_google_drive_folder_id, sheet_name, worksheet_name, in_df)
 
     out_df = google_sheets.get(client, tmp_google_drive_folder_id, sheet_name, worksheet_name)
@@ -165,6 +167,7 @@ def test_patched_open(tmp_google_drive_folder_id, tmp_google_drive_folder_id_2):
             "col A": [1],
         }
     )
+    google_sheets.create_sheet(client, tmp_google_drive_folder_id, sheet_name, [worksheet_name])
     google_sheets.persist(client, tmp_google_drive_folder_id, sheet_name, worksheet_name, in_df)
 
     in_df_2 = pd.DataFrame(
@@ -172,6 +175,7 @@ def test_patched_open(tmp_google_drive_folder_id, tmp_google_drive_folder_id_2):
             "col B": [2],
         }
     )
+    google_sheets.create_sheet(client, tmp_google_drive_folder_id_2, sheet_name, [worksheet_name])
     google_sheets.persist(
         client, tmp_google_drive_folder_id_2, sheet_name, worksheet_name, in_df_2
     )
