@@ -141,3 +141,42 @@ def test_persist_overwrite_google_sheet(tmp_google_drive_folder_id):
 
     out_df = google_sheets.get(client, tmp_google_drive_folder_id, sheet_name, worksheet_name)
     pd.testing.assert_frame_equal(out_df, in_df)
+
+
+tmp_google_drive_folder_id_2 = tmp_google_drive_folder_id
+
+
+@pytest.mark.auth
+def test_patched_open(tmp_google_drive_folder_id, tmp_google_drive_folder_id_2):
+    """Test patched `open` and ensure folder ID is used when opening Sheet using its name.
+
+    This test fails without the patch, as unpatched `open` will pick the first sheet which matches
+    name irrespective of sheet locations.
+
+    This test uses the real Google Drive to persist Sheets to.
+    """
+    sheet_name = "test_sheet"
+    worksheet_name = "test_worksheet"
+
+    client = google_sheets.get_client()
+
+    in_df = pd.DataFrame(
+        {
+            "col A": [1],
+        }
+    )
+    google_sheets.persist(client, tmp_google_drive_folder_id, sheet_name, worksheet_name, in_df)
+
+    in_df_2 = pd.DataFrame(
+        {
+            "col B": [2],
+        }
+    )
+    google_sheets.persist(
+        client, tmp_google_drive_folder_id_2, sheet_name, worksheet_name, in_df_2
+    )
+
+    out_df = google_sheets.get(client, tmp_google_drive_folder_id, sheet_name, worksheet_name)
+    out_df_2 = google_sheets.get(client, tmp_google_drive_folder_id_2, sheet_name, worksheet_name)
+    pd.testing.assert_frame_equal(out_df, in_df)
+    pd.testing.assert_frame_equal(out_df_2, in_df_2)
