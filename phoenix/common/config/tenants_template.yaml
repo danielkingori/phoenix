@@ -1,0 +1,13 @@
+---
+tenants:
+    -
+        id: tenant_id_1
+        google_drive_folder_id: folder_id_1
+        crowdtangle_scrape_list_id: list_id_1
+    -
+        id: tenant_id_2
+        crowdtangle_scrape_list_id: list_id_2
+    -
+        id: tenant_id_3
+        google_drive_folder_id: folder_id_3
+
