@@ -145,6 +145,8 @@ def test_persist_overwrite_google_sheet(tmp_google_drive_folder_id):
     pd.testing.assert_frame_equal(out_df, in_df)
 
 
+# tmp_google_drive_folder_id_2 creates a second drive folder for a fixture.
+# For one test  `tmp_google_drive_folder_id_2` will be different then `tmp_google_drive_folder_id`.
 tmp_google_drive_folder_id_2 = tmp_google_drive_folder_id
 
 
