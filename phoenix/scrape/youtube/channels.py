@@ -1,10 +1,10 @@
 """Channels functionality."""
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 
 import pandas as pd
 from googleapiclient import discovery
 
-from phoenix.scrape.youtube import utils
+from phoenix.scrape.youtube import lists, utils
 
 
 DEFAULT_PARTS_TO_REQUEST = [
@@ -44,12 +44,7 @@ def get_channels(
     part_str = _get_part_str(parts_list)
     channel_ids_str = _get_channel_ids_str(cur_chanels_config)
     request = channels.list(part=part_str, id=channel_ids_str)
-    result: List[Any] = []
-    while request is not None:
-        found_resource = request.execute()
-        result = _process_found_channels(result, found_resource)
-        request = channels.list_next(request, found_resource)
-    return result
+    return lists.paginate_list_resource(channels, request)
 
 
 def _get_channel_ids_str(cur_chanels_config: pd.DataFrame):
@@ -64,11 +59,3 @@ def _get_part_str(
     if not parts_list:
         parts_list = DEFAULT_PARTS_TO_REQUEST
     return ",".join(parts_list)
-
-
-def _process_found_channels(
-    result: List[Any],
-    found_channels: Dict[Any, Any],
-) -> List[Any]:
-    """Process the found channels appending to result."""
-    return result + [found_channels]
