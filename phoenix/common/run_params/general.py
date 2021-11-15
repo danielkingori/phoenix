@@ -12,7 +12,9 @@ from phoenix.common.run_params import base
 class GeneralRunParams(base.RunParams):
     """GeneralRunParams."""
 
-    pass
+    run_dt: run_datetime.RunDatetime
+    tenant_config: tenant.TenantConfig
+    art_url_reg: artifacts.registry.ArtifactURLRegistry
 
 
 def create(
