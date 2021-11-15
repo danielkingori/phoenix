@@ -15,6 +15,7 @@ from phoenix.scrape import twitter_queries
         twitter_queries.ENV_OAUTH_ACCESS_TOKEN: "oauth_access_token",
         twitter_queries.ENV_OAUTH_ACCESS_SECRET: "oauth_access_secret",
     },
+    clear=True,
 )
 @mock.patch("tweepy.OAuthHandler")
 @mock.patch("tweepy.AppAuthHandler")
@@ -40,6 +41,7 @@ def test_get_auth_handler_oauth(m_AppAuthHandler, m_OAuthHandler):
         twitter_queries.ENV_APPLICATION_KEY: "applicaton_key",
         twitter_queries.ENV_APPLICATION_SECRET: "applicaton_secret",
     },
+    clear=True,
 )
 @mock.patch("tweepy.OAuthHandler")
 @mock.patch("tweepy.AppAuthHandler")
@@ -61,6 +63,7 @@ def test_get_auth_handler_oauth_overrides(m_AppAuthHandler, m_OAuthHandler):
         twitter_queries.ENV_APPLICATION_KEY: "applicaton_key",
         twitter_queries.ENV_APPLICATION_SECRET: "applicaton_secret",
     },
+    clear=True,
 )
 @mock.patch("tweepy.OAuthHandler")
 @mock.patch("tweepy.AppAuthHandler")
@@ -72,12 +75,17 @@ def test_get_auth_handler_application(m_AppAuthHandler, m_OAuthHandler):
     m_OAuthHandler.assert_not_called()
 
 
+@mock.patch.dict(
+    os.environ,
+    {},
+    clear=True,
+)
 @mock.patch("tweepy.OAuthHandler")
 @mock.patch("tweepy.AppAuthHandler")
 def test_get_auth_handler_error(m_AppAuthHandler, m_OAuthHandler):
     """Test get_auth_handler with no enviroment keys."""
     with pytest.raises(RuntimeError) as error:
         twitter_queries.get_auth_handler()
-        assert "not correct" in str(error.value)
+    assert "not correct" in str(error.value)
     m_AppAuthHandler.assert_not_called()
     m_OAuthHandler.assert_not_called()
