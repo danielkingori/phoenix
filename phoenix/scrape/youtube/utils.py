@@ -33,3 +33,21 @@ def get_api_key_from_env():
     if not key:
         raise RuntimeError(f"No key found for env {API_KEY_ENV_NAME}")
     return key
+
+
+def get_resource_client(
+    resource_name: str,
+    client: Optional[discovery.Resource] = None,
+):
+    """Get the Resource Client form the client.
+
+    Arguments:
+        resource_name (str): name of resource to get from the client.
+        client: youtube client. Optional
+
+    Returns:
+        Resource
+    """
+    if not client:
+        client = get_client()
+    return getattr(client, resource_name)()

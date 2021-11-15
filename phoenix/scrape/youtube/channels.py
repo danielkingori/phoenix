@@ -40,7 +40,7 @@ def get_channels(
     Returns:
         List of dictionaries that contain the channel list resource.
     """
-    channels = _get_channels_client(client)
+    channels = utils.get_resource_client("channels", client)
     part_str = _get_part_str(parts_list)
     channel_ids_str = _get_channel_ids_str(cur_chanels_config)
     request = channels.list(part=part_str, id=channel_ids_str)
@@ -50,15 +50,6 @@ def get_channels(
         result = _process_found_channels(result, found_resource)
         request = channels.list_next(request, found_resource)
     return result
-
-
-def _get_channels_client(
-    client: Optional[discovery.Resource] = None,
-):
-    """Get the channels Resource."""
-    if not client:
-        client = utils.get_client()
-    return client.channels()
 
 
 def _get_channel_ids_str(cur_chanels_config: pd.DataFrame):
