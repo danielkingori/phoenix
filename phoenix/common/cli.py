@@ -7,7 +7,9 @@ from phoenix.common.cli_modules import (  # noqa: F401
     facebook_comments_pages,
     graphing,
     main_group,
-    scrape,
+    scrape_facebook,
+    scrape_group,
+    scrape_twitter,
     tagging,
     utils,
 )
