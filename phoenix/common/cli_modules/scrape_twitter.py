@@ -57,7 +57,7 @@ def tw(
         "ARTIFACT_SOURCE_TWEETS_URL": source_artifact_url,
     }
     parameters = {
-        **utils.init_parameters(cur_run_params.run_dt, cur_run_params.art_url_reg),
+        **utils.init_parameters(cur_run_params),
         **extra_parameters,
     }
     if scrape_since_days:

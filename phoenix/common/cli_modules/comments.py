@@ -78,7 +78,7 @@ def run_phase(
 
     extra_parameters = dict([item.strip("--").split("=") for item in ctx.args])
     parameters = {
-        **utils.init_parameters(cur_run_params.run_dt, cur_run_params.art_url_reg),
+        **utils.init_parameters(cur_run_params),
         **args_parameters,
         **extra_parameters,
     }
@@ -172,7 +172,7 @@ def tag_phase_2(
 
     extra_parameters = dict([item.strip("--").split("=") for item in ctx.args])
     parameters = {
-        **utils.init_parameters(cur_run_params.run_dt, cur_run_params.art_url_reg),
+        **utils.init_parameters(cur_run_params),
         **args_parameters,
         **extra_parameters,
     }

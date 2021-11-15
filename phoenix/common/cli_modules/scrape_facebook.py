@@ -61,7 +61,7 @@ def fb(
         "ARTIFACT_SOURCE_FB_POSTS_URL": cur_run_params.art_url_reg.get_url("source-posts"),
     }
     parameters = {
-        **utils.init_parameters(cur_run_params.run_dt, cur_run_params.art_url_reg),
+        **utils.init_parameters(cur_run_params),
         **extra_parameters,
     }
     if scrape_since_days:
