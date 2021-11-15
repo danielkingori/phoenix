@@ -2,6 +2,8 @@
 
 This keeps datetimes consistent across projects.
 """
+from typing import Any, Dict
+
 import datetime
 
 
@@ -49,6 +51,13 @@ class RunDatetime:
     def to_run_date_str(self) -> str:
         """Get the run date."""
         return self.dt.strftime("%Y-%m-%d")
+
+    def to_url_config(self) -> Dict[str, Any]:
+        """Get the url config for the run datetime."""
+        return {
+            "YEAR_FILTER": self.dt.year,
+            "MONTH_FILTER": self.dt.month,
+        }
 
 
 def create_run_datetime_now() -> RunDatetime:
