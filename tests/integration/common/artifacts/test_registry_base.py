@@ -65,6 +65,14 @@ from tests.integration.common.artifacts import conftest
                 "year_filter=2021/month_filter=1/failed_parse/20000101T010101.000001Z/"
             ),
         ),
+        (
+            "base-grouped_by_youtube_channels",
+            {"YEAR_FILTER": 2021, "MONTH_FILTER": 1},
+            (
+                "base/grouped_by_year_month/youtube_channels/"
+                "year_filter=2021/month_filter=1/youtube_channels-20000101T010101.000001Z.json"
+            ),
+        ),
     ],
 )
 def test_base_grouped_by(artifact_key, url_config, expected_url):

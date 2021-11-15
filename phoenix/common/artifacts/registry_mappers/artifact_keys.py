@@ -33,6 +33,9 @@ ArtifactKey = Literal[
     "base-facebook_comments_pages_successful_parse",
     "base-facebook_comments_pages_failed_parse",
     "base-grouped_by_facebook_comments",
+    # Youtube
+    "source-youtube_channels_from_channels",
+    "base-grouped_by_youtube_channels",
     # Tagging notebooks
     "tagging_runs-output_notebook_base",
     # Tagging facebook

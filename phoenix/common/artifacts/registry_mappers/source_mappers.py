@@ -32,4 +32,8 @@ MAPPERS: MapperDict = {
     "source-facebook_comments": partial(
         url_mapper, "source_runs/{RUN_DATE}/source-facebook_comments-{RUN_DATETIME}.json"
     ),
+    "source-youtube_channels_from_channels": partial(
+        url_mapper,
+        "source_runs/{RUN_DATE}/source-youtube_channels_from_channels-{RUN_DATETIME}.json",
+    ),
 }
