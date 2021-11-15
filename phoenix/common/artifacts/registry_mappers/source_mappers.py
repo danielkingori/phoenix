@@ -7,6 +7,9 @@ from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperD
 SOURCE_BASE = "source_runs/{RUN_DATE}/"
 
 MAPPERS: MapperDict = {
+    "source-notebooks_base": partial(
+        url_mapper, f"{SOURCE_BASE}" + "output_notebooks/{RUN_DATETIME}/"
+    ),
     "source-undp_events_notebook": partial(
         url_mapper, f"{SOURCE_BASE}" + "undp_events-{RUN_DATETIME}.ipynb"
     ),
