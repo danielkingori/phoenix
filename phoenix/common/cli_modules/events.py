@@ -40,7 +40,7 @@ def run(
     EVENT_TYPE: acled, undp
     """
     cur_run_params = run_params.general.create(artifact_env, tenant_id)
-    parameters = utils.init_parameters(cur_run_params.run_dt, cur_run_params.art_url_reg)
+    parameters = utils.init_parameters(cur_run_params)
     notebook_key = ""
     if event_type == "undp":
         notebook_key = "scrape/undp_events/undp_events_transform.ipynb"

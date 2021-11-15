@@ -119,7 +119,7 @@ def run(
         cur_run_params.run_dt, month_offset
     )
     init_parameters = {
-        **utils.init_parameters(cur_run_params.run_dt, cur_run_params.art_url_reg),
+        **utils.init_parameters(cur_run_params),
         "YEAR_FILTER": year_filter,
         "MONTH_FILTER": month_filter,
     }
