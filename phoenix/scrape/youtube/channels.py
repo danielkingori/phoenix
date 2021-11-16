@@ -19,6 +19,9 @@ DEFAULT_PARTS_TO_REQUEST = [
 ]
 
 
+RESOURCE_CLIENT = "channels"
+
+
 def get_channels(
     channels_config: pd.DataFrame,
     parts_list: Optional[List[str]] = None,
@@ -40,7 +43,7 @@ def get_channels(
     Returns:
         List of dictionaries that contain the channel list resource.
     """
-    channels = utils.get_resource_client("channels", client)
+    channels = utils.get_resource_client(RESOURCE_CLIENT, client)
     part_str = _get_part_str(parts_list)
     channel_ids_str = _get_channel_ids_str(channels_config)
     request = channels.list(part=part_str, id=channel_ids_str)
