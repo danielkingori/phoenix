@@ -28,6 +28,10 @@ def paginate_list_resource(
 
     General functionality based on:
     https://github.com/googleapis/google-api-python-client/blob/main/docs/pagination.md
+
+    This functioality can be used for any resource client that has `list` and `list_next`.
+    Lot's of clients have this but not all.
+
     Arguments:
         resource_client: Resource client such as `youtube.channels()`
         process_function (ListProcessFunction): Function that will take the found resources
