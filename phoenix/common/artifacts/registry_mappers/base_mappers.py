@@ -39,4 +39,9 @@ MAPPERS: MapperDict = {
     # Acled events
     "base-acled_events_input": partial(url_mapper, shared_urls.BASE_BASE + "acled_events/"),
     "base-undp_events_input": partial(url_mapper, shared_urls.BASE_BASE + "undp_events/"),
+    # YouTube
+    "base-grouped_by_youtube_channels": partial(
+        url_mapper,
+        shared_urls.GROUP_BY_YOUTUBE_CHANNELS + "youtube_channels-{RUN_DATETIME}.json",
+    ),
 }

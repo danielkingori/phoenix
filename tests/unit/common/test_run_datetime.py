@@ -120,3 +120,11 @@ def test_eq_non():
         datetime.datetime(2010, 11, 12, 13, 14, 15, 16, tzinfo=datetime.timezone.utc)
     )
     assert run_dt_1 != run_dt_2
+
+
+def test_url_config():
+    """Test to_url_config."""
+    run_dt = run_datetime.RunDatetime(
+        datetime.datetime(2010, 11, 12, 13, 14, 15, 17, tzinfo=datetime.timezone.utc)
+    )
+    assert run_dt.to_url_config() == {"YEAR_FILTER": 2010, "MONTH_FILTER": 11}

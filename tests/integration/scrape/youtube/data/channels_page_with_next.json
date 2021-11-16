@@ -1,0 +1,131 @@
+{
+    "kind": "youtube#channelListResponse",
+    "etag": "ty69er8891U71EnUAmmq8T2MAtM",
+    "nextPageToken": "token",
+    "pageInfo": {
+        "totalResults": 2,
+        "resultsPerPage": 5
+    },
+    "items": [
+        {
+            "kind": "youtube#channel",
+            "etag": "ZPMNCrIJStCn68ZVgeBAgjO9x3g",
+            "id": "UC3z8ZdT6f6lskINqJFI8gyQ",
+            "snippet": {
+                "title": "Build Peace",
+                "description": "All Build Peace Conference talks are now hosted here: https://www.youtube.com/channel/UC5VgEt3Na1zZDJo-PBa86Rg\n\nBuild Peace Conference brings together practitioners, activists and technologists to share ideas on using technology for peacebuilding & conflict transformation.\n\nhttp://howtobuildpeace.com",
+                "publishedAt": "2014-04-24T06:27:29Z",
+                "thumbnails": {
+                    "default": {
+                        "url": "https://yt3.ggpht.com/ytc/AKedOLRKoxldPBrZqAceFzBGl_gPD_-8LplP4FNdcbHr=s88-c-k-c0x00ffffff-no-rj",
+                        "width": 88,
+                        "height": 88
+                    },
+                    "medium": {
+                        "url": "https://yt3.ggpht.com/ytc/AKedOLRKoxldPBrZqAceFzBGl_gPD_-8LplP4FNdcbHr=s240-c-k-c0x00ffffff-no-rj",
+                        "width": 240,
+                        "height": 240
+                    },
+                    "high": {
+                        "url": "https://yt3.ggpht.com/ytc/AKedOLRKoxldPBrZqAceFzBGl_gPD_-8LplP4FNdcbHr=s800-c-k-c0x00ffffff-no-rj",
+                        "width": 800,
+                        "height": 800
+                    }
+                },
+                "localized": {
+                    "title": "Build Peace",
+                    "description": "All Build Peace Conference talks are now hosted here: https://www.youtube.com/channel/UC5VgEt3Na1zZDJo-PBa86Rg\n\nBuild Peace Conference brings together practitioners, activists and technologists to share ideas on using technology for peacebuilding & conflict transformation.\n\nhttp://howtobuildpeace.com"
+                }
+            },
+            "contentDetails": {
+                "relatedPlaylists": {
+                    "likes": "",
+                    "uploads": "UU3z8ZdT6f6lskINqJFI8gyQ"
+                }
+            },
+            "statistics": {
+                "viewCount": "15812",
+                "subscriberCount": "145",
+                "hiddenSubscriberCount": false,
+                "videoCount": "64"
+            },
+            "status": {
+                "privacyStatus": "public",
+                "isLinked": true,
+                "longUploadsStatus": "longUploadsUnspecified"
+            },
+            "brandingSettings": {
+                "channel": {
+                    "title": "Build Peace",
+                    "description": "All Build Peace Conference talks are now hosted here: https://www.youtube.com/channel/UC5VgEt3Na1zZDJo-PBa86Rg\n\nBuild Peace Conference brings together practitioners, activists and technologists to share ideas on using technology for peacebuilding & conflict transformation.\n\nhttp://howtobuildpeace.com"
+                },
+                "image": {
+                    "bannerExternalUrl": "https://lh3.googleusercontent.com/Hil9vz85nXw7Yhuy3D9WQGPsAsURZG17fdubrojRCnRmam1--qYlr8Yiw-B0R4DjiFosiTS8"
+                }
+            },
+            "contentOwnerDetails": {}
+        },
+        {
+            "kind": "youtube#channel",
+            "etag": "tZf3RqWmQ77PxlyspObZeKF21R4",
+            "id": "UC5VgEt3Na1zZDJo-PBa86Rg",
+            "snippet": {
+                "title": "Build Up",
+                "description": "Build Up transforms conflict in the digital age. Our approach combines peacebuilding, participation and technology to identify and address emergent challenges to peace. \n\nWe use digital technologies to build peace: we support peace innovators across the globe, working with local organisations to design and implement technology interventions to peacebuilding processes. We transform conflicts that happen in digital spaces: we conduct research and interventions to address polarization on social and digital media in contexts across the globe. \n\nWe have demonstrated that our approach and methodologies work to address fractures in societies experiencing active violent conflict such as Syria, in post-conflict societies such as Colombia, and in societies where new divisions are emerging such as the USA. We foster a community of practice that thinks critically about conflict in the digital age through the annual convening of Build Peace, the leading global conference on peace and tech.",
+                "customUrl": "buildup73223",
+                "publishedAt": "2015-07-24T10:55:31Z",
+                "thumbnails": {
+                    "default": {
+                        "url": "https://yt3.ggpht.com/ytc/AKedOLQufTEXTllUEfR6ZPF5AF1hiVLTvJr1ufANwLNv=s88-c-k-c0x00ffffff-no-rj",
+                        "width": 88,
+                        "height": 88
+                    },
+                    "medium": {
+                        "url": "https://yt3.ggpht.com/ytc/AKedOLQufTEXTllUEfR6ZPF5AF1hiVLTvJr1ufANwLNv=s240-c-k-c0x00ffffff-no-rj",
+                        "width": 240,
+                        "height": 240
+                    },
+                    "high": {
+                        "url": "https://yt3.ggpht.com/ytc/AKedOLQufTEXTllUEfR6ZPF5AF1hiVLTvJr1ufANwLNv=s800-c-k-c0x00ffffff-no-rj",
+                        "width": 800,
+                        "height": 800
+                    }
+                },
+                "localized": {
+                    "title": "Build Up",
+                    "description": "Build Up transforms conflict in the digital age. Our approach combines peacebuilding, participation and technology to identify and address emergent challenges to peace. \n\nWe use digital technologies to build peace: we support peace innovators across the globe, working with local organisations to design and implement technology interventions to peacebuilding processes. We transform conflicts that happen in digital spaces: we conduct research and interventions to address polarization on social and digital media in contexts across the globe. \n\nWe have demonstrated that our approach and methodologies work to address fractures in societies experiencing active violent conflict such as Syria, in post-conflict societies such as Colombia, and in societies where new divisions are emerging such as the USA. We foster a community of practice that thinks critically about conflict in the digital age through the annual convening of Build Peace, the leading global conference on peace and tech."
+                }
+            },
+            "contentDetails": {
+                "relatedPlaylists": {
+                    "likes": "",
+                    "uploads": "UU5VgEt3Na1zZDJo-PBa86Rg"
+                }
+            },
+            "statistics": {
+                "viewCount": "18216",
+                "subscriberCount": "274",
+                "hiddenSubscriberCount": false,
+                "videoCount": "161"
+            },
+            "status": {
+                "privacyStatus": "public",
+                "isLinked": true,
+                "longUploadsStatus": "longUploadsUnspecified",
+                "madeForKids": false
+            },
+            "brandingSettings": {
+                "channel": {
+                    "title": "Build Up",
+                    "description": "Build Up transforms conflict in the digital age. Our approach combines peacebuilding, participation and technology to identify and address emergent challenges to peace. \n\nWe use digital technologies to build peace: we support peace innovators across the globe, working with local organisations to design and implement technology interventions to peacebuilding processes. We transform conflicts that happen in digital spaces: we conduct research and interventions to address polarization on social and digital media in contexts across the globe. \n\nWe have demonstrated that our approach and methodologies work to address fractures in societies experiencing active violent conflict such as Syria, in post-conflict societies such as Colombia, and in societies where new divisions are emerging such as the USA. We foster a community of practice that thinks critically about conflict in the digital age through the annual convening of Build Peace, the leading global conference on peace and tech.",
+                    "keywords": "peacebuilding technology \"social good\" arts",
+                    "unsubscribedTrailer": "xRZiglaia38"
+                },
+                "image": {
+                    "bannerExternalUrl": "https://yt3.ggpht.com/sZL3_7EF9lV8jjWwsoDXbnrJmNYmxMD2wLDa5wpkXIMlTXwJBASE3B72tXSxtq1_bIojeOg4"
+                }
+            },
+            "contentOwnerDetails": {}
+        }
+    ]
+}

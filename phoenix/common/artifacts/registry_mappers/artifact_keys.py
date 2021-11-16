@@ -7,6 +7,8 @@ ArtifactKey = Literal[
     "static-twitter_users",
     "static-twitter_keywords",
     "static-custom_models_tension_classifier_base",
+    "static-youtube_channels",
+    "source-notebooks_base",
     # Acled Events
     "source-acled_events_notebook",
     "base-acled_events_input",
@@ -32,6 +34,9 @@ ArtifactKey = Literal[
     "base-facebook_comments_pages_successful_parse",
     "base-facebook_comments_pages_failed_parse",
     "base-grouped_by_facebook_comments",
+    # Youtube
+    "source-youtube_channels_from_channel_ids",
+    "base-grouped_by_youtube_channels",
     # Tagging notebooks
     "tagging_runs-output_notebook_base",
     # Tagging facebook
