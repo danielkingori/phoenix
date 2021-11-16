@@ -32,9 +32,9 @@ lint:
 test:
 	pytest tests -m "not auth"
 
-# Use: make test_logging --ARG="tests"
+# Usage example: `make test_logging path=tests/unit`
 test_logging:
-	pytest -o log_cli=true --log-cli-level=DEBUG ${ARG}
+	pytest -o log_cli=true --log-cli-level=DEBUG ${path}
 
 integration:
 	pytest tests/integration -m "not auth"
