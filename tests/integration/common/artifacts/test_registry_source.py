@@ -20,11 +20,11 @@ from tests.integration.common.artifacts import conftest
             ("source_runs/2000-01-01/" "source-facebook_comments-20000101T010101.000001Z.json"),
         ),
         (
-            "source-youtube_channels_from_channels",
+            "source-youtube_channels_from_channel_ids",
             {},
             (
                 "source_runs/2000-01-01/"
-                "source-youtube_channels_from_channels-20000101T010101.000001Z.json"
+                "source-youtube_channels_from_channel_ids-20000101T010101.000001Z.json"
             ),
         ),
         (

@@ -13,12 +13,12 @@ class ScrapeYouTubeChannelsFromChannelsURLS(base.RunParams):
 
     config: Dict[str, Any]
     static_youtube_channels: str
-    source_youtube_channels_from_channels: str
+    source_youtube_channels_from_channel_ids: str
     base_youtube_channels: str
 
 
 @dataclasses.dataclass
-class ScrapeYouTubeChannelsFromChannels(base.RunParams):
+class ScrapeYouTubeChannelsFromChannelIds(base.RunParams):
     """Scrape channels from channels run params."""
 
     urls: ScrapeYouTubeChannelsFromChannelsURLS
@@ -37,7 +37,7 @@ def create(
         general_run_params,
     )
 
-    return ScrapeYouTubeChannelsFromChannels(urls=urls, general=general_run_params)
+    return ScrapeYouTubeChannelsFromChannelIds(urls=urls, general=general_run_params)
 
 
 def _get_urls(
@@ -50,8 +50,8 @@ def _get_urls(
         static_youtube_channels=general_run_params.art_url_reg.get_url(
             "static-youtube_channels", config
         ),
-        source_youtube_channels_from_channels=general_run_params.art_url_reg.get_url(
-            "source-youtube_channels_from_channels", config
+        source_youtube_channels_from_channel_ids=general_run_params.art_url_reg.get_url(
+            "source-youtube_channels_from_channel_ids", config
         ),
         base_youtube_channels=general_run_params.art_url_reg.get_url(
             "base-grouped_by_youtube_channels", config

@@ -19,21 +19,21 @@ def youtube(
     """Run scrape of the youtube.
 
     Example commands:
-    ./phoenix-cli scrape youtube production tenant channels_from_channels
+    ./phoenix-cli scrape youtube production tenant channels_from_channel_ids
 
     ARTIFACT_ENV:
         The artifact environment that will be used.
         Can use "production" which will pick the artifact env from the env var.
         Or a valid storage URL like "s3://my-phoenix-bucket/"
     TENANT_ID: The id of the tenant to run phoenix for.
-    ENDPOINT: the endpoint to scrape "channels_from_channels"
+    ENDPOINT: the endpoint to scrape "channels_from_channel_ids"
     """
     cur_run_params = run_params.general.create(artifact_env, tenant_id)
     # Default is empty parameters
     extra_parameters: Dict[str, Any] = {}
     # Hard coding the artifact keys so that the mypy can check it easier.
-    if endpoint == "channels_from_channels":
-        notebook_key = "scrape/youtube/channels_from_channels.ipynb"
+    if endpoint == "channels_from_channel_ids":
+        notebook_key = "scrape/youtube/channels_from_channel_ids.ipynb"
         input_nb_url = utils.get_input_notebook_path(notebook_key)
         output_nb_url = scrape_group.get_output_notebook_url(cur_run_params, notebook_key)
     else:
