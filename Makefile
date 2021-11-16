@@ -32,6 +32,10 @@ lint:
 test:
 	pytest tests -m "not auth"
 
+# Use: make test_logging --ARG="tests"
+test_logging:
+	pytest -o log_cli=true --log-cli-level=DEBUG ${ARG}
+
 integration:
 	pytest tests/integration -m "not auth"
 
