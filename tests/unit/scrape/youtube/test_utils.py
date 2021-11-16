@@ -54,3 +54,15 @@ def test_get_resource_client_with_client(m_get_client):
     m_get_client.assert_not_called()
     m_client.client_key.assert_called_once_with()
     assert result == m_client.client_key.return_value
+
+
+@pytest.mark.parametrize(
+    "default_parts_list, parts_list, expected",
+    [
+        (["d1", "d2", "d3"], None, "d1,d2,d3"),
+        (["d1", "d2", "d3"], ["g1", "g2"], "g1,g2"),
+    ],
+)
+def test_get_part_str(default_parts_list, parts_list, expected):
+    """Test get_part_str."""
+    assert expected == utils.get_part_str(default_parts_list, parts_list)

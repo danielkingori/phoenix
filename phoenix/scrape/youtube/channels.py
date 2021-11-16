@@ -59,6 +59,4 @@ def _get_part_str(
     parts_list: Optional[List[str]] = None,
 ) -> str:
     """Get the part string for the request."""
-    if not parts_list:
-        parts_list = DEFAULT_PARTS_TO_REQUEST
-    return ",".join(parts_list)
+    return utils.get_part_str(DEFAULT_PARTS_TO_REQUEST, parts_list)

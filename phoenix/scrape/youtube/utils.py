@@ -1,5 +1,5 @@
 """Utils for youtube."""
-from typing import Optional
+from typing import List, Optional
 
 import os
 
@@ -51,3 +51,13 @@ def get_resource_client(
     if not client:
         client = get_client()
     return getattr(client, resource_name)()
+
+
+def get_part_str(
+    default_pasts_list: List[str],
+    parts_list: Optional[List[str]] = None,
+) -> str:
+    """Get the part string for the request."""
+    if not parts_list:
+        parts_list = default_pasts_list
+    return ",".join(parts_list)
