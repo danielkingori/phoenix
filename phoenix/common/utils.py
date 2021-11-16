@@ -1,4 +1,5 @@
 """General utilities."""
+import datetime
 import logging
 import os
 import pathlib
@@ -89,3 +90,16 @@ def dask_global_init():
         Client(dask_cluster_ip)
     else:
         logging.info("Dask default is used.")
+
+
+def is_utc(dt: datetime.datetime):
+    """Is the datetime utc."""
+    if not dt.tzinfo:
+        return False
+
+    utcoffset = dt.utcoffset()
+    # Taken from
+    # https://stackoverflow.com/questions/6706499/checking-if-date-is-in-utc-format
+    if utcoffset and int(utcoffset.total_seconds()) != 0:
+        return False
+    return True
