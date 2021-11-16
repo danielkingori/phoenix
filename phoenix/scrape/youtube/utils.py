@@ -1,10 +1,13 @@
 """Utils for youtube."""
 from typing import List, Optional
 
+import datetime
 import os
 
 from googleapiclient import discovery
 from googleapiclient.http import HttpMock
+
+from phoenix import common
 
 
 YOUTUBE_API_SERVICE_NAME = "youtube"
@@ -61,3 +64,16 @@ def get_part_str(
     if not parts_list:
         parts_list = default_pasts_list
     return ",".join(parts_list)
+
+
+def datetime_str(
+    dt: datetime.datetime,
+) -> str:
+    """Convert a datetime to a str in the correct format for the api.
+
+    DateTime must be UTC. This is so that the developer has to make sure they
+    are working with the datetime that they want.
+    """
+    if not common.utils.is_utc(dt):
+        raise ValueError("DateTime for string must have time zone UTC")
+    return dt.isoformat()

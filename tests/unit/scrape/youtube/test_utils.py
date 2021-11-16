@@ -1,9 +1,11 @@
 """Test Utils."""
+import datetime
 import os
 
 import googleapiclient
 import mock
 import pytest
+import pytz
 
 from phoenix.scrape.youtube import utils
 
@@ -66,3 +68,44 @@ def test_get_resource_client_with_client(m_get_client):
 def test_get_part_str(default_parts_list, parts_list, expected):
     """Test get_part_str."""
     assert expected == utils.get_part_str(default_parts_list, parts_list)
+
+
+@pytest.mark.parametrize(
+    "dt, expected",
+    [
+        (
+            datetime.datetime(2021, 1, 1, 2, 2, 2, 3, tzinfo=datetime.timezone.utc),
+            "2021-01-01T02:02:02.000003+00:00",
+        ),
+        (
+            datetime.datetime(2021, 1, 1, 2, 2, 2, tzinfo=datetime.timezone.utc),
+            "2021-01-01T02:02:02+00:00",
+        ),
+    ],
+)
+def test_datetime_str(dt, expected):
+    """Test datetime_str."""
+    assert expected == utils.datetime_str(dt)
+
+
+def test_disallowed_datetime_no_timezone():
+    """Test disallowed datetimes."""
+    dt = datetime.datetime.now()
+    with pytest.raises(ValueError):
+        utils.datetime_str(dt)
+
+
+def test_disallowed_datetime_timezone():
+    """Test disallowed datetimes."""
+    timezone = pytz.timezone("America/Los_Angeles")
+    dt = timezone.localize(datetime.datetime.now())
+    with pytest.raises(ValueError):
+        utils.datetime_str(dt)
+
+
+def test_disallowed_datetime_timezone_st():
+    """Test disallowed datetimes."""
+    tz = datetime.timezone(datetime.timedelta(seconds=19800))
+    dt = datetime.datetime.now().astimezone(tz)
+    with pytest.raises(ValueError):
+        utils.datetime_str(dt)
