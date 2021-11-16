@@ -2,6 +2,7 @@
 from typing import Any, List, Optional
 
 import datetime
+import logging
 
 import pandas as pd
 from googleapiclient import discovery
@@ -64,6 +65,7 @@ def get_videos_for_channel_config(
     """Get the videos for a channel config."""
     result: lists.ListResults = []
     for channel_id in channels_config["channel_id"].values:
+        logging.info(f"Finding videos for {channel_id}")
         found_results = get_videos_for_channel(channel_id, published_after)
         result = result + found_results
     return result
