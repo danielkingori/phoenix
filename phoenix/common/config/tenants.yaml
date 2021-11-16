@@ -1,4 +1,7 @@
 ---
+# NOTE: this is a template/example tenants.yaml file
+# Users should create their own tenants.yaml file in either
+# their local artifacts dir or production artifacts dir
 tenants:
     -
         id: tenant_id_1
