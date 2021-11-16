@@ -37,6 +37,8 @@ ArtifactKey = Literal[
     # Youtube
     "source-youtube_channels_from_channel_ids",
     "base-grouped_by_youtube_channels",
+    "source-youtube_videos_from_channel_ids",
+    "base-grouped_by_youtube_searches",
     # Tagging notebooks
     "tagging_runs-output_notebook_base",
     # Tagging facebook

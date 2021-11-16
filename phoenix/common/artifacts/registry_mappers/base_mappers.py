@@ -44,4 +44,8 @@ MAPPERS: MapperDict = {
         url_mapper,
         shared_urls.GROUP_BY_YOUTUBE_CHANNELS + "youtube_channels-{RUN_DATETIME}.json",
     ),
+    "base-grouped_by_youtube_searches": partial(
+        url_mapper,
+        shared_urls.GROUP_BY_YOUTUBE_SEARCHES + "youtube_video_searches-{RUN_DATETIME}.json",
+    ),
 }
