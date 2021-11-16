@@ -10,8 +10,6 @@
 # CrowdTangle auth token
 export CROWDTANGLE_API_TOKEN=""
 export CT_RATE_LIMIT_CALLS=6
-# This needs to be refactored in to tenants.yaml
-export CROWDTANGLE_SCRAPE_LIST_ID=""
 
 # Twitter auth credentials
 export TWITTER_CONSUMER_KEY=""

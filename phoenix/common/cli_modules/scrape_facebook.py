@@ -28,22 +28,12 @@ from phoenix.common.cli_modules import scrape_group, utils
         "Define a end date of the scrape data (%Y-%m-%d)." "Default will be set in the notebook."
     ),
 )
-@click.option(
-    "--scrape_list_id",
-    default=None,
-    help=(
-        "Crowdtangle list id that should be scraped."
-        " If not provided the enviroment variable CROWDTANGLE_SCRAPE_LIST_ID should set."
-        " If multiple crowdtangle lists need to be scraped, use commas without space, e.g. id1,id2"
-    ),
-)
 def fb(
     artifact_env,
     tenant_id,
     scrape_since_days,
     scrape_start_date,
     scrape_end_date,
-    scrape_list_id,
 ):
     """Run scrape of facebook posts.
 
@@ -72,9 +62,6 @@ def fb(
 
     if scrape_end_date:
         parameters["SCRAPE_END_DATE"] = scrape_end_date
-
-    if scrape_list_id:
-        parameters["SCRAPE_LIST_ID"] = scrape_list_id
 
     input_nb_url = utils.get_input_notebook_path("scrape/fb_post_source_api.ipynb")
     output_nb_url = cur_run_params.art_url_reg.get_url("source-fb_post_source_api_notebook")
