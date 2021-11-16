@@ -14,7 +14,7 @@ def test_tenant_config():
 
 @pytest.fixture
 def tenants_template_config_url() -> str:
-    return artifacts.urls.get_static_config()
+    return f"{artifacts.urls.get_static_config()}tenants_template.yaml"
 
 
 def test_get_tenant_configs(tenants_template_config_url):
@@ -57,10 +57,10 @@ def test_get_tenant_config_raises_for_tenant_not_found(tmp_path):
         -
             id: tenant_id_1
     """
-    path = tmp_path / "tenants.yaml"
+    path = tmp_path / "test.yaml"
     path.write_text(raw_yaml)
     with pytest.raises(ValueError):
-        tenant.get_config("tenant_id_2", str(tmp_path) + "/")
+        tenant.get_config("tenant_id_2", str(path))
 
 
 def test_get_tenant_config_raises_for_multiple_tenants_found(tmp_path):
@@ -72,7 +72,7 @@ def test_get_tenant_config_raises_for_multiple_tenants_found(tmp_path):
         -
             id: tenant_id_1
     """
-    path = tmp_path / "tenants.yaml"
+    path = tmp_path / "test.yaml"
     path.write_text(raw_yaml)
     with pytest.raises(ValueError):
-        tenant.get_config("tenant_id_1", str(tmp_path) + "/")
+        tenant.get_config("tenant_id_1", str(path))
