@@ -1,0 +1,16 @@
+---
+# NOTE: this is a template/example tenants.yaml file
+# Users should create their own tenants.yaml file in either
+# their local artifacts dir or production artifacts dir
+tenants:
+    -
+        id: tenant_id_1
+        google_drive_folder_id: folder_id_1
+        crowdtangle_scrape_list_id: list_id_1
+    -
+        id: tenant_id_2
+        crowdtangle_scrape_list_id: list_id_2
+    -
+        id: tenant_id_3
+        google_drive_folder_id: folder_id_3
+

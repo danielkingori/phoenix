@@ -19,5 +19,5 @@ def get_local() -> str:
 
 
 def get_static_config() -> str:
-    """Get the URL of the staic."""
+    """Get the URL of the static config files directory."""
     return "file://" + str(STATIC_CONFIG_PATH) + "/"

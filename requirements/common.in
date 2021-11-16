@@ -17,3 +17,5 @@ papermill
 click
 freezegun
 gspread
+pyyaml
+types-pyyaml

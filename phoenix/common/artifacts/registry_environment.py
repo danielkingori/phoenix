@@ -33,6 +33,12 @@ def default_url_prefix(
     return f"{base_url}{tenant_id}/"
 
 
+def config_url_prefix(environment_key: Environments) -> str:
+    """URL prefix for config files."""
+    base_url = _get_url_from_environment_key(environment_key)
+    return f"{base_url}config/"
+
+
 def _get_url_from_environment_key(environment_key: Environments):
     """Get URL from the environment_key."""
     if environment_key == DEFAULT_ENVIRONMENT_KEY:

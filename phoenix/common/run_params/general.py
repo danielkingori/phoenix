@@ -18,7 +18,7 @@ class GeneralRunParams(base.RunParams):
 
 
 def create(
-    artifact_env: artifacts.registry_environment.Environments,
+    environment_key: artifacts.registry_environment.Environments,
     tenant_id: str,
     run_datetime_str: Optional[str] = None,
 ):
@@ -28,7 +28,7 @@ def create(
     else:
         run_dt = run_datetime.create_run_datetime_now()
 
-    tenant_config = tenant.TenantConfig(tenant_id)
+    tenant_config = tenant.get_config(tenant_id, tenant.get_config_url(environment_key))
 
-    art_url_reg = artifacts.registry.ArtifactURLRegistry(artifact_env, tenant_config, run_dt)
+    art_url_reg = artifacts.registry.ArtifactURLRegistry(environment_key, tenant_config, run_dt)
     return GeneralRunParams(run_dt=run_dt, tenant_config=tenant_config, art_url_reg=art_url_reg)

@@ -338,6 +338,7 @@ pytz==2021.1
     #   redshift-connector
 pyyaml==5.4.1
     # via
+    #   -r requirements/common.in
     #   awscli
     #   bokeh
     #   dask
@@ -445,6 +446,8 @@ traitlets==5.0.5
     #   jupyter-core
     #   nbclient
     #   nbformat
+types-pyyaml==6.0.1
+    # via -r requirements/common.in
 typing-extensions==3.10.0.0
     # via
     #   aiohttp
