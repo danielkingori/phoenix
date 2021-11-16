@@ -1,8 +1,6 @@
 """Vectorizer Topics Tension classifier classifies tensions based on topics and words in text."""
 from typing import List, Optional
 
-import random
-
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.compose import ColumnTransformer
@@ -78,7 +76,7 @@ class VectorizerTopicsTensionClassifier(TensionClassifier):
     def train(
         self,
         df: pd.DataFrame,
-        random_state_int: int = random.randint(0, 999999),
+        random_state_int: int = 2021,
     ) -> None:
         """Train a model that uses word vectors and topics to classify tensions."""
         self.check_expected_train_cols(df)

@@ -1,8 +1,6 @@
 """Count Vectorizer Tension classifier classifies tensions based on word vectors from text."""
 from typing import List, Optional
 
-import random
-
 import numpy as np
 import pandas as pd
 from sklearn.base import ClassifierMixin
@@ -60,7 +58,7 @@ class CountVectorizerTensionClassifier(TensionClassifier):
         self,
         training_df: pd.DataFrame,
         test_df: pd.DataFrame,
-        random_state_int: int = random.randint(0, 999999),
+        random_state_int: int = 2021,
     ) -> None:
         """Train a count_vectorizer based tension classifier model."""
         logger.info("Training StemmedCountVectorizer training dataset.")
