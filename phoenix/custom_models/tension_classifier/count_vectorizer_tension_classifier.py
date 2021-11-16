@@ -22,9 +22,9 @@ class CountVectorizerTensionClassifier(TensionClassifier):
         count_vectorizer: (StemmedCountVectorizer) count_vectorizer which has been fit
         classifier: The sklearn classifier used to classify tensions
         class_labels: List[str]: list of tension names for the classifier's classes
-        X_test: Optional[np.matrix]: word matrix of the test set. Obtained by running
+        X_test: Optional[np.ndarray]: word matrix of the test set. Obtained by running
             count_vectorizer.transform(test_dataset["text"])
-        Y_test: Optional[np.matrix]: true labels of the test set. Is a matrix of shape
+        Y_test: Optional[np.ndarray]: true labels of the test set. Is a matrix of shape
             [n, m] where n is number of rows, and m is the len(class_labels)
     """
 
@@ -33,17 +33,17 @@ class CountVectorizerTensionClassifier(TensionClassifier):
         class_labels: List[str],
         count_vectorizer: Optional[StemmedCountVectorizer] = None,
         classifier: Optional[ClassifierMixin] = None,
-        X_test: Optional[np.matrix] = None,
-        Y_test: Optional[np.matrix] = None,
+        X_test: Optional[np.ndarray] = None,
+        Y_test: Optional[np.ndarray] = None,
     ):
         super().__init__(classifier)
         self.count_vectorizer: StemmedCountVectorizer
         if count_vectorizer:
             self.count_vectorizer = count_vectorizer
-        self.X_test: np.matrix
+        self.X_test: np.ndarray
         if X_test:
             self.X_test = X_test
-        self.Y_test: np.matrix
+        self.Y_test: np.ndarray
         if Y_test:
             self.Y_test = Y_test
         self.class_labels: List[str] = class_labels
