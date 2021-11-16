@@ -3,6 +3,7 @@ from typing import Any, List, Optional
 
 import datetime
 
+import pandas as pd
 from googleapiclient import discovery
 
 from phoenix.scrape.youtube import lists, utils
@@ -54,3 +55,15 @@ def get_videos_for_channel(
         type=TYPE_VIDEO,
     )
     return lists.paginate_list_resource(resource_client, request)
+
+
+def get_videos_for_channel_config(
+    channels_config: pd.DataFrame,
+    published_after: datetime.datetime,
+):
+    """Get the videos for a channel config."""
+    result: lists.ListResults = []
+    for channel_id in channels_config["channel_id"].values:
+        found_results = get_videos_for_channel(channel_id, published_after)
+        result = result + found_results
+    return result
