@@ -42,7 +42,7 @@ def get_resource_client(
     resource_name: str,
     client: Optional[discovery.Resource] = None,
 ):
-    """Get the Resource Client form the client.
+    """Get the Resource Client from the client.
 
     Arguments:
         resource_name (str): name of resource to get from the client.

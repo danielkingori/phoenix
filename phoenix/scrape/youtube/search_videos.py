@@ -38,10 +38,10 @@ def get_videos_for_channel(
             See: https://developers.google.com/youtube/v3/docs/search/list#part
         order: Order of the videos
         max_pages (int): Maximum number of pages (and thus API quota usage) to request.
-        client: YouTube client to override the default
+        client (discovery.Resource): YouTube client to override the default
 
     Returns:
-        List of dictionaries that contain the channel list resource.
+        List of dictionaries that contain the video list resource.
     """
     if not order:
         order = DEFAULT_ORDER
@@ -62,7 +62,7 @@ def get_videos_for_channel(
 def get_videos_for_channel_config(
     channels_config: pd.DataFrame,
     published_after: datetime.datetime,
-):
+) -> List[Any]:
     """Get the videos for a channel config."""
     result: lists.ListResults = []
     for channel_id in channels_config["channel_id"].values:

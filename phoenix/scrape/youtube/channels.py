@@ -38,7 +38,7 @@ def get_channels(
         parts_list (List[str]): A list of parts that should be requested.
             See: https://developers.google.com/youtube/v3/docs/channels/list#part
         max_pages (int): Maximum number of pages (and thus API quota usage) to request.
-        client: YouTube client to override the default
+        client (discovery.Resource): YouTube client to override the default
 
     Returns:
         List of dictionaries that contain the channel list resource.
