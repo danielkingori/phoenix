@@ -21,7 +21,7 @@ RESOURCE_CLIENT = "search"
 def get_videos_for_channel(
     channel_id: str,
     published_after: datetime.datetime,
-    parts_list: Optional[List[str]] = None,
+    parts_list: List[str] = DEFAULT_PARTS_TO_REQUEST,
     order: Optional[str] = None,
     max_pages: int = 1,
     client: Optional[discovery.Resource] = None,
@@ -34,10 +34,8 @@ def get_videos_for_channel(
     Arguments:
         channel_id (str): Channel id to get the videos for
         published_after (datetime): a UTC datetime to get videos after
-        parts_list: An optional list of parts that should be requested. Default is None.
-            If None then DEFAULT_PARTS_TO_REQUEST is used.
-            See:
-            https://developers.google.com/youtube/v3/docs/search/list#part
+        parts_list (List[str]): A list of parts that should be requested.
+            See: https://developers.google.com/youtube/v3/docs/search/list#part
         order: Order of the videos
         max_pages (int): Maximum number of pages (and thus API quota usage) to request.
         client: YouTube client to override the default
@@ -48,7 +46,7 @@ def get_videos_for_channel(
     if not order:
         order = DEFAULT_ORDER
     resource_client = utils.get_resource_client(RESOURCE_CLIENT, client)
-    part_str = utils.get_part_str(DEFAULT_PARTS_TO_REQUEST, parts_list)
+    part_str = utils.get_part_str(parts_list)
     published_after_str = utils.datetime_str(published_after)
     request = resource_client.list(
         part=part_str,

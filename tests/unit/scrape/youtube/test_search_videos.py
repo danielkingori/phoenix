@@ -21,7 +21,7 @@ def test_get_videos_for_channel_defaults(
     result = search.get_videos_for_channel(channel_id, published_after)
     m_get_resource_client.assert_called_once_with(search.RESOURCE_CLIENT, None)
     resource_client = m_get_resource_client.return_value
-    m_get_part_str.assert_called_once_with(search.DEFAULT_PARTS_TO_REQUEST, None)
+    m_get_part_str.assert_called_once_with(search.DEFAULT_PARTS_TO_REQUEST)
     m_datetime_str.assert_called_once_with(published_after)
     resource_client.list.assert_called_once_with(
         part=m_get_part_str.return_value,
@@ -54,7 +54,7 @@ def test_get_videos_for_channel(
     )
     m_get_resource_client.assert_called_once_with(search.RESOURCE_CLIENT, client)
     resource_client = m_get_resource_client.return_value
-    m_get_part_str.assert_called_once_with(search.DEFAULT_PARTS_TO_REQUEST, parts_list)
+    m_get_part_str.assert_called_once_with(parts_list)
     m_datetime_str.assert_called_once_with(published_after)
     resource_client.list.assert_called_once_with(
         part=m_get_part_str.return_value,

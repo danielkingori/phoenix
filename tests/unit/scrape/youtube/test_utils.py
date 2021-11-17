@@ -59,15 +59,15 @@ def test_get_resource_client_with_client(m_get_client):
 
 
 @pytest.mark.parametrize(
-    "default_parts_list, parts_list, expected",
+    "parts_list, expected",
     [
-        (["d1", "d2", "d3"], None, "d1,d2,d3"),
-        (["d1", "d2", "d3"], ["g1", "g2"], "g1,g2"),
+        (["d1", "d2", "d3"], "d1,d2,d3"),
+        (["g1", "g2"], "g1,g2"),
     ],
 )
-def test_get_part_str(default_parts_list, parts_list, expected):
+def test_get_part_str(parts_list, expected):
     """Test get_part_str."""
-    assert expected == utils.get_part_str(default_parts_list, parts_list)
+    assert expected == utils.get_part_str(parts_list)
 
 
 @pytest.mark.parametrize(

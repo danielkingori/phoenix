@@ -32,7 +32,7 @@ def test_get_channels_1_page(youtube_channel_config_url, youtube_channel_page_fi
     http = googleapiclient.http.HttpMockSequence([(header_success, youtube_channel_page_final)])
     cur_channels_config = channels_config.get_channels_to_scrape(youtube_channel_config_url)
     client = utils.get_client(http_mock=http)
-    result = channels.get_channels(cur_channels_config, parts_list=None, client=client)
+    result = channels.get_channels(cur_channels_config, client=client)
     assert len(result) == 1
     # Build Up should be one of the titles on the list
     assert "Build Up" in json.dumps(result)
@@ -53,7 +53,7 @@ def test_get_channels_2_page(
     )
     cur_channels_config = channels_config.get_channels_to_scrape(youtube_channel_config_url)
     client = utils.get_client(http_mock=http)
-    result = channels.get_channels(cur_channels_config, parts_list=None, client=client)
+    result = channels.get_channels(cur_channels_config, client=client)
     assert len(result) == 2
     # Build Up should be one of the titles on the list
     assert "Build Up" in json.dumps(result)
