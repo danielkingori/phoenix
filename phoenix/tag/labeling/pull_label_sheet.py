@@ -54,13 +54,11 @@ def extract_features_to_label_mapping_objects(
     feature_to_label_df["processed_features"] = tfa.features(
         feature_to_label_df, "unprocessed_features"
     )
-
     # This defensive cast through mapping each list of strings to a string should never be
     # needed over just a str(str_list), but just in case, we've gone defensive.
     feature_to_label_df["processed_features"] = [
         " ".join(map(str, str_list)) for str_list in feature_to_label_df["processed_features"]
     ]
-
     feature_to_label_df["use_processed_features"] = True
     feature_to_label_df["status"] = "active"
 
@@ -75,6 +73,20 @@ def extract_features_to_label_mapping_objects(
     feature_to_label_df = feature_to_label_df.fillna("")
 
     return feature_to_label_df, label_with_no_feature_df
+
+
+def get_account_labels(df: pd.DataFrame) -> pd.DataFrame:
+    """Get account labels and the people who labeled it."""
+    long_account_df = pd.wide_to_long(
+        df,
+        stubnames="account_label",
+        i=["object_user_name", "object_user_url"],
+        j="position",
+        suffix="_\\d+",
+    )
+    long_account_df = long_account_df.reset_index().drop("position", axis=1).replace("", np.nan)
+    long_account_df = long_account_df.dropna(subset=["account_label"], how="any", axis=0)
+    return long_account_df
 
 
 def wide_to_long_labels_features(df: pd.DataFrame) -> pd.DataFrame:

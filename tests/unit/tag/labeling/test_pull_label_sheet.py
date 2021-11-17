@@ -176,3 +176,47 @@ def test_extract_features_to_label_mapping_no_features(mock_execute):
         actual_df.sort_values(by=["object_id", "class"]).reset_index(drop=True),
         expected_df.sort_values(by=["object_id", "class"]).reset_index(drop=True),
     )
+
+
+def test_get_account_labels():
+    """Test that get_account_labels returns correct df."""
+    input_df = pd.DataFrame(
+        {
+            "object_user_name": [
+                "user_1",
+                "user_2",
+                "user_3",
+            ],
+            "object_user_url": [
+                "https://www.facebook.com/user_1",
+                "https://www.facebook.com/user_2",
+                "https://www.facebook.com/user_3",
+            ],
+            "account_label_1": ["Bot", "", "Journalist"],
+            "account_label_2": ["", "", "Publisher"],
+            "account_label_3": ["", "", ""],
+            "account_label_4": ["", "", ""],
+            "account_label_5": ["", "", ""],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        {
+            "object_user_name": [
+                "user_1",
+                "user_3",
+                "user_3",
+            ],
+            "object_user_url": [
+                "https://www.facebook.com/user_1",
+                "https://www.facebook.com/user_3",
+                "https://www.facebook.com/user_3",
+            ],
+            "account_label": ["Bot", "Journalist", "Publisher"],
+        },
+        index=[0, 10, 11],
+    )
+
+    actual_df = pull_label_sheet.get_account_labels(input_df)
+
+    pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
