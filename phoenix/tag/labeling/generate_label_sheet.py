@@ -40,6 +40,10 @@ def create_new_labeling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
         if col not in for_tag_df.columns:
             for_tag_df[col] = None
 
+    for_tag_df["created_at"] = for_tag_df["created_at"].apply(
+        lambda x: pd.to_datetime(x).strftime("%Y-%m-%d %H:%M") if x else None
+    )
+
     return for_tag_df[EXPECTED_COLUMNS_LABELING_SHEET]
 
 
