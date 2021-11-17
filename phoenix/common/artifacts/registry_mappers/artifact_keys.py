@@ -40,9 +40,8 @@ ArtifactKey = Literal[
     "base-grouped_by_youtube_channels",
     "source-youtube_search_videos_from_channel_ids",
     "base-grouped_by_youtube_search_videos",
-    "tagging_runs-youtube_videos_input",
-    "tagging_runs-youtube_videos_pulled",
-    "tagging_runs-youtube_videos_for_tagging",
+    "source-youtube_comment_threads_from_channel_ids",
+    "base-grouped_by_youtube_comment_threads",
     # Tagging notebooks
     "tagging_runs-output_notebook_base",
     # Tagging facebook
@@ -57,12 +56,16 @@ ArtifactKey = Literal[
     "tagging_runs-tweets_for_tagging",
     "tagging_runs-tweets_final",
     "tagging_runs-tweets_topics_final",
-    # Tagging tweets
+    # Tagging facebook comments
     "tagging_runs-facebook_comments_input",
     "tagging_runs-facebook_comments_pulled",
     "tagging_runs-facebook_comments_for_tagging",
     "tagging_runs-facebook_comments_final",
     "tagging_runs-facebook_comments_topics_final",
+    # Tagging Youtube
+    "tagging_runs-youtube_videos_input",
+    "tagging_runs-youtube_videos_pulled",
+    "tagging_runs-youtube_videos_for_tagging",
     # Tagging Pipeline
     "tagging_runs-pipeline_base",
     "tagging_runs-for_analyst_base",
