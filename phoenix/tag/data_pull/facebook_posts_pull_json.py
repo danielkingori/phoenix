@@ -190,12 +190,24 @@ def for_tagging(given_df: pd.DataFrame):
         object_id: String, dtype: string
         text: String, dtype: string
         object_type: "facebook_post", dtype: String
+        created_at: datetime
+        object_url: String, dtype: string
+        object_user_url: String, dtype: string
 
     """
     df = given_df.copy()
-    df = df[["phoenix_post_id", "text", "language_from_api"]]
+    df = df[
+        ["phoenix_post_id", "text", "language_from_api", "post_created", "post_url", "account_url"]
+    ]
 
-    df = df.rename(columns={"phoenix_post_id": "object_id"})
+    df = df.rename(
+        columns={
+            "phoenix_post_id": "object_id",
+            "post_created": "created_at",
+            "post_url": "object_url",
+            "account_url": "object_user_url",
+        }
+    )
     df = df.set_index(df["object_id"], verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_FACEBOOK_POST
     return df
