@@ -61,7 +61,12 @@ def get_goal_number_rows(
         pd.DataFrame: excluded rows
         pd.DataFrame: included rows
     """
-    if len(df) > n:
+    if df[stratify_col].nunique() > n:
+        # If there are more unique items in the stratify columns than `n`, do a simple sample
+        df_copy = df.copy()
+        df = df.sample(n, random_state=2021)
+        excluded_df = df_copy[~df_copy["object_id"].isin(df["object_id"])]
+    elif len(df) > n:
         test_size = n / len(df)
         # remove rows when the stratified column only has one object; needed for train_test_split
         no_non_duplicates_df = df[df[stratify_col].duplicated(keep=False)]

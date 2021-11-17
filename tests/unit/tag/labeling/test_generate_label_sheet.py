@@ -48,3 +48,24 @@ def test_get_goal_number_rows():
     excluded_df, actual_df = generate_label_sheet.get_goal_number_rows(input_df, "stratify_col", 5)
 
     pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
+
+
+def test_get_goal_number_rows_many_unique():
+    input_df = pd.DataFrame(
+        data={
+            "object_id": ["id_1", "id_2", "id_3"],
+            "data_col": ["1", "2", "3"],
+            "stratify_col": ["a", "b", "c"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        data={
+            "object_id": ["id_3", "id_2"],
+            "data_col": ["3", "2"],
+            "stratify_col": ["c", "b"],
+        },
+        index=[2, 1],
+    )
+    excluded_df, actual_df = generate_label_sheet.get_goal_number_rows(input_df, "stratify_col", 2)
+    pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
