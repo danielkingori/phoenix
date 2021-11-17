@@ -2,6 +2,7 @@
 from typing import List, Optional
 
 import dataclasses
+import pathlib
 
 import tentaclio
 import yaml
@@ -42,3 +43,7 @@ def get_config(tenant_id: str, config_file_url: str) -> TenantConfig:
     if len(tenant_config) == 0:
         raise ValueError(f"No tenant found for [tenant_id={tenant_id}].")
     return tenant_config[0]
+
+
+# Var for unit testing purposes only
+TENANTS_TEMPLATE_PATH = pathlib.Path(__file__).parents[0] / "tenants_template.yaml"

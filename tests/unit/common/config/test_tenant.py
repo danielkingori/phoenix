@@ -1,7 +1,6 @@
 """Test Tenant configuration."""
 import pytest
 
-from phoenix.common import artifacts
 from phoenix.common.config import tenant
 
 
@@ -14,7 +13,7 @@ def test_tenant_config():
 
 @pytest.fixture
 def tenants_template_config_url() -> str:
-    return f"{artifacts.urls.get_static_config()}tenants_template.yaml"
+    return str(tenant.TENANTS_TEMPLATE_PATH)
 
 
 def test_get_tenant_configs(tenants_template_config_url):

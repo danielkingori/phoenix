@@ -75,7 +75,7 @@ def key_features(given_df: pd.DataFrame, features_key: str = "features") -> pd.S
 
 def get_interesting_features() -> pd.DataFrame:
     """Get interesting features configuration."""
-    return pd.read_csv(f"{artifacts.urls.get_static_config()}/interesting_features.csv")
+    return pd.read_csv(f"{artifacts.urls.get_static_data()}/interesting_features.csv")
 
 
 def get_features_to_label(exploded_features_df) -> pd.DataFrame:

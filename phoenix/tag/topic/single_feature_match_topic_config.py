@@ -97,7 +97,7 @@ def persist_topic_config_csv(df: pd.DataFrame, config_url=None):
 
 def _default_config_url() -> str:
     """Default config url."""
-    return f"{artifacts.urls.get_static_config()}{constants.DEFAULT_RAW_TOPIC_CONFIG}"
+    return f"{artifacts.urls.get_static_data()}{constants.DEFAULT_RAW_TOPIC_CONFIG}"
 
 
 def create_new_committable_topic_config(
