@@ -9,6 +9,7 @@ Important docs:
 """
 from phoenix.scrape.youtube import channels  # noqa: F401
 from phoenix.scrape.youtube import channels_config  # noqa: F401
+from phoenix.scrape.youtube import comment_threads  # noqa: F401
 from phoenix.scrape.youtube import run_params  # noqa: F401
 from phoenix.scrape.youtube import search_videos  # noqa: F401
 from phoenix.scrape.youtube import utils  # noqa: F401
