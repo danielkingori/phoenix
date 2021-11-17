@@ -14,6 +14,7 @@ EXPECTED_COLUMNS_LABELING_SHEET = [
     "matched_labels",
     "matched_features",
     "text",
+    "labelled_by",
     "label_1",
     "label_1_features",
     "label_2",
