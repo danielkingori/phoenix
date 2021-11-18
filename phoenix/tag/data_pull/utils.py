@@ -42,3 +42,25 @@ def get_file_name_timestamp(url: str) -> datetime.datetime:
 def is_valid_file_name(url: str) -> bool:
     """Valid file name check."""
     return url.endswith(".json")
+
+
+def add_filter_cols(df: pd.DataFrame, created_at_col: pd.Series) -> pd.DataFrame:
+    """Add the filter columns based on the created at col.
+
+    Adds columns:
+        - "timestamp_filter"
+        - "date_filter"
+        - "year_filter"
+        - "month_filter"
+        - "day_filter"
+
+    Returns:
+        New dataframe with the filter columns.
+    """
+    df = df.copy()
+    df["timestamp_filter"] = created_at_col
+    df["date_filter"] = created_at_col.dt.date
+    df["year_filter"] = created_at_col.dt.year
+    df["month_filter"] = created_at_col.dt.month
+    df["day_filter"] = created_at_col.dt.day
+    return df
