@@ -46,7 +46,7 @@ def get_channels(
     channels = utils.get_resource_client(RESOURCE_CLIENT, client)
     part_str = _get_part_str(parts_list)
     channel_ids_str = _get_channel_ids_str(channels_config)
-    request = channels.list(part=part_str, id=channel_ids_str)
+    request = channels.list(part=part_str, id=channel_ids_str, maxResults=50)
     return lists.paginate_list_resource(channels, request)
 
 
