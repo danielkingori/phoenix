@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.multioutput import MultiOutputClassifier
 
-from phoenix.custom_models.tension_classifier import tension_classifier
+from phoenix.custom_models.tension_classifier import count_vectorizer_tension_classifier
 from phoenix.tag.text_features_analyser import StemmedCountVectorizer
 
 
@@ -15,7 +15,7 @@ def test_persist_model(tmpdir):
     forest = RandomForestClassifier(random_state=1)
     multi_target_forest = MultiOutputClassifier(forest, n_jobs=-1)
 
-    classifier = tension_classifier.CountVectorizerTensionClassifier(
+    classifier = count_vectorizer_tension_classifier.CountVectorizerTensionClassifier(
         class_labels, vectorizer, multi_target_forest
     )
 
@@ -38,7 +38,7 @@ def test_predict():
     mock_classifier = mock.MagicMock()
     mock_classifier.predict.return_value = [[0, 1]]
 
-    cv_tension_classifier = tension_classifier.CountVectorizerTensionClassifier(
+    cv_tension_classifier = count_vectorizer_tension_classifier.CountVectorizerTensionClassifier(
         class_labels, mock_vectorizer, mock_classifier
     )
     # This tests that the columns in `class_labels` - the ones that we have a prediction for are
@@ -75,7 +75,6 @@ def test_predict():
 
 def test_CountVectorizerTensionClassifier_train():
     """Simple integration test that model gets trained and assigns the expected class variables."""
-    input_corpus_df = pd.DataFrame({"text": ["hello", "world", "foo", "bar", "baz", "xyz"]})
     input_training_df = pd.DataFrame(
         {
             "text": ["hello", "world", "foo", "bar", "baz", "xyz"] * 10,
@@ -92,15 +91,27 @@ def test_CountVectorizerTensionClassifier_train():
         "is_environmental_tension",
     ]
 
-    count_vectorizer_classifier = tension_classifier.CountVectorizerTensionClassifier(
-        class_labels=tensions_with_enough_labels
+    input_test_df = pd.DataFrame(
+        {
+            "text": ["hello", "world", "foo", "bar", "baz", "xyz"] * 3,
+            "is_economic_labour_tension": [1, 0, 1, 0, 1, 0] * 3,
+            "is_sectarian_tension": [1, 1, 1, 1, 1, 1] * 3,
+            "is_environmental_tension": [1, 1, 1, 1, 1, 1] * 3,
+            "is_political_tension": [0, 0, 0, 0, 0, 0] * 3,
+        }
     )
 
-    count_vectorizer_classifier.train(input_corpus_df, input_training_df)
+    count_vectorizer_classifier = (
+        count_vectorizer_tension_classifier.CountVectorizerTensionClassifier(
+            class_labels=tensions_with_enough_labels
+        )
+    )
 
-    # Test that there are 15 (25% of the 60 rows) in the test set
-    assert len(count_vectorizer_classifier.X_test) == 15
+    count_vectorizer_classifier.train(input_training_df, input_test_df)
+
+    # Test that there are 18 rows with 6 unique words in the test set matrix
+    assert count_vectorizer_classifier.X_test.shape == (18, 6)
     # Test that there are exactly equal labels compared to the class_labels inputted
-    assert count_vectorizer_classifier.Y_test.shape == (15, len(tensions_with_enough_labels))
+    assert count_vectorizer_classifier.Y_test.shape == (18, len(tensions_with_enough_labels))
     assert count_vectorizer_classifier.count_vectorizer is not None
     assert count_vectorizer_classifier.classifier is not None

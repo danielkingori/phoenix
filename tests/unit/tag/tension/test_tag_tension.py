@@ -80,3 +80,20 @@ def test_normalise(m_tag_object_has_tension, m_normalise_tension_cols):
     m_normalise_tension_cols.assert_called_once_with(input_df)
     m_tag_object_has_tension.assert_called_once_with(m_normalise_tension_cols.return_value)
     assert m_tag_object_has_tension.return_value == result
+
+
+def test_agg_list_topics():
+    """Test agg_list_topics."""
+    input_df = pd.DataFrame(
+        {
+            "object_id": ["1", "1", "1", "2", "2", "3"],
+            "topic": ["a", "b", "c", "a", "c", "d"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        {"object_id": ["1", "2", "3"], "topics": [["a", "b", "c"], ["a", "c"], ["d"]]}
+    )
+    output_df = tag_tension.agg_list_topics(input_df)
+
+    pd.testing.assert_frame_equal(output_df, expected_df)

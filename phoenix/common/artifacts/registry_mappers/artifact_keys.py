@@ -7,6 +7,7 @@ ArtifactKey = Literal[
     "static-twitter_users",
     "static-twitter_keywords",
     "static-custom_models_tension_classifier_base",
+    "static-custom_models_tension_classifier_data",
     "static-youtube_channels",
     "source-notebooks_base",
     # Acled Events

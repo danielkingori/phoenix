@@ -30,3 +30,9 @@ def normalise(df: pd.DataFrame) -> pd.DataFrame:
     """Normalise the tensions."""
     df = normalise_tension_cols(df)
     return tag_object_has_tension(df)
+
+
+def agg_list_topics(df: pd.DataFrame) -> pd.DataFrame:
+    """Aggregate topics per object into a list."""
+    df = df.groupby("object_id").agg({"topic": list}).rename({"topic": "topics"}, axis=1)
+    return df.reset_index()

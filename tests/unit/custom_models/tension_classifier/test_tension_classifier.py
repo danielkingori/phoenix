@@ -1,9 +1,11 @@
 """Unit tests for tension classifier."""
-import pytest
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.multioutput import MultiOutputClassifier
 
-from phoenix.custom_models.tension_classifier import tension_classifier
+from phoenix.custom_models.tension_classifier import (
+    count_vectorizer_tension_classifier,
+    tension_classifier,
+)
 from phoenix.tag.text_features_analyser import StemmedCountVectorizer
 
 
@@ -13,7 +15,7 @@ def test_count_vectorizer_tension_classifier_init():
     forest = RandomForestClassifier(random_state=1)
     multi_target_forest = MultiOutputClassifier(forest, n_jobs=-1)
 
-    classifier = tension_classifier.CountVectorizerTensionClassifier(
+    classifier = count_vectorizer_tension_classifier.CountVectorizerTensionClassifier(
         class_labels, vectorizer, multi_target_forest
     )
 
@@ -24,7 +26,7 @@ def test_count_vectorizer_tension_classifier_init():
 
 def test_count_vectorizer_tension_classifier_init_class_label_only():
     class_labels = ["is_economic_labour_tension"]
-    classifier = tension_classifier.CountVectorizerTensionClassifier(class_labels)
+    classifier = count_vectorizer_tension_classifier.CountVectorizerTensionClassifier(class_labels)
     assert classifier.class_labels == class_labels
 
 
@@ -51,54 +53,3 @@ def test_get_model_name_with_suffix():
         tension_classifier.TensionClassifier.get_model_name("SEP_21")
         == "tension_classifier_model_SEP_21"
     )
-
-
-def test_get_model_name_count_vectorizer():
-    assert (
-        tension_classifier.CountVectorizerTensionClassifier.get_model_name()
-        == "count_vectorizer_tension_classifier_model"
-    )
-
-
-def test_get_model_url_count_vectorizer():
-    assert (
-        tension_classifier.CountVectorizerTensionClassifier.get_model_url("file:///")
-        == "file:///count_vectorizer_tension_classifier_model.pickle"
-    )
-
-
-def test_get_model_url_count_vectorizer_suffix():
-    assert (
-        tension_classifier.CountVectorizerTensionClassifier.get_model_url("file:///", "suf")
-        == "file:///count_vectorizer_tension_classifier_model_suf.pickle"
-    )
-
-
-def test_get_model_name_count_vectorizer_with_suffix():
-    assert (
-        tension_classifier.CountVectorizerTensionClassifier.get_model_name("SEP_21")
-        == "count_vectorizer_tension_classifier_model_SEP_21"
-    )
-
-
-def test_count_vectorizer_tension_classifier_analyse_fail():
-    class_labels = ["is_economic_labour_tension"]
-    classifier = tension_classifier.CountVectorizerTensionClassifier(class_labels)
-    with pytest.raises(ValueError) as exc_info:
-        classifier.analyse()
-    assert "classifier" in str(exc_info.value)
-
-
-def test_count_vectorizer_tension_classifier_analyse_data_fail():
-    class_labels = ["is_economic_labour_tension"]
-    vectorizer = StemmedCountVectorizer()
-    forest = RandomForestClassifier(random_state=1)
-    multi_target_forest = MultiOutputClassifier(forest, n_jobs=-1)
-
-    classifier = tension_classifier.CountVectorizerTensionClassifier(
-        class_labels, vectorizer, multi_target_forest
-    )
-
-    with pytest.raises(ValueError) as exc_info:
-        classifier.analyse()
-    assert "dataset" in str(exc_info.value)
