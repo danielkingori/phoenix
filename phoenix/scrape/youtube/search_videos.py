@@ -23,6 +23,7 @@ def get_videos_for_channel(
     published_after: datetime.datetime,
     parts_list: Optional[List[str]] = None,
     order: Optional[str] = None,
+    max_pages: int = 1,
     client: Optional[discovery.Resource] = None,
 ) -> List[Any]:
     """Get all the videos data for a channel.
@@ -38,6 +39,7 @@ def get_videos_for_channel(
             See:
             https://developers.google.com/youtube/v3/docs/search/list#part
         order: Order of the videos
+        max_pages (int): Maximum number of pages (and thus API quota usage) to request.
         client: YouTube client to override the default
 
     Returns:
@@ -56,7 +58,7 @@ def get_videos_for_channel(
         type=TYPE_VIDEO,
         maxResults=50,
     )
-    return lists.paginate_list_resource(resource_client, request)
+    return lists.paginate_list_resource(resource_client, request, max_pages=max_pages)
 
 
 def get_videos_for_channel_config(

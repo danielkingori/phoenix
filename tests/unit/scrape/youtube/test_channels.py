@@ -41,11 +41,10 @@ def test_get_channels_defaults(
     m_get_channel_ids_str.assert_called_once_with(channel_config)
     m_get_part_str.assert_called_once_with(None)
     resource_client.list.assert_called_once_with(
-        part=m_get_part_str.return_value,
-        id=m_get_channel_ids_str.return_value,
+        part=m_get_part_str.return_value, id=m_get_channel_ids_str.return_value, maxResults=50
     )
     request = resource_client.list.return_value
-    m_paginate_list_resource.assert_called_once_with(resource_client, request)
+    m_paginate_list_resource.assert_called_once_with(resource_client, request, max_pages=10000)
     assert result == m_paginate_list_resource.return_value
 
 
@@ -60,7 +59,7 @@ def test_get_channels(
     channel_config = mock.Mock()
     parts_list = mock.Mock()
     client = mock.Mock()
-    result = channels.get_channels(channel_config, parts_list, client)
+    result = channels.get_channels(channel_config, parts_list=parts_list, client=client)
     m_get_resource_client.assert_called_once_with(channels.RESOURCE_CLIENT, client)
     resource_client = m_get_resource_client.return_value
     m_get_channel_ids_str.assert_called_once_with(channel_config)
@@ -68,7 +67,8 @@ def test_get_channels(
     resource_client.list.assert_called_once_with(
         part=m_get_part_str.return_value,
         id=m_get_channel_ids_str.return_value,
+        maxResults=50,
     )
     request = resource_client.list.return_value
-    m_paginate_list_resource.assert_called_once_with(resource_client, request)
+    m_paginate_list_resource.assert_called_once_with(resource_client, request, max_pages=10000)
     assert result == m_paginate_list_resource.return_value

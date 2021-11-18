@@ -29,9 +29,10 @@ def test_get_videos_for_channel_defaults(
         order=search.DEFAULT_ORDER,
         publishedAfter=m_datetime_str.return_value,
         type=search.TYPE_VIDEO,
+        maxResults=50,
     )
     request = resource_client.list.return_value
-    m_paginate_list_resource.assert_called_once_with(resource_client, request)
+    m_paginate_list_resource.assert_called_once_with(resource_client, request, max_pages=1)
     assert result == m_paginate_list_resource.return_value
 
 
@@ -48,7 +49,9 @@ def test_get_videos_for_channel(
     parts_list = mock.Mock()
     order = "order"
     client = mock.Mock()
-    result = search.get_videos_for_channel(channel_id, published_after, parts_list, order, client)
+    result = search.get_videos_for_channel(
+        channel_id, published_after, parts_list=parts_list, order=order, client=client
+    )
     m_get_resource_client.assert_called_once_with(search.RESOURCE_CLIENT, client)
     resource_client = m_get_resource_client.return_value
     m_get_part_str.assert_called_once_with(search.DEFAULT_PARTS_TO_REQUEST, parts_list)
@@ -59,9 +62,10 @@ def test_get_videos_for_channel(
         order=order,
         publishedAfter=m_datetime_str.return_value,
         type=search.TYPE_VIDEO,
+        maxResults=50,
     )
     request = resource_client.list.return_value
-    m_paginate_list_resource.assert_called_once_with(resource_client, request)
+    m_paginate_list_resource.assert_called_once_with(resource_client, request, max_pages=1)
     assert result == m_paginate_list_resource.return_value
 
 

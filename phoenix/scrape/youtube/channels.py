@@ -25,6 +25,7 @@ RESOURCE_CLIENT = "channels"
 def get_channels(
     channels_config: pd.DataFrame,
     parts_list: Optional[List[str]] = None,
+    max_pages: int = 10000,
     client: Optional[discovery.Resource] = None,
 ) -> List[Any]:
     """Get all the channels data from the channels_config.
@@ -38,6 +39,7 @@ def get_channels(
             If None then DEFAULT_PARTS_TO_REQUEST is used.
             See:
             https://developers.google.com/youtube/v3/docs/channels/list#part
+        max_pages (int): Maximum number of pages (and thus API quota usage) to request.
         client: YouTube client to override the default
 
     Returns:
@@ -47,7 +49,7 @@ def get_channels(
     part_str = _get_part_str(parts_list)
     channel_ids_str = _get_channel_ids_str(channels_config)
     request = channels.list(part=part_str, id=channel_ids_str, maxResults=50)
-    return lists.paginate_list_resource(channels, request)
+    return lists.paginate_list_resource(channels, request, max_pages=max_pages)
 
 
 def _get_channel_ids_str(channels_config: pd.DataFrame):
