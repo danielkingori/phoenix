@@ -54,6 +54,7 @@ def get_videos_for_channel(
         publishedAfter=published_after_str,
         order=order,
         type=TYPE_VIDEO,
+        maxResults=50,
     )
     return lists.paginate_list_resource(resource_client, request)
 
