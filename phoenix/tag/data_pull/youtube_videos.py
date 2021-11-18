@@ -10,6 +10,10 @@ import tentaclio
 from phoenix.tag.data_pull import utils
 
 
+YOUTUBE_VIDEOS_URL = "https://www.youtube.com/watch?v="
+YOUTUBE_CHANNEL_URL = "https://www.youtube.com/channel/"
+
+
 def execute(
     url_to_folder: str, year_filter: Optional[int] = None, month_filter: Optional[int] = None
 ) -> pd.DataFrame:
@@ -66,8 +70,21 @@ def create_dataframe_from_response(response: Dict[str, Any]) -> pd.DataFrame:
         },
     )
     df["text"] = df["title"] + " " + df["description"]
+    df["video_url"] = YOUTUBE_VIDEOS_URL + df["id"]
+    df["channel_url"] = YOUTUBE_CHANNEL_URL + df["channel_id"]
     df = df[
-        ["id", "created_at", "channel_id", "channel_title", "title", "description", "text", "etag"]
+        [
+            "id",
+            "created_at",
+            "channel_id",
+            "channel_title",
+            "title",
+            "description",
+            "text",
+            "video_url",
+            "channel_url",
+            "etag",
+        ]
     ]
     df["response_etag"] = response_etag
     df["created_at"] = pd.to_datetime(df["created_at"])

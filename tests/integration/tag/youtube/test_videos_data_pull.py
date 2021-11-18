@@ -39,6 +39,8 @@ def test_videos_data_pull(youtube_videos_source_folder_url):
                 "title": "video_3-title_updated",
                 "description": "video_3-description_updated",
                 "text": "video_3-title_updated video_3-description_updated",
+                "video_url": youtube_videos.YOUTUBE_VIDEOS_URL + "video_3-id",
+                "channel_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_3-channel_id",
                 "etag": "item_3-response_2-etag_1",
                 "response_etag": "response_2-etag_1",
                 "timestamp_filter": datetime.datetime(
@@ -62,6 +64,8 @@ def test_videos_data_pull(youtube_videos_source_folder_url):
                 "title": "video_2-title_updated",
                 "description": "video_2-description_updated",
                 "text": "video_2-title_updated video_2-description_updated",
+                "video_url": youtube_videos.YOUTUBE_VIDEOS_URL + "video_2-id",
+                "channel_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_2-channel_id",
                 "etag": "item_2-response_2-etag_1",
                 "response_etag": "response_2-etag_1",
                 "timestamp_filter": datetime.datetime(
@@ -83,6 +87,8 @@ def test_videos_data_pull(youtube_videos_source_folder_url):
                 "title": "video_4-title",
                 "description": "video_4-description",
                 "text": "video_4-title video_4-description",
+                "video_url": youtube_videos.YOUTUBE_VIDEOS_URL + "video_4-id",
+                "channel_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_4-channel_id",
                 "etag": "item_2-response_2-etag_2",
                 "response_etag": "response_2-etag_2",
                 "timestamp_filter": datetime.datetime(
@@ -104,6 +110,8 @@ def test_videos_data_pull(youtube_videos_source_folder_url):
                 "title": "video_1-title",
                 "description": "video_1-description",
                 "text": "video_1-title video_1-description",
+                "video_url": youtube_videos.YOUTUBE_VIDEOS_URL + "video_1-id",
+                "channel_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_1-channel_id",
                 "etag": "item_2-response_1-etag_1",
                 "response_etag": "response_1-etag_1",
                 "timestamp_filter": datetime.datetime(
