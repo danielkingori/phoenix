@@ -33,6 +33,19 @@ def test_videos_data_pull(youtube_videos_source_folder_url):
             "description": "video_1-description",
             "text": "video_1-title video_1-description",
             "channel_title": "video_1-channel_title",
+            "etag": "item_2-response_1-etag_1",
+            "response_etag": "response_1-etag_1",
+        },
+        {
+            "id": "video_4-id",
+            "created_at": datetime.datetime(2000, 1, 1, 1, 0, 0),
+            "channel_id": "video_4-channel_id",
+            "title": "video_4-title",
+            "description": "video_4-description",
+            "text": "video_4-title video_4-description",
+            "channel_title": "video_4-channel_title",
+            "etag": "item_2-response_2-etag_2",
+            "response_etag": "response_2-etag_2",
         },
         {
             "id": "video_2-id",
@@ -42,6 +55,8 @@ def test_videos_data_pull(youtube_videos_source_folder_url):
             "description": "video_2-description_updated",
             "text": "video_2-title-updated video_2-description_updated",
             "channel_title": "video_2-channel_title_updated",
+            "etag": "item_3-response_1-etag_1",
+            "response_etag": "response_1-etag_1",
         },
         {
             "id": "video_3-id",
@@ -51,6 +66,8 @@ def test_videos_data_pull(youtube_videos_source_folder_url):
             "description": "video_3-description_updated",
             "text": "video_3-title-updated video_3-description_updated",
             "channel_title": "video_3-channel_title_updated",
+            "etag": "item_4-response_1-etag_1",
+            "response_etag": "response_1-etag_1",
         },
     ])
     pd.testing.assert_frame_equal(result, expected)
