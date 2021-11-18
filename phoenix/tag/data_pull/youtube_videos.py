@@ -89,3 +89,21 @@ def create_dataframe_from_response(response: Dict[str, Any]) -> pd.DataFrame:
     df["response_etag"] = response_etag
     df["created_at"] = pd.to_datetime(df["created_at"])
     return utils.add_filter_cols(df, df["created_at"])
+
+
+def for_tagging(given_df: pd.DataFrame):
+    """Get YouTube videos for tagging.
+
+    Return:
+    dataframe  : pandas.DataFrame
+    Index:
+        object_id: String, dtype: string
+    Columns:
+        object_id: String, dtype: string
+        text: String, dtype: string
+        object_type: "facebook_post", dtype: String
+        created_at: datetime
+        object_url: String, dtype: string
+        object_user_url: String, dtype: string
+    """
+    return pd.DataFrame({})
