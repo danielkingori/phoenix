@@ -2,7 +2,7 @@
 import mock
 import pandas as pd
 
-from phoenix.scrape.youtube import search
+from phoenix.scrape.youtube import search_videos as search
 
 
 YOUTUBE_MODULE_STR = "phoenix.scrape.youtube"
@@ -65,7 +65,7 @@ def test_get_videos_for_channel(
     assert result == m_paginate_list_resource.return_value
 
 
-@mock.patch(f"{YOUTUBE_MODULE_STR}.search.get_videos_for_channel")
+@mock.patch(f"{YOUTUBE_MODULE_STR}.search_videos.get_videos_for_channel")
 def test_get_videos_for_channel_config(m_get_videos_for_channel):
     """Test get_videos_for_channel_config set params."""
     id_1 = "id_1"

@@ -41,8 +41,8 @@ MAPPERS: MapperDict = {
         url_mapper,
         f"{SOURCE_BASE}" + "source-youtube_channels_from_channel_ids-{RUN_DATETIME}.json",
     ),
-    "source-youtube_videos_from_channel_ids": partial(
+    "source-youtube_search_videos_from_channel_ids": partial(
         url_mapper,
-        f"{SOURCE_BASE}" + "source-youtube_videos_from_channel_ids-{RUN_DATETIME}.json",
+        f"{SOURCE_BASE}" + "source-youtube_search_videos_from_channel_ids-{RUN_DATETIME}.json",
     ),
 }

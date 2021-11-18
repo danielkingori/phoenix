@@ -28,7 +28,7 @@ def youtube(
     TENANT_ID: The id of the tenant to run phoenix for.
     ENDPOINT: the endpoint to scrape:
         - "channels_from_channel_ids"
-        - "videos_from_channel_ids"
+        - "search_videos_from_channel_ids"
     """
     cur_run_params = run_params.general.create(artifact_env, tenant_id)
     # Default is empty parameters
@@ -38,8 +38,8 @@ def youtube(
         notebook_key = "scrape/youtube/channels_from_channel_ids.ipynb"
         input_nb_url = utils.get_input_notebook_path(notebook_key)
         output_nb_url = scrape_group.get_output_notebook_url(cur_run_params, notebook_key)
-    if endpoint == "videos_from_channel_ids":
-        notebook_key = "scrape/youtube/videos_from_channel_ids.ipynb"
+    if endpoint == "search_videos_from_channel_ids":
+        notebook_key = "scrape/youtube/search_videos_from_channel_ids.ipynb"
         input_nb_url = utils.get_input_notebook_path(notebook_key)
         output_nb_url = scrape_group.get_output_notebook_url(cur_run_params, notebook_key)
     else:

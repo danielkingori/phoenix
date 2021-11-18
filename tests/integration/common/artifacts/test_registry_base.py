@@ -74,12 +74,12 @@ from tests.integration.common.artifacts import conftest
             ),
         ),
         (
-            "base-grouped_by_youtube_searches",
+            "base-grouped_by_youtube_search_videos",
             {"YEAR_FILTER": 2021, "MONTH_FILTER": 1},
             (
-                "base/grouped_by_year_month/youtube_searches/"
+                "base/grouped_by_year_month/youtube_search_videos/"
                 "year_filter=2021/month_filter=1/"
-                "youtube_video_searches-20000101T010101.000001Z.json"
+                "youtube_search_videos-20000101T010101.000001Z.json"
             ),
         ),
     ],

@@ -13,6 +13,6 @@ TAGGING_PIPELINE_BASE = f"tagging_runs/{YEAR_MONTH_FILTER_DIRS}" + "{OBJECT_TYPE
 GROUP_BY_YOUTUBE_CHANNELS = (
     f"{BASE_BASE}grouped_by_year_month/youtube_channels/{YEAR_MONTH_FILTER_DIRS}"
 )
-GROUP_BY_YOUTUBE_SEARCHES = (
-    f"{BASE_BASE}grouped_by_year_month/youtube_searches/{YEAR_MONTH_FILTER_DIRS}"
+GROUP_BY_YOUTUBE_SEARCH_VIDEOS = (
+    f"{BASE_BASE}grouped_by_year_month/youtube_search_videos/{YEAR_MONTH_FILTER_DIRS}"
 )

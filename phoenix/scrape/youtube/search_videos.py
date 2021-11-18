@@ -1,4 +1,4 @@
-"""Search functionality."""
+"""Search for videos functionality."""
 from typing import Any, List, Optional
 
 import datetime

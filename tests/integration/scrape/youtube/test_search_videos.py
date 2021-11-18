@@ -8,7 +8,9 @@ import googleapiclient
 import mock
 import pytest
 
-from phoenix.scrape.youtube import channels_config, search, utils
+from phoenix.scrape.youtube import channels_config
+from phoenix.scrape.youtube import search_videos as search
+from phoenix.scrape.youtube import utils
 
 
 @pytest.mark.auth
