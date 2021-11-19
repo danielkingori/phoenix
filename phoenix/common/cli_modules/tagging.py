@@ -204,7 +204,7 @@ def get_notebook_keys(phase_number: int, object_type) -> List[str]:
     if phase_number == 1:
         return [
             get_data_pull_notebook_key(object_type),
-            "tag/labeling/push_labeling_sheet.ipynb",
+            # "tag/labeling/push_labeling_sheet.ipynb",
             # "tag/features.ipynb",
             # "tag/topics.ipynb",
             # "tag/tensions.ipynb",
