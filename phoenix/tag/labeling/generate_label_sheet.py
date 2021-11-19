@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-EXPECTED_COLUMNS_LABELING_SHEET = [
+EXPECTED_COLUMNS_OBJECT_LABELING_SHEET = [
     "object_id",
     "object_type",
     "object_url",
@@ -25,19 +25,27 @@ EXPECTED_COLUMNS_LABELING_SHEET = [
     "label_4_features",
     "label_5",
     "label_5_features",
+    "notes",
+]
+
+EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET = [
+    "object_user_url",
+    "object_user_name",
     "account_label_1",
     "account_label_2",
     "account_label_3",
+    "account_label_4",
+    "account_label_5",
 ]
 
 
-def create_new_labeling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
-    """Create a new labeling sheet using the for_tagging pulled data.
+def create_new_object_labeling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
+    """Create a new object labeling sheet using the for_tagging pulled data.
 
     Args:
         for_tag_df (pd.DataFrame): dataframe with data from the tag/data_pull scripts.
     """
-    for col in EXPECTED_COLUMNS_LABELING_SHEET:
+    for col in EXPECTED_COLUMNS_OBJECT_LABELING_SHEET:
         if col not in for_tag_df.columns:
             for_tag_df[col] = None
 
@@ -45,7 +53,7 @@ def create_new_labeling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
         lambda x: pd.to_datetime(x).strftime("%Y-%m-%d %H:%M") if x else None
     )
 
-    return for_tag_df[EXPECTED_COLUMNS_LABELING_SHEET]
+    return for_tag_df[EXPECTED_COLUMNS_OBJECT_LABELING_SHEET]
 
 
 def get_goal_number_rows(
