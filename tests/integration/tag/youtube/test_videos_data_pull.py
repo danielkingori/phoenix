@@ -5,6 +5,7 @@ import pandas as pd
 import pytest
 
 from phoenix.common import utils
+from phoenix.tag import data_pull
 from phoenix.tag.data_pull import youtube_videos
 
 
@@ -15,19 +16,10 @@ def youtube_videos_source_folder_url():
     return f"file://{rel_path}/"
 
 
-def test_videos_data_pull(youtube_videos_source_folder_url):
-    """Integration test for the data pull.
-
-    - Takes 2 test data source files
-    - normalises them in to youtube_videos schema
-    - including adding the filter columns
-    - de-duplicates them based on run datetime
-    - order by created_at descending
-    - add file_timestamp
-    - filter for month and date.
-    """
-    result = youtube_videos.execute(youtube_videos_source_folder_url, 2000, 1)
-    expected = pd.DataFrame(
+@pytest.fixture()
+def processed_videos_df() -> pd.DataFrame:
+    """Fixture for dataframe processed from scraped videos JSON."""
+    df = pd.DataFrame(
         [
             {
                 "id": "video_3-id",
@@ -128,4 +120,66 @@ def test_videos_data_pull(youtube_videos_source_folder_url):
         ],
         index=pd.Int64Index([1, 2, 3, 4], dtype="int64"),
     )
+    return df
+
+
+def test_videos_data_pull(youtube_videos_source_folder_url, processed_videos_df):
+    """Integration test for the data pull.
+
+    - Takes 2 test data source files
+    - normalises them in to youtube_videos schema
+    - including adding the filter columns
+    - de-duplicates them based on run datetime
+    - order by created_at descending
+    - add file_timestamp
+    - filter for month and date.
+    """
+    result = youtube_videos.execute(youtube_videos_source_folder_url, 2000, 1)
+    pd.testing.assert_frame_equal(result, processed_videos_df)
+
+
+def test_videos_for_tagging(processed_videos_df):
+    """Integration test for transforming processed videos ready for tagging (labelling) format."""
+    result = youtube_videos.for_tagging(processed_videos_df)
+    expected = pd.DataFrame(
+        [
+            {
+                "object_id": "video_3-id",
+                "text": "video_3-title_updated video_3-description_updated",
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_VIDEO,
+                "created_at": datetime.datetime(
+                    2000, 1, 31, 23, 59, 59, tzinfo=datetime.timezone.utc
+                ),
+                "object_url": youtube_videos.YOUTUBE_VIDEOS_URL + "video_3-id",
+                "object_user_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_3-channel_id",
+            },
+            {
+                "object_id": "video_2-id",
+                "text": "video_2-title_updated video_2-description_updated",
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_VIDEO,
+                "created_at": datetime.datetime(
+                    2000, 1, 2, 2, 26, 31, tzinfo=datetime.timezone.utc
+                ),
+                "object_url": youtube_videos.YOUTUBE_VIDEOS_URL + "video_2-id",
+                "object_user_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_2-channel_id",
+            },
+            {
+                "object_id": "video_4-id",
+                "text": "video_4-title video_4-description",
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_VIDEO,
+                "created_at": datetime.datetime(2000, 1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc),
+                "object_url": youtube_videos.YOUTUBE_VIDEOS_URL + "video_4-id",
+                "object_user_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_4-channel_id",
+            },
+            {
+                "object_id": "video_1-id",
+                "text": "video_1-title video_1-description",
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_VIDEO,
+                "created_at": datetime.datetime(2000, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc),
+                "object_url": youtube_videos.YOUTUBE_VIDEOS_URL + "video_1-id",
+                "object_user_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_1-channel_id",
+            },
+        ],
+    )
+    expected = expected.set_index("object_id")
     pd.testing.assert_frame_equal(result, expected)

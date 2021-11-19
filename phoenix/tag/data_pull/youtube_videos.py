@@ -7,7 +7,7 @@ import logging
 import pandas as pd
 import tentaclio
 
-from phoenix.tag.data_pull import utils
+from phoenix.tag.data_pull import constants, utils
 
 
 YOUTUBE_VIDEOS_URL = "https://www.youtube.com/watch?v="
@@ -106,4 +106,11 @@ def for_tagging(given_df: pd.DataFrame):
         object_url: String, dtype: string
         object_user_url: String, dtype: string
     """
-    return pd.DataFrame({})
+    df = given_df.copy()
+    df = df.rename(columns={"id": "object_id"})
+    df["object_type"] = constants.OBJECT_TYPE_YOUTUBE_VIDEO
+    df["object_url"] = df["video_url"]
+    df["object_user_url"] = df["channel_url"]
+    df = df[["object_id", "text", "object_type", "created_at", "object_url", "object_user_url"]]
+    df = df.set_index("object_id", verify_integrity=True)
+    return df
