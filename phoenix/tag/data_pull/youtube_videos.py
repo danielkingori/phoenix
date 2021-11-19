@@ -14,7 +14,7 @@ YOUTUBE_VIDEOS_URL = "https://www.youtube.com/watch?v="
 YOUTUBE_CHANNEL_URL = "https://www.youtube.com/channel/"
 
 
-def execute(
+def from_json(
     url_to_folder: str, year_filter: Optional[int] = None, month_filter: Optional[int] = None
 ) -> pd.DataFrame:
     """Pull source json and create youtube_videos pre-tagging dataframe."""
