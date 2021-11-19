@@ -1,6 +1,7 @@
 """YouTube videos data pull."""
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
+import datetime
 import json
 import logging
 
@@ -8,6 +9,12 @@ import pandas as pd
 import tentaclio
 
 from phoenix.tag.data_pull import constants, utils
+
+
+logger = logging.getLogger(__name__)
+
+
+JSONType = Any
 
 
 YOUTUBE_VIDEOS_URL = "https://www.youtube.com/watch?v="
@@ -18,21 +25,15 @@ def from_json(
     url_to_folder: str, year_filter: Optional[int] = None, month_filter: Optional[int] = None
 ) -> pd.DataFrame:
     """Pull source json and create youtube_videos pre-tagging dataframe."""
-    li = []
-    for entry in tentaclio.listdir(url_to_folder):
-        logging.info(f"Processing file: {entry}")
-        if not utils.is_valid_file_name(entry):
-            logging.info(f"Skipping file with invalid filename: {entry}")
-            continue
-        file_timestamp = utils.get_file_name_timestamp(entry)
-        with tentaclio.open(entry) as file_io:
-            js_obj = json.load(file_io)
+    json_objects = get_jsons(url_to_folder, year_filter, month_filter)
 
-        df = create_dataframe(js_obj)
+    dfs: List[pd.DataFrame] = []
+    for json_object, file_timestamp in json_objects:
+        df = create_dataframe(json_object)
         df["file_timestamp"] = file_timestamp
-        li.append(df)
+        dfs.append(df)
 
-    df = pd.concat(li, axis=0, ignore_index=True)
+    df = pd.concat(dfs, axis=0, ignore_index=True)
     df = df.sort_values("file_timestamp")
     df = df.groupby("id").last()
     df = df.reset_index()
@@ -44,13 +45,32 @@ def from_json(
     return df
 
 
+def get_jsons(
+    url_to_folder: str, year_filter: Optional[int] = None, month_filter: Optional[int] = None
+) -> List[Tuple[JSONType, datetime.datetime]]:
+    """Read all JSON files and tuple with the file's timestamp."""
+    json_objects: List[Tuple[Any, datetime.datetime]] = []
+    for entry in tentaclio.listdir(url_to_folder):
+        logger.info(f"Processing file: {entry}")
+        if not utils.is_valid_file_name(entry):
+            logger.info(f"Skipping file with invalid filename: {entry}")
+            continue
+        file_timestamp = utils.get_file_name_timestamp(entry)
+        with tentaclio.open(entry) as file_io:
+            json_objects.append((json.load(file_io), file_timestamp))
+    return json_objects
+
+
 def create_dataframe(json_obj: List[Dict[str, Any]]) -> pd.DataFrame:
     """Create Dataframe from the raw json."""
     # raw json contains a list of responses
     li = []
     for response in json_obj:
-        df = create_dataframe_from_response(response)
-        li.append(df)
+        if response["items"]:
+            df = create_dataframe_from_response(response)
+            li.append(df)
+        else:
+            logger.info(f"No videos found for etag: [etag={response['etag']}]")
 
     return pd.concat(li, axis=0, ignore_index=True)
 
