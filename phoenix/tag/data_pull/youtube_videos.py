@@ -132,5 +132,5 @@ def for_tagging(given_df: pd.DataFrame):
     df["object_url"] = df["video_url"]
     df["object_user_url"] = df["channel_url"]
     df = df[["object_id", "text", "object_type", "created_at", "object_url", "object_user_url"]]
-    df = df.set_index("object_id", verify_integrity=True)
+    df = df.set_index("object_id", drop=False, verify_integrity=True)
     return df

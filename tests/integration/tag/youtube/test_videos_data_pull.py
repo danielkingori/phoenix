@@ -180,6 +180,10 @@ def test_videos_for_tagging(processed_videos_df):
                 "object_user_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_1-channel_id",
             },
         ],
+        index=pd.Index(
+            ["video_3-id", "video_2-id", "video_4-id", "video_1-id"],
+            dtype="object",
+            name="object_id",
+        ),
     )
-    expected = expected.set_index("object_id")
     pd.testing.assert_frame_equal(result, expected)
