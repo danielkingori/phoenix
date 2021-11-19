@@ -6,7 +6,7 @@ import pytest
 
 from phoenix.common import utils
 from phoenix.tag import data_pull
-from phoenix.tag.data_pull import youtube_videos
+from phoenix.tag.data_pull import youtube_videos_pull as youtube_videos
 
 
 @pytest.fixture()
