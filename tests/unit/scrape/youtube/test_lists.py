@@ -35,7 +35,9 @@ def test_paginate_list_resource_with_result(m_default_list_process_function):
     request = mock.Mock()
     execute_fn = request.execute
     init_result = mock.Mock()
-    result = lists.paginate_list_resource(resource_client, request, None, init_result)
+    result = lists.paginate_list_resource(
+        resource_client, request, process_function=None, result=init_result
+    )
     assert result == m_default_list_process_function.return_value
     execute_fn.assert_called_once_with()
     m_default_list_process_function.assert_called_once_with(init_result, execute_fn.return_value)

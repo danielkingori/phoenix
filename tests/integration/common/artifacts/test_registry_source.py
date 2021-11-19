@@ -28,6 +28,14 @@ from tests.integration.common.artifacts import conftest
             ),
         ),
         (
+            "source-youtube_search_videos_from_channel_ids",
+            {},
+            (
+                "source_runs/2000-01-01/"
+                "source-youtube_search_videos_from_channel_ids-20000101T010101.000001Z.json"
+            ),
+        ),
+        (
             "source-notebooks_base",
             {},
             ("source_runs/2000-01-01/output_notebooks/20000101T010101.000001Z/"),

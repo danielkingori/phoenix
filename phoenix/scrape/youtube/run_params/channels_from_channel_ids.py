@@ -1,4 +1,4 @@
-"""Facebook posts run params."""
+"""Channel from channel ids run params."""
 from typing import Any, Dict, Optional
 
 import dataclasses

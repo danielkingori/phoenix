@@ -33,3 +33,15 @@ def youtube_channel_page_final(mock_data_folder):
 def youtube_channel_page_with_next(mock_data_folder):
     """Youtube Channel page with next page."""
     return read_youtube_response(mock_data_folder + "channels_page_with_next.json")
+
+
+@pytest.fixture
+def youtube_search_videos_page_final(mock_data_folder):
+    """Youtube search videos final page (no next page)."""
+    return read_youtube_response(mock_data_folder + "search_videos_page_final.json")
+
+
+@pytest.fixture
+def youtube_search_videos_page_with_next(mock_data_folder):
+    """Youtube search videos page with next page."""
+    return read_youtube_response(mock_data_folder + "search_videos_page_with_next.json")
