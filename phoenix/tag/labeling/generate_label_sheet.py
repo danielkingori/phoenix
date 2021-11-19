@@ -57,6 +57,21 @@ def create_new_object_labeling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFram
     return user_notes_df.append(for_tag_df[EXPECTED_COLUMNS_OBJECT_LABELING_SHEET])
 
 
+def create_new_account_labeling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
+    """Create a new account labeling sheet using the for_tagging pulled data.
+
+    Args:
+        for_tag_df (pd.DataFrame): dataframe with data from the tag/data_pull scripts.
+    """
+    user_notes_df = get_user_notes_account_df()
+    deduped_account_df = for_tag_df[["object_user_url", "object_user_name"]].drop_duplicates()
+    for col in EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET:
+        if col not in deduped_account_df.columns:
+            deduped_account_df[col] = None
+
+    return user_notes_df.append(deduped_account_df[EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET])
+
+
 def get_user_notes_object_df() -> pd.DataFrame:
     """Adds notes for the users of the object_labelling_sheet as the first row of a df."""
     notes_list = [
@@ -110,6 +125,23 @@ def get_user_notes_object_df() -> pd.DataFrame:
 
     data_dict = dict(zip(EXPECTED_COLUMNS_OBJECT_LABELING_SHEET, notes_list))
     df = pd.DataFrame(data=data_dict, columns=EXPECTED_COLUMNS_OBJECT_LABELING_SHEET, index=[0])
+    return df
+
+
+def get_user_notes_account_df() -> pd.DataFrame:
+    """Adds notes for the users of the account_labelling sheet as the first row of a df."""
+    notes_list = [
+        "User's URL. Click to see the context of this user",
+        "Username of this user's account.",
+        "What's the class?",
+        "Is there another class mentioned here as well? If not, please leave it empty",
+        "Is there another class mentioned here as well? If not, please leave it empty",
+        "Is there another class mentioned here as well? If not, please leave it empty",
+        "Is there another class mentioned here as well? If not, please leave it empty",
+    ]
+
+    data_dict = dict(zip(EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET, notes_list))
+    df = pd.DataFrame(data=data_dict, columns=EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET, index=[0])
     return df
 
 

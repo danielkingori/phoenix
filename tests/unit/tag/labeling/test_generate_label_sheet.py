@@ -83,3 +83,50 @@ def test_get_user_notes_object_df():
     assert notes_object_df.iloc[0].count() == len(
         generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELING_SHEET
     )
+
+
+def test_get_user_notes_account_df():
+    """Test basic assumptions for the get_user_notes_account_df."""
+    notes_object_df = generate_label_sheet.get_user_notes_account_df()
+    assert len(notes_object_df) == 1
+
+    # Assert that the number of filled cells in the notes is equal to the expected columns number
+    assert notes_object_df.iloc[0].count() == len(
+        generate_label_sheet.EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET
+    )
+
+
+def test_create_new_account_labeling_sheet_df():
+    input_df = pd.DataFrame(
+        {
+            "object_user_url": ["link_1", "link_1", "link_2", "link_3"],
+            "object_user_name": ["person_1", "person_1", "person_2", "person_3"],
+            "unimportant_column": ["foo", "bar", "baz", "bark"],
+        }
+    )
+
+    expected_df_after_first_row = pd.DataFrame(
+        {
+            "object_user_url": ["link_1", "link_2", "link_3"],
+            "object_user_name": ["person_1", "person_2", "person_3"],
+            "account_label_1": [None] * 3,
+            "account_label_2": [None] * 3,
+            "account_label_3": [None] * 3,
+            "account_label_4": [None] * 3,
+            "account_label_5": [None] * 3,
+        },
+        columns=[
+            "object_user_url",
+            "object_user_name",
+            "account_label_1",
+            "account_label_2",
+            "account_label_3",
+            "account_label_4",
+            "account_label_5",
+        ],
+        index=[0, 2, 3],
+    )
+
+    actual_df = generate_label_sheet.create_new_account_labeling_sheet_df(input_df)
+
+    pd.testing.assert_frame_equal(actual_df[1:], expected_df_after_first_row, check_like=True)
