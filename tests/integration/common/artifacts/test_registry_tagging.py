@@ -45,6 +45,36 @@ from tests.integration.common.artifacts import conftest
             "test_tenant",
         ),
         (
+            "tagging_runs-youtube_videos_input",
+            {"YEAR_FILTER": 2021, "MONTH_FILTER": 1},
+            "local",
+            (
+                "/test_tenant/"
+                "base/grouped_by_year_month/youtube_search_videos/year_filter=2021/month_filter=1/"
+            ),
+            "test_tenant",
+        ),
+        (
+            "tagging_runs-youtube_videos_pulled",
+            {"YEAR_FILTER": 2021, "MONTH_FILTER": 1},
+            "local",
+            (
+                "test_tenant/tagging_runs/year_filter=2021/month_filter=1/"
+                "youtube_videos/youtube_videos_pulled.parquet"
+            ),
+            "test_tenant",
+        ),
+        (
+            "tagging_runs-youtube_videos_for_tagging",
+            {"YEAR_FILTER": 2021, "MONTH_FILTER": 1},
+            "local",
+            (
+                "test_tenant/tagging_runs/year_filter=2021/month_filter=1/"
+                "youtube_videos/for_tagging/youtube_videos_for_tagging.parquet"
+            ),
+            "test_tenant",
+        ),
+        (
             "tagging_runs-pipeline_base",
             {"YEAR_FILTER": 2021, "MONTH_FILTER": 1, "OBJECT_TYPE": "facebook_posts"},
             "local",
