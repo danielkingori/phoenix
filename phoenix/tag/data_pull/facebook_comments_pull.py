@@ -122,6 +122,6 @@ def for_tagging(given_df: pd.DataFrame):
     df = given_df.copy()
     df = df[["id", "text"]]
     df = df.rename(columns={"id": "object_id"})
-    df = df.set_index(df["object_id"], verify_integrity=True)
+    df = df.set_index("object_id", drop=False, verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_FACEBOOK_COMMENT
     return df

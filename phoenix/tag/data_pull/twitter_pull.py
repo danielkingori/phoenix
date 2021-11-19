@@ -111,6 +111,6 @@ def for_tagging(given_df: pd.DataFrame):
         df["retweeted"] = given_df["retweeted"]
 
     df = df.rename(columns={"id_str": "object_id", "user_screen_name": "object_user_name"})
-    df = df.set_index(df["object_id"], verify_integrity=True)
+    df = df.set_index("object_id", drop=False, verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_TWEET
     return df
