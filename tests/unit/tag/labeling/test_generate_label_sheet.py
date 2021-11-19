@@ -11,7 +11,8 @@ def test_create_new_labeling_sheet_empty():
     assert all(
         actual_df.columns.values == generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELING_SHEET
     )
-    assert actual_df.empty
+    assert len(actual_df) == 1
+    pd.testing.assert_frame_equal(actual_df, generate_label_sheet.get_user_notes_object_df())
 
 
 def test_create_new_labeling_sheet():
@@ -30,7 +31,7 @@ def test_create_new_labeling_sheet():
 
     actual_df = generate_label_sheet.create_new_object_labeling_sheet_df(df)
 
-    pd.testing.assert_frame_equal(actual_df, expected_df)
+    pd.testing.assert_frame_equal(actual_df[1:], expected_df)
 
 
 def test_get_goal_number_rows():
@@ -71,3 +72,14 @@ def test_get_goal_number_rows_many_unique():
     )
     excluded_df, actual_df = generate_label_sheet.get_goal_number_rows(input_df, "stratify_col", 2)
     pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
+
+
+def test_get_user_notes_object_df():
+    """Test basic assumptions for get_user_notes_object_df."""
+    notes_object_df = generate_label_sheet.get_user_notes_object_df()
+    assert len(notes_object_df) == 1
+
+    # Assert that the number of filled cells in the notes is equal to the expected columns number
+    assert notes_object_df.iloc[0].count() == len(
+        generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELING_SHEET
+    )
