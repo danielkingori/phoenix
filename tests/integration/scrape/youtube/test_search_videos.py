@@ -46,9 +46,7 @@ def test_get_videos_for_channel(youtube_search_videos_page_final):
     )
     client = utils.get_client(http_mock=http)
     published_after = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=3)
-    result = search.get_videos_for_channel(
-        "channel_id", published_after, parts_list=None, order=None, client=client
-    )
+    result = search.get_videos_for_channel("channel_id", published_after, client=client)
     assert len(result) == 1
     # Build Up should be one of the titles on the list
     assert result[0] == json.loads(youtube_search_videos_page_final)
@@ -69,7 +67,7 @@ def test_get_videos_for_channel_2_page(
     client = utils.get_client(http_mock=http)
     published_after = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=3)
     result = search.get_videos_for_channel(
-        "channel_id", published_after, parts_list=None, order=None, max_pages=2, client=client
+        "channel_id", published_after, max_pages=2, client=client
     )
     assert len(result) == 2
     # Build Up should be one of the titles on the list

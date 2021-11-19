@@ -42,7 +42,7 @@ def get_resource_client(
     resource_name: str,
     client: Optional[discovery.Resource] = None,
 ):
-    """Get the Resource Client form the client.
+    """Get the Resource Client from the client.
 
     Arguments:
         resource_name (str): name of resource to get from the client.
@@ -56,13 +56,8 @@ def get_resource_client(
     return getattr(client, resource_name)()
 
 
-def get_part_str(
-    default_pasts_list: List[str],
-    parts_list: Optional[List[str]] = None,
-) -> str:
-    """Get the part string for the request."""
-    if not parts_list:
-        parts_list = default_pasts_list
+def get_part_str(parts_list: List[str]) -> str:
+    """Form the part string for the request."""
     return ",".join(parts_list)
 
 
