@@ -1,4 +1,7 @@
 """Utility functions for the labelling submodule."""
+import pandas as pd
+
+from phoenix.tag.labeling.generate_label_sheet import EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET
 
 
 def get_account_object_type(object_type: str) -> str:
@@ -13,3 +16,16 @@ def get_account_object_type(object_type: str) -> str:
         raise KeyError(f"No account object type found for {object_type}")
 
     return account_object_type
+
+
+def is_valid_account_labeling_sheet(df: pd.DataFrame) -> bool:
+    """Check if a dataframe has the correct columns to be an account_labeling sheet.
+
+    Args:
+        df (pd.DataFrame): df to be checked if it's a valid labeling sheet.
+    """
+    for col_name in EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET:
+        if col_name not in df.columns:
+            return False
+
+    return True
