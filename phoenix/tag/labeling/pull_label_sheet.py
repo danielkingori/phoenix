@@ -5,7 +5,11 @@ import numpy as np
 import pandas as pd
 
 from phoenix.tag import language, text_features_analyser
-from phoenix.tag.labeling.generate_label_sheet import EXPECTED_COLUMNS_OBJECT_LABELING_SHEET
+from phoenix.tag.labeling.generate_label_sheet import (
+    EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET,
+    EXPECTED_COLUMNS_OBJECT_LABELING_SHEET,
+)
+from phoenix.tag.labeling.utils import is_valid_account_labeling_sheet
 
 
 def is_valid_labeling_sheet(df: pd.DataFrame) -> bool:
@@ -76,9 +80,19 @@ def extract_features_to_label_mapping_objects(
 
 
 def get_account_labels(df: pd.DataFrame) -> pd.DataFrame:
-    """Get account labels and the people who labeled it."""
+    """Get account labels and the people who labeled it.
+
+    Args:
+        df (pd.DataFrame): account labeling dataframe.
+    """
+    if not is_valid_account_labeling_sheet(df):
+        ValueError(
+            f"Dataframe doesn't have correct columns to be an account labeling sheet. {df.columns}"
+        )
+
+    account_df = df[EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET]
     long_account_df = pd.wide_to_long(
-        df,
+        account_df,
         stubnames="account_label",
         i=["object_user_name", "object_user_url"],
         j="position",
