@@ -31,6 +31,7 @@ EXPECTED_COLUMNS_OBJECT_LABELING_SHEET = [
 EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET = [
     "object_user_url",
     "object_user_name",
+    "labelled_by",
     "account_label_1",
     "account_label_2",
     "account_label_3",
@@ -133,6 +134,7 @@ def get_user_notes_account_df() -> pd.DataFrame:
     notes_list = [
         "User's URL. Click to see the context of this user",
         "Username of this user's account.",
+        "Who is labelling this post? (name of the person not the org)",
         "What's the class?",
         "Is there another class mentioned here as well? If not, please leave it empty",
         "Is there another class mentioned here as well? If not, please leave it empty",

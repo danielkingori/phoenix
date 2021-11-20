@@ -94,7 +94,7 @@ def get_account_labels(df: pd.DataFrame) -> pd.DataFrame:
     long_account_df = pd.wide_to_long(
         account_df,
         stubnames="account_label",
-        i=["object_user_name", "object_user_url"],
+        i=["object_user_name", "object_user_url", "labelled_by"],
         j="position",
         suffix="_\\d+",
     )

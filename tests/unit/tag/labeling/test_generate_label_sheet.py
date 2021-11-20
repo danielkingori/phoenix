@@ -109,6 +109,7 @@ def test_create_new_account_labeling_sheet_df():
         {
             "object_user_url": ["link_1", "link_2", "link_3"],
             "object_user_name": ["person_1", "person_2", "person_3"],
+            "labelled_by": [None] * 3,
             "account_label_1": [None] * 3,
             "account_label_2": [None] * 3,
             "account_label_3": [None] * 3,
@@ -118,6 +119,7 @@ def test_create_new_account_labeling_sheet_df():
         columns=[
             "object_user_url",
             "object_user_name",
+            "labelled_by",
             "account_label_1",
             "account_label_2",
             "account_label_3",
