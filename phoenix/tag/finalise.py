@@ -43,13 +43,25 @@ def join_objects_to_facebook_posts(
     language_sentiment_objects: Optional[pd.DataFrame] = None,
 ):
     """Join the objects to the facebook_posts."""
-    if objects is not None and language_sentiment_objects is not None:
+    facebook_posts["object_id"] = facebook_posts["phoenix_post_id"].astype(str)
+    facebook_posts = facebook_posts.set_index("object_id")
+    if objects is None and language_sentiment_objects is not None:
+        language_sentiment_objects = language_sentiment_objects.set_index("object_id")
+        return facebook_posts.join(
+            language_sentiment_objects[LANGUAGE_SENTIMENT_COLUMNS], rsuffix="_objects"
+        )
+
+    if objects is not None:
         objects = objects.set_index("object_id")
+
+    if objects is not None and language_sentiment_objects is not None:
         language_sentiment_objects = language_sentiment_objects.set_index("object_id")
         objects = objects.join(language_sentiment_objects[LANGUAGE_SENTIMENT_COLUMNS])
-        facebook_posts["object_id"] = facebook_posts["phoenix_post_id"].astype(str)
-        facebook_posts = facebook_posts.set_index("object_id")
+
+    if objects is not None:
         return facebook_posts.join(objects, rsuffix="_objects")
+
+    return facebook_posts
 
 
 def join_objects_to_facebook_comments(objects, language_sentiment_objects, facebook_comments):
