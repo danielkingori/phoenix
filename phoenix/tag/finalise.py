@@ -37,14 +37,19 @@ COMMENT_INHERITED_COLUMNS = [
 ]
 
 
-def join_objects_to_facebook_posts(objects, language_sentiment_objects, facebook_posts):
+def join_objects_to_facebook_posts(
+    facebook_posts,
+    objects: Optional[pd.DataFrame] = None,
+    language_sentiment_objects: Optional[pd.DataFrame] = None,
+):
     """Join the objects to the facebook_posts."""
-    objects = objects.set_index("object_id")
-    language_sentiment_objects = language_sentiment_objects.set_index("object_id")
-    objects = objects.join(language_sentiment_objects[LANGUAGE_SENTIMENT_COLUMNS])
-    facebook_posts["object_id"] = facebook_posts["phoenix_post_id"].astype(str)
-    facebook_posts = facebook_posts.set_index("object_id")
-    return facebook_posts.join(objects, rsuffix="_objects")
+    if objects is not None and language_sentiment_objects is not None:
+        objects = objects.set_index("object_id")
+        language_sentiment_objects = language_sentiment_objects.set_index("object_id")
+        objects = objects.join(language_sentiment_objects[LANGUAGE_SENTIMENT_COLUMNS])
+        facebook_posts["object_id"] = facebook_posts["phoenix_post_id"].astype(str)
+        facebook_posts = facebook_posts.set_index("object_id")
+        return facebook_posts.join(objects, rsuffix="_objects")
 
 
 def join_objects_to_facebook_comments(objects, language_sentiment_objects, facebook_comments):
