@@ -36,6 +36,11 @@ COMMENT_INHERITED_COLUMNS = [
     "has_tension",
 ]
 
+PARTITION_COLUMNS_TO_DROP = [
+    "year_filter",
+    "month_filter",
+]
+
 
 def join_objects_to_facebook_posts(
     facebook_posts,
@@ -45,6 +50,7 @@ def join_objects_to_facebook_posts(
     """Join the objects to the facebook_posts."""
     facebook_posts["object_id"] = facebook_posts["phoenix_post_id"].astype(str)
     facebook_posts = facebook_posts.set_index("object_id")
+    facebook_posts = facebook_posts.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
     if objects is None and language_sentiment_objects is not None:
         language_sentiment_objects = language_sentiment_objects.set_index("object_id")
         return facebook_posts.join(

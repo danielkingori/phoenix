@@ -13,6 +13,8 @@ def facebook_posts_for_join():
             "phoenix_post_id": ["o1", "o2", "o3", "o4"],
             "object_type": ["ot", "ot", "ot", "ot"],
             "url": ["url1", "url2", "url3", "url4"],
+            "year_filter": [2021, 2021, 2021, 2021],
+            "month_filter": [1, 1, 2, 2],
         }
     )
 
