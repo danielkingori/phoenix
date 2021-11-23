@@ -12,6 +12,31 @@ from phoenix.common import artifacts
 from phoenix.tag import constants, feature, object_filters
 
 
+def get_dataframe_for_url(url: str, allow_not_found: bool = False) -> Optional[pd.DataFrame]:
+    """Get the dataframe for the URL.
+
+    This is to allow for not found errors.
+
+    Arguments:
+        url (str): string of the dataframe artifact.
+        allow_not_found (optional - bool): Return None and don't throw a not found error if True
+
+    Returns:
+        pd.DataFrame if found
+        None if not found and `allow_not_found` is True
+        or FileNotFoundError exception if `allow_not_found` is False.
+    """
+    try:
+        return artifacts.dataframes.get(url).dataframe
+    # This is super crap from tentaclio that they throw different errors for
+    # Different Client errors for file not found
+    except (FileNotFoundError, tentaclio.clients.exceptions.ClientError) as e:
+        if allow_not_found:
+            return None
+        # else via the return
+        raise e
+
+
 def get_posts_to_scrape(posts_df: pd.DataFrame) -> pd.DataFrame:
     """Get posts to scrape.
 
