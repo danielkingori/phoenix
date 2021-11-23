@@ -125,12 +125,24 @@ def for_tagging(given_df: pd.DataFrame):
         created_at: datetime
         object_url: String, dtype: string
         object_user_url: String, dtype: string
+        object_user_name: String, dtype: string
     """
     df = given_df.copy()
     df = df.rename(columns={"id": "object_id"})
     df["object_type"] = constants.OBJECT_TYPE_YOUTUBE_VIDEO
     df["object_url"] = df["video_url"]
     df["object_user_url"] = df["channel_url"]
-    df = df[["object_id", "text", "object_type", "created_at", "object_url", "object_user_url"]]
+    df["object_user_name"] = df["channel_title"]
+    df = df[
+        [
+            "object_id",
+            "text",
+            "object_type",
+            "created_at",
+            "object_url",
+            "object_user_url",
+            "object_user_name",
+        ]
+    ]
     df = df.set_index("object_id", drop=False, verify_integrity=True)
     return df

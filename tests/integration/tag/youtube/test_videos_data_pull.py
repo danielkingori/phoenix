@@ -152,6 +152,7 @@ def test_videos_for_tagging(processed_videos_df):
                 ),
                 "object_url": youtube_videos.YOUTUBE_VIDEOS_URL + "video_3-id",
                 "object_user_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_3-channel_id",
+                "object_user_name": "video_3-channel_title_updated",
             },
             {
                 "object_id": "video_2-id",
@@ -162,6 +163,7 @@ def test_videos_for_tagging(processed_videos_df):
                 ),
                 "object_url": youtube_videos.YOUTUBE_VIDEOS_URL + "video_2-id",
                 "object_user_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_2-channel_id",
+                "object_user_name": "video_2-channel_title_updated",
             },
             {
                 "object_id": "video_4-id",
@@ -170,6 +172,7 @@ def test_videos_for_tagging(processed_videos_df):
                 "created_at": datetime.datetime(2000, 1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc),
                 "object_url": youtube_videos.YOUTUBE_VIDEOS_URL + "video_4-id",
                 "object_user_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_4-channel_id",
+                "object_user_name": "video_4-channel_title",
             },
             {
                 "object_id": "video_1-id",
@@ -178,6 +181,7 @@ def test_videos_for_tagging(processed_videos_df):
                 "created_at": datetime.datetime(2000, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc),
                 "object_url": youtube_videos.YOUTUBE_VIDEOS_URL + "video_1-id",
                 "object_user_url": youtube_videos.YOUTUBE_CHANNEL_URL + "video_1-channel_id",
+                "object_user_name": "video_1-channel_title",
             },
         ],
         index=pd.Index(
