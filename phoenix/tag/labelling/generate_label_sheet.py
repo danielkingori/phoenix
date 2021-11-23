@@ -40,13 +40,20 @@ EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET = [
 ]
 
 
-def create_new_object_labelling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
-    """Create a new object labelling sheet using the for_tagging pulled data.
+def create_new_object_labelling_sheet_df(
+    for_tag_df: pd.DataFrame, with_user_notes: bool = True
+) -> pd.DataFrame:
+    """Create a new object labeling sheet using the for_tagging pulled data.
 
     Args:
         for_tag_df (pd.DataFrame): dataframe with data from the tag/data_pull scripts.
+        with_user_notes (bool): Should the dataframe also have notes for the user as the first row?
     """
-    user_notes_df = get_user_notes_object_df()
+    if with_user_notes:
+        user_notes_df = get_user_notes_object_df()
+    else:
+        user_notes_df = pd.DataFrame(columns=EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET)
+
     for col in EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET:
         if col not in for_tag_df.columns:
             for_tag_df[col] = None

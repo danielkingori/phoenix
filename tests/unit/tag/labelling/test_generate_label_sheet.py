@@ -34,6 +34,27 @@ def test_create_new_labelling_sheet():
     pd.testing.assert_frame_equal(actual_df[1:], expected_df)
 
 
+def test_create_new_labeling_sheet_without_notes():
+    df = pd.DataFrame(
+        {
+            "object_id": ["id_1", "id_2"],
+            "text": ["text_1", "text_2"],
+            "column_to_be_ignore": ["wrong_text_1", "wrong_text_2"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        {"object_id": ["id_1", "id_2"], "text": ["text_1", "text_2"]},
+        columns=generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
+    )
+
+    actual_df = generate_label_sheet.create_new_object_labelling_sheet_df(
+        df, with_user_notes=False
+    )
+
+    pd.testing.assert_frame_equal(actual_df, expected_df)
+
+
 def test_get_goal_number_rows():
     input_df = pd.DataFrame(
         data={
