@@ -193,11 +193,20 @@ def for_tagging(given_df: pd.DataFrame):
         created_at: datetime
         object_url: String, dtype: string
         object_user_url: String, dtype: string
+        object_user_name: String, dtypu: string
 
     """
     df = given_df.copy()
     df = df[
-        ["phoenix_post_id", "text", "language_from_api", "post_created", "post_url", "account_url"]
+        [
+            "phoenix_post_id",
+            "text",
+            "language_from_api",
+            "post_created",
+            "post_url",
+            "account_url",
+            "account_handle",
+        ]
     ]
 
     df = df.rename(
@@ -206,6 +215,7 @@ def for_tagging(given_df: pd.DataFrame):
             "post_created": "created_at",
             "post_url": "object_url",
             "account_url": "object_user_url",
+            "account_handle": "object_user_name",
         }
     )
     df = df.set_index(df["object_id"], verify_integrity=True)
