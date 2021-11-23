@@ -47,3 +47,86 @@ def test_is_valid_account_labelling_sheet_fail():
     columns.pop()
     input_df = pd.DataFrame(columns=columns)
     assert not utils.is_valid_account_labelling_sheet(input_df)
+
+
+def test_filter_out_duplicates():
+    """Test that filter_out_duplicates filters out duplicates."""
+    to_filter_df = pd.DataFrame(
+        data={
+            "object_id": ["1", "2", "3", "4", "5"],
+            "data_column": ["data_1", "data_2", "data_3", "data_4", "data_5"],
+        }
+    )
+
+    filter_using_this_df = pd.DataFrame(
+        data={
+            "object_id": ["1", "3", "5"],
+            "different_data_column": ["best data", "better data", "ok data"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        data={"object_id": ["2", "4"], "data_column": ["data_2", "data_4"]}, index=[1, 3]
+    )
+
+    output_df = utils.filter_out_duplicates(filter_using_this_df, to_filter_df)
+    pd.testing.assert_frame_equal(output_df, expected_df)
+
+
+def test_filter_out_duplicates_inputted_col_name():
+    """Test that filter_out_duplicates filters out duplicates."""
+    to_filter_df = pd.DataFrame(
+        data={
+            "new_col_name": ["1", "2", "3", "4", "5"],
+            "data_column": ["data_1", "data_2", "data_3", "data_4", "data_5"],
+        }
+    )
+
+    filter_using_this_df = pd.DataFrame(
+        data={
+            "new_col_name": ["1", "3", "5"],
+            "different_data_column": ["best data", "better data", "ok data"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        data={"new_col_name": ["2", "4"], "data_column": ["data_2", "data_4"]}, index=[1, 3]
+    )
+
+    output_df = utils.filter_out_duplicates(
+        filter_using_this_df, to_filter_df, cols=["new_col_name"]
+    )
+    pd.testing.assert_frame_equal(output_df, expected_df)
+
+
+def test_filter_out_duplicates_multi_col_name():
+    """Test that filter_out_duplicates filters out duplicates."""
+    to_filter_df = pd.DataFrame(
+        data={
+            "new_col_name": ["1", "2", "3", "4", "5"],
+            "another_col_name": ["a", "b", "c", "d", "e"],
+            "data_column": ["data_1", "data_2", "data_3", "data_4", "data_5"],
+        }
+    )
+
+    filter_using_this_df = pd.DataFrame(
+        data={
+            "new_col_name": ["1", "3", "5"],
+            "another_col_name": ["a", "not_c", "e"],
+            "different_data_column": ["best data", "better data", "ok data"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        data={
+            "new_col_name": ["2", "3", "4"],
+            "another_col_name": ["b", "c", "d"],
+            "data_column": ["data_2", "data_3", "data_4"],
+        },
+        index=[1, 2, 3],
+    )
+
+    output_df = utils.filter_out_duplicates(
+        filter_using_this_df, to_filter_df, cols=["new_col_name", "another_col_name"]
+    )
+    pd.testing.assert_frame_equal(output_df, expected_df)

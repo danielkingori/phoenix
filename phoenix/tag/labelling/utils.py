@@ -1,4 +1,6 @@
 """Utility functions for the labelling submodule."""
+from typing import List, Optional
+
 import pandas as pd
 
 from phoenix.tag.labelling.generate_label_sheet import EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET
@@ -29,3 +31,24 @@ def is_valid_account_labelling_sheet(df: pd.DataFrame) -> bool:
             return False
 
     return True
+
+
+def filter_out_duplicates(
+    filled_sheet_df: pd.DataFrame, data_df: pd.DataFrame, cols: Optional[List[str]] = None
+) -> pd.DataFrame:
+    """Filter out objects that are already in the filled_sheet_df by one or more columns.
+
+    Args:
+        filled_sheet_df (pd.DataFrame): data that users have already labelled data
+        data_df (pd.DataFrame): df you want filtered by the filled_sheet_df
+        cols (Optional[List[str]]): columns for which to check duplication in both dataframes.
+            Defaults to ["object_id"]
+
+    Returns:
+        pd.DataFrame: subset of data_df which does not have a duplicate in filled_sheet_df.
+            Duplication checked on the `cols` parameter.
+    """
+    cols = ["object_id"] if cols is None else cols
+    merged_df = pd.merge(data_df, filled_sheet_df[cols], how="left", on=cols, indicator=True)
+    merged_df = merged_df.loc[merged_df["_merge"] == "left_only"].drop("_merge", axis=1)
+    return merged_df
