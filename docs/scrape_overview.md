@@ -57,6 +57,7 @@ Tweets are pulled from the twitter APIs using the `user timeline` and `keyword` 
 
 You must have a Twitter developer account.
 For more information on the Twitter API, see [Twitter API documentation](https://developer.twitter.com/en/docs).
+Object Model of a [Tweet](https://developer.twitter.com/en/docs/twitter-api/v1/data-dictionary/object-model/tweet).
 
 ### Configuration
 Two configuration CSV files are used for the scraping.
