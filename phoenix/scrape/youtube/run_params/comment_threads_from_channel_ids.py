@@ -18,7 +18,7 @@ class ScrapeYouTubeCommentThreadsFromChannelsURLs(base.RunParams):
 
 
 @dataclasses.dataclass
-class ScrapeYouTubeVideosFromChannelIds(base.RunParams):
+class ScrapeYouTubeCommentThreadsFromChannelIds(base.RunParams):
     """Run params for scraping comment threads from channels ids."""
 
     urls: ScrapeYouTubeCommentThreadsFromChannelsURLs
@@ -29,15 +29,15 @@ def create(
     artifact_env: artifacts.registry_environment.Environments,
     tenant_id: str,
     run_datetime_str: Optional[str] = None,
-):
-    """Create run params ScrapeYouTubeVideosFromChannelIds."""
+) -> ScrapeYouTubeCommentThreadsFromChannelIds:
+    """Create run params ScrapeYouTubeCommentThreadsFromChannelIds."""
     general_run_params = general.create(artifact_env, tenant_id, run_datetime_str)
 
     urls = _get_urls(
         general_run_params,
     )
 
-    return ScrapeYouTubeVideosFromChannelIds(
+    return ScrapeYouTubeCommentThreadsFromChannelIds(
         urls=urls,
         general=general_run_params,
     )
