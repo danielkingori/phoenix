@@ -81,16 +81,15 @@ def get_user_notes_object_df() -> pd.DataFrame:
         # Note for column: object_type
         "Type of object",
         # Note for column: object_url
-        "Object's Url. Click to see context of the object",
+        "Object's url. Click to see context of the object",
         # Note for column: created_at",
         "Date of posting",
         # Note for column: object_user_url
         "User url",
         # Note for column: matched_labels
-        "Which classes did the system find for this object by using the labelling that you have "
-        "previously done",
+        "The class labels the system has output for the object",
         # Note for column: matched_features
-        "Which features did the system use to give this object these classes",
+        "The features the system used to identify which labels to apply to object",
         # Note for column: text
         "The content of the object",
         # Note for column: labelled_by
@@ -132,7 +131,7 @@ def get_user_notes_object_df() -> pd.DataFrame:
 def get_user_notes_account_df() -> pd.DataFrame:
     """Adds notes for the users of the account_labelling sheet as the first row of a df."""
     notes_list = [
-        "User's URL. Click to see the context of this user",
+        "User's url. Click to see the context of this user",
         "Username of this user's account.",
         "Who is labelling this post? (name of the person not the org)",
         "What's the class?",
