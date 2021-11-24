@@ -27,6 +27,7 @@ DEFAULT_PARTS_TO_REQUEST = [
 def get_comment_threads(
     channel_id: str,
     parts_list: List[str] = DEFAULT_PARTS_TO_REQUEST,
+    max_pages: int = 10,
     client: Optional[discovery.Resource] = None,
 ) -> lists.ListResults:
     """Get all the comment threads data for channel id.
@@ -38,6 +39,7 @@ def get_comment_threads(
         channel_id (str): Channel id to get the comment threads for.
         parts_list (List[str]): A list of parts that should be requested.
             See: https://developers.google.com/youtube/v3/docs/commentThreads/list#part
+        max_pages (int): Maximum number of pages (and thus API quota usage) to request.
         client (discovery.Resource): YouTube client. If None then one will be initialised.
 
     Returns:
@@ -53,7 +55,7 @@ def get_comment_threads(
         order="time",
         textFormat="plainText",
     )
-    return lists.paginate_list_resource(comment_threads_client, request)
+    return lists.paginate_list_resource(comment_threads_client, request, max_pages=max_pages)
 
 
 def get_comment_threads_for_channel_config(
