@@ -35,7 +35,7 @@ def get_comment_threads(
     https://developers.google.com/resources/api-libraries/documentation/youtube/v3/python/latest/youtube_v3.commentThreads.html
 
     Arguments:
-        channels_id (str): Channel id to get the comment threads for.
+        channel_id (str): Channel id to get the comment threads for.
         parts_list (List[str]): A list of parts that should be requested.
             See: https://developers.google.com/youtube/v3/docs/commentThreads/list#part
         client (discovery.Resource): YouTube client. If None then one will be initialised.
