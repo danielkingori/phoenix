@@ -58,7 +58,7 @@ def get_comment_threads(
     return lists.paginate_list_resource(comment_threads_client, request, max_pages=max_pages)
 
 
-def get_comment_threads_for_channel_config(
+def get_comment_threads_for_channels_config(
     channels_config: pd.DataFrame,
 ) -> lists.ListResults:
     """Get all the comment threads data for all the channels specified in the config."""
