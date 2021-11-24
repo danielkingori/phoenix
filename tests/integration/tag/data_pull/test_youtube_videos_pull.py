@@ -126,7 +126,7 @@ def test_videos_data_pull(youtube_raw_data_source_folder_url, processed_videos_d
     - add file_timestamp
     - filter for month and date.
     """
-    result = youtube_videos.from_json(youtube_raw_data_source_folder_url, 2000, 1)
+    result = youtube_videos.from_json(youtube_raw_data_source_folder_url + "videos/", 2000, 1)
     pd.testing.assert_frame_equal(result, processed_videos_df)
 
 
