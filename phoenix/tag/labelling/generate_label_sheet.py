@@ -1,11 +1,11 @@
-"""Generate labeling sheet for human labelers."""
+"""Generate labelling sheet for human labelers."""
 from typing import Tuple
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-EXPECTED_COLUMNS_OBJECT_LABELING_SHEET = [
+EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET = [
     "object_id",
     "object_type",
     "object_url",
@@ -28,9 +28,10 @@ EXPECTED_COLUMNS_OBJECT_LABELING_SHEET = [
     "notes",
 ]
 
-EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET = [
+EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET = [
     "object_user_url",
     "object_user_name",
+    "labelled_by",
     "account_label_1",
     "account_label_2",
     "account_label_3",
@@ -39,14 +40,14 @@ EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET = [
 ]
 
 
-def create_new_object_labeling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
-    """Create a new object labeling sheet using the for_tagging pulled data.
+def create_new_object_labelling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
+    """Create a new object labelling sheet using the for_tagging pulled data.
 
     Args:
         for_tag_df (pd.DataFrame): dataframe with data from the tag/data_pull scripts.
     """
     user_notes_df = get_user_notes_object_df()
-    for col in EXPECTED_COLUMNS_OBJECT_LABELING_SHEET:
+    for col in EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET:
         if col not in for_tag_df.columns:
             for_tag_df[col] = None
 
@@ -54,22 +55,22 @@ def create_new_object_labeling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFram
         lambda x: pd.to_datetime(x).strftime("%Y-%m-%d %H:%M") if x else None
     )
 
-    return user_notes_df.append(for_tag_df[EXPECTED_COLUMNS_OBJECT_LABELING_SHEET])
+    return user_notes_df.append(for_tag_df[EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET])
 
 
-def create_new_account_labeling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
-    """Create a new account labeling sheet using the for_tagging pulled data.
+def create_new_account_labelling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
+    """Create a new account labelling sheet using the for_tagging pulled data.
 
     Args:
         for_tag_df (pd.DataFrame): dataframe with data from the tag/data_pull scripts.
     """
     user_notes_df = get_user_notes_account_df()
     deduped_account_df = for_tag_df[["object_user_url", "object_user_name"]].drop_duplicates()
-    for col in EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET:
+    for col in EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET:
         if col not in deduped_account_df.columns:
             deduped_account_df[col] = None
 
-    return user_notes_df.append(deduped_account_df[EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET])
+    return user_notes_df.append(deduped_account_df[EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET])
 
 
 def get_user_notes_object_df() -> pd.DataFrame:
@@ -80,16 +81,15 @@ def get_user_notes_object_df() -> pd.DataFrame:
         # Note for column: object_type
         "Type of object",
         # Note for column: object_url
-        "Object's Url. Click to see context of the object",
+        "Object's url. Click to see context of the object",
         # Note for column: created_at",
         "Date of posting",
         # Note for column: object_user_url
         "User url",
         # Note for column: matched_labels
-        "Which classes did the system find for this object by using the labelling that you have "
-        "previously done",
+        "The class labels the system has output for the object",
         # Note for column: matched_features
-        "Which features did the system use to give this object these classes",
+        "The features the system used to identify which labels to apply to object",
         # Note for column: text
         "The content of the object",
         # Note for column: labelled_by
@@ -105,43 +105,44 @@ def get_user_notes_object_df() -> pd.DataFrame:
         "The Features (i.e.: keywords, words or phrases) that made us think that it is this "
         "class (and always think it is this class)",
         # Note for column: label_3
-        "Is there another class mentioned here as well? if not, please leave it empty.",
+        "Is there another class mentioned here as well? if not, please leave empty.",
         # Note for column: label_3_features
         "The Features (i.e.: keywords, words or phrases) that made us think of this class if not, "
-        "please leave it empty",
+        "please leave empty",
         # Note for column: label_4
         "Is there another class mentioned here as well? if not, please leave it empty.",
         # Note for column: label_4_features
         "the Features (i.e.: keywords, words or phrases) that made us think of this class if not, "
-        "please leave it empty",
+        "please leave empty",
         # Note for column: label_5
         "Is there another class mentioned here as well? if not, please leave it empty.",
         # Note for column: label_5_features
         "the Features (i.e.: keywords, words or phrases) that made us think of this class if not, "
-        "please leave it empty",
+        "please leave empty",
         # Note for column: notes
         "Space to add your own notes.",
     ]
 
-    data_dict = dict(zip(EXPECTED_COLUMNS_OBJECT_LABELING_SHEET, notes_list))
-    df = pd.DataFrame(data=data_dict, columns=EXPECTED_COLUMNS_OBJECT_LABELING_SHEET, index=[0])
+    data_dict = dict(zip(EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET, notes_list))
+    df = pd.DataFrame(data=data_dict, columns=EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET, index=[0])
     return df
 
 
 def get_user_notes_account_df() -> pd.DataFrame:
     """Adds notes for the users of the account_labelling sheet as the first row of a df."""
     notes_list = [
-        "User's URL. Click to see the context of this user",
+        "User's url. Click to see the context of this user",
         "Username of this user's account.",
+        "Who is labelling this post? (name of the person not the org)",
         "What's the class?",
-        "Is there another class mentioned here as well? If not, please leave it empty",
-        "Is there another class mentioned here as well? If not, please leave it empty",
-        "Is there another class mentioned here as well? If not, please leave it empty",
-        "Is there another class mentioned here as well? If not, please leave it empty",
+        "Is there another class mentioned here as well? If not, please leave empty",
+        "Is there another class mentioned here as well? If not, please leave empty",
+        "Is there another class mentioned here as well? If not, please leave empty",
+        "Is there another class mentioned here as well? If not, please leave empty",
     ]
 
-    data_dict = dict(zip(EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET, notes_list))
-    df = pd.DataFrame(data=data_dict, columns=EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET, index=[0])
+    data_dict = dict(zip(EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET, notes_list))
+    df = pd.DataFrame(data=data_dict, columns=EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET, index=[0])
     return df
 
 

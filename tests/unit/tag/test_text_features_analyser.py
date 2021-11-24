@@ -1,6 +1,5 @@
 """Test text_features_analyser."""
 import pandas as pd
-import pytest
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from snowballstemmer import stemmer
@@ -86,10 +85,6 @@ def test_get_stopwords_has_arabic():
     assert set(stopwords_list).issubset(actual_stopwords_list)
 
 
-@pytest.mark.skip(
-    "bug to be fixed: doesn't stem the first word of a bigram and the first 2 words of "
-    "a trigram"
-)
 def test_TextFeaturesAnalyser_features():
     df_test = pd.DataFrame(
         [("1", "succeeding in stemming removes the ends of words", "en")],
@@ -114,6 +109,25 @@ def test_TextFeaturesAnalyser_features():
     ]
 
     assert df_test["features"][0] == expected_3gram_feature_list
+
+
+def test_TextFeaturesAnalyser_features_no_ngrams():
+    df_test = pd.DataFrame(
+        [("1", "succeeding in stemming removes the ends of words", "en")],
+        columns=["id", "clean_text", "language"],
+    )
+    text_analyser = tfa.create(use_ngrams=False)
+    df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+
+    expected_feature_list = [
+        "succeed",
+        "stem",
+        "remov",
+        "end",
+        "word",
+    ]
+
+    assert df_test["features"][0] == expected_feature_list
 
 
 def test_TextFeaturesAnalyser_hashtags_arabic():
