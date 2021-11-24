@@ -106,20 +106,20 @@ def get_user_notes_object_df() -> pd.DataFrame:
         "The Features (i.e.: keywords, words or phrases) that made us think that it is this "
         "class (and always think it is this class)",
         # Note for column: label_3
-        "Is there another class mentioned here as well? if not, please leave it empty.",
+        "Is there another class mentioned here as well? if not, please leave empty.",
         # Note for column: label_3_features
         "The Features (i.e.: keywords, words or phrases) that made us think of this class if not, "
-        "please leave it empty",
+        "please leave empty",
         # Note for column: label_4
         "Is there another class mentioned here as well? if not, please leave it empty.",
         # Note for column: label_4_features
         "the Features (i.e.: keywords, words or phrases) that made us think of this class if not, "
-        "please leave it empty",
+        "please leave empty",
         # Note for column: label_5
         "Is there another class mentioned here as well? if not, please leave it empty.",
         # Note for column: label_5_features
         "the Features (i.e.: keywords, words or phrases) that made us think of this class if not, "
-        "please leave it empty",
+        "please leave empty",
         # Note for column: notes
         "Space to add your own notes.",
     ]
@@ -136,10 +136,10 @@ def get_user_notes_account_df() -> pd.DataFrame:
         "Username of this user's account.",
         "Who is labelling this post? (name of the person not the org)",
         "What's the class?",
-        "Is there another class mentioned here as well? If not, please leave it empty",
-        "Is there another class mentioned here as well? If not, please leave it empty",
-        "Is there another class mentioned here as well? If not, please leave it empty",
-        "Is there another class mentioned here as well? If not, please leave it empty",
+        "Is there another class mentioned here as well? If not, please leave empty",
+        "Is there another class mentioned here as well? If not, please leave empty",
+        "Is there another class mentioned here as well? If not, please leave empty",
+        "Is there another class mentioned here as well? If not, please leave empty",
     ]
 
     data_dict = dict(zip(EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET, notes_list))
