@@ -83,6 +83,6 @@ def for_tagging(given_df: pd.DataFrame):
         df["language_from_api"] = given_df["lang"]
 
     df = df.rename(columns={"phoenix_post_id": "object_id", "message": "text"})
-    df = df.set_index(df["object_id"], verify_integrity=True)
+    df = df.set_index("object_id", drop=False, verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_FACEBOOK_POST
     return df

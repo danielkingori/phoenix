@@ -218,6 +218,6 @@ def for_tagging(given_df: pd.DataFrame):
             "account_handle": "object_user_name",
         }
     )
-    df = df.set_index(df["object_id"], verify_integrity=True)
+    df = df.set_index("object_id", drop=False, verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_FACEBOOK_POST
     return df

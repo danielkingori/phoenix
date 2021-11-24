@@ -53,7 +53,7 @@ def paginate_list_resource(
 
     page_counter = 0
     while request is not None and page_counter < max_pages:
-        page_counter = +1
+        page_counter += 1
         found_resource = request.execute()
         result = process_function(result, found_resource)
         request = resource_client.list_next(request, found_resource)

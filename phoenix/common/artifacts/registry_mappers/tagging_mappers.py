@@ -23,6 +23,10 @@ TAGGING_TWEETS_FOR_TAGGING = TAGGING_TWEETS + FOR_TAGGING_SUFFIX
 TAGGING_FACEBOOK_COMMENTS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}facebook_comments/"
 TAGGING_FACEBOOK_COMMENTS_FOR_TAGGING = TAGGING_FACEBOOK_COMMENTS + FOR_TAGGING_SUFFIX
 
+# Facebook
+TAGGING_YOUTUBE_VIDEOS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}youtube_videos/"
+TAGGING_YOUTUBE_VIDEOS_FOR_TAGGING = TAGGING_YOUTUBE_VIDEOS + FOR_TAGGING_SUFFIX
+
 
 MAPPERS: MapperDict = {
     # Notebooks
@@ -74,6 +78,16 @@ MAPPERS: MapperDict = {
     ),
     "tagging_runs-facebook_comments_topics_final": partial(
         url_mapper, TAGGING_FACEBOOK_COMMENTS + "facebook_comments_topics_final.parquet"
+    ),
+    # Youtube
+    "tagging_runs-youtube_videos_input": partial(
+        url_mapper, shared_urls.GROUP_BY_YOUTUBE_SEARCH_VIDEOS
+    ),
+    "tagging_runs-youtube_videos_pulled": partial(
+        url_mapper, TAGGING_YOUTUBE_VIDEOS + "youtube_videos_pulled.parquet"
+    ),
+    "tagging_runs-youtube_videos_for_tagging": partial(
+        url_mapper, TAGGING_YOUTUBE_VIDEOS_FOR_TAGGING + "youtube_videos_for_tagging.parquet"
     ),
     # Utils
     "tagging_runs-pipeline_base": partial(url_mapper, TAGGING_PIPELINE_BASE),

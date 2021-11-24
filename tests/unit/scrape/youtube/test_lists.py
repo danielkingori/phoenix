@@ -42,3 +42,18 @@ def test_paginate_list_resource_with_result(m_default_list_process_function):
     execute_fn.assert_called_once_with()
     m_default_list_process_function.assert_called_once_with(init_result, execute_fn.return_value)
     resource_client.list_next.assert_called_once_with(request, execute_fn.return_value)
+
+
+@mock.patch("phoenix.scrape.youtube.lists.default_list_process_function")
+def test_paginate_list_resource_max_pages(m_default_list_process_function):
+    """Test paginate_list_resource with max pages set."""
+    resource_client = mock.Mock()
+    request = mock.Mock()
+    list_next_fn = resource_client.list_next
+    list_next_fn.return_value = request
+    execute_fn = request.execute
+    init_result = mock.Mock()
+    _ = lists.paginate_list_resource(
+        resource_client, request, max_pages=3, process_function=None, result=init_result
+    )
+    assert execute_fn.call_count == 3

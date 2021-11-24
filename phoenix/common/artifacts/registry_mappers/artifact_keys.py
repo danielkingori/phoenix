@@ -40,6 +40,9 @@ ArtifactKey = Literal[
     "base-grouped_by_youtube_channels",
     "source-youtube_search_videos_from_channel_ids",
     "base-grouped_by_youtube_search_videos",
+    "tagging_runs-youtube_videos_input",
+    "tagging_runs-youtube_videos_pulled",
+    "tagging_runs-youtube_videos_for_tagging",
     # Tagging notebooks
     "tagging_runs-output_notebook_base",
     # Tagging facebook
