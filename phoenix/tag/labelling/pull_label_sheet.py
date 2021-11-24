@@ -1,24 +1,24 @@
-"""Pull the labeling sheet with human-annotated labels."""
+"""Pull the labelling sheet with human-annotated labels."""
 from typing import Tuple
 
 import numpy as np
 import pandas as pd
 
 from phoenix.tag import language, text_features_analyser
-from phoenix.tag.labeling.generate_label_sheet import (
-    EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET,
-    EXPECTED_COLUMNS_OBJECT_LABELING_SHEET,
+from phoenix.tag.labelling.generate_label_sheet import (
+    EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET,
+    EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
 )
-from phoenix.tag.labeling.utils import is_valid_account_labeling_sheet
+from phoenix.tag.labelling.utils import is_valid_account_labelling_sheet
 
 
-def is_valid_labeling_sheet(df: pd.DataFrame) -> bool:
-    """Check if DataFrame is a valid labeling sheet.
+def is_valid_labelling_sheet(df: pd.DataFrame) -> bool:
+    """Check if DataFrame is a valid labelling sheet.
 
     Args:
-        df (pd.DataFrame): df to be checked if it's a valid labeling sheet.
+        df (pd.DataFrame): df to be checked if it's a valid labelling sheet.
     """
-    for col_name in EXPECTED_COLUMNS_OBJECT_LABELING_SHEET:
+    for col_name in EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET:
         if col_name not in df.columns:
             return False
 
@@ -41,12 +41,12 @@ def extract_features_to_label_mapping_objects(
     Runs the language detection from tag.language on the "text" column, and uses that language
     to run the feature processing pipeline without splitting text into ngrams.
     """
-    if not is_valid_labeling_sheet(df):
+    if not is_valid_labelling_sheet(df):
         ValueError(
-            f"Dataframe does not have correct columns to be an object labeling sheet. {df.columns}"
+            f"Dataframe does not have correct columns to be an object labelling sheet.{df.columns}"
         )
 
-    # The first row of the df is made up of notes to the users doing the manual labeling and does
+    # The first row of the df is made up of notes to the users doing the manual labelling and does
     # not contain data.
     df = df.drop(0)
 
@@ -87,14 +87,14 @@ def get_account_labels(df: pd.DataFrame) -> pd.DataFrame:
     """Get account labels and the people who labeled it.
 
     Args:
-        df (pd.DataFrame): account labeling dataframe.
+        df (pd.DataFrame): account labelling dataframe.
     """
-    if not is_valid_account_labeling_sheet(df):
+    if not is_valid_account_labelling_sheet(df):
         ValueError(
-            f"Dataframe doesn't have correct columns to be an account labeling sheet. {df.columns}"
+            f"Dataframe doesn't have correct cols to be an account labelling sheet. {df.columns}"
         )
 
-    account_df = df[EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET]
+    account_df = df[EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET]
     long_account_df = pd.wide_to_long(
         account_df,
         stubnames="account_label",

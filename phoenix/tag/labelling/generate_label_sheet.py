@@ -1,11 +1,11 @@
-"""Generate labeling sheet for human labelers."""
+"""Generate labelling sheet for human labelers."""
 from typing import Tuple
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-EXPECTED_COLUMNS_OBJECT_LABELING_SHEET = [
+EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET = [
     "object_id",
     "object_type",
     "object_url",
@@ -28,7 +28,7 @@ EXPECTED_COLUMNS_OBJECT_LABELING_SHEET = [
     "notes",
 ]
 
-EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET = [
+EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET = [
     "object_user_url",
     "object_user_name",
     "labelled_by",
@@ -40,14 +40,14 @@ EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET = [
 ]
 
 
-def create_new_object_labeling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
-    """Create a new object labeling sheet using the for_tagging pulled data.
+def create_new_object_labelling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
+    """Create a new object labelling sheet using the for_tagging pulled data.
 
     Args:
         for_tag_df (pd.DataFrame): dataframe with data from the tag/data_pull scripts.
     """
     user_notes_df = get_user_notes_object_df()
-    for col in EXPECTED_COLUMNS_OBJECT_LABELING_SHEET:
+    for col in EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET:
         if col not in for_tag_df.columns:
             for_tag_df[col] = None
 
@@ -55,22 +55,22 @@ def create_new_object_labeling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFram
         lambda x: pd.to_datetime(x).strftime("%Y-%m-%d %H:%M") if x else None
     )
 
-    return user_notes_df.append(for_tag_df[EXPECTED_COLUMNS_OBJECT_LABELING_SHEET])
+    return user_notes_df.append(for_tag_df[EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET])
 
 
-def create_new_account_labeling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
-    """Create a new account labeling sheet using the for_tagging pulled data.
+def create_new_account_labelling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
+    """Create a new account labelling sheet using the for_tagging pulled data.
 
     Args:
         for_tag_df (pd.DataFrame): dataframe with data from the tag/data_pull scripts.
     """
     user_notes_df = get_user_notes_account_df()
     deduped_account_df = for_tag_df[["object_user_url", "object_user_name"]].drop_duplicates()
-    for col in EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET:
+    for col in EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET:
         if col not in deduped_account_df.columns:
             deduped_account_df[col] = None
 
-    return user_notes_df.append(deduped_account_df[EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET])
+    return user_notes_df.append(deduped_account_df[EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET])
 
 
 def get_user_notes_object_df() -> pd.DataFrame:
@@ -124,8 +124,8 @@ def get_user_notes_object_df() -> pd.DataFrame:
         "Space to add your own notes.",
     ]
 
-    data_dict = dict(zip(EXPECTED_COLUMNS_OBJECT_LABELING_SHEET, notes_list))
-    df = pd.DataFrame(data=data_dict, columns=EXPECTED_COLUMNS_OBJECT_LABELING_SHEET, index=[0])
+    data_dict = dict(zip(EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET, notes_list))
+    df = pd.DataFrame(data=data_dict, columns=EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET, index=[0])
     return df
 
 
@@ -142,8 +142,8 @@ def get_user_notes_account_df() -> pd.DataFrame:
         "Is there another class mentioned here as well? If not, please leave it empty",
     ]
 
-    data_dict = dict(zip(EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET, notes_list))
-    df = pd.DataFrame(data=data_dict, columns=EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET, index=[0])
+    data_dict = dict(zip(EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET, notes_list))
+    df = pd.DataFrame(data=data_dict, columns=EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET, index=[0])
     return df
 
 

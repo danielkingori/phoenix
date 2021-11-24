@@ -1,21 +1,21 @@
 """Test generate_label_sheet."""
 import pandas as pd
 
-from phoenix.tag.labeling import generate_label_sheet
+from phoenix.tag.labelling import generate_label_sheet
 
 
-def test_create_new_labeling_sheet_empty():
+def test_create_new_labelling_sheet_empty():
     empty_df = pd.DataFrame()
-    actual_df = generate_label_sheet.create_new_object_labeling_sheet_df(empty_df)
+    actual_df = generate_label_sheet.create_new_object_labelling_sheet_df(empty_df)
 
     assert all(
-        actual_df.columns.values == generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELING_SHEET
+        actual_df.columns.values == generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET
     )
     assert len(actual_df) == 1
     pd.testing.assert_frame_equal(actual_df, generate_label_sheet.get_user_notes_object_df())
 
 
-def test_create_new_labeling_sheet():
+def test_create_new_labelling_sheet():
     df = pd.DataFrame(
         {
             "object_id": ["id_1", "id_2"],
@@ -26,10 +26,10 @@ def test_create_new_labeling_sheet():
 
     expected_df = pd.DataFrame(
         {"object_id": ["id_1", "id_2"], "text": ["text_1", "text_2"]},
-        columns=generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELING_SHEET,
+        columns=generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
     )
 
-    actual_df = generate_label_sheet.create_new_object_labeling_sheet_df(df)
+    actual_df = generate_label_sheet.create_new_object_labelling_sheet_df(df)
 
     pd.testing.assert_frame_equal(actual_df[1:], expected_df)
 
@@ -81,7 +81,7 @@ def test_get_user_notes_object_df():
 
     # Assert that the number of filled cells in the notes is equal to the expected columns number
     assert notes_object_df.iloc[0].count() == len(
-        generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELING_SHEET
+        generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET
     )
 
 
@@ -92,11 +92,11 @@ def test_get_user_notes_account_df():
 
     # Assert that the number of filled cells in the notes is equal to the expected columns number
     assert notes_object_df.iloc[0].count() == len(
-        generate_label_sheet.EXPECTED_COLUMNS_ACCOUNT_LABELING_SHEET
+        generate_label_sheet.EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET
     )
 
 
-def test_create_new_account_labeling_sheet_df():
+def test_create_new_account_labelling_sheet_df():
     input_df = pd.DataFrame(
         {
             "object_user_url": ["link_1", "link_1", "link_2", "link_3"],
@@ -129,6 +129,6 @@ def test_create_new_account_labeling_sheet_df():
         index=[0, 2, 3],
     )
 
-    actual_df = generate_label_sheet.create_new_account_labeling_sheet_df(input_df)
+    actual_df = generate_label_sheet.create_new_account_labelling_sheet_df(input_df)
 
     pd.testing.assert_frame_equal(actual_df[1:], expected_df_after_first_row, check_like=True)

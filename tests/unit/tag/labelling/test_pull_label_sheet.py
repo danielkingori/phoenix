@@ -2,18 +2,18 @@
 import mock
 import pandas as pd
 
-from phoenix.tag.labeling import pull_label_sheet
-from phoenix.tag.labeling.generate_label_sheet import EXPECTED_COLUMNS_OBJECT_LABELING_SHEET
+from phoenix.tag.labelling import pull_label_sheet
+from phoenix.tag.labelling.generate_label_sheet import EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET
 
 
-def test_is_valid_labeling_sheet():
-    correct_df = pd.DataFrame(columns=EXPECTED_COLUMNS_OBJECT_LABELING_SHEET)
-    assert pull_label_sheet.is_valid_labeling_sheet(correct_df)
+def test_is_valid_labelling_sheet():
+    correct_df = pd.DataFrame(columns=EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET)
+    assert pull_label_sheet.is_valid_labelling_sheet(correct_df)
 
 
-def test_is_valid_labeling_sheet_false():
+def test_is_valid_labelling_sheet_false():
     incorrect_df = pd.DataFrame(columns=["some_col"])
-    assert not pull_label_sheet.is_valid_labeling_sheet(incorrect_df)
+    assert not pull_label_sheet.is_valid_labelling_sheet(incorrect_df)
 
 
 def test_wide_to_long_labels_features():
@@ -62,7 +62,7 @@ def test_wide_to_long_labels_features():
     pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
 
 
-@mock.patch("phoenix.tag.labeling.pull_label_sheet.language.execute")
+@mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
 def test_extract_features_to_label_mapping(mock_execute):
     mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 7)
     input_df = pd.DataFrame(
@@ -89,7 +89,7 @@ def test_extract_features_to_label_mapping(mock_execute):
                 None,
             ],
         },
-        columns=EXPECTED_COLUMNS_OBJECT_LABELING_SHEET,
+        columns=EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
     )
 
     expected_df = pd.DataFrame(
@@ -130,7 +130,7 @@ def test_extract_features_to_label_mapping(mock_execute):
     )
 
 
-@mock.patch("phoenix.tag.labeling.pull_label_sheet.language.execute")
+@mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
 def test_extract_features_to_label_mapping_no_features(mock_execute):
     mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 7)
     input_df = pd.DataFrame(
@@ -157,7 +157,7 @@ def test_extract_features_to_label_mapping_no_features(mock_execute):
                 None,
             ],
         },
-        columns=EXPECTED_COLUMNS_OBJECT_LABELING_SHEET,
+        columns=EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
     )
 
     expected_df = pd.DataFrame(
