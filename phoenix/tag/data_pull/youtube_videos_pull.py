@@ -1,12 +1,9 @@
 """YouTube videos data pull."""
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
-import datetime
-import json
 import logging
 
 import pandas as pd
-import tentaclio
 
 from phoenix.tag.data_pull import constants, utils
 
@@ -25,7 +22,7 @@ def from_json(
     url_to_folder: str, year_filter: Optional[int] = None, month_filter: Optional[int] = None
 ) -> pd.DataFrame:
     """Pull source json and create youtube_videos pre-tagging dataframe."""
-    json_objects = get_jsons(url_to_folder)
+    json_objects = utils.get_jsons(url_to_folder)
 
     dfs: List[pd.DataFrame] = []
     for json_object, file_timestamp in json_objects:
@@ -43,20 +40,6 @@ def from_json(
     if month_filter:
         df = df[df["month_filter"] == month_filter]
     return df
-
-
-def get_jsons(url_to_folder: str) -> List[Tuple[JSONType, datetime.datetime]]:
-    """Read all JSON files and tuple with the file's timestamp."""
-    json_objects: List[Tuple[Any, datetime.datetime]] = []
-    for entry in tentaclio.listdir(url_to_folder):
-        logger.info(f"Processing file: {entry}")
-        if not utils.is_valid_file_name(entry):
-            logger.info(f"Skipping file with invalid filename: {entry}")
-            continue
-        file_timestamp = utils.get_file_name_timestamp(entry)
-        with tentaclio.open(entry) as file_io:
-            json_objects.append((json.load(file_io), file_timestamp))
-    return json_objects
 
 
 def create_dataframe(json_obj: List[Dict[str, Any]]) -> pd.DataFrame:
