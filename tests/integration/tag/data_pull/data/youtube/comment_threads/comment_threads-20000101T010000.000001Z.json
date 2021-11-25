@@ -39,9 +39,33 @@
                     "canReply": true,
                     "totalReplyCount": 1,
                     "isPublic": true
-                }
+                },
                 "replies": {
-                    "comments": []
+                    "comments": [
+                        {
+                            "kind": "youtube#comment",
+                            "etag": "comment_6-response_2-etag_1",
+                            "id": "comment_id_6",
+                            "snippet": {
+                                "channelId": "channel_id_6",
+                                "videoId": "video_id_6",
+                                "textDisplay": "comment_6-text_display",
+                                "textOriginal": "comment_6-text_original",
+                                "parentId": "comment_id_1",
+                                "authorDisplayName": "comment_6-author_display_name",
+                                "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AKedOLQufTEXTllUEfR6ZPF5AF1hiVLTvJr1ufANwLNv=s48-c-k-c0x00ffffff-no-rj",
+                                "authorChannelUrl": "http://www.youtube.com/channel/comment_5-author_channel_id",
+                                "authorChannelId": {
+                                    "value": "comment_6-author_channel_id"
+                                },
+                                "canRate": true,
+                                "viewerRating": "none",
+                                "likeCount": 0,
+                                "publishedAt": "2000-01-21T00:00:00Z",
+                                "updatedAt": "2000-01-21T00:00:00Z"
+                            }
+                        }
+                    ]
                 }
             },
             {
@@ -54,13 +78,13 @@
                     "topLevelComment": {
                         "kind": "youtube#comment",
                         "etag": "comment_2-response_2-etag_1",
-                        "id": "future_comment_id",
+                        "id": "foo_comment_id",
                         "snippet": {
                             "channelId": "foo_channel_id",
                             "videoId": "foo_video_id",
                             "textDisplay": "foo_text_display",
                             "textOriginal": "foo_text_original",
-                            "authorDisplayName": "",
+                            "authorDisplayName": "foo_author_display_name",
                             "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AKedOLT-_NHRrbJ9SOQablC6pkac-cNO_SKYKD5WRoy-mg=s48-c-k-c0x00ffffff-no-rj",
                             "authorChannelUrl": "http://www.youtube.com/channel/foo_author_channel_id",
                             "authorChannelId": {
@@ -131,7 +155,7 @@
                                 },
                                 "canRate": true,
                                 "viewerRating": "none",
-                                "likeCount": 0,
+                                "likeCount": 3,
                                 "publishedAt": "2000-01-10T00:00:00Z",
                                 "updatedAt": "2000-01-10T00:00:00Z"
                             }
@@ -156,7 +180,7 @@
                                 "viewerRating": "none",
                                 "likeCount": 0,
                                 "publishedAt": "2000-01-20T00:00:00Z",
-                                "updatedAt": "2000-01-20T00:00:00Z"
+                                "updatedAt": "2000-01-22T00:00:00Z"
                             }
                         }
                     ]

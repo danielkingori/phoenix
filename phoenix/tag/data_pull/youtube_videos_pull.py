@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 JSONType = Any
 
 
-YOUTUBE_VIDEOS_URL = "https://www.youtube.com/watch?v="
-YOUTUBE_CHANNEL_URL = "https://www.youtube.com/channel/"
+YOUTUBE_VIDEOS_URL = constants.YOUTUBE_VIDEOS_URL
+YOUTUBE_CHANNEL_URL = constants.YOUTUBE_CHANNEL_URL
 
 
 def from_json(
