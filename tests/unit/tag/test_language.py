@@ -7,7 +7,7 @@ import pytest
 from phoenix.tag import language
 
 
-@mock.patch("phoenix.tag.language.fasttext.load_model")
+@mock.patch("phoenix.tag.language.load_model")
 @mock.patch("phoenix.tag.language.detect")
 def test_execute(m_detect, m_fasttext_loader):
     """Test that the execute of language."""
