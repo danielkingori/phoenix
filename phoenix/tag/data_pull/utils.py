@@ -1,5 +1,5 @@
 """Utils for pulling data."""
-from typing import Any, List, Tuple
+from typing import Any, List, Optional, Tuple
 
 import datetime
 import hashlib
@@ -89,3 +89,14 @@ def get_jsons(url_to_folder: str) -> List[Tuple[JSONType, datetime.datetime]]:
         with tentaclio.open(entry) as file_io:
             json_objects.append((json.load(file_io), file_timestamp))
     return json_objects
+
+
+def filter_df(
+    df: pd.DataFrame, year_filter: Optional[int] = None, month_filter: Optional[int] = None
+):
+    """Filter dataframe by year and/or month."""
+    if year_filter:
+        df = df[df["year_filter"] == year_filter]
+    if month_filter:
+        df = df[df["month_filter"] == month_filter]
+    return df

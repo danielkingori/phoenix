@@ -35,10 +35,7 @@ def from_json(
     df = df.groupby("id").last()
     df = df.reset_index()
     df = df.sort_values("created_at", ascending=False).reset_index(drop=True)
-    if year_filter:
-        df = df[df["year_filter"] == year_filter]
-    if month_filter:
-        df = df[df["month_filter"] == month_filter]
+    df = utils.filter_df(df, year_filter, month_filter)
     return df
 
 
