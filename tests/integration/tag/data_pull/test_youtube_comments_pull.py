@@ -196,34 +196,12 @@ def test_comments_for_tagging(processed_comments_df):
     expected = pd.DataFrame(
         [
             {
-                "object_id": "comment_id_7",
-                "created_at": datetime.datetime(
-                    2000, 2, 25, 0, 0, 0, tzinfo=datetime.timezone.utc
-                ),
-                "text": "comment_7-text_original-updated",
-                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
-                "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_7",
-                "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
-                + "comment_7-author_channel_id",
-                "object_user_name": "comment_7-author_display_name",
-            },
-            {
-                "object_id": "foo_comment_id",
-                "created_at": datetime.datetime(2000, 2, 1, 0, 0, 0, tzinfo=datetime.timezone.utc),
-                "text": "foo_text_original",
-                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
-                "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "foo_video_id",
-                "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
-                + "foo_author_channel_id",
-                "object_user_name": "foo_author_display_name",
-            },
-            {
                 "object_id": "comment_id_6",
+                "text": "comment_6-text_display",
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
                 "created_at": datetime.datetime(
                     2000, 1, 21, 0, 0, 0, tzinfo=datetime.timezone.utc
                 ),
-                "text": "comment_6-text_original",
-                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
                 "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_6",
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_6-author_channel_id",
@@ -231,33 +209,33 @@ def test_comments_for_tagging(processed_comments_df):
             },
             {
                 "object_id": "comment_id_5",
+                "text": "comment_5-text_display",
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
                 "created_at": datetime.datetime(
                     2000, 1, 20, 0, 0, 0, tzinfo=datetime.timezone.utc
                 ),
-                "text": "comment_5-text_original",
-                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
-                "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_5",
+                "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_3",
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_5-author_channel_id",
                 "object_user_name": "comment_5-author_display_name",
             },
             {
                 "object_id": "comment_id_4",
+                "text": "comment_4-text_display",
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
                 "created_at": datetime.datetime(
                     2000, 1, 10, 0, 0, 0, tzinfo=datetime.timezone.utc
                 ),
-                "text": "comment_4-text_original",
-                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
-                "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_4",
+                "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_3",
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_4-author_channel_id",
                 "object_user_name": "comment_4-author_display_name",
             },
             {
                 "object_id": "comment_id_3",
-                "create_at": datetime.datetime(2000, 1, 3, 0, 0, 0, tzinfo=datetime.timezone.utc),
-                "text": "comment_3-text_original",
+                "text": "comment_3-text_display",
                 "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
+                "created_at": datetime.datetime(2000, 1, 3, 0, 0, 0, tzinfo=datetime.timezone.utc),
                 "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_3",
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_3-author_channel_id",
@@ -265,9 +243,9 @@ def test_comments_for_tagging(processed_comments_df):
             },
             {
                 "object_id": "comment_id_1",
-                "created_at": datetime.datetime(2000, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc),
-                "text": "comment_1-text_original-updated",
+                "text": "comment_1-text_display-updated",
                 "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
+                "created_at": datetime.datetime(2000, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc),
                 "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_1",
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_1-author_channel_id",
@@ -275,7 +253,7 @@ def test_comments_for_tagging(processed_comments_df):
             },
         ],
         index=pd.Index(
-            ["video_3-id", "video_2-id", "video_4-id", "video_1-id"],
+            ["comment_id_6", "comment_id_5", "comment_id_4", "comment_id_3", "comment_id_1"],
             dtype="object",
             name="object_id",
         ),

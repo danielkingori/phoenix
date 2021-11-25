@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
-from phoenix.tag.data_pull import utils
+from phoenix.tag.data_pull import constants, utils
 
 
 def from_json(
@@ -132,4 +132,22 @@ def for_tagging(given_df: pd.DataFrame):
         object_user_url: String, dtype: string
         object_user_name: String, dtype: string
     """
-    pass
+    df = given_df.copy()
+    df = df.rename(columns={"id": "object_id", "published_at": "created_at"})
+    df["object_type"] = constants.OBJECT_TYPE_YOUTUBE_COMMENT
+    df["object_url"] = constants.YOUTUBE_VIDEOS_URL + df["video_id"]
+    df["object_user_url"] = constants.YOUTUBE_CHANNEL_URL + df["author_channel_id"]
+    df["object_user_name"] = df["author_display_name"]
+    df = df[
+        [
+            "object_id",
+            "text",
+            "object_type",
+            "created_at",
+            "object_url",
+            "object_user_url",
+            "object_user_name",
+        ]
+    ]
+    df = df.set_index("object_id", drop=False, verify_integrity=True)
+    return df
