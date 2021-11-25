@@ -25,7 +25,7 @@ def from_json(
     url_to_folder: str, year_filter: Optional[int] = None, month_filter: Optional[int] = None
 ) -> pd.DataFrame:
     """Pull source json and create youtube_videos pre-tagging dataframe."""
-    json_objects = get_jsons(url_to_folder, year_filter, month_filter)
+    json_objects = get_jsons(url_to_folder)
 
     dfs: List[pd.DataFrame] = []
     for json_object, file_timestamp in json_objects:
@@ -45,9 +45,7 @@ def from_json(
     return df
 
 
-def get_jsons(
-    url_to_folder: str, year_filter: Optional[int] = None, month_filter: Optional[int] = None
-) -> List[Tuple[JSONType, datetime.datetime]]:
+def get_jsons(url_to_folder: str) -> List[Tuple[JSONType, datetime.datetime]]:
     """Read all JSON files and tuple with the file's timestamp."""
     json_objects: List[Tuple[Any, datetime.datetime]] = []
     for entry in tentaclio.listdir(url_to_folder):

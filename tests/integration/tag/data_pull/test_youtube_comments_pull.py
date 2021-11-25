@@ -252,7 +252,7 @@ def test_comments_data_pull(youtube_raw_data_source_folder_url, processed_commen
 
 
 def test_comments_for_tagging(processed_comments_df):
-    """Integration test for transforming processed comments ready for tagging (labelling) format."""
+    """Integration test for transforming processed comments ready for tagging (labelling)."""
     result = data_pull.youtube_comments_pull.for_tagging(processed_comments_df)
     expected = pd.DataFrame(
         [
@@ -272,7 +272,7 @@ def test_comments_for_tagging(processed_comments_df):
                 "object_id": "foo_comment_id",
                 "created_at": datetime.datetime(2000, 2, 1, 0, 0, 0, tzinfo=datetime.timezone.utc),
                 "text": "foo_text_original",
-                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENTS,
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
                 "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "foo_video_id",
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "foo_author_channel_id",
@@ -284,7 +284,7 @@ def test_comments_for_tagging(processed_comments_df):
                     2000, 1, 21, 0, 0, 0, tzinfo=datetime.timezone.utc
                 ),
                 "text": "comment_6-text_original",
-                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENTS,
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
                 "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_6",
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_6-author_channel_id",
@@ -296,7 +296,7 @@ def test_comments_for_tagging(processed_comments_df):
                     2000, 1, 20, 0, 0, 0, tzinfo=datetime.timezone.utc
                 ),
                 "text": "comment_5-text_original",
-                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENTS,
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
                 "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_5",
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_5-author_channel_id",
@@ -308,7 +308,7 @@ def test_comments_for_tagging(processed_comments_df):
                     2000, 1, 10, 0, 0, 0, tzinfo=datetime.timezone.utc
                 ),
                 "text": "comment_4-text_original",
-                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENTS,
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
                 "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_4",
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_4-author_channel_id",
@@ -318,7 +318,7 @@ def test_comments_for_tagging(processed_comments_df):
                 "object_id": "comment_id_3",
                 "create_at": datetime.datetime(2000, 1, 3, 0, 0, 0, tzinfo=datetime.timezone.utc),
                 "text": "comment_3-text_original",
-                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENTS,
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
                 "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_3",
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_3-author_channel_id",
@@ -328,7 +328,7 @@ def test_comments_for_tagging(processed_comments_df):
                 "object_id": "comment_id_1",
                 "created_at": datetime.datetime(2000, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc),
                 "text": "comment_1-text_original-updated",
-                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENTS,
+                "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
                 "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_1",
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_1-author_channel_id",
