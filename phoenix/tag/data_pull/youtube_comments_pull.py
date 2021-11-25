@@ -81,7 +81,11 @@ def process_comment_thread_json(comment_thread_json: Dict[str, Any]) -> pd.DataF
 
 
 def process_comments_json(comments_list: List[Dict[str, Any]]) -> pd.DataFrame:
-    """Process youtube#comment(s) in replies."""
+    """Process youtube#comment(s) in replies.
+
+    We use `snippet.textDisplay` as `text`, as `snippet.textOriginal` is not always guaranteed to
+    be available in the response.
+    """
     df = pd.json_normalize(comments_list)
     df = df.rename(
         columns={
