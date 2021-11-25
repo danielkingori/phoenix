@@ -1,7 +1,6 @@
 """Test of the tagging export."""
 import mock
 import pandas as pd
-import pytest
 
 from phoenix.tag import export
 
@@ -40,32 +39,3 @@ def test_persist_posts_to_scrape_dashboard_url(m_open):
     m_open.assert_has_calls(calls)
     calls = [mock.call(m_open().__enter__()), mock.call(m_open().__enter__())]
     posts_to_scrape.to_csv.assert_has_calls(calls)
-
-
-@mock.patch("phoenix.common.artifacts.dataframes.get")
-def test_get_dataframe_for_url(m_get):
-    """Test get_dataframe_for_url."""
-    url = "url"
-    result = export.get_dataframe_for_url(url)
-    m_get.assert_called_once_with(url)
-    assert result == m_get().dataframe
-
-
-@mock.patch("phoenix.common.artifacts.dataframes.get")
-def test_get_dataframe_for_url_none(m_get):
-    """Test get_dataframe_for_url with `allow_not_found`."""
-    url = "url"
-    m_get.side_effect = FileNotFoundError(url)
-    result = export.get_dataframe_for_url(url, allow_not_found=True)
-    m_get.assert_called_once_with(url)
-    assert result is None
-
-
-@mock.patch("phoenix.common.artifacts.dataframes.get")
-def test_get_dataframe_for_url_error(m_get):
-    """Test get_dataframe_for_url with error."""
-    url = "url"
-    m_get.side_effect = FileNotFoundError(url)
-    with pytest.raises(FileNotFoundError):
-        export.get_dataframe_for_url(url)
-        m_get.assert_called_once_with(url)
