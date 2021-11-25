@@ -13,67 +13,6 @@ def processed_comments_df() -> pd.DataFrame:
     return pd.DataFrame(
         [
             {
-                "id": "comment_id_7",
-                "published_at": datetime.datetime(
-                    2000, 2, 30, 0, 0, 0, tzinfo=datetime.timezone.utc
-                ),
-                "updated_at": datetime.datetime(
-                    2000, 3, 30, 0, 0, 1, tzinfo=datetime.timezone.utc
-                ),
-                "text": "comment_7-text_display-updated",
-                "text_original": "comment_7-text_original-updated",
-                "like_count": 0,
-                "is_top_level_comment": True,
-                "total_reply_count": 1,
-                "parent_comment_id": None,
-                "author_channel_id": "comment_7-author_channel_id",
-                "author_display_name": "comment_7-author_display_name",
-                "channel_id": "channel_id_7",
-                "video_id": "video_id_7",
-                "etag": "comment_7-response_2-etag_7",
-                "response_etag": "response_2-etag_7",
-                "timestamp_filter": datetime.datetime(
-                    2000, 2, 30, 0, 0, 0, tzinfo=datetime.timezone.utc
-                ),
-                "date_filter": datetime.date(2000, 2, 30),
-                "year_filter": 2000,
-                "month_filter": 2,
-                "day_filter": 30,
-                "file_timestamp": datetime.datetime(
-                    2000, 1, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc
-                ),
-            },
-            {
-                "id": "foo_comment_id",
-                "published_at": datetime.datetime(
-                    2000, 2, 1, 0, 0, 0, tzinfo=datetime.timezone.utc
-                ),
-                "updated_at": datetime.datetime(2000, 2, 1, 0, 0, 0, tzinfo=datetime.timezone.utc),
-                "text": "foo_text_display",
-                "text_original": "foo_text_original",
-                "like_count": 0,
-                "is_top_level_comment": True,
-                "total_reply_count": 0,
-                "parent_comment_id": None,
-                "author_channel_id": "foo_author_channel_id",
-                "author_display_name": "foo_author_display_name",
-                "channel_id": "foo_channel_id",
-                "video_id": "foo_video_id",
-                "etag": "comment_2-response_2-etag_1",
-                "response_etag": "response_2-etag_1",
-                "timestamp_filter": datetime.datetime(
-                    2000, 2, 1, 0, 0, 0, tzinfo=datetime.timezone.utc
-                ),
-                "date_filter": datetime.date(2000, 2, 1),
-                "year_filter": 2000,
-                "month_filter": 2,
-                "day_filter": 1,
-                "file_timestamp": datetime.datetime(
-                    2000, 1, 1, 1, 0, 0, 1, tzinfo=datetime.timezone.utc
-                ),
-            },
-            # Testing from 0 replies to 1 replies
-            {
                 "id": "comment_id_6",
                 "published_at": datetime.datetime(
                     2000, 1, 21, 0, 0, 0, tzinfo=datetime.timezone.utc
@@ -85,7 +24,7 @@ def processed_comments_df() -> pd.DataFrame:
                 "text_original": "comment_6-text_original",
                 "like_count": 0,
                 "is_top_level_comment": False,
-                "total_reply_count": 0,
+                "total_reply_count": None,
                 "parent_comment_id": "comment_id_1",
                 "author_channel_id": "comment_6-author_channel_id",
                 "author_display_name": "comment_6-author_display_name",
@@ -110,18 +49,18 @@ def processed_comments_df() -> pd.DataFrame:
                     2000, 1, 20, 0, 0, 0, tzinfo=datetime.timezone.utc
                 ),
                 "updated_at": datetime.datetime(
-                    2000, 1, 23, 0, 0, 0, tzinfo=datetime.timezone.utc
+                    2000, 1, 22, 0, 0, 0, tzinfo=datetime.timezone.utc
                 ),
                 "text": "comment_5-text_display",
                 "text_original": "comment_5-text_original",
                 "like_count": 0,
                 "is_top_level_comment": False,
-                "total_reply_count": 0,
+                "total_reply_count": None,
                 "parent_comment_id": "comment_id_3",
                 "author_channel_id": "comment_5-author_channel_id",
                 "author_display_name": "comment_5-author_display_name",
-                "channel_id": "channel_id_5",
-                "video_id": "video_id_5",
+                "channel_id": "channel_id_3",
+                "video_id": "video_id_3",
                 "etag": "comment_5-response_2-etag_1",
                 "response_etag": "response_2-etag_1",
                 "timestamp_filter": datetime.datetime(
@@ -147,12 +86,12 @@ def processed_comments_df() -> pd.DataFrame:
                 "text_original": "comment_4-text_original",
                 "like_count": 3,
                 "is_top_level_comment": False,
-                "total_reply_count": 0,
+                "total_reply_count": None,
                 "parent_comment_id": "comment_id_3",
                 "author_channel_id": "comment_4-author_channel_id",
                 "author_display_name": "comment_4-author_display_name",
-                "channel_id": "channel_id_4",
-                "video_id": "video_id_4",
+                "channel_id": "channel_id_3",
+                "video_id": "video_id_3",
                 "etag": "comment_4-response_2-etag_1",
                 "response_etag": "response_2-etag_1",
                 "timestamp_filter": datetime.datetime(
@@ -176,7 +115,7 @@ def processed_comments_df() -> pd.DataFrame:
                 "text_original": "comment_3-text_original",
                 "like_count": 2,
                 "is_top_level_comment": True,
-                "total_reply_count": 0,
+                "total_reply_count": 2,
                 "parent_comment_id": None,
                 "author_channel_id": "comment_3-author_channel_id",
                 "author_display_name": "comment_3-author_display_name",
@@ -259,7 +198,7 @@ def test_comments_for_tagging(processed_comments_df):
             {
                 "object_id": "comment_id_7",
                 "created_at": datetime.datetime(
-                    2000, 2, 30, 0, 0, 0, tzinfo=datetime.timezone.utc
+                    2000, 2, 25, 0, 0, 0, tzinfo=datetime.timezone.utc
                 ),
                 "text": "comment_7-text_original-updated",
                 "object_type": data_pull.constants.OBJECT_TYPE_YOUTUBE_COMMENT,
