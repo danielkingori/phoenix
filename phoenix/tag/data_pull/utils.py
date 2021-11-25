@@ -91,6 +91,16 @@ def get_jsons(url_to_folder: str) -> List[Tuple[JSONType, datetime.datetime]]:
     return json_objects
 
 
+def concat_dedupe_sort_objects(dfs: List[pd.DataFrame], sort_column: str) -> pd.DataFrame:
+    """Concat, dedupe based on `file_timestamp` and `id`, then sort."""
+    df = pd.concat(dfs, axis=0, ignore_index=True)
+    df = df.sort_values("file_timestamp")
+    df = df.groupby("id").last()
+    df = df.reset_index()
+    df = df.sort_values(sort_column, ascending=False).reset_index(drop=True)
+    return df
+
+
 def filter_df(
     df: pd.DataFrame, year_filter: Optional[int] = None, month_filter: Optional[int] = None
 ):

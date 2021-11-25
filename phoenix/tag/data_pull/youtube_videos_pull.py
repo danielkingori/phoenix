@@ -30,11 +30,7 @@ def from_json(
         df["file_timestamp"] = file_timestamp
         dfs.append(df)
 
-    df = pd.concat(dfs, axis=0, ignore_index=True)
-    df = df.sort_values("file_timestamp")
-    df = df.groupby("id").last()
-    df = df.reset_index()
-    df = df.sort_values("created_at", ascending=False).reset_index(drop=True)
+    df = utils.concat_dedupe_sort_objects(dfs, "created_at")
     df = utils.filter_df(df, year_filter, month_filter)
     return df
 
