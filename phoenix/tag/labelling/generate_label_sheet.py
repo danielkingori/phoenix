@@ -65,13 +65,20 @@ def create_new_object_labelling_sheet_df(
     return user_notes_df.append(for_tag_df[EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET])
 
 
-def create_new_account_labelling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
+def create_new_account_labelling_sheet_df(
+    for_tag_df: pd.DataFrame, with_user_notes: bool = True
+) -> pd.DataFrame:
     """Create a new account labelling sheet using the for_tagging pulled data.
 
     Args:
         for_tag_df (pd.DataFrame): dataframe with data from the tag/data_pull scripts.
+        with_user_notes (bool): Should the first row of the df be notes for the user of the sheet?
     """
-    user_notes_df = get_user_notes_account_df()
+    if with_user_notes:
+        user_notes_df = get_user_notes_account_df()
+    else:
+        user_notes_df = pd.DataFrame(columns=EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET)
+
     deduped_account_df = for_tag_df[["object_user_url", "object_user_name"]].drop_duplicates()
     for col in EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET:
         if col not in deduped_account_df.columns:

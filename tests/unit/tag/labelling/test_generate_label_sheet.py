@@ -153,3 +153,43 @@ def test_create_new_account_labelling_sheet_df():
     actual_df = generate_label_sheet.create_new_account_labelling_sheet_df(input_df)
 
     pd.testing.assert_frame_equal(actual_df[1:], expected_df_after_first_row, check_like=True)
+
+
+def test_create_new_account_labelling_sheet_df_no_notes():
+    input_df = pd.DataFrame(
+        {
+            "object_user_url": ["link_1", "link_1", "link_2", "link_3"],
+            "object_user_name": ["person_1", "person_1", "person_2", "person_3"],
+            "unimportant_column": ["foo", "bar", "baz", "bark"],
+        }
+    )
+
+    expected_df_after_first_row = pd.DataFrame(
+        {
+            "object_user_url": ["link_1", "link_2", "link_3"],
+            "object_user_name": ["person_1", "person_2", "person_3"],
+            "labelled_by": [None] * 3,
+            "account_label_1": [None] * 3,
+            "account_label_2": [None] * 3,
+            "account_label_3": [None] * 3,
+            "account_label_4": [None] * 3,
+            "account_label_5": [None] * 3,
+        },
+        columns=[
+            "object_user_url",
+            "object_user_name",
+            "labelled_by",
+            "account_label_1",
+            "account_label_2",
+            "account_label_3",
+            "account_label_4",
+            "account_label_5",
+        ],
+        index=[0, 2, 3],
+    )
+
+    actual_df = generate_label_sheet.create_new_account_labelling_sheet_df(
+        input_df, with_user_notes=False
+    )
+
+    pd.testing.assert_frame_equal(actual_df, expected_df_after_first_row)
