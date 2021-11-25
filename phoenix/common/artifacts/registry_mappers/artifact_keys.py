@@ -66,6 +66,9 @@ ArtifactKey = Literal[
     "tagging_runs-youtube_videos_input",
     "tagging_runs-youtube_videos_pulled",
     "tagging_runs-youtube_videos_for_tagging",
+    "tagging_runs-youtube_comments_input",
+    "tagging_runs-youtube_comments_pulled",
+    "tagging_runs-youtube_comments_for_tagging",
     # Tagging Pipeline
     "tagging_runs-pipeline_base",
     "tagging_runs-for_analyst_base",
