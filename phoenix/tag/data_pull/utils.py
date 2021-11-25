@@ -109,4 +109,5 @@ def filter_df(
         df = df[df["year_filter"] == year_filter]
     if month_filter:
         df = df[df["month_filter"] == month_filter]
+    df = df.reset_index(drop=True)
     return df

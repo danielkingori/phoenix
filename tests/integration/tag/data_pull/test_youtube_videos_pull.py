@@ -109,8 +109,7 @@ def processed_videos_df() -> pd.DataFrame:
                     2000, 1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc
                 ),
             },
-        ],
-        index=pd.Int64Index([1, 2, 3, 4], dtype="int64"),
+        ]
     )
     return df
 
