@@ -96,6 +96,9 @@ def process_comments_json(comments_list: List[Dict[str, Any]]) -> pd.DataFrame:
             "snippet.authorDisplayName": "author_display_name",
         },
     )
+    # This data is not always guaranteed to be present, so fill with NaN if not in response.
+    if "author_channel_id" not in df:
+        df["author_channel_id"] = None
     df = df[
         [
             "id",

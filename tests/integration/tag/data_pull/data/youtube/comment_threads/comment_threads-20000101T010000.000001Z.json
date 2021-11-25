@@ -172,10 +172,6 @@
                                 "parentId": "comment_id_3",
                                 "authorDisplayName": "comment_5-author_display_name",
                                 "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AKedOLQufTEXTllUEfR6ZPF5AF1hiVLTvJr1ufANwLNv=s48-c-k-c0x00ffffff-no-rj",
-                                "authorChannelUrl": "http://www.youtube.com/channel/comment_5-author_channel_id",
-                                "authorChannelId": {
-                                    "value": "comment_5-author_channel_id"
-                                },
                                 "canRate": true,
                                 "viewerRating": "none",
                                 "likeCount": 0,

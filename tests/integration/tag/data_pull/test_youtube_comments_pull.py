@@ -57,7 +57,7 @@ def processed_comments_df() -> pd.DataFrame:
                 "is_top_level_comment": False,
                 "total_reply_count": None,
                 "parent_comment_id": "comment_id_3",
-                "author_channel_id": "comment_5-author_channel_id",
+                "author_channel_id": None,
                 "author_display_name": "comment_5-author_display_name",
                 "channel_id": "channel_id_3",
                 "video_id": "video_id_3",
@@ -215,8 +215,7 @@ def test_comments_for_tagging(processed_comments_df):
                     2000, 1, 20, 0, 0, 0, tzinfo=datetime.timezone.utc
                 ),
                 "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_3",
-                "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
-                + "comment_5-author_channel_id",
+                "object_user_url": None,
                 "object_user_name": "comment_5-author_display_name",
             },
             {
