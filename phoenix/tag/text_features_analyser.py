@@ -209,6 +209,17 @@ def create(use_ngrams=True):
             "encoding": "utf-8",
             "token_pattern": r"#?\b\w\w+\b",
         },
+        "ckb": {
+            "strip_accents": "ascii",
+            "encoding": "utf-8",
+            "token_pattern": r"#?\b\w\w+\b",
+        },
+        "ku": {
+            "strip_accents": "ascii",
+            "encoding": "utf-8",
+            "token_pattern": r"#?\b\w\w+\b",
+        },
+        "und": {"strip_accents": "unicode"},
     }
 
     return TextFeaturesAnalyser(
