@@ -159,5 +159,6 @@ def wide_to_long_labels_features(df: pd.DataFrame) -> pd.DataFrame:
     df_labels = df_labels.explode("unprocessed_features").reset_index(drop=True)
     df_labels["unprocessed_features"] = df_labels["unprocessed_features"].fillna("")
     df_labels["unprocessed_features"] = df_labels["unprocessed_features"].str.strip()
+    df_labels["class"] = df_labels["class"].str.strip()
 
     return df_labels
