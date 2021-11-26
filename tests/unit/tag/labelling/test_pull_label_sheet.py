@@ -1,5 +1,6 @@
 """Test pull_label_sheet."""
 import mock
+import numpy as np
 import pandas as pd
 
 from phoenix.tag.labelling import pull_label_sheet
@@ -229,3 +230,38 @@ def test_get_account_labels():
     actual_df = pull_label_sheet.get_account_labels(input_df)
 
     pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
+
+
+def test_clean_feature_to_label_df():
+    """Test the clean_feature_to_label_df outputs correct cols and deduplicates.
+
+    Dedupe is based on class + unprocessed_features + processed_features
+    """
+    input_df = pd.DataFrame(
+        {
+            "object_id": ["id_1", "id_2", "id_3", "id_4"],
+            "class": ["cat", "dog", "cat", "dog"],
+            "unprocessed_features": ["meow", "woof", "meow", np.nan],
+            "text": ["meow meow", "bark woof", "say meow", "faithful furry friend"],
+            "language": ["en"] * 4,
+            "language_confidence": [0.99] * 4,
+            "processed_features": ["meow", "woof", "meow", ""],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        {
+            "object_id": ["id_1", "id_2"],
+            "class": ["cat", "dog"],
+            "unprocessed_features": ["meow", "woof"],
+            "language": ["en"] * 2,
+            "language_confidence": [0.99] * 2,
+            "processed_features": ["meow", "woof"],
+            "use_processed_features": [True] * 2,
+            "status": ["active"] * 2,
+        }
+    )
+
+    actual_df = pull_label_sheet.clean_feature_to_label_df(input_df)
+
+    pd.testing.assert_frame_equal(actual_df, expected_df)
