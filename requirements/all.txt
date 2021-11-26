@@ -149,6 +149,8 @@ et-xmlfile==1.1.0
     # via openpyxl
 fastparquet==0.7.1
     # via -r requirements/common.in
+fasttext==0.9.2
+    # via -r requirements/tag.in
 flake8==3.9.2
     # via -r requirements/development.in
 flask==2.0.1
@@ -359,6 +361,7 @@ numpy==1.21.2
     #   bokeh
     #   dask
     #   fastparquet
+    #   fasttext
     #   matplotlib
     #   pandas
     #   pyarrow
@@ -449,6 +452,8 @@ pyasn1-modules==0.2.8
     # via google-auth
 pyathena==1.10.7
     # via tentaclio
+pybind11==2.8.1
+    # via fasttext
 pycld2==0.41
     # via -r requirements/tag.in
 pycodestyle==2.7.0
