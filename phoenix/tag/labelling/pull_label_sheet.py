@@ -76,6 +76,15 @@ def extract_features_to_label_mapping_objects(
     label_with_no_feature_df = feature_to_label_df[
         feature_to_label_df["unprocessed_features"].isna()
     ].fillna("")
+    label_with_no_feature_df = label_with_no_feature_df[
+        [
+            "object_id",
+            "class",
+            "text",
+            "language",
+            "language_confidence",
+        ]
+    ]
     feature_to_label_df = feature_to_label_df.drop("text", axis=1)
     feature_to_label_df = feature_to_label_df.dropna(subset=["unprocessed_features"])
     feature_to_label_df = feature_to_label_df.fillna("")
