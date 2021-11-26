@@ -65,7 +65,7 @@ def test_wide_to_long_labels_features():
 
 @mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
 def test_extract_features_to_label_mapping(mock_execute):
-    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 7)
+    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 8)
     input_df = pd.DataFrame(
         {
             "object_id": ["note to user about the object_id", "id_1", "id_2", "id_3"],
@@ -73,14 +73,15 @@ def test_extract_features_to_label_mapping(mock_execute):
                 "note to user about the text",
                 "this thing speaks woof and bark",
                 "this goes meow",
-                "this is alive",
+                "this is alive eukaryotic",
             ],
             "label_1": ["note to user about label_1", "dog", "cat", "animal"],
             "label_1_features": [
                 "note to user about label_1_features",
                 "speaks woof,bark",
                 "meow",
-                "alive",
+                # the following line contains the arabic comma "،"
+                "alive، eukaryotic",
             ],
             "label_2": ["note to user about label_2", "animal", "animal", None],
             "label_2_features": [
@@ -95,8 +96,8 @@ def test_extract_features_to_label_mapping(mock_execute):
 
     expected_df = pd.DataFrame(
         {
-            "object_id": ["id_1", "id_1", "id_1", "id_1", "id_2", "id_3"],
-            "class": ["dog", "dog", "animal", "animal", "cat", "animal"],
+            "object_id": ["id_1", "id_1", "id_1", "id_1", "id_2", "id_3", "id_3"],
+            "class": ["dog", "dog", "animal", "animal", "cat", "animal", "animal"],
             "unprocessed_features": [
                 "speaks woof",
                 "bark",
@@ -104,12 +105,21 @@ def test_extract_features_to_label_mapping(mock_execute):
                 "bark",
                 "meow",
                 "alive",
+                "eukaryotic",
             ],
-            "language": ["en"] * 6,
-            "language_confidence": [99.5] * 6,
-            "processed_features": ["speak woof", "bark", "speak woof", "bark", "meow", "aliv"],
-            "use_processed_features": [False] * 6,
-            "status": ["active"] * 6,
+            "language": ["en"] * 7,
+            "language_confidence": [99.5] * 7,
+            "processed_features": [
+                "speak woof",
+                "bark",
+                "speak woof",
+                "bark",
+                "meow",
+                "aliv",
+                "eukaryot",
+            ],
+            "use_processed_features": [False] * 7,
+            "status": ["active"] * 7,
         },
         columns=[
             "object_id",
