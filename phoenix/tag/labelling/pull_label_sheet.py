@@ -94,7 +94,7 @@ def clean_feature_to_label_df(feature_to_label_df: pd.DataFrame) -> pd.DataFrame
     Sets defaults for "use_processed_features" and "status"
     Deduplicates based on "class", "unprocessed_features", "processed_features"
     """
-    feature_to_label_df["use_processed_features"] = True
+    feature_to_label_df["use_processed_features"] = False
     feature_to_label_df["status"] = "active"
     feature_to_label_df = feature_to_label_df.drop("text", axis=1)
     feature_to_label_df = feature_to_label_df.dropna(subset=["unprocessed_features"])

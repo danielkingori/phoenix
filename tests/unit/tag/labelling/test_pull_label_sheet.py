@@ -108,7 +108,7 @@ def test_extract_features_to_label_mapping(mock_execute):
             "language": ["en"] * 6,
             "language_confidence": [99.5] * 6,
             "processed_features": ["speak woof", "bark", "speak woof", "bark", "meow", "aliv"],
-            "use_processed_features": [True] * 6,
+            "use_processed_features": [False] * 6,
             "status": ["active"] * 6,
         },
         columns=[
@@ -257,7 +257,7 @@ def test_clean_feature_to_label_df():
             "language": ["en"] * 2,
             "language_confidence": [0.99] * 2,
             "processed_features": ["meow", "woof"],
-            "use_processed_features": [True] * 2,
+            "use_processed_features": [False] * 2,
             "status": ["active"] * 2,
         }
     )
