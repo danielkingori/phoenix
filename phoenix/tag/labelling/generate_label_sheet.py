@@ -40,10 +40,10 @@ EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET = [
 ]
 
 
-def create_new_object_labelling_sheet_df(
+def create_object_labelling_dataframe(
     for_tag_df: pd.DataFrame, with_user_notes: bool = True
 ) -> pd.DataFrame:
-    """Create a new object labeling sheet using the for_tagging pulled data.
+    """Create a new object labeling dataframe using the for_tagging pulled data.
 
     Args:
         for_tag_df (pd.DataFrame): dataframe with data from the tag/data_pull scripts.
@@ -65,10 +65,10 @@ def create_new_object_labelling_sheet_df(
     return user_notes_df.append(for_tag_df[EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET])
 
 
-def create_new_account_labelling_sheet_df(
+def create_account_labelling_dataframe(
     for_tag_df: pd.DataFrame, with_user_notes: bool = True
 ) -> pd.DataFrame:
-    """Create a new account labelling sheet using the for_tagging pulled data.
+    """Create a new account labelling dataframe using the for_tagging pulled data.
 
     Args:
         for_tag_df (pd.DataFrame): dataframe with data from the tag/data_pull scripts.
