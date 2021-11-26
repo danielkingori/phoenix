@@ -29,6 +29,7 @@ def youtube(
     ENDPOINT: the endpoint to scrape:
         - "channels_from_channel_ids"
         - "search_videos_from_channel_ids"
+        - "comment_threads_from_channel_ids"
     """
     cur_run_params = run_params.general.create(artifact_env, tenant_id)
     # Default is empty parameters
@@ -40,6 +41,10 @@ def youtube(
         output_nb_url = scrape_group.get_output_notebook_url(cur_run_params, notebook_key)
     if endpoint == "search_videos_from_channel_ids":
         notebook_key = "scrape/youtube/search_videos_from_channel_ids.ipynb"
+        input_nb_url = utils.get_input_notebook_path(notebook_key)
+        output_nb_url = scrape_group.get_output_notebook_url(cur_run_params, notebook_key)
+    if endpoint == "comment_threads_from_channel_ids":
+        notebook_key = "scrape/youtube/comment_threads_from_channel_ids.ipynb"
         input_nb_url = utils.get_input_notebook_path(notebook_key)
         output_nb_url = scrape_group.get_output_notebook_url(cur_run_params, notebook_key)
     else:

@@ -16,3 +16,6 @@ GROUP_BY_YOUTUBE_CHANNELS = (
 GROUP_BY_YOUTUBE_SEARCH_VIDEOS = (
     f"{BASE_BASE}grouped_by_year_month/youtube_search_videos/{YEAR_MONTH_FILTER_DIRS}"
 )
+GROUP_BY_YOUTUBE_COMMENT_THREADS = (
+    f"{BASE_BASE}grouped_by_year_month/youtube_comment_threads/{YEAR_MONTH_FILTER_DIRS}"
+)

@@ -28,10 +28,11 @@ def test_get_videos_for_channel_defaults_auth(youtube_channel_config_url):
     # There should always be a result even if there is no videos found
     assert len(result) > 0
     # Build Up should be one of the titles on the list
-    assert "youtube#searchListResponse" in json.dumps(result)
-    assert "youtube#video" in json.dumps(result)
-    assert "youtube#channel" not in json.dumps(result)
-    assert "youtube#playlist" not in json.dumps(result)
+    json_result = json.dumps(result)
+    assert "youtube#searchListResponse" in json_result
+    assert "youtube#video" in json_result
+    assert "youtube#channel" not in json_result
+    assert "youtube#playlist" not in json_result
     # If you want to persist the response for mock testing
     #  with open("response.json", "w") as io:
     #      json.dump(result[0], io, indent=4)
