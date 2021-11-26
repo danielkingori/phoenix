@@ -21,7 +21,7 @@ def test_wide_to_long_labels_features():
     input_df = pd.DataFrame(
         {
             "object_id": ["id_1", "id_2", "id_3"],
-            "label_1": ["dog", "cat", "animal"],
+            "label_1": ["       dog", "cat        ", "animal"],
             "label_1_features": ["speaks woof,bark", "meow", "alive"],
             "label_2": ["animal", "animal", None],
             "label_2_features": ["speaks woof,bark", None, None],
