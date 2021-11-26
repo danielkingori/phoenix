@@ -164,24 +164,16 @@ def test_extract_features_to_label_mapping_no_features(mock_execute):
         {
             "object_id": ["id_2"],
             "class": ["animal"],
-            "unprocessed_features": [""],
             "text": ["this goes meow"],
             "language": ["en"],
             "language_confidence": [99.5],
-            "processed_features": [""],
-            "use_processed_features": [True],
-            "status": ["active"],
         },
         columns=[
             "object_id",
             "class",
-            "unprocessed_features",
             "text",
             "language",
             "language_confidence",
-            "processed_features",
-            "use_processed_features",
-            "status",
         ],
     )
 
