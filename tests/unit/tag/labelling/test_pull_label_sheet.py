@@ -143,7 +143,7 @@ def test_extract_features_to_label_mapping(mock_execute):
 
 @mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
 def test_extract_features_to_label_mapping_no_features(mock_execute):
-    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 7)
+    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 8)
     input_df = pd.DataFrame(
         {
             "object_id": ["note to user about the object_id", "id_1", "id_2", "id_3"],
@@ -167,6 +167,7 @@ def test_extract_features_to_label_mapping_no_features(mock_execute):
                 None,
                 None,
             ],
+            "label_3": ["note to user about label_3", None, "animal", None],
         },
         columns=EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
     )
