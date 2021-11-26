@@ -82,7 +82,7 @@ def extract_features_to_label_mapping_objects(
             "language",
             "language_confidence",
         ]
-    ]
+    ].drop_duplicates(subset=["object_id", "class"])
     feature_to_label_df = clean_feature_to_label_df(feature_to_label_df)
 
     return feature_to_label_df, label_with_no_feature_df
