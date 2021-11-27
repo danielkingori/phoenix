@@ -81,7 +81,7 @@ def create_dataframe_from_response(response: Dict[str, Any]) -> pd.DataFrame:
         ]
     ]
     df["response_etag"] = response_etag
-    df["created_at"] = pd.to_datetime(df["created_at"])
+    df["created_at"] = pd.to_datetime(df["created_at"], utc=True)
     return utils.add_filter_cols(df, df["created_at"])
 
 

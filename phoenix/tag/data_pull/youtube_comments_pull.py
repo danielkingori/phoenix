@@ -119,7 +119,7 @@ def process_comments_json(comments_list: List[Dict[str, Any]]) -> pd.DataFrame:
         ]
     ]
     for col in ["published_at", "updated_at"]:
-        df[col] = pd.to_datetime(df[col])
+        df[col] = pd.to_datetime(df[col], utc=True)
     return df
 
 
