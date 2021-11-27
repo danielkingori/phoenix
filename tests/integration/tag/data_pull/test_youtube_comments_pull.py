@@ -177,6 +177,8 @@ def test_comments_data_pull(youtube_raw_data_source_folder_url, processed_commen
         - Response list that contains no items
         - Comment that has received subsequent more replies between source files
         - Comment that is not in date range specified for filtering
+        - Comment that doesn't have AuthorChannelId present as per
+            https://developers.google.com/youtube/v3/docs/comments#resource
     - Normalises them to youtube_comments schema
     - Includes adding year, month, date filter columns
     - Add file_timestamp
