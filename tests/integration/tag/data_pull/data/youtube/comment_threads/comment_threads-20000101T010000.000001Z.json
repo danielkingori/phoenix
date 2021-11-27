@@ -73,22 +73,22 @@
                 "etag": "item_2-response_2-etag_1",
                 "id": "future_comment_thread",
                 "snippet": {
-                    "channelId": "foo_channel_id",
-                    "videoId": "foo_video_id",
+                    "channelId": "filtered_out_by_year_month_channel_id",
+                    "videoId": "filtered_out_by_year_month_video_id",
                     "topLevelComment": {
                         "kind": "youtube#comment",
                         "etag": "comment_2-response_2-etag_1",
-                        "id": "foo_comment_id",
+                        "id": "filtered_out_by_year_month_comment_id",
                         "snippet": {
-                            "channelId": "foo_channel_id",
-                            "videoId": "foo_video_id",
-                            "textDisplay": "foo_text_display",
-                            "textOriginal": "foo_text_original",
-                            "authorDisplayName": "foo_author_display_name",
+                            "channelId": "filtered_out_by_year_month_channel_id",
+                            "videoId": "filtered_out_by_year_month_video_id",
+                            "textDisplay": "filtered_out_by_year_month_text_display",
+                            "textOriginal": "filtered_out_by_year_month_text_original",
+                            "authorDisplayName": "filtered_out_by_year_month_author_display_name",
                             "authorProfileImageUrl": "https://yt3.ggpht.com/ytc/AKedOLT-_NHRrbJ9SOQablC6pkac-cNO_SKYKD5WRoy-mg=s48-c-k-c0x00ffffff-no-rj",
-                            "authorChannelUrl": "http://www.youtube.com/channel/foo_author_channel_id",
+                            "authorChannelUrl": "http://www.youtube.com/channel/filtered_out_by_year_month_author_channel_id",
                             "authorChannelId": {
-                                "value": "foo_author_channel_id"
+                                "value": "filtered_out_by_year_month_author_channel_id"
                             },
                             "canRate": true,
                             "viewerRating": "none",
