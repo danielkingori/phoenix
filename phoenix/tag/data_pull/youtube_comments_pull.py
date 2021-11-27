@@ -129,15 +129,15 @@ def for_tagging(given_df: pd.DataFrame):
     Return:
     dataframe  : pandas.DataFrame
     Index:
-        object_id: String, dtype: string
+        object_id: ID of object from source system/platform, dtype: string
     Columns:
-        object_id: String, dtype: string
-        text: String, dtype: string
-        object_type: "facebook_post", dtype: String
-        created_at: datetime
-        object_url: String, dtype: string
-        object_user_url: String, dtype: string
-        object_user_name: String, dtype: string
+        object_id: ID of object from source system/platform, dtype: string
+        text: Text content of the object, dtype: string
+        object_type: Type i.e. class of the object, dtype: String
+        created_at: Date time when object was created/posted dtype: datetime
+        object_url: URL to location of object, dtype: string
+        object_user_url: URL to creator/author of object, if available dtype: Optional[string]
+        object_user_name: User name of creator/author, dtype: string
     """
     df = given_df.copy()
     df = df.rename(columns={"id": "object_id", "published_at": "created_at"})
