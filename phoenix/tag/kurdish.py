@@ -1,4 +1,5 @@
 """Kurdish NLP."""
+from klpt.preprocess import Preprocess
 from klpt.stem import Stem
 
 
@@ -48,3 +49,19 @@ class KurmanjiStemmer:
     def stemWord(self, word: str) -> str:
         """Pass through."""
         return word
+
+
+sorani_preprocessor = Preprocess("Sorani", "Arabic", numeral="Latin")
+
+
+def sorani_preprocess(doc: str) -> str:
+    """Preprocess Sorani text."""
+    return sorani_preprocessor.preprocess(doc)
+
+
+kurmanji_preprocessor = Preprocess("Kurmanji", "Latin", numeral="Latin")
+
+
+def kurmanji_preprocess(doc: str) -> str:
+    """Preprocess Kurmanji text."""
+    return kurmanji_preprocessor.preprocess(doc)

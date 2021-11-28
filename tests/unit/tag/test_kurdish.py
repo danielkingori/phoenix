@@ -15,3 +15,17 @@ def test_kurmanji_stemmer():
     stemmer = kurdish.KurmanjiStemmer()
     assert stemmer.stemWord("pisîk") == "pisîk"
     assert stemmer.stemWord("xanî") == "xanî"
+
+
+def test_sorani_preprocess():
+    """Test Sorani preprocessing."""
+    input_doc = "لە ســـاڵەکانی ١٩٥٠دا"
+    output_doc = kurdish.sorani_preprocess(input_doc)
+    assert "لە ساڵەکانی 1950دا" == output_doc
+
+
+def test_kurmanji_preprocess():
+    """Test Kurmanji preprocessing."""
+    input_doc = "Min nizanibû ku min dizanibû ku min ew nizanibû."
+    output_doc = kurdish.kurmanji_preprocess(input_doc)
+    assert "Min nizanibû ku min dizanibû ku min ew nizanibû." == output_doc
