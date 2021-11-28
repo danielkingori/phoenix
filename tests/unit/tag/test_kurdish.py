@@ -29,3 +29,28 @@ def test_kurmanji_preprocess():
     input_doc = "Min nizanibû ku min dizanibû ku min ew nizanibû."
     output_doc = kurdish.kurmanji_preprocess(input_doc)
     assert "Min nizanibû ku min dizanibû ku min ew nizanibû." == output_doc
+
+
+def test_sorani_tokenize():
+    """Test Sorani tokenization."""
+    input_doc = "لە ساڵەکانی 1950دا"
+    output_tokens = kurdish.sorani_tokenize(input_doc)
+    assert ["▁لە▁", "▁ساڵ▁ەکان▁ی", "1950دا"] == output_tokens
+
+
+def test_kurmanji_tokenize():
+    """Test Kurmanji tokenization."""
+    input_doc = "Min nizanibû ku min dizanibû ku min ew nizanibû."
+    output_tokens = kurdish.kurmanji_tokenize(input_doc)
+    assert [
+        "Min",
+        "nizanibû",
+        "▁ku▁",
+        "▁min▁",
+        "dizanibû",
+        "▁ku▁",
+        "▁min▁",
+        "▁ew▁",
+        "nizanibû",
+        ".",
+    ] == output_tokens

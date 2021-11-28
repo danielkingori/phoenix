@@ -1,6 +1,9 @@
 """Kurdish NLP."""
+from typing import List
+
 from klpt.preprocess import Preprocess
 from klpt.stem import Stem
+from klpt.tokenize import Tokenize
 
 
 KURDISH_CODE = "ku"
@@ -65,3 +68,25 @@ kurmanji_preprocessor = Preprocess("Kurmanji", "Latin", numeral="Latin")
 def kurmanji_preprocess(doc: str) -> str:
     """Preprocess Kurmanji text."""
     return kurmanji_preprocessor.preprocess(doc)
+
+
+sorani_tokenizer = Tokenize("Sorani", "Arabic")
+
+
+def sorani_tokenize(doc: str) -> List[str]:
+    """Tokenize Sorani text.
+
+    Should be given document which has been preprocessed.
+    """
+    return sorani_tokenizer.word_tokenize(doc)
+
+
+kurmanji_tokenizer = Tokenize("Kurmanji", "Latin")
+
+
+def kurmanji_tokenize(doc: str) -> List[str]:
+    """Tokenize Kurmanji text.
+
+    Should be given document which has been preprocessed.
+    """
+    return kurmanji_tokenizer.word_tokenize(doc)
