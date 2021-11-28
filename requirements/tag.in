@@ -6,6 +6,7 @@ pyicu
 pycld2
 python-bidi
 nltk
+klpt
 seaborn
 snowballstemmer
 sklearn
