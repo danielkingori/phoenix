@@ -133,14 +133,10 @@ class TextFeaturesAnalyser:
             lang_default_params = {}
             if lang in default_params:
                 lang_default_params = default_params[lang]
-            countvectorizers = list(
-                map(
-                    lambda ngram_range: StemmedCountVectorizer(
-                        **lang_default_params, ngram_range=ngram_range
-                    ),
-                    ngram_ranges,
-                )
-            )
+            countvectorizers = [
+                StemmedCountVectorizer(**lang_default_params, ngram_range=ngram_range)
+                for ngram_range in ngram_ranges
+            ]
             self.column_return_count = len(countvectorizers)
             self.dict_countvectorizers[lang] = countvectorizers
             self.dict_analyser[lang] = self._create_analyser(countvectorizers, use_ngrams)
