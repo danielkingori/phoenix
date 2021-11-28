@@ -181,7 +181,7 @@ def feature_apply(
     lang = row["language"]
     if lang in dict_analyser:
         analysers = dict_analyser[lang]
-        return pd.Series(map(lambda analyser_fn: analyser_fn(message), analysers))
+        return pd.Series([analyser_fn(message) for analyser_fn in analysers])
     keys = list(dict_analyser.keys())
     raise ValueError(f"Language {lang} is not supported. Supported keys: {keys}")
 
