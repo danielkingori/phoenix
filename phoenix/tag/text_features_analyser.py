@@ -138,17 +138,17 @@ class TextFeaturesAnalyser:
                 for ngram_range in ngram_ranges
             ]
             self.dict_countvectorizers[lang] = countvectorizers
-            self.dict_analyser[lang] = self._create_analyser(countvectorizers, use_ngrams)
+            self.dict_analyser[lang] = self._create_analysers(countvectorizers, use_ngrams)
         self.column_return_count = len(ngram_ranges)
 
     def _build_meta_return(self):
         """Build the meta return."""
         return [(i, "object") for i in range(self.column_return_count)]
 
-    def _create_analyser(self, countvectorizers: List, use_ngrams: bool):
+    def _create_analysers(self, countvectorizers: List, use_ngrams: bool):
         # cast to a list is needed otherwise will not
         # be able to analyse more then one row.
-        return list(map(lambda obj: obj.build_analyzer(use_ngrams), countvectorizers))
+        return [countvectorizer.build_analyzer(use_ngrams) for countvectorizer in countvectorizers]
 
     def features(self, df: pd.DataFrame, message_key: str = "message"):
         """Build feature grams."""
