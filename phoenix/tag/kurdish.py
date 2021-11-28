@@ -2,11 +2,13 @@
 from klpt.stem import Stem
 
 
+KURDISH_CODE = "ku"
+
 SORANI_CODE = "ckb"
 SORANI = "Sorani"
 ARABIC = "Arabic"
 
-KURMANJI_CODE = "ku"
+KURMANJI_CODE = "kmr"
 KURMANJI = "Kurmanji"
 LATIN = "Latin"
 
