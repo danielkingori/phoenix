@@ -24,6 +24,8 @@ from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from snowballstemmer import stemmer
 
+from phoenix.tag import kurdish
+
 
 class StemmedCountVectorizer(CountVectorizer):
     """CountVectorizer with stemming.
@@ -206,12 +208,16 @@ def create(use_ngrams=True):
             "token_pattern": r"#?\b\w\w+\b",
         },
         "ckb": {
-            "strip_accents": "ascii",
+            "stemmer": kurdish.SoraniStemmer(),
+            "preprocessor": kurdish.sorani_preprocess,
+            "tokenizer": kurdish.sorani_tokenize,
             "encoding": "utf-8",
             "token_pattern": r"#?\b\w\w+\b",
         },
         "ku": {
-            "strip_accents": "ascii",
+            "stemmer": kurdish.KurmanjiStemmer(),
+            "preprocessor": kurdish.kurmanji_preprocess,
+            "tokenizer": kurdish.kurmanji_tokenize,
             "encoding": "utf-8",
             "token_pattern": r"#?\b\w\w+\b",
         },
