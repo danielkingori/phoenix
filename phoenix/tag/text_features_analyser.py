@@ -137,9 +137,9 @@ class TextFeaturesAnalyser:
                 StemmedCountVectorizer(**lang_default_params, ngram_range=ngram_range)
                 for ngram_range in ngram_ranges
             ]
-            self.column_return_count = len(countvectorizers)
             self.dict_countvectorizers[lang] = countvectorizers
             self.dict_analyser[lang] = self._create_analyser(countvectorizers, use_ngrams)
+        self.column_return_count = len(ngram_ranges)
 
     def _build_meta_return(self):
         """Build the meta return."""
