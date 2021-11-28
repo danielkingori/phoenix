@@ -9,6 +9,7 @@ import pytest
 from phoenix.tag import language
 
 
+@pytest.mark.auth
 @mock.patch("phoenix.tag.language.urls.get_local_models")
 def test_load_model(m_local_models, tmp_path):
     """Test that load_model can download models when the model is not present on local.
@@ -24,6 +25,7 @@ def test_load_model(m_local_models, tmp_path):
     assert os.path.isfile(str(tmp_path) + file_name)
 
 
+@pytest.mark.auth
 @pytest.mark.parametrize(
     "sentence,expected_lang",
     [
