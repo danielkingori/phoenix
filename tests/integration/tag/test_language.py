@@ -30,7 +30,7 @@ def test_load_model(m_local_models, tmp_path):
     "sentence,expected_lang",
     [
         ("المعادلة النفطية: جيش ، شعب ، بنزين", "ar"),
-        ("Hello and good morning", "en"),
+        ("Hello and good morning\n\n Hello", "en"),
         ("Ser çavan, gelekî kêfxweş bûm", "ku"),
         ("من باشم، سوپاست دەکەم، ئەی تۆ؟", "ckb"),
         ("shi jdid, 7ala2  beit w rayi7 3al she5el w reji3 da7ir ma3 lshabeb w inte?", "und"),
