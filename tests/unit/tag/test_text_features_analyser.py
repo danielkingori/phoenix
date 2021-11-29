@@ -85,6 +85,28 @@ def test_get_stopwords_has_arabic():
     assert set(stopwords_list).issubset(actual_stopwords_list)
 
 
+def test_TextFeaturesAnalyser_default_accepted_languages():
+    """Test the whitelisted languages from tag.language are accepted in the default analyser.
+
+    This will raise an error if the TextFeaturesAnalyser doesn't have the languages in its
+    default language list.
+    """
+    df_test = pd.DataFrame(
+        [
+            ("1", "this is a sentance", "en"),
+            ("1", "some sentance", "ku"),
+            ("1", "another sentance", "und"),
+            ("1", "yas", "ckb"),
+            ("1", "yas sentance", "ar"),
+            ("1", "yas sentances", "ar_izi"),
+        ],
+        columns=["id", "clean_text", "language"],
+    )
+
+    text_analyser = tfa.create()
+    df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+
+
 def test_TextFeaturesAnalyser_features():
     df_test = pd.DataFrame(
         [("1", "succeeding in stemming removes the ends of words", "en")],
