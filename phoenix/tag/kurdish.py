@@ -54,7 +54,7 @@ class KurmanjiStemmer:
         return word
 
 
-sorani_preprocessor = Preprocess("Sorani", "Arabic", numeral="Latin")
+sorani_preprocessor = Preprocess(SORANI, ARABIC, numeral=LATIN)
 
 
 def sorani_preprocess(doc: str) -> str:
@@ -62,7 +62,7 @@ def sorani_preprocess(doc: str) -> str:
     return sorani_preprocessor.preprocess(doc)
 
 
-kurmanji_preprocessor = Preprocess("Kurmanji", "Latin", numeral="Latin")
+kurmanji_preprocessor = Preprocess(KURMANJI, LATIN, numeral=LATIN)
 
 
 def kurmanji_preprocess(doc: str) -> str:
@@ -70,7 +70,7 @@ def kurmanji_preprocess(doc: str) -> str:
     return kurmanji_preprocessor.preprocess(doc)
 
 
-sorani_tokenizer = Tokenize("Sorani", "Arabic")
+sorani_tokenizer = Tokenize(SORANI, ARABIC)
 
 
 def sorani_tokenize(doc: str) -> List[str]:
@@ -81,7 +81,7 @@ def sorani_tokenize(doc: str) -> List[str]:
     return sorani_tokenizer.word_tokenize(doc)
 
 
-kurmanji_tokenizer = Tokenize("Kurmanji", "Latin")
+kurmanji_tokenizer = Tokenize(KURMANJI, LATIN)
 
 
 def kurmanji_tokenize(doc: str) -> List[str]:
