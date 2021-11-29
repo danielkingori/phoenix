@@ -8,7 +8,7 @@ python -m nltk.downloader stopwords
 The text feature analyser will do the analysis of text for
 arabic, arabizi, and english.
 """
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Tuple
 
 import functools
 import itertools
@@ -23,6 +23,8 @@ from bidi.algorithm import get_display
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from snowballstemmer import stemmer
+
+from phoenix.tag import kurdish
 
 
 class StemmedCountVectorizer(CountVectorizer):
@@ -133,26 +135,22 @@ class TextFeaturesAnalyser:
             lang_default_params = {}
             if lang in default_params:
                 lang_default_params = default_params[lang]
-            countvectorizers = list(
-                map(
-                    lambda ngram_range: StemmedCountVectorizer(
-                        **lang_default_params, ngram_range=ngram_range
-                    ),
-                    ngram_ranges,
-                )
-            )
-            self.column_return_count = len(countvectorizers)
+            countvectorizers = [
+                StemmedCountVectorizer(**lang_default_params, ngram_range=ngram_range)
+                for ngram_range in ngram_ranges
+            ]
             self.dict_countvectorizers[lang] = countvectorizers
-            self.dict_analyser[lang] = self._create_analyser(countvectorizers, use_ngrams)
+            self.dict_analyser[lang] = self._create_analysers(countvectorizers, use_ngrams)
+        self.column_return_count = len(ngram_ranges)
 
     def _build_meta_return(self):
         """Build the meta return."""
         return [(i, "object") for i in range(self.column_return_count)]
 
-    def _create_analyser(self, countvectorizers: List, use_ngrams: bool):
+    def _create_analysers(self, countvectorizers: List, use_ngrams: bool):
         # cast to a list is needed otherwise will not
         # be able to analyse more then one row.
-        return list(map(lambda obj: obj.build_analyzer(use_ngrams), countvectorizers))
+        return [countvectorizer.build_analyzer(use_ngrams) for countvectorizer in countvectorizers]
 
     def features(self, df: pd.DataFrame, message_key: str = "message"):
         """Build feature grams."""
@@ -185,12 +183,12 @@ def feature_apply(
     lang = row["language"]
     if lang in dict_analyser:
         analysers = dict_analyser[lang]
-        return pd.Series(map(lambda analyser_fn: analyser_fn(message), analysers))
+        return pd.Series([analyser_fn(message) for analyser_fn in analysers])
     keys = list(dict_analyser.keys())
     raise ValueError(f"Language {lang} is not supported. Supported keys: {keys}")
 
 
-def create(use_ngrams=True):
+def create(ngram_ranges: List[Tuple[int, int]] = [(1, 3)], use_ngrams=True):
     """Create the TextFeaturesAnalyser."""
     # Configuration is hard coded this can be changed at some point.
     # token_pattern is the default token pattern with the addition of a optional # before a word
@@ -210,12 +208,16 @@ def create(use_ngrams=True):
             "token_pattern": r"#?\b\w\w+\b",
         },
         "ckb": {
-            "strip_accents": "ascii",
+            "stemmer": kurdish.SoraniStemmer(),
+            "preprocessor": kurdish.sorani_preprocess,
+            "tokenizer": kurdish.sorani_tokenize,
             "encoding": "utf-8",
             "token_pattern": r"#?\b\w\w+\b",
         },
         "ku": {
-            "strip_accents": "ascii",
+            "stemmer": kurdish.KurmanjiStemmer(),
+            "preprocessor": kurdish.kurmanji_preprocess,
+            "tokenizer": kurdish.kurmanji_tokenize,
             "encoding": "utf-8",
             "token_pattern": r"#?\b\w\w+\b",
         },
@@ -225,7 +227,7 @@ def create(use_ngrams=True):
     return TextFeaturesAnalyser(
         languages=list(default_params.keys()),
         default_params=default_params,
-        ngram_ranges=[(1, 3)],
+        ngram_ranges=ngram_ranges,
         use_ngrams=use_ngrams,
     )
 
