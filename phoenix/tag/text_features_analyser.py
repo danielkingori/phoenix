@@ -8,7 +8,7 @@ python -m nltk.downloader stopwords
 The text feature analyser will do the analysis of text for
 arabic, arabizi, and english.
 """
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, Tuple
 
 import functools
 import itertools
@@ -188,7 +188,7 @@ def feature_apply(
     raise ValueError(f"Language {lang} is not supported. Supported keys: {keys}")
 
 
-def create(use_ngrams=True):
+def create(ngram_ranges: List[Tuple[int, int]] = [(1, 3)], use_ngrams=True):
     """Create the TextFeaturesAnalyser."""
     # Configuration is hard coded this can be changed at some point.
     # token_pattern is the default token pattern with the addition of a optional # before a word
@@ -227,7 +227,7 @@ def create(use_ngrams=True):
     return TextFeaturesAnalyser(
         languages=list(default_params.keys()),
         default_params=default_params,
-        ngram_ranges=[(1, 3)],
+        ngram_ranges=ngram_ranges,
         use_ngrams=use_ngrams,
     )
 

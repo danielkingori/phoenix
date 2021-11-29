@@ -133,6 +133,33 @@ def test_TextFeaturesAnalyser_features():
     assert df_test["features"][0] == expected_3gram_feature_list
 
 
+def test_TextFeaturesAnalyser_kurdish():
+    """Test analysing Kurdish."""
+    df_test = pd.DataFrame(
+        [
+            ("1", "Min nizanibû ku min", "ku"),
+            ("1", "لە ســـاڵەکانی ١٩٥٠دا", "ckb"),
+        ],
+        columns=["id", "clean_text", "language"],
+    )
+    text_analyser = tfa.create(ngram_ranges=[(1, 2)])
+    df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+
+    kurmanji_feats = [
+        "Min",
+        "nizanibû",
+        "▁ku▁",
+        "▁min▁",
+        "Min nizanibû",
+        "nizanibû ▁ku▁",
+        "▁ku▁ ▁min▁",
+    ]
+    sorani_feats = ["▁لە▁", "▁ساڵ▁ەکان▁ی", "1950دا", "▁لە▁ ▁ساڵ▁ەکان▁ی", "▁ساڵ▁ەکان▁ی 1950دا"]
+
+    df_test["features"][0] == kurmanji_feats
+    df_test["features"][1] == sorani_feats
+
+
 def test_TextFeaturesAnalyser_features_no_ngrams():
     df_test = pd.DataFrame(
         [("1", "succeeding in stemming removes the ends of words", "en")],
