@@ -54,6 +54,7 @@ def extract_features_to_label_mapping_objects(
     feature_to_label_df = feature_to_label_df.merge(
         df[["object_id", "text"]], how="left", on="object_id"
     )
+    feature_to_label_df["text"] = feature_to_label_df["text"].str.replace("\n", " ")
     feature_to_label_df[["language", "language_confidence"]] = language.execute(
         feature_to_label_df["text"]
     )
@@ -160,5 +161,6 @@ def wide_to_long_labels_features(df: pd.DataFrame) -> pd.DataFrame:
     df_labels["unprocessed_features"] = df_labels["unprocessed_features"].fillna("")
     df_labels["unprocessed_features"] = df_labels["unprocessed_features"].str.strip()
     df_labels["class"] = df_labels["class"].str.strip()
+    df_labels["class"] = df_labels["class"].str.lower()
 
     return df_labels
