@@ -1,5 +1,5 @@
 """Artifacts DataFrame interface."""
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict
 
 import functools
 
@@ -62,40 +62,6 @@ def get(
         dataframe = pd.read_parquet(file_io)
 
     return dtypes.ArtifactDataFrame(url=artifacts_dataframe_url, dataframe=dataframe)
-
-
-def get_dataframe(
-    artifacts_dataframe_url: str, allow_not_found: Optional[bool] = True
-) -> Union[pd.DataFrame, None]:
-    """Get the dataframe if possible.
-
-    This function is used to allow for a return of None if not the artifact is not found.
-    If found will return the dataframe.
-
-    Args:
-        artifacts_dataframe_url (str): URL for the artifact DataFrame.
-            This must be a valid dataframe URL with the extension ".parquet"
-        allow_not_found (Optional bool). If True then return None if not found rather then raising
-            an exception. Default is True.
-
-    Raises:
-        If `allow_not_found` is False and the artifact is not found then raises:
-        tentaclio.ClientError or FileNotFound exception. FileNotFound when local url
-        and tentaclio.ClientError when remote URL is used.
-
-    Returns:
-        ArtifactDataFrame object
-        or None if not found and `allow_not_found` is set to True
-    """
-    try:
-        return get(artifacts_dataframe_url).dataframe
-    # This is super crap from tentaclio that they throw different errors for
-    # Different Client errors for file not found
-    except (FileNotFoundError, tentaclio.clients.exceptions.ClientError) as e:
-        if allow_not_found:
-            return None
-        # else via the return
-        raise e
 
 
 def delete(artifact_dataframe: dtypes.ArtifactDataFrame) -> None:

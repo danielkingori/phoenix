@@ -2,7 +2,6 @@
 import mock
 import pandas as pd
 import pytest
-import tentaclio
 
 from phoenix.common.artifacts import dataframes
 
@@ -57,42 +56,3 @@ def test_persist_dataframe_copy_to_parquet_params(m__persist):
     # Checking that the dataframe was copied but they are equal
     assert a_df.dataframe is not dataframe
     pd.testing.assert_frame_equal(a_df.dataframe, dataframe)
-
-
-@mock.patch("phoenix.common.artifacts.dataframes.get")
-def test_get_dataframe(m_get):
-    """Test get_dataframe."""
-    url = "url"
-    result = dataframes.get_dataframe(url)
-    m_get.assert_called_once_with(url)
-    assert result == m_get().dataframe
-
-
-@mock.patch("phoenix.common.artifacts.dataframes.get")
-def test_get_dataframe_return_none(m_get):
-    """Test get_dataframe with `allow_not_found`."""
-    url = "url"
-    m_get.side_effect = FileNotFoundError(url)
-    result = dataframes.get_dataframe(url)
-    m_get.assert_called_once_with(url)
-    assert result is None
-
-
-@mock.patch("phoenix.common.artifacts.dataframes.get")
-def test_get_dataframe_none_client_error(m_get):
-    """Test get_dataframe with `allow_not_found` with a client error."""
-    url = "url"
-    m_get.side_effect = tentaclio.clients.exceptions.ClientError(url)
-    result = dataframes.get_dataframe(url)
-    m_get.assert_called_once_with(url)
-    assert result is None
-
-
-@mock.patch("phoenix.common.artifacts.dataframes.get")
-def test_get_dataframe_raises_error(m_get):
-    """Test get_dataframe_for_url with error and `allow_not_found` is False."""
-    url = "url"
-    m_get.side_effect = FileNotFoundError(url)
-    with pytest.raises(FileNotFoundError):
-        dataframes.get_dataframe(url, allow_not_found=False)
-        m_get.assert_called_once_with(url)
