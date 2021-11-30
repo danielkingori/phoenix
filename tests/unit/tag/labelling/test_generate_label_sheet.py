@@ -69,7 +69,7 @@ def test_get_goal_number_rows():
     )
     excluded_df, actual_df = generate_label_sheet.get_goal_number_rows(input_df, "stratify_col", 5)
 
-    pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
+    pd.testing.assert_frame_equal(actual_df.sort_index(), expected_df)
 
 
 def test_get_goal_number_rows_many_unique():
@@ -90,7 +90,7 @@ def test_get_goal_number_rows_many_unique():
         index=[2, 1],
     )
     excluded_df, actual_df = generate_label_sheet.get_goal_number_rows(input_df, "stratify_col", 2)
-    pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
+    pd.testing.assert_frame_equal(actual_df, expected_df)
 
 
 def test_get_user_notes_object_df():
@@ -150,7 +150,7 @@ def test_create_new_account_labelling_sheet_df():
 
     actual_df = generate_label_sheet.create_account_labelling_dataframe(input_df)
 
-    pd.testing.assert_frame_equal(actual_df[1:], expected_df_after_first_row, check_like=True)
+    pd.testing.assert_frame_equal(actual_df[1:], expected_df_after_first_row)
 
 
 def test_create_new_account_labelling_sheet_df_no_notes():
