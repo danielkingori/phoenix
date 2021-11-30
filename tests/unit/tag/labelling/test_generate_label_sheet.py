@@ -6,7 +6,7 @@ from phoenix.tag.labelling import generate_label_sheet
 
 def test_create_new_labelling_sheet_empty():
     empty_df = pd.DataFrame()
-    actual_df = generate_label_sheet.create_object_labelling_dataframe(empty_df)
+    actual_df = generate_label_sheet.create_object_labelling_df(empty_df)
 
     assert all(
         actual_df.columns.values == generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET
@@ -29,7 +29,7 @@ def test_create_new_labelling_sheet():
         columns=generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
     )
 
-    actual_df = generate_label_sheet.create_object_labelling_dataframe(df)
+    actual_df = generate_label_sheet.create_object_labelling_df(df)
 
     pd.testing.assert_frame_equal(actual_df[1:], expected_df)
 
@@ -48,7 +48,7 @@ def test_create_new_labeling_sheet_without_notes():
         columns=generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
     )
 
-    actual_df = generate_label_sheet.create_object_labelling_dataframe(df, with_user_notes=False)
+    actual_df = generate_label_sheet.create_object_labelling_df(df, with_user_notes=False)
 
     pd.testing.assert_frame_equal(actual_df, expected_df)
 
