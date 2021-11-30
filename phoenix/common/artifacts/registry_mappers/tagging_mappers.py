@@ -26,6 +26,8 @@ TAGGING_FACEBOOK_COMMENTS_FOR_TAGGING = TAGGING_FACEBOOK_COMMENTS + FOR_TAGGING_
 # Facebook
 TAGGING_YOUTUBE_VIDEOS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}youtube_videos/"
 TAGGING_YOUTUBE_VIDEOS_FOR_TAGGING = TAGGING_YOUTUBE_VIDEOS + FOR_TAGGING_SUFFIX
+TAGGING_YOUTUBE_COMMENTS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}youtube_comments/"
+TAGGING_YOUTUBE_COMMENTS_FOR_TAGGING = TAGGING_YOUTUBE_COMMENTS + FOR_TAGGING_SUFFIX
 
 
 MAPPERS: MapperDict = {
@@ -88,6 +90,15 @@ MAPPERS: MapperDict = {
     ),
     "tagging_runs-youtube_videos_for_tagging": partial(
         url_mapper, TAGGING_YOUTUBE_VIDEOS_FOR_TAGGING + "youtube_videos_for_tagging.parquet"
+    ),
+    "tagging_runs-youtube_comments_input": partial(
+        url_mapper, shared_urls.GROUP_BY_YOUTUBE_COMMENT_THREADS
+    ),
+    "tagging_runs-youtube_comments_pulled": partial(
+        url_mapper, TAGGING_YOUTUBE_COMMENTS + "youtube_comments_pulled.parquet"
+    ),
+    "tagging_runs-youtube_comments_for_tagging": partial(
+        url_mapper, TAGGING_YOUTUBE_COMMENTS_FOR_TAGGING + "youtube_comments_for_tagging.parquet"
     ),
     # Utils
     "tagging_runs-pipeline_base": partial(url_mapper, TAGGING_PIPELINE_BASE),

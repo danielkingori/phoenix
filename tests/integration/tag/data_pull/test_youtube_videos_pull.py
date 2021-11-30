@@ -4,16 +4,8 @@ import datetime
 import pandas as pd
 import pytest
 
-from phoenix.common import utils
 from phoenix.tag import data_pull
 from phoenix.tag.data_pull import youtube_videos_pull as youtube_videos
-
-
-@pytest.fixture()
-def youtube_videos_source_folder_url():
-    """YouTube videos source folder URL."""
-    rel_path = utils.relative_path("./data/", __file__)
-    return f"file://{rel_path}/"
 
 
 @pytest.fixture()
@@ -117,13 +109,12 @@ def processed_videos_df() -> pd.DataFrame:
                     2000, 1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc
                 ),
             },
-        ],
-        index=pd.Int64Index([1, 2, 3, 4], dtype="int64"),
+        ]
     )
     return df
 
 
-def test_videos_data_pull(youtube_videos_source_folder_url, processed_videos_df):
+def test_videos_data_pull(youtube_raw_data_source_folder_url, processed_videos_df):
     """Integration test for the data pull.
 
     - Takes 2 test data source files
@@ -134,7 +125,7 @@ def test_videos_data_pull(youtube_videos_source_folder_url, processed_videos_df)
     - add file_timestamp
     - filter for month and date.
     """
-    result = youtube_videos.from_json(youtube_videos_source_folder_url, 2000, 1)
+    result = youtube_videos.from_json(youtube_raw_data_source_folder_url + "videos/", 2000, 1)
     pd.testing.assert_frame_equal(result, processed_videos_df)
 
 

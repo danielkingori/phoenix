@@ -1,10 +1,21 @@
 """Utils for pulling data."""
+from typing import Any, List, Optional, Tuple
+
 import datetime
 import hashlib
+import json
+import logging
 
 import pandas as pd
+import tentaclio
 
 from phoenix.common.artifacts import source_file_name_processing
+
+
+JSONType = Any
+
+
+logger = logging.getLogger(__name__)
 
 
 def to_type(column_name: str, astype, df: pd.DataFrame):
@@ -63,4 +74,40 @@ def add_filter_cols(df: pd.DataFrame, created_at_col: pd.Series) -> pd.DataFrame
     df["year_filter"] = created_at_col.dt.year
     df["month_filter"] = created_at_col.dt.month
     df["day_filter"] = created_at_col.dt.day
+    return df
+
+
+def get_jsons(url_to_folder: str) -> List[Tuple[JSONType, datetime.datetime]]:
+    """Read all JSON files and tuple with the file's timestamp."""
+    json_objects: List[Tuple[Any, datetime.datetime]] = []
+    for entry in tentaclio.listdir(url_to_folder):
+        logger.info(f"Processing file: {entry}")
+        if not is_valid_file_name(entry):
+            logger.info(f"Skipping file with invalid filename: {entry}")
+            continue
+        file_timestamp = get_file_name_timestamp(entry)
+        with tentaclio.open(entry) as file_io:
+            json_objects.append((json.load(file_io), file_timestamp))
+    return json_objects
+
+
+def concat_dedupe_sort_objects(dfs: List[pd.DataFrame], sort_column: str) -> pd.DataFrame:
+    """Concat, dedupe based on `file_timestamp` and `id`, then sort."""
+    df = pd.concat(dfs, axis=0, ignore_index=True)
+    df = df.sort_values("file_timestamp")
+    df = df.groupby("id").last()
+    df = df.reset_index()
+    df = df.sort_values(sort_column, ascending=False).reset_index(drop=True)
+    return df
+
+
+def filter_df(
+    df: pd.DataFrame, year_filter: Optional[int] = None, month_filter: Optional[int] = None
+):
+    """Filter dataframe by year and/or month."""
+    if year_filter:
+        df = df[df["year_filter"] == year_filter]
+    if month_filter:
+        df = df[df["month_filter"] == month_filter]
+    df = df.reset_index(drop=True)
     return df

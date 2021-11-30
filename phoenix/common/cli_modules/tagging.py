@@ -52,7 +52,7 @@ def run_phase(
         Or a valid storage URL like "s3://my-phoenix-bucket/"
     TENANT_ID: The id of the tenant to run phoenix for.
     PHASE_NUMBER: 1 or 2
-    OBJECT_TYPE: facebook_posts, facebook_comments, tweets, youtube_videos
+    OBJECT_TYPE: facebook_posts, facebook_comments, tweets, youtube_videos, youtube_comments
     YEAR_FILTER: year. E.g. 2021
     MONTH_FILTER: month number. E.g. 8
 
