@@ -40,31 +40,46 @@ EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET = [
 ]
 
 
-def create_new_object_labelling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
-    """Create a new object labelling sheet using the for_tagging pulled data.
+def create_object_labelling_df(
+    for_tag_df: pd.DataFrame, with_user_notes: bool = True
+) -> pd.DataFrame:
+    """Create a new object labeling dataframe using the for_tagging pulled data.
 
     Args:
         for_tag_df (pd.DataFrame): dataframe with data from the tag/data_pull scripts.
+        with_user_notes (bool): flag, if True get and add user notes to output dataframe
     """
-    user_notes_df = get_user_notes_object_df()
     for col in EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET:
         if col not in for_tag_df.columns:
             for_tag_df[col] = None
+
+    for_tag_df = for_tag_df[EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET]
 
     for_tag_df["created_at"] = for_tag_df["created_at"].apply(
         lambda x: pd.to_datetime(x).strftime("%Y-%m-%d %H:%M") if x else None
     )
 
-    return user_notes_df.append(for_tag_df[EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET])
+    if with_user_notes:
+        user_notes_df = get_user_notes_object_df()
+        for_tag_df = user_notes_df.append(for_tag_df)
+
+    return for_tag_df
 
 
-def create_new_account_labelling_sheet_df(for_tag_df: pd.DataFrame) -> pd.DataFrame:
-    """Create a new account labelling sheet using the for_tagging pulled data.
+def create_account_labelling_dataframe(
+    for_tag_df: pd.DataFrame, with_user_notes: bool = True
+) -> pd.DataFrame:
+    """Create a new account labelling dataframe using the for_tagging pulled data.
 
     Args:
         for_tag_df (pd.DataFrame): dataframe with data from the tag/data_pull scripts.
+        with_user_notes (bool): Should the first row of the df be notes for the user of the sheet?
     """
-    user_notes_df = get_user_notes_account_df()
+    if with_user_notes:
+        user_notes_df = get_user_notes_account_df()
+    else:
+        user_notes_df = pd.DataFrame(columns=EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET)
+
     deduped_account_df = for_tag_df[["object_user_url", "object_user_name"]].drop_duplicates()
     for col in EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET:
         if col not in deduped_account_df.columns:

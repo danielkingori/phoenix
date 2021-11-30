@@ -6,7 +6,7 @@ from phoenix.tag.labelling import generate_label_sheet
 
 def test_create_new_labelling_sheet_empty():
     empty_df = pd.DataFrame()
-    actual_df = generate_label_sheet.create_new_object_labelling_sheet_df(empty_df)
+    actual_df = generate_label_sheet.create_object_labelling_df(empty_df)
 
     assert all(
         actual_df.columns.values == generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET
@@ -29,9 +29,28 @@ def test_create_new_labelling_sheet():
         columns=generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
     )
 
-    actual_df = generate_label_sheet.create_new_object_labelling_sheet_df(df)
+    actual_df = generate_label_sheet.create_object_labelling_df(df)
 
     pd.testing.assert_frame_equal(actual_df[1:], expected_df)
+
+
+def test_create_new_labeling_sheet_without_notes():
+    df = pd.DataFrame(
+        {
+            "object_id": ["id_1", "id_2"],
+            "text": ["text_1", "text_2"],
+            "column_to_be_ignore": ["wrong_text_1", "wrong_text_2"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        {"object_id": ["id_1", "id_2"], "text": ["text_1", "text_2"]},
+        columns=generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
+    )
+
+    actual_df = generate_label_sheet.create_object_labelling_df(df, with_user_notes=False)
+
+    pd.testing.assert_frame_equal(actual_df, expected_df)
 
 
 def test_get_goal_number_rows():
@@ -50,7 +69,7 @@ def test_get_goal_number_rows():
     )
     excluded_df, actual_df = generate_label_sheet.get_goal_number_rows(input_df, "stratify_col", 5)
 
-    pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
+    pd.testing.assert_frame_equal(actual_df.sort_index(), expected_df)
 
 
 def test_get_goal_number_rows_many_unique():
@@ -71,7 +90,7 @@ def test_get_goal_number_rows_many_unique():
         index=[2, 1],
     )
     excluded_df, actual_df = generate_label_sheet.get_goal_number_rows(input_df, "stratify_col", 2)
-    pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
+    pd.testing.assert_frame_equal(actual_df, expected_df)
 
 
 def test_get_user_notes_object_df():
@@ -129,6 +148,46 @@ def test_create_new_account_labelling_sheet_df():
         index=[0, 2, 3],
     )
 
-    actual_df = generate_label_sheet.create_new_account_labelling_sheet_df(input_df)
+    actual_df = generate_label_sheet.create_account_labelling_dataframe(input_df)
 
-    pd.testing.assert_frame_equal(actual_df[1:], expected_df_after_first_row, check_like=True)
+    pd.testing.assert_frame_equal(actual_df[1:], expected_df_after_first_row)
+
+
+def test_create_new_account_labelling_sheet_df_no_notes():
+    input_df = pd.DataFrame(
+        {
+            "object_user_url": ["link_1", "link_1", "link_2", "link_3"],
+            "object_user_name": ["person_1", "person_1", "person_2", "person_3"],
+            "unimportant_column": ["foo", "bar", "baz", "bark"],
+        }
+    )
+
+    expected_df_after_first_row = pd.DataFrame(
+        {
+            "object_user_url": ["link_1", "link_2", "link_3"],
+            "object_user_name": ["person_1", "person_2", "person_3"],
+            "labelled_by": [None] * 3,
+            "account_label_1": [None] * 3,
+            "account_label_2": [None] * 3,
+            "account_label_3": [None] * 3,
+            "account_label_4": [None] * 3,
+            "account_label_5": [None] * 3,
+        },
+        columns=[
+            "object_user_url",
+            "object_user_name",
+            "labelled_by",
+            "account_label_1",
+            "account_label_2",
+            "account_label_3",
+            "account_label_4",
+            "account_label_5",
+        ],
+        index=[0, 2, 3],
+    )
+
+    actual_df = generate_label_sheet.create_account_labelling_dataframe(
+        input_df, with_user_notes=False
+    )
+
+    pd.testing.assert_frame_equal(actual_df, expected_df_after_first_row)
