@@ -208,6 +208,7 @@ def test_comments_for_tagging(processed_comments_df):
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_6-author_channel_id",
                 "object_user_name": "comment_6-author_display_name",
+                "object_parent_text": "comment_1-text_display-updated",
             },
             {
                 "object_id": "comment_id_5",
@@ -219,6 +220,7 @@ def test_comments_for_tagging(processed_comments_df):
                 "object_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_3",
                 "object_user_url": None,
                 "object_user_name": "comment_5-author_display_name",
+                "object_parent_text": "comment_3-text_display",
             },
             {
                 "object_id": "comment_id_4",
@@ -231,6 +233,7 @@ def test_comments_for_tagging(processed_comments_df):
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_4-author_channel_id",
                 "object_user_name": "comment_4-author_display_name",
+                "object_parent_text": "comment_3-text_display",
             },
             {
                 "object_id": "comment_id_3",
@@ -241,6 +244,7 @@ def test_comments_for_tagging(processed_comments_df):
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_3-author_channel_id",
                 "object_user_name": "comment_3-author_display_name",
+                "object_parent_text": None,
             },
             {
                 "object_id": "comment_id_1",
@@ -251,6 +255,7 @@ def test_comments_for_tagging(processed_comments_df):
                 "object_user_url": data_pull.constants.YOUTUBE_CHANNEL_URL
                 + "comment_1-author_channel_id",
                 "object_user_name": "comment_1-author_display_name",
+                "object_parent_text": None,
             },
         ],
         index=pd.Index(

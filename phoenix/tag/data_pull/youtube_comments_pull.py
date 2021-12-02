@@ -129,18 +129,31 @@ def for_tagging(given_df: pd.DataFrame):
     Return:
     dataframe  : pandas.DataFrame
     Index:
-        object_id: String, dtype: string
+        object_id: ID of object from source system/platform, dtype: string
     Columns:
-        object_id: String, dtype: string
-        text: String, dtype: string
-        object_type: "facebook_post", dtype: String
-        created_at: datetime
-        object_url: String, dtype: string
-        object_user_url: String, dtype: string
-        object_user_name: String, dtype: string
+        object_id: ID of object from source system/platform, dtype: string
+        text: Text content of the object, dtype: string
+        object_type: Type i.e. class of the object, dtype: String
+        created_at: Date time when object was created/posted dtype: datetime
+        object_url: URL to location of object, dtype: string
+        object_user_url: URL to creator/author of object, if available dtype: Optional[string]
+        object_user_name: User name of creator/author, dtype: string
+        object_parent_text: Text of the parent object, if applicable, dtype: Optional[string]
     """
     df = given_df.copy()
-    df = df.rename(columns={"id": "object_id", "published_at": "created_at"})
+    df = df.merge(
+        df[["id", "text"]].rename(columns={"id": "_id", "text": "parent_comment_text"}),
+        how="left",
+        left_on="parent_comment_id",
+        right_on="_id",
+    )
+    df = df.rename(
+        columns={
+            "id": "object_id",
+            "published_at": "created_at",
+            "parent_comment_text": "object_parent_text",
+        }
+    )
     df["object_type"] = constants.OBJECT_TYPE_YOUTUBE_COMMENT
     df["object_url"] = constants.YOUTUBE_VIDEOS_URL + df["video_id"]
     df["object_user_url"] = constants.YOUTUBE_CHANNEL_URL + df["author_channel_id"]
@@ -154,6 +167,7 @@ def for_tagging(given_df: pd.DataFrame):
             "object_url",
             "object_user_url",
             "object_user_name",
+            "object_parent_text",
         ]
     ]
     df = df.set_index("object_id", drop=False, verify_integrity=True)
