@@ -11,10 +11,19 @@ from phoenix.common.cli_modules import scrape_group, utils
 @click.argument("artifact_env")
 @click.argument("tenant_id")
 @click.argument("endpoint", nargs=1)
+@click.option(
+    "--scrape_since_days",
+    default=None,
+    help=(
+        "Number of days back from today you want to scrape."
+        " Will overwrite scrape_start_date and scrape_end_date."
+    ),
+)
 def youtube(
     artifact_env,
     tenant_id,
     endpoint,
+    scrape_since_days,
 ):
     """Run scrape of the youtube.
 
@@ -54,4 +63,6 @@ def youtube(
         **utils.init_parameters(cur_run_params),
         **extra_parameters,
     }
+    if scrape_since_days:
+        parameters["SCRAPE_SINCE_DAYS"] = scrape_since_days
     utils.run_notebooks(input_nb_url, output_nb_url, parameters)
