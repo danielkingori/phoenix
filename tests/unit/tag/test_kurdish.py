@@ -35,7 +35,7 @@ def test_sorani_tokenize():
     """Test Sorani tokenization."""
     input_doc = "لە ساڵەکانی 1950دا"
     output_tokens = kurdish.sorani_tokenize(input_doc)
-    assert ["▁لە▁", "▁ساڵ▁ەکان▁ی", "1950دا"] == output_tokens
+    assert ["لە", "ساڵەکانی", "1950دا"] == output_tokens
 
 
 def test_kurmanji_tokenize():
@@ -45,12 +45,12 @@ def test_kurmanji_tokenize():
     assert [
         "Min",
         "nizanibû",
-        "▁ku▁",
-        "▁min▁",
+        "ku",
+        "min",
         "dizanibû",
-        "▁ku▁",
-        "▁min▁",
-        "▁ew▁",
+        "ku",
+        "min",
+        "ew",
         "nizanibû",
         ".",
     ] == output_tokens

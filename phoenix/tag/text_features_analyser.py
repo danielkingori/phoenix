@@ -209,6 +209,7 @@ def create(ngram_ranges: List[Tuple[int, int]] = [(1, 3)], use_ngrams=True):
         },
         "ckb": {
             "stemmer": kurdish.SoraniStemmer(),
+            "stop_words": kurdish.sorani_stopwords,
             "preprocessor": kurdish.sorani_preprocess,
             "tokenizer": kurdish.sorani_tokenize,
             "encoding": "utf-8",
@@ -216,6 +217,7 @@ def create(ngram_ranges: List[Tuple[int, int]] = [(1, 3)], use_ngrams=True):
         },
         "ku": {
             "stemmer": kurdish.KurmanjiStemmer(),
+            "stop_words": kurdish.kurmanji_stopwords,
             "preprocessor": kurdish.kurmanji_preprocess,
             "tokenizer": kurdish.kurmanji_tokenize,
             "encoding": "utf-8",

@@ -137,27 +137,20 @@ def test_TextFeaturesAnalyser_kurdish():
     """Test analysing Kurdish."""
     df_test = pd.DataFrame(
         [
-            ("1", "Min nizanibû ku min", "ku"),
-            ("1", "لە ســـاڵەکانی ١٩٥٠دا", "ckb"),
+            ("1", "Min nizanibû a ku bin min", "ku"),
+            ("1", "لە ســـاڵەکانی ١٩٥٠دا یان", "ckb"),
         ],
         columns=["id", "clean_text", "language"],
     )
     text_analyser = tfa.create(ngram_ranges=[(1, 2)])
     df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
 
-    kurmanji_feats = [
-        "Min",
-        "nizanibû",
-        "▁ku▁",
-        "▁min▁",
-        "Min nizanibû",
-        "nizanibû ▁ku▁",
-        "▁ku▁ ▁min▁",
-    ]
-    sorani_feats = ["▁لە▁", "▁ساڵ▁ەکان▁ی", "1950دا", "▁لە▁ ▁ساڵ▁ەکان▁ی", "▁ساڵ▁ەکان▁ی 1950دا"]
+    kurmanji_feats = ["Min", "nizanibû", "Min nizanibû"]
 
-    df_test["features"][0] == kurmanji_feats
-    df_test["features"][1] == sorani_feats
+    sorani_feats = ["ساڵەکانی", "1950دا", "ساڵەکانی 1950دا"]
+
+    assert df_test["features"][0] == kurmanji_feats
+    assert df_test["features"][1] == sorani_feats
 
 
 def test_TextFeaturesAnalyser_features_no_ngrams():
