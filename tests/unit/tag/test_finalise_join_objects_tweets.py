@@ -54,9 +54,9 @@ def test_join_object_to_tweets(
 ):
     """Test the join of objects to tweets."""
     result_df = finalise.join_objects_to_tweets(
-        tweets=tweets_for_join,
-        objects=objects_for_join,
-        language_sentiment_objects=language_sentiment_objects_for_join,
+        tweets_df=tweets_for_join,
+        objects_df=objects_for_join,
+        language_sentiment_objects_df=language_sentiment_objects_for_join,
     )
     pd.testing.assert_frame_equal(
         result_df,
@@ -83,8 +83,8 @@ def test_join_object_to_tweets_none_objects_to_join(
 ):
     """Test the join of objects to facebook posts."""
     result_df = finalise.join_objects_to_tweets(
-        tweets=tweets_for_join,
-        language_sentiment_objects=language_sentiment_objects_for_join,
+        tweets_df=tweets_for_join,
+        language_sentiment_objects_df=language_sentiment_objects_for_join,
     )
     pd.testing.assert_frame_equal(
         result_df,
@@ -107,8 +107,8 @@ def test_join_object_to_tweets_none_objects_to_join(
 def test_join_object_to_tweets_none_langauge_sentiment_objects(tweets_for_join, objects_for_join):
     """Test the join of objects to facebook posts."""
     result_df = finalise.join_objects_to_tweets(
-        tweets=tweets_for_join,
-        objects=objects_for_join,
+        tweets_df=tweets_for_join,
+        objects_df=objects_for_join,
     )
     pd.testing.assert_frame_equal(
         result_df,
@@ -128,7 +128,7 @@ def test_join_object_to_tweets_none_langauge_sentiment_objects(tweets_for_join, 
 def test_join_object_to_tweets_none(tweets_for_join):
     """Test the join of objects to tweets."""
     result_df = finalise.join_objects_to_tweets(
-        tweets=tweets_for_join,
+        tweets_df=tweets_for_join,
     )
     pd.testing.assert_frame_equal(
         result_df,

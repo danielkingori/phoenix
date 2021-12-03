@@ -43,41 +43,41 @@ PARTITION_COLUMNS_TO_DROP = [
 
 
 def join_to_objects_and_language_sentiment(
-    to_join: pd.DataFrame,
-    objects: Optional[pd.DataFrame] = None,
-    language_sentiment_objects: Optional[pd.DataFrame] = None,
+    df: pd.DataFrame,
+    objects_df: Optional[pd.DataFrame] = None,
+    language_sentiment_objects_df: Optional[pd.DataFrame] = None,
 ):
-    """Generalised join of objects and language_sentiment_objects to a final dataframe."""
-    if objects is None and language_sentiment_objects is not None:
-        language_sentiment_objects = language_sentiment_objects.set_index("object_id")
-        return to_join.join(
-            language_sentiment_objects[LANGUAGE_SENTIMENT_COLUMNS], rsuffix="_objects"
+    """Generalised join of objects_df and language_sentiment_objects_df to a final dataframe."""
+    if objects_df is None and language_sentiment_objects_df is not None:
+        language_sentiment_objects_df = language_sentiment_objects_df.set_index("object_id")
+        return df.join(
+            language_sentiment_objects_df[LANGUAGE_SENTIMENT_COLUMNS], rsuffix="_objects"
         )
 
-    if objects is not None:
-        objects = objects.set_index("object_id")
+    if objects_df is not None:
+        objects_df = objects_df.set_index("object_id")
 
-    if objects is not None and language_sentiment_objects is not None:
-        language_sentiment_objects = language_sentiment_objects.set_index("object_id")
-        objects = objects.join(language_sentiment_objects[LANGUAGE_SENTIMENT_COLUMNS])
+    if objects_df is not None and language_sentiment_objects_df is not None:
+        language_sentiment_objects_df = language_sentiment_objects_df.set_index("object_id")
+        objects_df = objects_df.join(language_sentiment_objects_df[LANGUAGE_SENTIMENT_COLUMNS])
 
-    if objects is not None:
-        return to_join.join(objects, rsuffix="_objects")
+    if objects_df is not None:
+        return df.join(objects_df, rsuffix="_objects_df")
 
-    return to_join
+    return df
 
 
 def join_objects_to_facebook_posts(
-    facebook_posts,
-    objects: Optional[pd.DataFrame] = None,
-    language_sentiment_objects: Optional[pd.DataFrame] = None,
+    facebook_posts_df: pd.DataFrame,
+    objects_df: Optional[pd.DataFrame] = None,
+    language_sentiment_objects_df: Optional[pd.DataFrame] = None,
 ):
-    """Join the objects to the facebook_posts."""
-    facebook_posts["object_id"] = facebook_posts["phoenix_post_id"].astype(str)
-    facebook_posts = facebook_posts.set_index("object_id")
-    facebook_posts = facebook_posts.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
+    """Join the objects_df to the facebook_posts."""
+    facebook_posts_df["object_id"] = facebook_posts_df["phoenix_post_id"].astype(str)
+    facebook_posts_df = facebook_posts_df.set_index("object_id")
+    facebook_posts_df = facebook_posts_df.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
     return join_to_objects_and_language_sentiment(
-        facebook_posts, objects, language_sentiment_objects
+        facebook_posts_df, objects_df, language_sentiment_objects_df
     )
 
 
@@ -92,17 +92,19 @@ def join_objects_to_facebook_comments(objects, language_sentiment_objects, faceb
 
 
 def join_objects_to_tweets(
-    tweets: pd.DataFrame,
-    objects: Optional[pd.DataFrame] = None,
-    language_sentiment_objects: Optional[pd.DataFrame] = None,
+    tweets_df: pd.DataFrame,
+    objects_df: Optional[pd.DataFrame] = None,
+    language_sentiment_objects_df: Optional[pd.DataFrame] = None,
 ):
-    """Join the objects to the tweets."""
-    tweets["object_id"] = tweets["id_str"].astype(str)
-    tweets = tweets.set_index("object_id")
-    tweets = tweets.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
-    if objects is not None:
-        objects = objects.drop(columns=["retweeted", "text", "language_from_api"])
-    return join_to_objects_and_language_sentiment(tweets, objects, language_sentiment_objects)
+    """Join the objects_df to the tweets_df."""
+    tweets_df["object_id"] = tweets_df["id_str"].astype(str)
+    tweets_df = tweets_df.set_index("object_id")
+    tweets_df = tweets_df.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
+    if objects_df is not None:
+        objects_df = objects_df.drop(columns=["retweeted", "text", "language_from_api"])
+    return join_to_objects_and_language_sentiment(
+        tweets_df, objects_df, language_sentiment_objects_df
+    )
 
 
 def join_topics_to_facebook_posts(topics, facebook_posts):

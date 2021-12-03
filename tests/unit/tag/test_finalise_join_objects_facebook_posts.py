@@ -51,9 +51,9 @@ def test_join_object_to_facebook_posts(
 ):
     """Test the join of objects to facebook posts."""
     result_df = finalise.join_objects_to_facebook_posts(
-        facebook_posts=facebook_posts_for_join,
-        objects=objects_for_join,
-        language_sentiment_objects=language_sentiment_objects_for_join,
+        facebook_posts_df=facebook_posts_for_join,
+        objects_df=objects_for_join,
+        language_sentiment_objects_df=language_sentiment_objects_for_join,
     )
     pd.testing.assert_frame_equal(
         result_df,
@@ -80,8 +80,8 @@ def test_join_object_to_facebook_posts_none_objects(
 ):
     """Test the join of objects to facebook posts."""
     result_df = finalise.join_objects_to_facebook_posts(
-        facebook_posts=facebook_posts_for_join,
-        language_sentiment_objects=language_sentiment_objects_for_join,
+        facebook_posts_df=facebook_posts_for_join,
+        language_sentiment_objects_df=language_sentiment_objects_for_join,
     )
     pd.testing.assert_frame_equal(
         result_df,
@@ -106,8 +106,8 @@ def test_join_object_to_facebook_posts_none_langauge_sentiment_objects(
 ):
     """Test the join of objects to facebook posts."""
     result_df = finalise.join_objects_to_facebook_posts(
-        facebook_posts=facebook_posts_for_join,
-        objects=objects_for_join,
+        facebook_posts_df=facebook_posts_for_join,
+        objects_df=objects_for_join,
     )
     pd.testing.assert_frame_equal(
         result_df,
@@ -127,7 +127,7 @@ def test_join_object_to_facebook_posts_none_langauge_sentiment_objects(
 def test_join_object_to_facebook_posts_none(facebook_posts_for_join):
     """Test the join of objects to facebook posts."""
     result_df = finalise.join_objects_to_facebook_posts(
-        facebook_posts=facebook_posts_for_join,
+        facebook_posts_df=facebook_posts_for_join,
     )
     pd.testing.assert_frame_equal(
         result_df,
