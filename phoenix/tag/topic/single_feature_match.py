@@ -2,7 +2,7 @@
 import pandas as pd
 
 
-FILL_TOPIC = "other"
+FILL_TOPIC = "irrelevant"
 
 
 def get_topics(topic_config, features_df) -> pd.DataFrame:
