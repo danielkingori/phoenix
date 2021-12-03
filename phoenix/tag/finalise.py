@@ -107,30 +107,38 @@ def join_objects_to_tweets(
     )
 
 
-def join_to_topics(df: pd.DataFrame, topics_df: pd.DataFrame):
+def join_to_topics(df: pd.DataFrame, topics_df: pd.DataFrame, rename_topic_to_class: bool = False):
     """Join a dataframe with `object_id` to topics_df.
 
     Arg:
         df: a dataframe with "object_id" as the index
         topics_df: topics dataframe schema: docs/schemas/topics.md
+        rename_topic_to_class (boolean): if the `topic` column is renamed to `class`.
+            Default is False
 
     Returns:
         Add dataframe with each object in the df repeated for each topic.
     """
     topics_df = topics_df[TOPICS_COLUMNS]
+    if rename_topic_to_class:
+        topics_df = topics_df.rename(columns={"has_topic": "has_class", "topic": "class"})
     topics_df = topics_df.set_index("object_id")
     result_df = topics_df.join(df, how="right")
     return result_df.reset_index()
 
 
 def join_topics_to_facebook_posts(
-    topics_df: pd.DataFrame, facebook_posts_df: pd.DataFrame
+    topics_df: pd.DataFrame,
+    facebook_posts_df: pd.DataFrame,
+    rename_topic_to_class: bool = False,
 ) -> pd.DataFrame:
     """Join the topics to the facebook_posts.
 
     Args:
         topics_df: topics dataframe schema: docs/schemas/topics.md
         facebook_posts_df: facebook posts dataframe.
+        rename_topic_to_class (boolean): if the `topic` column is renamed to `class`.
+            Default is False
 
     Returns:
         A dataframe that is the cross product of topic and facebook posts:
@@ -139,15 +147,21 @@ def join_topics_to_facebook_posts(
     facebook_posts_df = facebook_posts_df.copy()
     facebook_posts_df["object_id"] = facebook_posts_df["phoenix_post_id"].astype(str)
     facebook_posts_df = facebook_posts_df.set_index("object_id")
-    return join_to_topics(facebook_posts_df, topics_df)
+    return join_to_topics(facebook_posts_df, topics_df, rename_topic_to_class)
 
 
-def join_topics_to_tweets(topics_df: pd.DataFrame, tweets_df: pd.DataFrame) -> pd.DataFrame:
+def join_topics_to_tweets(
+    topics_df: pd.DataFrame,
+    tweets_df: pd.DataFrame,
+    rename_topic_to_class: bool = False,
+) -> pd.DataFrame:
     """Join the topics to the tweets.
 
     Args:
         topics_df: topics dataframe schema: docs/schemas/topics.md
         tweets_df: tweets dataframe.
+        rename_topic_to_class (boolean): if the `topic` column is renamed to `class`.
+            Default is False
 
     Returns:
         A dataframe that is the cross product of topic and tweets:
@@ -157,17 +171,21 @@ def join_topics_to_tweets(topics_df: pd.DataFrame, tweets_df: pd.DataFrame) -> p
     tweets_df["object_id"] = tweets_df["id_str"].astype(str)
     tweets_df = tweets_df.set_index("object_id")
     tweets_df = tweets_df.drop(columns=["retweeted"])
-    return join_to_topics(tweets_df, topics_df)
+    return join_to_topics(tweets_df, topics_df, rename_topic_to_class)
 
 
 def join_topics_to_facebook_comments(
-    topics_df: pd.DataFrame, facebook_comments_df: pd.DataFrame
+    topics_df: pd.DataFrame,
+    facebook_comments_df: pd.DataFrame,
+    rename_topic_to_class: bool = False,
 ) -> pd.DataFrame:
     """Join the topics to the facebook comments.
 
     Args:
         topics_df: topics dataframe schema: docs/schemas/topics.md
         tweets_df: facebook comments dataframe.
+        rename_topic_to_class (boolean): if the `topic` column is renamed to `class`.
+            Default is False
 
     Returns:
         A dataframe that is the cross product of topic and facebook_comments:
@@ -176,7 +194,7 @@ def join_topics_to_facebook_comments(
     facebook_comments_df = facebook_comments_df.copy()
     facebook_comments_df["object_id"] = facebook_comments_df["id"].astype(str)
     facebook_comments_df = facebook_comments_df.set_index("object_id")
-    return join_to_topics(facebook_comments_df, topics_df)
+    return join_to_topics(facebook_comments_df, topics_df, rename_topic_to_class)
 
 
 def inherit_facebook_comment_topics_from_facebook_posts_topics_df(
