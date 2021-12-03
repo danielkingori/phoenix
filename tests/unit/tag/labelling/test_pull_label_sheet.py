@@ -276,3 +276,44 @@ def test_clean_feature_to_label_df():
     actual_df = pull_label_sheet.clean_feature_to_label_df(input_df)
 
     pd.testing.assert_frame_equal(actual_df, expected_df)
+
+
+def test_extract_labelled_examples_with_no_feature():
+    """Test that labelled examples with no feature are extracted from the feature_to_label_df."""
+    input_df = pd.DataFrame(
+        data={
+            "object_id": ["id_1", "id_1", "id_2", "id_2", "id_3"],
+            "class": [
+                "doubly_filled_in_class_user_error",
+                "doubly_filled_in_class_user_error",
+                "cat",
+                "animal",
+                "animal",
+            ],
+            "unprocessed_features": ["", "", "meow", "", "eukaryote"],
+            "text": [
+                "furry best friend",
+                "furry best friend",
+                "i go meow",
+                "i go meow",
+                "eukaryotes without cell walls",
+            ],
+            "language": ["en"] * 5,
+            "language_confidence": [0.95] * 5,
+            "columns_that_do_not_matter": ["processed_features", "status", "and", "other", "cols"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        data={
+            "object_id": ["id_1", "id_2"],
+            "class": ["doubly_filled_in_class_user_error", "animal"],
+            "text": ["furry best friend", "i go meow"],
+            "language": ["en"] * 2,
+            "language_confidence": [0.95] * 2,
+        },
+        index=[0, 3],
+    )
+
+    actual_df = pull_label_sheet.extract_labelled_examples_with_no_feature(input_df)
+    pd.testing.assert_frame_equal(actual_df, expected_df)

@@ -68,13 +68,34 @@ def extract_features_to_label_mapping_objects(
         " ".join(map(str, str_list)) for str_list in feature_to_label_df["processed_features"]
     ]
 
+    examples_labelled_with_no_feature_df = extract_labelled_examples_with_no_feature(
+        feature_to_label_df
+    )
+
+    feature_to_label_df = clean_feature_to_label_df(feature_to_label_df)
+
+    return feature_to_label_df, examples_labelled_with_no_feature_df
+
+
+def extract_labelled_examples_with_no_feature(feature_to_label_df) -> pd.DataFrame:
+    """Extracts the labelled examples that do not have features associated with the label.
+
+    Args:
+        feature_to_label_df (pd.DataFrame): has examples with the unprocessed_features column
+            denoting features that a user associates with that label. If empty it is an example
+            with no feature.
+
+    Returns:
+        pd.DataFrame: dataframe with each row being an example with a label, but no feature.
+
+    """
     feature_to_label_df["unprocessed_features"] = feature_to_label_df[
         "unprocessed_features"
     ].replace(r"^\s*$", np.nan, regex=True)
-    label_with_no_feature_df = feature_to_label_df[
+    examples_labelled_with_no_feature_df = feature_to_label_df[
         feature_to_label_df["unprocessed_features"].isna()
     ].fillna("")
-    label_with_no_feature_df = label_with_no_feature_df[
+    examples_labelled_with_no_feature_df = examples_labelled_with_no_feature_df[
         [
             "object_id",
             "class",
@@ -83,9 +104,7 @@ def extract_features_to_label_mapping_objects(
             "language_confidence",
         ]
     ].drop_duplicates(subset=["object_id", "class"])
-    feature_to_label_df = clean_feature_to_label_df(feature_to_label_df)
-
-    return feature_to_label_df, label_with_no_feature_df
+    return examples_labelled_with_no_feature_df
 
 
 def clean_feature_to_label_df(feature_to_label_df: pd.DataFrame) -> pd.DataFrame:
