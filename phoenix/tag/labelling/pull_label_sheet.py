@@ -194,7 +194,10 @@ def compute_sflm_statistics(
     """
     labels_cols: List[str] = [f"label_{x}" for x in range(1, 5)]
 
-    sflm = single_feature_to_label_mapping_df[["class", "processed_features"]].drop_duplicates()
+    sflm = single_feature_to_label_mapping_df[
+        ["class", "processed_features", "unprocessed_features", "status"]
+    ].drop_duplicates()
+    sflm = sflm[sflm["status"] == "active"]
     df = sflm["class"].value_counts().reset_index()
     df = df.rename(columns={"class": "num_features", "index": "class"})
     df = df.sort_values(by="class").reset_index(drop=True)
