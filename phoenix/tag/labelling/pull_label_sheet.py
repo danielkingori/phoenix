@@ -1,5 +1,5 @@
 """Pull the labelling sheet with human-annotated labels."""
-from typing import Tuple
+from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -192,15 +192,18 @@ def compute_sflm_statistics(
     Note that naming of input vars are chosen to match var names within
     pull_objects_labelling.ipynb.
     """
+    labels_cols: List[str] = [f"label_{x}" for x in range(1, 5)]
+
     sflm = single_feature_to_label_mapping_df[["class", "processed_features"]].drop_duplicates()
     df = sflm["class"].value_counts().reset_index()
     df = df.rename(columns={"class": "num_features", "index": "class"})
     df = df.sort_values(by="class").reset_index(drop=True)
 
-    labels_df = labelled_objects_df.iloc[1:][["object_id"] + [f"label_{x}" for x in range(1, 5)]]
-    labels_df = pd.melt(
-        labels_df, id_vars=["object_id"], value_vars=[f"label_{x}" for x in range(1, 5)]
-    )
+    for col in labels_cols:
+        labelled_objects_df[col] = labelled_objects_df[col].str.lower().str.strip()
+
+    labels_df = labelled_objects_df.iloc[1:][["object_id"] + labels_cols]
+    labels_df = pd.melt(labels_df, id_vars=["object_id"], value_vars=labels_cols)
     num_objects_labelled = (
         labels_df["value"]
         .value_counts()

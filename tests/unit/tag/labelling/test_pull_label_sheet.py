@@ -86,7 +86,7 @@ def labelled_data() -> pd.DataFrame:
                 "alive، eukaryotic",
                 None,
             ],
-            "label_2": ["note to user about label_2", "animal", "animal", None, None],
+            "label_2": ["note to user about label_2", "animal", "Animal", None, None],
             "label_2_features": [
                 "note to user about label_2_features",
                 "speaks woof,bark",
