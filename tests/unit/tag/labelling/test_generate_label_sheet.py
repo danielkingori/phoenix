@@ -34,6 +34,23 @@ def test_create_new_labelling_sheet():
     pd.testing.assert_frame_equal(actual_df[1:], expected_df)
 
 
+def test_create_new_labelling_sheet_cast_text_str():
+    """Test that input objects with `text` that is not of string type are cast to string."""
+    df = pd.DataFrame(
+        {
+            "object_id": ["id_1", "id_2"],
+            "text": ["text_1", 10],
+            "column_to_be_ignore": ["wrong_text_1", "wrong_text_2"],
+        }
+    )
+    expected_df = pd.DataFrame(
+        {"object_id": ["id_1", "id_2"], "text": ["text_1", "10"]},
+        columns=generate_label_sheet.EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
+    )
+    actual_df = generate_label_sheet.create_object_labelling_df(df)
+    pd.testing.assert_frame_equal(actual_df[1:], expected_df)
+
+
 def test_create_new_labeling_sheet_without_notes():
     df = pd.DataFrame(
         {

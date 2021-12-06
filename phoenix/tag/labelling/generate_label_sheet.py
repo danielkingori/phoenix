@@ -63,6 +63,8 @@ def create_object_labelling_df(
         user_notes_df = get_user_notes_object_df()
         for_tag_df = user_notes_df.append(for_tag_df)
 
+    for_tag_df["text"] = for_tag_df["text"].astype(str)
+
     return for_tag_df
 
 
