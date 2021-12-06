@@ -1,5 +1,5 @@
 """Pull the labelling sheet with human-annotated labels."""
-from typing import Tuple
+from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -182,3 +182,54 @@ def wide_to_long_labels_features(df: pd.DataFrame) -> pd.DataFrame:
     df_labels["class"] = df_labels["class"].str.lower()
 
     return df_labels
+
+
+def compute_sflm_statistics(
+    labelled_objects_df: pd.DataFrame, single_feature_to_label_mapping_df: pd.DataFrame
+) -> pd.DataFrame:
+    """Compute counts on various salient aspects of manually labelled data and resultant SFLM.
+
+    Note that naming of input vars are chosen to match var names within
+    pull_objects_labelling.ipynb.
+    """
+    labels_cols: List[str] = [f"label_{x}" for x in range(1, 5)]
+
+    sflm = single_feature_to_label_mapping_df[
+        ["class", "processed_features", "unprocessed_features", "status"]
+    ].drop_duplicates()
+    sflm = sflm[sflm["status"] == "active"]
+    df = sflm["class"].value_counts().reset_index()
+    df = df.rename(columns={"class": "num_features", "index": "class"})
+    df = df.sort_values(by="class").reset_index(drop=True)
+
+    for col in labels_cols:
+        labelled_objects_df[col] = labelled_objects_df[col].str.lower().str.strip()
+
+    labels_df = labelled_objects_df.iloc[1:][["object_id"] + labels_cols]
+    labels_df = pd.melt(labels_df, id_vars=["object_id"], value_vars=labels_cols)
+    num_objects_labelled = (
+        labels_df["value"]
+        .value_counts()
+        .reset_index()
+        .rename(columns={"index": "class", "value": "num_objects_labelled"})
+    )
+
+    df = df.merge(num_objects_labelled, on="class", how="outer").fillna(0)
+
+    _, labels_no_features_df = extract_features_to_label_mapping_objects(labelled_objects_df)
+    num_objects_no_features = (
+        labels_no_features_df.groupby("class")
+        .size()
+        .to_frame("num_objects_no_features")
+        .reset_index()
+    )
+
+    df = df.merge(num_objects_no_features, on="class", how="outer").fillna(0)
+
+    df["num_features"] = df["num_features"].astype(int)
+    df["num_objects_labelled"] = df["num_objects_labelled"].astype(int)
+    df["num_objects_no_features"] = df["num_objects_no_features"].astype(int)
+
+    df["num_objects_with_features"] = df["num_objects_labelled"] - df["num_objects_no_features"]
+
+    return df

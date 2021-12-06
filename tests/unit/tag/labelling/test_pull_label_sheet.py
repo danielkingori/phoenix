@@ -2,6 +2,7 @@
 import mock
 import numpy as np
 import pandas as pd
+import pytest
 
 from phoenix.tag.labelling import pull_label_sheet
 from phoenix.tag.labelling.generate_label_sheet import EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET
@@ -63,38 +64,46 @@ def test_wide_to_long_labels_features():
     pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
 
 
-@mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
-def test_extract_features_to_label_mapping(mock_execute):
-    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 8)
-    input_df = pd.DataFrame(
+@pytest.fixture
+def labelled_data() -> pd.DataFrame:
+    """Manually labelled data."""
+    df = pd.DataFrame(
         {
-            "object_id": ["note to user about the object_id", "id_1", "id_2", "id_3"],
+            "object_id": ["note to user about the object_id", "id_1", "id_2", "id_3", "id_4"],
             "text": [
                 "note to user about the text",
                 "this thing speaks woof and bark\n\n\nbark",
                 "this goes meow",
                 "this is alive eukaryotic",
+                "a bug",
             ],
-            "label_1": ["note to user about label_1", "dog", "cat", "animal"],
+            "label_1": ["note to user about label_1", "dog", "cat", "animal", "insect"],
             "label_1_features": [
                 "note to user about label_1_features",
                 "speaks woof,bark",
                 "meow",
                 # the following line contains the arabic comma "،"
                 "alive، eukaryotic",
+                None,
             ],
-            "label_2": ["note to user about label_2", "animal", "animal", None],
+            "label_2": ["note to user about label_2", "animal", "Animal", None, None],
             "label_2_features": [
                 "note to user about label_2_features",
                 "speaks woof,bark",
+                None,
                 None,
                 None,
             ],
         },
         columns=EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
     )
+    return df
 
-    expected_df = pd.DataFrame(
+
+@pytest.fixture
+def single_feature_to_label_mapping() -> pd.DataFrame:
+    """Single feature to label mapping df that corresponds to labelled data fixture."""
+    df = pd.DataFrame(
         {
             "object_id": ["id_1", "id_1", "id_1", "id_1", "id_2", "id_3", "id_3"],
             "class": ["dog", "dog", "animal", "animal", "cat", "animal", "animal"],
@@ -132,12 +141,39 @@ def test_extract_features_to_label_mapping(mock_execute):
             "status",
         ],
     )
+    return df
 
-    actual_df, _ = pull_label_sheet.extract_features_to_label_mapping_objects(input_df)
+
+def test_compute_sflm_statistics(labelled_data, single_feature_to_label_mapping):
+    """Test computing statistics for sflm."""
+    sflm_statistics_df = pull_label_sheet.compute_sflm_statistics(
+        labelled_data, single_feature_to_label_mapping
+    )
+    expected_df = pd.DataFrame(
+        {
+            "class": ["animal", "cat", "dog", "insect"],
+            "num_features": [4, 1, 2, 0],
+            "num_objects_labelled": [3, 1, 1, 1],
+            "num_objects_no_features": [1, 0, 0, 1],
+            "num_objects_with_features": [2, 1, 1, 0],
+        }
+    )
+    pd.testing.assert_frame_equal(sflm_statistics_df, expected_df)
+
+
+@mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
+def test_extract_features_to_label_mapping(
+    mock_execute, labelled_data, single_feature_to_label_mapping
+):
+    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 9)
+
+    actual_df, _ = pull_label_sheet.extract_features_to_label_mapping_objects(labelled_data)
 
     pd.testing.assert_frame_equal(
         actual_df.sort_values(by=["object_id", "class"]).reset_index(drop=True),
-        expected_df.sort_values(by=["object_id", "class"]).reset_index(drop=True),
+        single_feature_to_label_mapping.sort_values(by=["object_id", "class"]).reset_index(
+            drop=True
+        ),
     )
 
 
