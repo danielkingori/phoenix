@@ -155,6 +155,7 @@ def test_compute_sflm_statistics(labelled_data, single_feature_to_label_mapping)
             "num_features": [4, 1, 2, 0],
             "num_objects_labelled": [3, 1, 1, 1],
             "num_objects_no_features": [1, 0, 0, 1],
+            "num_objects_with_features": [2, 1, 1, 0],
         }
     )
     pd.testing.assert_frame_equal(sflm_statistics_df, expected_df)

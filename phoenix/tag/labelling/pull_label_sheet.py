@@ -224,4 +224,6 @@ def compute_sflm_statistics(
     df["num_objects_labelled"] = df["num_objects_labelled"].astype(int)
     df["num_objects_no_features"] = df["num_objects_no_features"].astype(int)
 
+    df["num_objects_with_features"] = df["num_objects_labelled"] - df["num_objects_no_features"]
+
     return df
