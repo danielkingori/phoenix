@@ -2,6 +2,7 @@
 import mock
 import numpy as np
 import pandas as pd
+import pytest
 
 from phoenix.tag.labelling import pull_label_sheet
 from phoenix.tag.labelling.generate_label_sheet import EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET
@@ -63,10 +64,10 @@ def test_wide_to_long_labels_features():
     pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
 
 
-@mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
-def test_extract_features_to_label_mapping(mock_execute):
-    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 8)
-    input_df = pd.DataFrame(
+@pytest.fixture
+def labelled_data() -> pd.DataFrame:
+    """Manually labelled data."""
+    df = pd.DataFrame(
         {
             "object_id": ["note to user about the object_id", "id_1", "id_2", "id_3"],
             "text": [
@@ -93,8 +94,13 @@ def test_extract_features_to_label_mapping(mock_execute):
         },
         columns=EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
     )
+    return df
 
-    expected_df = pd.DataFrame(
+
+@pytest.fixture
+def single_feature_to_label_mapping() -> pd.DataFrame:
+    """Single feature to label mapping df that corresponds to labelled data fixture."""
+    df = pd.DataFrame(
         {
             "object_id": ["id_1", "id_1", "id_1", "id_1", "id_2", "id_3", "id_3"],
             "class": ["dog", "dog", "animal", "animal", "cat", "animal", "animal"],
@@ -132,12 +138,22 @@ def test_extract_features_to_label_mapping(mock_execute):
             "status",
         ],
     )
+    return df
 
-    actual_df, _ = pull_label_sheet.extract_features_to_label_mapping_objects(input_df)
+
+@mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
+def test_extract_features_to_label_mapping(
+    mock_execute, labelled_data, single_feature_to_label_mapping
+):
+    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 8)
+
+    actual_df, _ = pull_label_sheet.extract_features_to_label_mapping_objects(labelled_data)
 
     pd.testing.assert_frame_equal(
         actual_df.sort_values(by=["object_id", "class"]).reset_index(drop=True),
-        expected_df.sort_values(by=["object_id", "class"]).reset_index(drop=True),
+        single_feature_to_label_mapping.sort_values(by=["object_id", "class"]).reset_index(
+            drop=True
+        ),
     )
 
 
