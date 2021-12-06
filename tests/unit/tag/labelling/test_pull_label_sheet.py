@@ -1,5 +1,6 @@
 """Test pull_label_sheet."""
 import mock
+import numpy as np
 import pandas as pd
 
 from phoenix.tag.labelling import pull_label_sheet
@@ -20,7 +21,7 @@ def test_wide_to_long_labels_features():
     input_df = pd.DataFrame(
         {
             "object_id": ["id_1", "id_2", "id_3"],
-            "label_1": ["dog", "cat", "animal"],
+            "label_1": ["       dog", "cat        ", "Animal\n"],
             "label_1_features": ["speaks woof,bark", "meow", "alive"],
             "label_2": ["animal", "animal", None],
             "label_2_features": ["speaks woof,bark", None, None],
@@ -64,22 +65,23 @@ def test_wide_to_long_labels_features():
 
 @mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
 def test_extract_features_to_label_mapping(mock_execute):
-    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 7)
+    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 8)
     input_df = pd.DataFrame(
         {
             "object_id": ["note to user about the object_id", "id_1", "id_2", "id_3"],
             "text": [
                 "note to user about the text",
-                "this thing speaks woof and bark",
+                "this thing speaks woof and bark\n\n\nbark",
                 "this goes meow",
-                "this is alive",
+                "this is alive eukaryotic",
             ],
             "label_1": ["note to user about label_1", "dog", "cat", "animal"],
             "label_1_features": [
                 "note to user about label_1_features",
                 "speaks woof,bark",
                 "meow",
-                "alive",
+                # the following line contains the arabic comma "،"
+                "alive، eukaryotic",
             ],
             "label_2": ["note to user about label_2", "animal", "animal", None],
             "label_2_features": [
@@ -94,8 +96,8 @@ def test_extract_features_to_label_mapping(mock_execute):
 
     expected_df = pd.DataFrame(
         {
-            "object_id": ["id_1", "id_1", "id_1", "id_1", "id_2", "id_3"],
-            "class": ["dog", "dog", "animal", "animal", "cat", "animal"],
+            "object_id": ["id_1", "id_1", "id_1", "id_1", "id_2", "id_3", "id_3"],
+            "class": ["dog", "dog", "animal", "animal", "cat", "animal", "animal"],
             "unprocessed_features": [
                 "speaks woof",
                 "bark",
@@ -103,12 +105,21 @@ def test_extract_features_to_label_mapping(mock_execute):
                 "bark",
                 "meow",
                 "alive",
+                "eukaryotic",
             ],
-            "language": ["en"] * 6,
-            "language_confidence": [99.5] * 6,
-            "processed_features": ["speak woof", "bark", "speak woof", "bark", "meow", "aliv"],
-            "use_processed_features": [True] * 6,
-            "status": ["active"] * 6,
+            "language": ["en"] * 7,
+            "language_confidence": [99.5] * 7,
+            "processed_features": [
+                "speak woof",
+                "bark",
+                "speak woof",
+                "bark",
+                "meow",
+                "aliv",
+                "eukaryot",
+            ],
+            "use_processed_features": [False] * 7,
+            "status": ["active"] * 7,
         },
         columns=[
             "object_id",
@@ -132,7 +143,7 @@ def test_extract_features_to_label_mapping(mock_execute):
 
 @mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
 def test_extract_features_to_label_mapping_no_features(mock_execute):
-    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 7)
+    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 8)
     input_df = pd.DataFrame(
         {
             "object_id": ["note to user about the object_id", "id_1", "id_2", "id_3"],
@@ -156,6 +167,7 @@ def test_extract_features_to_label_mapping_no_features(mock_execute):
                 None,
                 None,
             ],
+            "label_3": ["note to user about label_3", None, "animal", None],
         },
         columns=EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
     )
@@ -164,24 +176,16 @@ def test_extract_features_to_label_mapping_no_features(mock_execute):
         {
             "object_id": ["id_2"],
             "class": ["animal"],
-            "unprocessed_features": [""],
             "text": ["this goes meow"],
             "language": ["en"],
             "language_confidence": [99.5],
-            "processed_features": [""],
-            "use_processed_features": [True],
-            "status": ["active"],
         },
         columns=[
             "object_id",
             "class",
-            "unprocessed_features",
             "text",
             "language",
             "language_confidence",
-            "processed_features",
-            "use_processed_features",
-            "status",
         ],
     )
 
@@ -237,3 +241,79 @@ def test_get_account_labels():
     actual_df = pull_label_sheet.get_account_labels(input_df)
 
     pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
+
+
+def test_clean_feature_to_label_df():
+    """Test the clean_feature_to_label_df outputs correct cols and deduplicates.
+
+    Dedupe is based on class + unprocessed_features + processed_features
+    """
+    input_df = pd.DataFrame(
+        {
+            "object_id": ["id_1", "id_2", "id_3", "id_4"],
+            "class": ["cat", "dog", "cat", "dog"],
+            "unprocessed_features": ["meow", "woof", "meow", np.nan],
+            "text": ["meow meow", "bark woof", "say meow", "faithful furry friend"],
+            "language": ["en"] * 4,
+            "language_confidence": [0.99] * 4,
+            "processed_features": ["meow", "woof", "meow", ""],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        {
+            "object_id": ["id_1", "id_2"],
+            "class": ["cat", "dog"],
+            "unprocessed_features": ["meow", "woof"],
+            "language": ["en"] * 2,
+            "language_confidence": [0.99] * 2,
+            "processed_features": ["meow", "woof"],
+            "use_processed_features": [False] * 2,
+            "status": ["active"] * 2,
+        }
+    )
+
+    actual_df = pull_label_sheet.clean_feature_to_label_df(input_df)
+
+    pd.testing.assert_frame_equal(actual_df, expected_df)
+
+
+def test_extract_labelled_examples_with_no_feature():
+    """Test that labelled examples with no feature are extracted from the feature_to_label_df."""
+    input_df = pd.DataFrame(
+        data={
+            "object_id": ["id_1", "id_1", "id_2", "id_2", "id_3"],
+            "class": [
+                "doubly_filled_in_class_user_error",
+                "doubly_filled_in_class_user_error",
+                "cat",
+                "animal",
+                "animal",
+            ],
+            "unprocessed_features": ["", "", "meow", "", "eukaryote"],
+            "text": [
+                "furry best friend",
+                "furry best friend",
+                "i go meow",
+                "i go meow",
+                "eukaryotes without cell walls",
+            ],
+            "language": ["en"] * 5,
+            "language_confidence": [0.95] * 5,
+            "columns_that_do_not_matter": ["processed_features", "status", "and", "other", "cols"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        data={
+            "object_id": ["id_1", "id_2"],
+            "class": ["doubly_filled_in_class_user_error", "animal"],
+            "text": ["furry best friend", "i go meow"],
+            "language": ["en"] * 2,
+            "language_confidence": [0.95] * 2,
+        },
+        index=[0, 3],
+    )
+
+    actual_df = pull_label_sheet.extract_labelled_examples_with_no_feature(input_df)
+    pd.testing.assert_frame_equal(actual_df, expected_df)

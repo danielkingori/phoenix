@@ -30,7 +30,9 @@ def detect(message: str, model: fasttext.FastText) -> pd.Series:
             0: string,
             1: float,
     """
-    codes, confidences = model.predict(message, k=5) if not pd.isna(message) else (["en"], [0.0])
+    codes, confidences = (
+        model.predict(message.replace("\n", " "), k=5) if not pd.isna(message) else (["en"], [0.0])
+    )
     code, confidence = get_top_whitelisted_language(codes, confidences)
     return pd.Series([code, confidence])
 
