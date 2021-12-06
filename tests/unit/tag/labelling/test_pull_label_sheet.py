@@ -141,6 +141,20 @@ def single_feature_to_label_mapping() -> pd.DataFrame:
     return df
 
 
+def test_compute_sflm_statistics(labelled_data, single_feature_to_label_mapping):
+    """Test computing statistics for sflm."""
+    sflm_statistics_df = pull_label_sheet.compute_sflm_statistics(
+        labelled_data, single_feature_to_label_mapping
+    )
+    expected_df = pd.DataFrame(
+        {
+            "class": ["animal", "cat", "dog"],
+            "num_features": [4, 1, 2],
+        }
+    )
+    pd.testing.assert_frame_equal(sflm_statistics_df, expected_df)
+
+
 @mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
 def test_extract_features_to_label_mapping(
     mock_execute, labelled_data, single_feature_to_label_mapping

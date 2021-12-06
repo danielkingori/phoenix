@@ -182,3 +182,18 @@ def wide_to_long_labels_features(df: pd.DataFrame) -> pd.DataFrame:
     df_labels["class"] = df_labels["class"].str.lower()
 
     return df_labels
+
+
+def compute_sflm_statistics(
+    labelled_objects_df: pd.DataFrame, single_feature_to_label_mapping_df: pd.DataFrame
+) -> pd.DataFrame:
+    """Compute counts on various salient aspects of manually labelled data and resultant SFLM.
+
+    Note that naming of input vars are chosen to match var names within
+    pull_objects_labelling.ipynb.
+    """
+    sflm = single_feature_to_label_mapping_df[["class", "processed_features"]].drop_duplicates()
+    df = sflm["class"].value_counts().reset_index()
+    df = df.rename(columns={"class": "num_features", "index": "class"})
+    df = df.sort_values(by="class").reset_index(drop=True)
+    return df
