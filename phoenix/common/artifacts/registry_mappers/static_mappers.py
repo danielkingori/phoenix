@@ -18,5 +18,9 @@ MAPPERS: MapperDict = {
     "static-custom_models_tension_classifier_data": partial(
         url_mapper, CONFIG_BASE + "tension_classifier_data/"
     ),
+    # Backport neccesity for sfm config, delete me BEFORE 2022-01-15
+    "static-legacy-sfm-config": partial(
+        url_mapper, CONFIG_BASE + "single_feature_match_topic_config.csv"
+    ),
     "static-youtube_channels": partial(url_mapper, CONFIG_BASE + "youtube_channels.csv"),
 }

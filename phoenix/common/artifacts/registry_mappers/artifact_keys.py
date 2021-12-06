@@ -10,6 +10,8 @@ ArtifactKey = Literal[
     "static-custom_models_tension_classifier_data",
     "static-youtube_channels",
     "source-notebooks_base",
+    # Legacy static mapper
+    "static-legacy-sfm-config",
     # Acled Events
     "source-acled_events_notebook",
     "base-acled_events_input",
