@@ -150,6 +150,7 @@ def test_compute_sflm_statistics(labelled_data, single_feature_to_label_mapping)
         {
             "class": ["animal", "cat", "dog"],
             "num_features": [4, 1, 2],
+            "num_objects_labelled": [3, 1, 1],
         }
     )
     pd.testing.assert_frame_equal(sflm_statistics_df, expected_df)

@@ -196,4 +196,18 @@ def compute_sflm_statistics(
     df = sflm["class"].value_counts().reset_index()
     df = df.rename(columns={"class": "num_features", "index": "class"})
     df = df.sort_values(by="class").reset_index(drop=True)
+
+    labels_df = labelled_objects_df.iloc[1:][["object_id"] + [f"label_{x}" for x in range(1, 5)]]
+    labels_df = pd.melt(
+        labels_df, id_vars=["object_id"], value_vars=[f"label_{x}" for x in range(1, 5)]
+    )
+    num_objects_labelled = (
+        labels_df.dropna()["value"]
+        .value_counts()
+        .reset_index()
+        .rename(columns={"index": "class", "value": "num_objects_labelled"})
+    )
+
+    df = df.merge(num_objects_labelled, on="class")
+
     return df
