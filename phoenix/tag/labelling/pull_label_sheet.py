@@ -202,12 +202,26 @@ def compute_sflm_statistics(
         labels_df, id_vars=["object_id"], value_vars=[f"label_{x}" for x in range(1, 5)]
     )
     num_objects_labelled = (
-        labels_df.dropna()["value"]
+        labels_df["value"]
         .value_counts()
         .reset_index()
         .rename(columns={"index": "class", "value": "num_objects_labelled"})
     )
 
-    df = df.merge(num_objects_labelled, on="class")
+    df = df.merge(num_objects_labelled, on="class", how="outer").fillna(0)
+
+    _, labels_no_features_df = extract_features_to_label_mapping_objects(labelled_objects_df)
+    num_objects_no_features = (
+        labels_no_features_df.groupby("class")
+        .size()
+        .to_frame("num_objects_no_features")
+        .reset_index()
+    )
+
+    df = df.merge(num_objects_no_features, on="class", how="outer").fillna(0)
+
+    df["num_features"] = df["num_features"].astype(int)
+    df["num_objects_labelled"] = df["num_objects_labelled"].astype(int)
+    df["num_objects_no_features"] = df["num_objects_no_features"].astype(int)
 
     return df
