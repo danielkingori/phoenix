@@ -256,7 +256,7 @@ def test_non_legacy_file_name(source_file_name, non_legacy_file_name):
                     datetime.datetime(2021, 5, 25, 17, 39, 4, 914162, tzinfo=datetime.timezone.utc)
                 ),
             ),
-            "2021-05-25T17:39:04.914162.json"
+            "2021-05-25T17:39:04.914162.json",
         ),
         (
             source_file_name_processing.SourceFileName(
