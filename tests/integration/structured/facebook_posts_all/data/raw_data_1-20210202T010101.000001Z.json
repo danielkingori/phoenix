@@ -1,0 +1,144 @@
+[
+  {
+    "platformId": "11430503000_10159078346893000",
+    "platform": "Facebook",
+    "date": "2020-01-01 01:01:01",
+    "updated": "2020-01-02 01:01:01",
+    "type": "photo",
+    "message": "message_1",
+    "expandedLinks": [
+      {
+        "original": "expanded_links_original_1",
+        "expanded": "expanded_links_1"
+      }
+    ],
+    "link": "link_1",
+    "postUrl": "https://www.facebook.com/account_1/posts/post_1",
+    "subscriberCount": 100,
+    "score": 101.0,
+    "media": [
+      {
+        "type": "photo",
+        "url": "url_1",
+        "height": 100,
+        "width": 100,
+        "full": "full_1"
+      }
+    ],
+    "statistics": {
+      "actual": {
+        "likeCount": 42617,
+        "shareCount": 303,
+        "commentCount": 1060,
+        "loveCount": 10937,
+        "wowCount": 35,
+        "hahaCount": 123,
+        "sadCount": 4,
+        "angryCount": 2,
+        "thankfulCount": 0,
+        "careCount": 520
+      },
+      "expected": {
+        "likeCount": 10773,
+        "shareCount": 137,
+        "commentCount": 359,
+        "loveCount": 3279,
+        "wowCount": 18,
+        "hahaCount": 16,
+        "sadCount": 102,
+        "angryCount": 102,
+        "thankfulCount": 10,
+        "careCount": 167
+      }
+    },
+    "account": {
+      "id": 1,
+      "name": "account_name_1",
+      "handle": "account_handle_1",
+      "profileImage": "account_profile_image_1",
+      "subscriberCount": 13231210,
+      "url": "account_url_1",
+      "platform": "Facebook",
+      "platformId": "1",
+      "accountType": "facebook_page",
+      "pageAdminTopCountry": "US",
+      "pageCreatedDate": "2019-01-01 01:01:01",
+      "pageCategory": "account_category_1",
+      "pageDescription": "account_description_1",
+      "verified": true
+    },
+    "Id": "10000|10159078346893000",
+    "legacyid": 110173423000
+  },
+  {
+    "platformId": "21430503000_20159078346893000",
+    "platform": "Facebook",
+    "date": "2020-02-01 01:01:01",
+    "updated": "2020-02-02 01:01:01",
+    "type": "photo",
+    "message": "message_2",
+    "expandedLinks": [
+      {
+        "original": "expanded_links_original_2",
+        "expanded": "expanded_links_2"
+      }
+    ],
+    "link": "link_2",
+    "postUrl": "https://www.facebook.com/account_2/posts/post_2",
+    "subscriberCount": 100,
+    "score": 101.0,
+    "media": [
+      {
+        "type": "photo",
+        "url": "url_2",
+        "height": 100,
+        "width": 100,
+        "full": "full_2"
+      }
+    ],
+    "statistics": {
+      "actual": {
+        "likeCount": 1,
+        "shareCount": 2,
+        "commentCount": 3,
+        "loveCount": 4,
+        "wowCount": 5,
+        "hahaCount": 6,
+        "sadCount": 7,
+        "angryCount": 8,
+        "thankfulCount": 9,
+        "careCount": 0
+      },
+      "expected": {
+        "likeCount": 11,
+        "shareCount": 22,
+        "commentCount": 33,
+        "loveCount": 44,
+        "wowCount": 55,
+        "hahaCount": 66,
+        "sadCount": 77,
+        "angryCount": 88,
+        "thankfulCount": 99,
+        "careCount": 0
+      }
+    },
+    "account": {
+      "id": 2,
+      "name": "account_name_2",
+      "handle": "account_handle_2",
+      "profileImage": "account_profile_image_2",
+      "subscriberCount": 23231210,
+      "url": "account_url_2",
+      "platform": "Facebook",
+      "platformId": "2",
+      "accountType": "facebook_page",
+      "pageAdminTopCountry": "US",
+      "pageCreatedDate": "2019-02-01 01:01:01",
+      "pageCategory": "account_category_2",
+      "pageDescription": "account_description_2",
+      "verified": true
+    },
+    "Id": "20000|20159078346893000",
+    "legacyid": 210173423000
+  }
+]
