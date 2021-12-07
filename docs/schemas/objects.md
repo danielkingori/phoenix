@@ -49,3 +49,11 @@ This creates one schema for all sources that the tagging pipeline including the 
 | is_geopolitics_tension              | bool    | phoenix thinks this object is about geopolitics tension                                                  |
 | is_intercommunity_relations_tension | bool    | phoenix thinks this object is about intercommunity relation tension. This includes host-refugee tensions |
 | has_tension                         | bool    | phoenix thinks this object has one or more tensions |
+
+# Objects_topics
+ The objects_topics has the same schema as objects with the additional columns:
+
+| Column                  | dtype          | Description |
+|-------------------------|----------------|-------------|
+| topics                  | object         | a list of strings that is the computed topics for the text |
+| has_topics              | boolean        | if the object has computed topics. This is false if the default topic is the only topic for the object. |

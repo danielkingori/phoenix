@@ -107,38 +107,111 @@ def join_objects_to_tweets(
     )
 
 
-def join_topics_to_facebook_posts(topics, facebook_posts):
-    """Join the topics to the facebook_posts."""
-    facebook_posts_df = facebook_posts.copy()
-    facebook_posts_df["object_id"] = facebook_posts_df["phoenix_post_id"].astype(str)
-    facebook_posts_df = facebook_posts_df.set_index("object_id")
-    topics_df = topics[TOPICS_COLUMNS]
+def topic_to_class(df: pd.DataFrame) -> pd.DataFrame:
+    """Rename the topic columns to class columns.
+
+    Args:
+        df (dataframe): with possible "topic" or "topics"
+
+    Returns:
+        DataFrame with `has_class` and `class` or `has_classes` and `classes`
+    """
+    if "topic" in df.columns:
+        df = df.rename(columns={"has_topic": "has_class", "topic": "class"})
+
+    if "topics" in df.columns:
+        df = df.rename(columns={"has_topics": "has_classes", "topics": "classes"})
+    return df
+
+
+def join_to_topics(df: pd.DataFrame, topics_df: pd.DataFrame, rename_topic_to_class: bool = False):
+    """Join a dataframe with `object_id` to topics_df.
+
+    Arg:
+        df: a dataframe with "object_id" as the index
+        topics_df: topics dataframe schema: docs/schemas/topics.md
+        rename_topic_to_class (boolean): if the `topic` column is renamed to `class`.
+            Default is False
+
+    Returns:
+        Add dataframe with each object in the df repeated for each topic.
+    """
+    topics_df = topics_df[TOPICS_COLUMNS]
+    if rename_topic_to_class:
+        topics_df = topic_to_class(topics_df)
     topics_df = topics_df.set_index("object_id")
-    result_df = topics_df.join(facebook_posts_df, how="right")
+    result_df = topics_df.join(df, how="right")
     return result_df.reset_index()
 
 
-def join_topics_to_tweets(topics, tweets):
-    """Join the topics to the tweets."""
-    tweets_df = tweets.copy()
+def join_topics_to_facebook_posts(
+    topics_df: pd.DataFrame,
+    facebook_posts_df: pd.DataFrame,
+    rename_topic_to_class: bool = False,
+) -> pd.DataFrame:
+    """Join the topics to the facebook_posts.
+
+    Args:
+        topics_df: topics dataframe schema: docs/schemas/topics.md
+        facebook_posts_df: facebook posts dataframe.
+        rename_topic_to_class (boolean): if the `topic` column is renamed to `class`.
+            Default is False
+
+    Returns:
+        A dataframe that is the cross product of topic and facebook posts:
+        a new row for each topic that a facebook posts has
+    """
+    facebook_posts_df = facebook_posts_df.copy()
+    facebook_posts_df["object_id"] = facebook_posts_df["phoenix_post_id"].astype(str)
+    facebook_posts_df = facebook_posts_df.set_index("object_id")
+    return join_to_topics(facebook_posts_df, topics_df, rename_topic_to_class)
+
+
+def join_topics_to_tweets(
+    topics_df: pd.DataFrame,
+    tweets_df: pd.DataFrame,
+    rename_topic_to_class: bool = False,
+) -> pd.DataFrame:
+    """Join the topics to the tweets.
+
+    Args:
+        topics_df: topics dataframe schema: docs/schemas/topics.md
+        tweets_df: tweets dataframe.
+        rename_topic_to_class (boolean): if the `topic` column is renamed to `class`.
+            Default is False
+
+    Returns:
+        A dataframe that is the cross product of topic and tweets:
+        a new row for each topic that a tweets
+    """
+    tweets_df = tweets_df.copy()
     tweets_df["object_id"] = tweets_df["id_str"].astype(str)
     tweets_df = tweets_df.set_index("object_id")
     tweets_df = tweets_df.drop(columns=["retweeted"])
-    topics_df = topics[TOPICS_COLUMNS]
-    topics_df = topics_df.set_index("object_id")
-    result_df = topics_df.join(tweets_df, how="right")
-    return result_df.reset_index()
+    return join_to_topics(tweets_df, topics_df, rename_topic_to_class)
 
 
-def join_topics_to_facebook_comments(topics, facebook_comments):
-    """Join the topics to the tweets."""
-    facebook_comments_df = facebook_comments.copy()
+def join_topics_to_facebook_comments(
+    topics_df: pd.DataFrame,
+    facebook_comments_df: pd.DataFrame,
+    rename_topic_to_class: bool = False,
+) -> pd.DataFrame:
+    """Join the topics to the facebook comments.
+
+    Args:
+        topics_df: topics dataframe schema: docs/schemas/topics.md
+        tweets_df: facebook comments dataframe.
+        rename_topic_to_class (boolean): if the `topic` column is renamed to `class`.
+            Default is False
+
+    Returns:
+        A dataframe that is the cross product of topic and facebook_comments:
+        a new row for each topic that a facebook comments
+    """
+    facebook_comments_df = facebook_comments_df.copy()
     facebook_comments_df["object_id"] = facebook_comments_df["id"].astype(str)
     facebook_comments_df = facebook_comments_df.set_index("object_id")
-    topics_df = topics[TOPICS_COLUMNS]
-    topics_df = topics_df.set_index("object_id")
-    result_df = topics_df.join(facebook_comments_df, how="right")
-    return result_df.reset_index()
+    return join_to_topics(facebook_comments_df, topics_df, rename_topic_to_class)
 
 
 def inherit_facebook_comment_topics_from_facebook_posts_topics_df(
@@ -146,14 +219,25 @@ def inherit_facebook_comment_topics_from_facebook_posts_topics_df(
     comments_df: pd.DataFrame,
     inherit_every_row_per_id: bool = False,
     extra_inherited_cols: Optional[List[str]] = None,
+    rename_topic_to_class: bool = False,
 ) -> pd.DataFrame:
     """Joins comments to their parent posts and inherits tensions and topic(s) from parents.
 
-    posts_topics_df (pd.DataFrame): fb_posts dataframe with topics and other columns to inherit.
-    comments_df (pd.DataFrame) base comments which inherit certain characteristics from parents.
-    inherit_every_row_per_id (bool): If there are multiple rows per post_id (eg two `topic`s
-        for a post), should we inherit each of those rows.
-    extra_inherited_cols (Optional[List[str]]) extra columns to overwrite with posts information.
+    Args:
+        posts_topics_df (pd.DataFrame): fb_posts dataframe with topics
+            and other columns to inherit.
+        comments_df (pd.DataFrame): base comments which inherit certain
+            characteristics from parents.
+        inherit_every_row_per_id (bool): If there are multiple rows
+            per post_id (eg two `topic`s for a post),
+            should we inherit each of those rows.
+        extra_inherited_cols (Optional[List[str]]): extra columns to
+            overwrite with posts information.
+        rename_topic_to_class (boolean): if the `topic` column is rename to `class`.
+            Default is False
+
+    Returns:
+        Dataframe with the comments inheriting from the posts topics.
     """
     if extra_inherited_cols:
         inherited_columns = extra_inherited_cols + COMMENT_INHERITED_COLUMNS
@@ -183,5 +267,8 @@ def inherit_facebook_comment_topics_from_facebook_posts_topics_df(
     comments_df = pd.merge(
         comments_df, posts_topics_df, left_on="post_id", right_on="url_post_id", how="left"
     ).drop("url_post_id", axis=1)
+
+    if rename_topic_to_class:
+        comments_df = topic_to_class(comments_df)
 
     return comments_df

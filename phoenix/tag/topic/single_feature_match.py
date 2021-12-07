@@ -15,11 +15,7 @@ def get_topics(topic_config, features_df, fill_topic: str = FILL_TOPIC) -> pd.Da
             Default is "irrelevant".
 
     Return:
-        pd.DataFrame with dtypes:
-            object_id: string
-            object_type: string
-            topic: string
-            matched_features: array<string>
+        pd.DataFrame with schema: docs/schemas/topics.md
     """
     features_indexed_df = features_df.set_index("object_id")
     topic_config_i = topic_config.set_index("features")
