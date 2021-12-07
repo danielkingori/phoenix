@@ -1,0 +1,1 @@
+"""Structured common integration tests."""
