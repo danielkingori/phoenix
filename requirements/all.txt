@@ -92,16 +92,20 @@ click==8.0.1
     #   flask
     #   nltk
     #   papermill
+    #   prefect
     #   tentaclio
 cloudpickle==2.0.0
     # via
     #   -r requirements/common.in
     #   dask
     #   distributed
+    #   prefect
 colorama==0.4.3
     # via awscli
 cramjam==2.3.2
     # via fastparquet
+croniter==1.1.0
+    # via prefect
 cryptography==3.4.7
     # via paramiko
 cycler==0.10.0
@@ -122,6 +126,7 @@ dask[complete]==2021.09.1
     # via
     #   -r requirements/common.in
     #   distributed
+    #   prefect
 dataclasses==0.6
     # via tentaclio
 debugpy==1.4.1
@@ -131,7 +136,11 @@ decorator==5.0.9
 defusedxml==0.7.1
     # via nbconvert
 distributed==2021.09.1
-    # via dask
+    # via
+    #   dask
+    #   prefect
+docker==5.0.3
+    # via prefect
 docutils==0.15.2
     # via awscli
 entrypoints==0.3
@@ -293,6 +302,12 @@ lz4==3.1.3
     # via -r requirements/common.in
 markupsafe==2.0.1
     # via jinja2
+marshmallow==3.14.1
+    # via
+    #   marshmallow-oneofschema
+    #   prefect
+marshmallow-oneofschema==3.0.1
+    # via prefect
 matplotlib==3.4.3
     # via
     #   -r requirements/common.in
@@ -311,6 +326,7 @@ msgpack==1.0.2
     # via
     #   -r requirements/common.in
     #   distributed
+    #   prefect
 multidict==5.1.0
     # via
     #   aiohttp
@@ -321,6 +337,7 @@ mypy-extensions==0.4.3
     # via
     #   black
     #   mypy
+    #   prefect
 nbclassic==0.3.1
     # via jupyterlab
 nbclient==0.5.4
@@ -372,6 +389,7 @@ packaging==21.0
     #   google-api-core
     #   jupyterlab
     #   jupyterlab-server
+    #   prefect
     #   pytest
 pandas==1.1.3
     # via
@@ -392,6 +410,8 @@ partd==1.2.0
     # via dask
 pathspec==0.9.0
     # via black
+pendulum==2.1.2
+    # via prefect
 pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
@@ -406,6 +426,8 @@ pluggy==0.13.1
     # via pytest
 polyglot==16.7.4
     # via -r requirements/tag.in
+prefect==0.15.10
+    # via -r requirements/structured.in
 prometheus-client==0.11.0
     # via
     #   jupyter-server
@@ -480,21 +502,31 @@ pytest-mock==3.6.1
     # via -r requirements/development.in
 python-bidi==0.4.2
     # via -r requirements/tag.in
+python-box==5.4.1
+    # via prefect
 python-dateutil==2.8.2
     # via
     #   bokeh
     #   botocore
+    #   croniter
     #   freezegun
     #   jupyter-client
     #   matplotlib
     #   pandas
+    #   pendulum
+    #   prefect
 python-louvain==0.15
     # via -r requirements/tag.in
+python-slugify==5.0.2
+    # via prefect
 pytz==2021.1
     # via
     #   babel
     #   google-api-core
     #   pandas
+    #   prefect
+pytzdata==2020.1
+    # via pendulum
 pyyaml==5.4.1
     # via
     #   -r requirements/common.in
@@ -503,6 +535,7 @@ pyyaml==5.4.1
     #   dask
     #   distributed
     #   papermill
+    #   prefect
     #   tentaclio
 pyzmq==22.2.1
     # via
@@ -515,10 +548,12 @@ regex==2021.8.3
     #   nltk
 requests[socks]==2.25.1
     # via
+    #   docker
     #   google-api-core
     #   google-cloud-storage
     #   jupyterlab-server
     #   papermill
+    #   prefect
     #   requests-oauthlib
     #   requests-unixsocket
     #   tentaclio
@@ -585,6 +620,8 @@ soupsieve==2.2.1
     # via beautifulsoup4
 sqlalchemy==1.3.24
     # via tentaclio
+tabulate==0.8.9
+    # via prefect
 tblib==1.7.0
     # via distributed
 tenacity==8.0.1
@@ -600,6 +637,8 @@ terminado==0.11.0
     #   notebook
 testpath==0.5.0
     # via nbconvert
+text-unidecode==1.3
+    # via python-slugify
 textwrap3==0.9.2
     # via ansiwrap
 threadpoolctl==2.2.0
@@ -609,6 +648,7 @@ thrift==0.13.0
 toml==0.10.2
     # via
     #   mypy
+    #   prefect
     #   pytest
 tomli==1.2.1
     # via black
@@ -668,6 +708,7 @@ uritemplate==3.0.1
 urllib3==1.26.6
     # via
     #   botocore
+    #   prefect
     #   requests
     #   requests-unixsocket
     #   tentaclio
@@ -676,7 +717,9 @@ wcwidth==0.2.5
 webencodings==0.5.1
     # via bleach
 websocket-client==1.2.1
-    # via jupyter-server
+    # via
+    #   docker
+    #   jupyter-server
 webweb==0.0.37
     # via -r requirements/tag.in
 werkzeug==2.0.1
