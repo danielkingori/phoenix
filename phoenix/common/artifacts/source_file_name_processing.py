@@ -53,6 +53,11 @@ class SourceFileName:
             suffix += self.timestamp_suffix
         return f"{prefix}" f"{self.run_dt.to_file_safe_str()}" f"{suffix}" f"{self.extension}"
 
+    def get_basename(self) -> str:
+        """Get the basename."""
+        non_base_url = len(self.folder_url) + 1
+        return self.full_url[non_base_url:]
+
 
 def get_source_file_name(url: str) -> Optional[SourceFileName]:
     """Get the source file name object from the URL."""
