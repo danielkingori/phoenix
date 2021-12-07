@@ -1,6 +1,8 @@
 """Pandas Utils."""
 import re
 
+import pandas as pd
+
 
 def words_to_snake(name: str):
     """Map Words with spaces to snake case."""
@@ -15,3 +17,9 @@ def camel_to_snake(name):
     """
     name = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
     return re.sub("([a-z0-9])([A-Z])", r"\1_\2", name).lower()
+
+
+def to_type(column_name: str, astype, df: pd.DataFrame):
+    """Convent to type function."""
+    df[column_name] = df[column_name].astype(astype)
+    return df
