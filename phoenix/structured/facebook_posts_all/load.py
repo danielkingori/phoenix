@@ -1,7 +1,16 @@
 """Load of the facebook_posts_all."""
 import pandas as pd
+import prefect
 
 from phoenix.common import artifacts
+
+
+@prefect.task
+def load_task(
+    facebook_posts_all_url: str, df: pd.DataFrame
+) -> artifacts.dtypes.ArtifactDaskDataFrame:
+    """Task for the load."""
+    return execute(facebook_posts_all_url, df)
 
 
 def execute(
@@ -15,5 +24,6 @@ def execute(
         to_parquet_params={
             "append": True,
             "compute": True,
+            "ignore_divisions": True,
         },
     )

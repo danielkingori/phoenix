@@ -1,7 +1,14 @@
 """Structured URLs."""
-from typing import Iterator
+from typing import Iterator, List
 
+import prefect
 import tentaclio
+
+
+@prefect.task
+def get_list_of_urls_in_directory(dir_url) -> List[str]:
+    """G."""
+    return list(get_files_in_directory(dir_url))
 
 
 def get_files_in_directory(dir_url) -> Iterator[str]:

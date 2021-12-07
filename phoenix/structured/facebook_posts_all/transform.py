@@ -3,10 +3,17 @@ import json
 
 import numpy as np
 import pandas as pd
+import prefect
 import tentaclio
 
 from phoenix.common import constants, pd_utils
 from phoenix.structured.common import utils as structured_utils
+
+
+@prefect.task
+def transform_task(file_url) -> pd.DataFrame:
+    """Transform task."""
+    return execute(file_url)
 
 
 def execute(file_url) -> pd.DataFrame:
