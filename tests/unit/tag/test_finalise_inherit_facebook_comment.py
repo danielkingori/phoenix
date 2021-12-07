@@ -11,7 +11,7 @@ def input_comments_df():
         {
             "id": ["1", "2"],
             "post_id": [123, 456],
-            "topics": ["[None]", "[None]"],
+            "topics": [[], []],
             "has_topics": [False, False],
             "is_economic_labour_tension": [False, False],
             "is_political_tension": [False, False],
@@ -31,11 +31,11 @@ def input_comments_df():
 def input_facebook_posts_topics_df():
     return pd.DataFrame(
         {
-            "id": ["1", "2", "3"],
+            "id": ["1", "2", "2"],
             "url_post_id": ["123", "456", "456"],
             "topic": ["a", "a", "b"],
             "has_topic": [True, True, True],
-            "topics": ["['a']", "['a', 'b']", "['a', 'b']"],
+            "topics": [["a"], ["a", "b"], ["a", "b"]],
             "has_topics": [True, True, True],
             "is_economic_labour_tension": [True, True, True],
             "is_political_tension": [True, True, True],
@@ -58,7 +58,7 @@ def test_inherit_facebook_comment_topics_from_posts(
         {
             "id": ["1", "2"],
             "post_id": [123, 456],
-            "topics": ["['a']", "['a', 'b']"],
+            "topics": [["a"], ["a", "b"]],
             "has_topics": [True, True],
             "is_economic_labour_tension": [True, True],
             "is_political_tension": [True, True],
@@ -88,7 +88,7 @@ def test_inherit_facebook_comment_topics_from_posts_rename(
         {
             "id": ["1", "2"],
             "post_id": [123, 456],
-            "classes": ["['a']", "['a', 'b']"],
+            "classes": [["a"], ["a", "b"]],
             "has_classes": [True, True],
             "is_economic_labour_tension": [True, True],
             "is_political_tension": [True, True],
@@ -117,7 +117,7 @@ def test_inherit_facebook_comment_topics_from_posts_inherit_every_row(
         {
             "id": ["1", "2", "2"],
             "post_id": [123, 456, 456],
-            "topics": ["['a']", "['a', 'b']", "['a', 'b']"],
+            "topics": [["a"], ["a", "b"], ["a", "b"]],
             "has_topics": [True, True, True],
             "is_economic_labour_tension": [True, True, True],
             "is_political_tension": [True, True, True],
@@ -146,7 +146,7 @@ def test_inherit_facebook_comment_topics_from_posts_inherit_every_row_rename(
         {
             "id": ["1", "2", "2"],
             "post_id": [123, 456, 456],
-            "classes": ["['a']", "['a', 'b']", "['a', 'b']"],
+            "classes": [["a"], ["a", "b"], ["a", "b"]],
             "has_classes": [True, True, True],
             "is_economic_labour_tension": [True, True, True],
             "is_political_tension": [True, True, True],
@@ -180,7 +180,7 @@ def test_inherit_facebook_comment_topics_from_posts_inherit_every_row_extra_inhe
             "post_id": [123, 456, 456],
             "topic": ["a", "a", "b"],
             "has_topic": [True, True, True],
-            "topics": ["['a']", "['a', 'b']", "['a', 'b']"],
+            "topics": [["a"], ["a", "b"], ["a", "b"]],
             "has_topics": [True, True, True],
             "is_economic_labour_tension": [True, True, True],
             "is_political_tension": [True, True, True],
@@ -214,7 +214,7 @@ def test_inherit_facebook_comment_topics_from_posts_inherit_every_row_extra_inhe
             "post_id": [123, 456, 456],
             "class": ["a", "a", "b"],
             "has_class": [True, True, True],
-            "classes": ["['a']", "['a', 'b']", "['a', 'b']"],
+            "classes": [["a"], ["a", "b"], ["a", "b"]],
             "has_classes": [True, True, True],
             "is_economic_labour_tension": [True, True, True],
             "is_political_tension": [True, True, True],
