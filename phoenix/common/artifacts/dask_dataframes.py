@@ -3,9 +3,9 @@ from typing import Any, Dict, List
 
 import shutil
 from pathlib import Path
+from urllib import parse
 
-import awswrangler as wr
-import pyarrow as pa
+import boto3
 from dask import dataframe as dd
 
 from phoenix.common.artifacts import dtypes
@@ -68,10 +68,20 @@ def delete(artifact_dataframe: dtypes.ArtifactDaskDataFrame) -> None:
         artifact_dataframe (ArtifactDaskDataFrame): ArtifactDaskDataFrame that will be deleted
     """
     url = artifact_dataframe.url
-    fs_to_use, path = pa.fs.FileSystem.from_uri(url)
+    url_parsed = parse.urlparse(url)
     if url.startswith("s3:"):
-        wr.s3.delete_objects(url)
+        return _delete_s3(url_parsed)
     else:
-        dirpath = Path(path)
+        dirpath = Path(url_parsed.path)
         if dirpath.exists() and dirpath.is_dir():
             shutil.rmtree(dirpath)
+
+
+def _delete_s3(url) -> None:
+    """Delete a folder or object from s3."""
+    bucket_name = url.hostname
+    key_name = url.path[1:] if url.path != "" else ""
+    s3 = boto3.resource("s3")
+    bucket = s3.Bucket(bucket_name)
+    for key in bucket.objects.filter(Prefix=key_name):
+        key.delete()

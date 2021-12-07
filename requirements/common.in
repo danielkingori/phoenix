@@ -1,5 +1,4 @@
 # Shared dependencies across project
-awswrangler
 dask[complete]==2021.09.1
 # Need for dask
 msgpack==1.0.2

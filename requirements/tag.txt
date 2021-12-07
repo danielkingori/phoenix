@@ -4,75 +4,66 @@
 #
 #    pip-compile requirements/tag.in
 #
-aiobotocore[awscli,boto3]==1.3.3
+aiobotocore[awscli,boto3]==2.0.1
     # via
     #   -r requirements/common.in
     #   s3fs
-aiohttp==3.7.4.post0
-    # via aiobotocore
+aiohttp==3.8.1
+    # via
+    #   aiobotocore
+    #   s3fs
 aioitertools==0.8.0
     # via aiobotocore
+aiosignal==1.2.0
+    # via aiohttp
 ansiwrap==0.8.4
     # via papermill
-appdirs==1.4.4
-    # via black
 arabic-reshaper==2.1.3
     # via -r requirements/tag.in
-asn1crypto==1.4.0
-    # via scramp
-async-timeout==3.0.1
+async-timeout==4.0.1
     # via aiohttp
 attrs==21.2.0
     # via
     #   aiohttp
     #   jsonschema
-awscli==1.19.106
+awscli==1.21.8
     # via aiobotocore
-awswrangler==2.10.0
-    # via -r requirements/common.in
 bcrypt==3.2.0
     # via paramiko
-beautifulsoup4==4.9.3
-    # via redshift-connector
-black==21.7b0
+black==21.12b0
     # via papermill
 blosc==1.10.2
     # via -r requirements/common.in
-bokeh==2.3.3
+bokeh==2.4.2
     # via dask
-boto3==1.17.106
+boto3==1.19.8
     # via
     #   aiobotocore
-    #   awswrangler
     #   pyathena
-    #   redshift-connector
     #   tentaclio
-botocore==1.20.106
+botocore==1.22.8
     # via
     #   aiobotocore
     #   awscli
-    #   awswrangler
     #   boto3
     #   pyathena
-    #   redshift-connector
     #   s3transfer
 cacheman==2.1.0
     # via cyhunspell
-cachetools==4.2.2
+cachetools==4.2.4
     # via google-auth
-certifi==2021.5.30
+certifi==2021.10.8
     # via requests
-cffi==1.14.6
+cffi==1.15.0
     # via
     #   bcrypt
     #   cryptography
-    #   google-crc32c
     #   pynacl
-chardet==4.0.0
+charset-normalizer==2.0.9
     # via
     #   aiohttp
     #   requests
-click==8.0.1
+click==8.0.3
     # via
     #   -r requirements/common.in
     #   black
@@ -87,11 +78,11 @@ cloudpickle==2.0.0
     #   distributed
 colorama==0.4.3
     # via awscli
-cramjam==2.3.2
+cramjam==2.5.0
     # via fastparquet
-cryptography==3.4.7
+cryptography==36.0.0
     # via paramiko
-cycler==0.10.0
+cycler==0.11.0
     # via matplotlib
 cyhunspell==2.0.2
     # via klpt
@@ -108,18 +99,24 @@ distributed==2021.09.1
 docutils==0.15.2
     # via awscli
 entrypoints==0.3
-    # via papermill
-et-xmlfile==1.1.0
-    # via openpyxl
-fastparquet==0.7.1
+    # via
+    #   jupyter-client
+    #   papermill
+fastparquet==0.7.2
     # via -r requirements/common.in
 fasttext==0.9.2
     # via -r requirements/tag.in
+fonttools==4.28.3
+    # via matplotlib
 freezegun==1.1.0
     # via
     #   -r requirements/common.in
     #   -r requirements/tag.in
-fsspec==2021.7.0
+frozenlist==1.2.0
+    # via
+    #   aiohttp
+    #   aiosignal
+fsspec==2021.11.1
     # via
     #   dask
     #   fastparquet
@@ -129,14 +126,14 @@ future==0.18.2
     #   arabic-reshaper
     #   cacheman
     #   pyathena
-google-api-core==1.31.2
+google-api-core==2.2.2
     # via
     #   google-api-python-client
     #   google-cloud-core
     #   google-cloud-storage
-google-api-python-client==2.15.0
+google-api-python-client==2.32.0
     # via tentaclio
-google-auth==1.35.0
+google-auth==2.3.3
     # via
     #   google-api-core
     #   google-api-python-client
@@ -149,37 +146,35 @@ google-auth-httplib2==0.1.0
     # via
     #   google-api-python-client
     #   tentaclio
-google-auth-oauthlib==0.4.5
+google-auth-oauthlib==0.4.6
     # via
     #   gspread
     #   tentaclio
-google-cloud-core==1.7.2
+google-cloud-core==2.2.1
     # via google-cloud-storage
-google-cloud-storage==1.42.0
+google-cloud-storage==1.43.0
     # via tentaclio
-google-crc32c==1.1.2
+google-crc32c==1.3.0
     # via google-resumable-media
-google-resumable-media==1.3.3
+google-resumable-media==2.1.0
     # via google-cloud-storage
 googleapis-common-protos==1.53.0
     # via google-api-core
-gspread==4.0.1
+gspread==5.0.0
     # via -r requirements/common.in
 heapdict==1.0.1
     # via zict
-httplib2==0.19.1
+httplib2==0.20.2
     # via
     #   google-api-python-client
     #   google-auth-httplib2
-idna==2.10
+idna==3.3
     # via
     #   requests
     #   yarl
 ipython-genutils==0.2.0
-    # via
-    #   nbformat
-    #   traitlets
-jinja2==3.0.1
+    # via nbformat
+jinja2==3.0.3
     # via
     #   bokeh
     #   dask
@@ -188,31 +183,29 @@ jmespath==0.10.0
     # via
     #   boto3
     #   botocore
-joblib==1.0.1
+joblib==1.1.0
     # via
     #   nltk
     #   scikit-learn
-jsonschema==3.2.0
+jsonschema==4.2.1
     # via nbformat
-jupyter-client==6.1.12
+jupyter-client==7.1.0
     # via nbclient
-jupyter-core==4.7.1
+jupyter-core==4.9.1
     # via
     #   jupyter-client
     #   nbformat
-kiwisolver==1.3.1
+kiwisolver==1.3.2
     # via matplotlib
 klpt==0.1.4
     # via -r requirements/tag.in
 locket==0.2.1
     # via partd
-lxml==4.6.3
-    # via redshift-connector
 lz4==3.1.3
     # via -r requirements/common.in
 markupsafe==2.0.1
     # via jinja2
-matplotlib==3.4.3
+matplotlib==3.5.0
     # via
     #   -r requirements/common.in
     #   seaborn
@@ -220,29 +213,30 @@ msgpack==1.0.2
     # via
     #   -r requirements/common.in
     #   distributed
-multidict==5.1.0
+multidict==5.2.0
     # via
     #   aiohttp
     #   yarl
 mypy-extensions==0.4.3
     # via black
-nbclient==0.5.4
+nbclient==0.5.9
     # via papermill
 nbformat==5.1.3
     # via
     #   nbclient
     #   papermill
-nest-asyncio==1.5.1
-    # via nbclient
-networkx==2.6.2
+nest-asyncio==1.5.4
+    # via
+    #   jupyter-client
+    #   nbclient
+networkx==2.6.3
     # via
     #   -r requirements/tag.in
     #   python-louvain
-nltk==3.6.2
+nltk==3.6.5
     # via -r requirements/tag.in
-numpy==1.21.2
+numpy==1.21.4
     # via
-    #   awswrangler
     #   bokeh
     #   dask
     #   fastparquet
@@ -257,51 +251,47 @@ numpy==1.21.2
     #   webweb
 oauthlib==3.1.1
     # via requests-oauthlib
-openpyxl==3.0.7
-    # via awswrangler
-packaging==21.0
+packaging==21.3
     # via
     #   bokeh
     #   dask
-    #   google-api-core
-    #   redshift-connector
+    #   matplotlib
+    #   setuptools-scm
 pandas==1.1.3
     # via
-    #   awswrangler
     #   dask
     #   fastparquet
     #   seaborn
     #   tentaclio
 papermill==2.3.3
     # via -r requirements/common.in
-paramiko==2.7.2
+paramiko==2.8.1
     # via pysftp
 partd==1.2.0
     # via dask
 pathspec==0.9.0
     # via black
-pg8000==1.20.0
-    # via awswrangler
-pillow==8.3.1
+pillow==8.4.0
     # via
     #   bokeh
     #   matplotlib
+platformdirs==2.4.0
+    # via black
 polyglot==16.7.4
     # via -r requirements/tag.in
-protobuf==3.17.3
+protobuf==3.19.1
     # via
     #   google-api-core
+    #   google-cloud-storage
     #   googleapis-common-protos
 psutil==5.8.0
     # via
     #   cacheman
     #   distributed
-psycopg2-binary==2.9.1
+psycopg2-binary==2.9.2
     # via tentaclio
-pyarrow==4.0.1
-    # via
-    #   -r requirements/common.in
-    #   awswrangler
+pyarrow==6.0.1
+    # via -r requirements/common.in
 pyasn1==0.4.8
     # via
     #   pyasn1-modules
@@ -314,17 +304,15 @@ pybind11==2.8.1
     # via fasttext
 pycld2==0.41
     # via -r requirements/tag.in
-pycparser==2.20
+pycparser==2.21
     # via cffi
-pyicu==2.7.4
+pyicu==2.8
     # via -r requirements/tag.in
-pymysql==1.0.2
-    # via awswrangler
 pynacl==1.4.0
     # via paramiko
-pyodbc==4.0.31
+pyodbc==4.0.32
     # via tentaclio
-pyparsing==2.4.7
+pyparsing==3.0.6
     # via
     #   httplib2
     #   matplotlib
@@ -337,7 +325,6 @@ python-bidi==0.4.2
     # via -r requirements/tag.in
 python-dateutil==2.8.2
     # via
-    #   bokeh
     #   botocore
     #   freezegun
     #   jupyter-client
@@ -345,11 +332,8 @@ python-dateutil==2.8.2
     #   pandas
 python-louvain==0.15
     # via -r requirements/tag.in
-pytz==2021.1
-    # via
-    #   google-api-core
-    #   pandas
-    #   redshift-connector
+pytz==2021.3
+    # via pandas
 pyyaml==5.4.1
     # via
     #   -r requirements/common.in
@@ -359,20 +343,15 @@ pyyaml==5.4.1
     #   distributed
     #   papermill
     #   tentaclio
-pyzmq==22.2.1
+pyzmq==22.3.0
     # via jupyter-client
-redshift-connector==2.0.885
-    # via awswrangler
-regex==2021.8.3
-    # via
-    #   black
-    #   nltk
-requests==2.25.1
+regex==2021.11.10
+    # via nltk
+requests==2.26.0
     # via
     #   google-api-core
     #   google-cloud-storage
     #   papermill
-    #   redshift-connector
     #   requests-oauthlib
     #   tentaclio
 requests-oauthlib==1.3.0
@@ -381,48 +360,39 @@ rsa==4.7.2
     # via
     #   awscli
     #   google-auth
-s3fs==2021.7.0
+s3fs==2021.11.1
     # via -r requirements/common.in
-s3transfer==0.4.2
+s3transfer==0.5.0
     # via
     #   awscli
     #   boto3
-scikit-learn==0.24.2
+scikit-learn==1.0.1
     # via sklearn
-scipy==1.7.1
+scipy==1.7.3
     # via
     #   scikit-learn
     #   seaborn
-scramp==1.4.0
-    # via
-    #   pg8000
-    #   redshift-connector
 seaborn==0.11.2
     # via -r requirements/tag.in
+setuptools-scm==6.3.2
+    # via matplotlib
 six==1.16.0
     # via
     #   bcrypt
     #   cacheman
-    #   cycler
-    #   google-api-core
     #   google-auth
     #   google-auth-httplib2
-    #   google-cloud-core
-    #   google-resumable-media
-    #   jsonschema
-    #   protobuf
+    #   google-cloud-storage
     #   pynacl
     #   python-bidi
     #   python-dateutil
     #   thrift
 sklearn==0.0
     # via -r requirements/tag.in
-snowballstemmer==2.1.0
+snowballstemmer==2.2.0
     # via -r requirements/tag.in
 sortedcontainers==2.4.0
     # via distributed
-soupsieve==2.2.1
-    # via beautifulsoup4
 sqlalchemy==1.3.24
     # via tentaclio
 tblib==1.7.0
@@ -435,13 +405,15 @@ tentaclio==0.0.15
     # via -r requirements/common.in
 textwrap3==0.9.2
     # via ansiwrap
-threadpoolctl==2.2.0
+threadpoolctl==3.0.0
     # via scikit-learn
-thrift==0.13.0
+thrift==0.15.0
     # via fastparquet
-tomli==1.2.1
-    # via black
-toolz==0.11.1
+tomli==1.2.2
+    # via
+    #   black
+    #   setuptools-scm
+toolz==0.11.2
     # via
     #   dask
     #   distributed
@@ -451,11 +423,11 @@ tornado==6.1
     #   bokeh
     #   distributed
     #   jupyter-client
-tqdm==4.62.1
+tqdm==4.62.3
     # via
     #   nltk
     #   papermill
-traitlets==5.0.5
+traitlets==5.1.1
     # via
     #   jupyter-client
     #   jupyter-core
@@ -463,23 +435,24 @@ traitlets==5.0.5
     #   nbformat
 types-pyyaml==6.0.1
     # via -r requirements/common.in
-typing-extensions==3.10.0.0
+typing-extensions==4.0.1
     # via
-    #   aiohttp
+    #   async-timeout
+    #   black
     #   bokeh
     #   tentaclio
-uritemplate==3.0.1
+uritemplate==4.1.1
     # via google-api-python-client
-urllib3==1.26.6
+urllib3==1.26.7
     # via
     #   botocore
     #   requests
     #   tentaclio
 webweb==0.0.37
     # via -r requirements/tag.in
-wrapt==1.12.1
+wrapt==1.13.3
     # via aiobotocore
-yarl==1.6.3
+yarl==1.7.2
     # via aiohttp
 zict==2.0.0
     # via distributed
