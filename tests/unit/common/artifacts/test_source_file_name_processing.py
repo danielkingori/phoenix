@@ -239,3 +239,41 @@ def test_get_file_name_timestamp(url, expected_source_file_name):
 def test_non_legacy_file_name(source_file_name, non_legacy_file_name):
     """None legacy file name test."""
     assert source_file_name.non_legacy_file_name() == non_legacy_file_name
+
+
+@pytest.mark.parametrize(
+    "source_file_name, expected_basename",
+    [
+        (
+            source_file_name_processing.SourceFileName(
+                is_legacy=True,
+                full_url="file:///host/2021-05-25T17:39:04.914162.json",
+                folder_url="file:///host",
+                timestamp_prefix=None,
+                timestamp_suffix=None,
+                extension=".json",
+                run_dt=run_datetime.RunDatetime(
+                    datetime.datetime(2021, 5, 25, 17, 39, 4, 914162, tzinfo=datetime.timezone.utc)
+                ),
+            ),
+            "2021-05-25T17:39:04.914162.json",
+        ),
+        (
+            source_file_name_processing.SourceFileName(
+                is_legacy=True,
+                full_url="file:///host/dir/usr_tweets-2021-06-12T20_09_50.425433.json",
+                folder_url="file:///host/dir",
+                timestamp_prefix="usr_tweets-",
+                timestamp_suffix=None,
+                extension=".json",
+                run_dt=run_datetime.RunDatetime(
+                    datetime.datetime(2021, 6, 12, 20, 9, 50, 425433, tzinfo=datetime.timezone.utc)
+                ),
+            ),
+            "usr_tweets-2021-06-12T20_09_50.425433.json",
+        ),
+    ],
+)
+def test_get_basename(source_file_name, expected_basename):
+    """Test get_basename."""
+    assert source_file_name.get_basename() == expected_basename
