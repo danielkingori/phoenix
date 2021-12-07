@@ -65,7 +65,9 @@ def add_filter_cols(df: pd.DataFrame, created_at_col: pd.Series) -> pd.DataFrame
     """
     df = df.copy()
     df["timestamp_filter"] = created_at_col
-    df["date_filter"] = created_at_col.dt.date
+    # We are changing the type here because parquet doesn't support
+    # date objects and pyarrow converts dates to datetimes
+    df["date_filter"] = created_at_col.dt.date.astype("datetime64")
     df["year_filter"] = created_at_col.dt.year
     df["month_filter"] = created_at_col.dt.month
     df["day_filter"] = created_at_col.dt.day

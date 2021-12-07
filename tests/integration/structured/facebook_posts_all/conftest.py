@@ -54,7 +54,10 @@ def expected_facebook_posts_all():
                 datetime.datetime(2020, 1, 1, 1, 1, 1, tzinfo=datetime.timezone.utc),
                 datetime.datetime(2020, 2, 1, 1, 1, 1, tzinfo=datetime.timezone.utc),
             ],
-            "date_filter": [datetime.date(2020, 1, 1), datetime.date(2020, 2, 1)],
+            "date_filter": [
+                datetime.datetime(2020, 1, 1),
+                datetime.datetime(2020, 2, 1),
+            ],
             "year_filter": [2020, 2020],
             "month_filter": [1, 2],
             "day_filter": [1, 1],
