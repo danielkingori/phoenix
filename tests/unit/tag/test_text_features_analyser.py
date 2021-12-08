@@ -103,7 +103,7 @@ def test_TextFeaturesAnalyser_default_accepted_languages():
         columns=["id", "clean_text", "language"],
     )
 
-    text_analyser = tfa.create()
+    text_analyser = tfa.create(parallelisable=False)
     df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
 
 
@@ -113,7 +113,11 @@ def test_TextFeaturesAnalyser_features():
         columns=["id", "clean_text", "language"],
     )
     text_analyser = tfa.create()
+    text_analyser_non_parallelizable = tfa.create(parallelisable=False)
     df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+    df_test["features_no_dask"] = text_analyser_non_parallelizable.features(
+        df_test[["clean_text", "language"]], "clean_text"
+    )
 
     expected_3gram_feature_list = [
         "succeed",
@@ -131,6 +135,7 @@ def test_TextFeaturesAnalyser_features():
     ]
 
     assert df_test["features"][0] == expected_3gram_feature_list
+    assert df_test["features_no_dask"][0] == expected_3gram_feature_list
 
 
 def test_TextFeaturesAnalyser_kurdish():
@@ -142,7 +147,7 @@ def test_TextFeaturesAnalyser_kurdish():
         ],
         columns=["id", "clean_text", "language"],
     )
-    text_analyser = tfa.create(ngram_ranges=[(1, 2)])
+    text_analyser = tfa.create(ngram_ranges=[(1, 2)], parallelisable=False)
     df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
 
     kurmanji_feats = ["Min", "nizanibû", "Min nizanibû"]
@@ -159,7 +164,11 @@ def test_TextFeaturesAnalyser_features_no_ngrams():
         columns=["id", "clean_text", "language"],
     )
     text_analyser = tfa.create(use_ngrams=False)
+    text_analyser_non_parallelizable = tfa.create(use_ngrams=False, parallelisable=False)
     df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+    df_test["features_no_dask"] = text_analyser_non_parallelizable.features(
+        df_test[["clean_text", "language"]], "clean_text"
+    )
 
     expected_feature_list = [
         "succeed",
@@ -170,6 +179,7 @@ def test_TextFeaturesAnalyser_features_no_ngrams():
     ]
 
     assert df_test["features"][0] == expected_feature_list
+    assert df_test["features_no_dask"][0] == expected_feature_list
 
 
 def test_TextFeaturesAnalyser_hashtags_arabic():
