@@ -129,8 +129,23 @@ class TextFeaturesAnalyser:
     dict_countvectorizers: Dict
     dict_analyser: Dict
 
-    def __init__(self, languages, ngram_ranges, use_ngrams, default_params):
-        """Init the text features Analyser."""
+    def __init__(self, languages, ngram_ranges, use_ngrams, default_params, parallelisable):
+        """Init the text features Analyser.
+
+        Args:
+            languages (List[str]): List of languages that the TextFeaturesAnalyser will create
+                analysers for.
+            ngram_ranges (List[Tuple[int,int]]): List of ngram ranges to create when analysing
+                text.
+            use_ngrams (bool): flag to use ngrams in analysis. If False the entire text will be
+                analysed as a sentence.
+            default_params (Dict[str, Dict[str, Any]]): default parameters to use when
+                analysing. The first key contains language. The sub-key contains processing
+                types, such as `stemmer`, `stop_words`, or `preprocessor`.
+            parallelisable (bool): flag to use dask. if False, uses pandas.apply() when creating
+                features. Needed for when parts of the function can not be pickled and thus
+                can't be used in combination with dask.
+        """
         self.dict_countvectorizers = {}
         self.dict_analyser = {}
 
@@ -145,6 +160,7 @@ class TextFeaturesAnalyser:
             self.dict_countvectorizers[lang] = countvectorizers
             self.dict_analyser[lang] = self._create_analysers(countvectorizers, use_ngrams)
         self.column_return_count = len(ngram_ranges)
+        self.use_dask = parallelisable
 
     def _build_meta_return(self):
         """Build the meta return."""
@@ -156,14 +172,28 @@ class TextFeaturesAnalyser:
         return [countvectorizer.build_analyzer(use_ngrams) for countvectorizer in countvectorizers]
 
     def features(self, df: pd.DataFrame, message_key: str = "message"):
-        """Build feature grams."""
+        """Build feature grams.
+
+        Args:
+            df (pd.DataFrame): dataframe with minimum the `message_key` column (default "message")
+                , and the "language" column
+            message_key (str): name of column that contains the string to be feature-ized.
+        """
         self.message_key = message_key
-        ddf = dd.from_pandas(
-            df, npartitions=30
-        )  # Should have npartitions configured in envirnment
-        # When using dask have to create a partial rather then a method on a class
         fn = functools.partial(feature_apply, self.dict_analyser, self.message_key)
-        return ddf.apply(fn, axis=1, meta=self._build_meta_return()).compute()
+        if self.use_dask:
+            ddf = dd.from_pandas(
+                df, npartitions=30
+            )  # Should have npartitions configured in envirnment
+            # When using dask have to create a partial rather then a method on a class
+
+            return ddf.apply(fn, axis=1, meta=self._build_meta_return()).compute()
+        else:
+            if len(df) == 0:
+                # An apply on an empty df returns the df itself, which has two columns. The
+                # expected return is a single series.
+                return pd.Series()
+            return df.apply(fn, axis=1)
 
 
 def feature_apply(
@@ -191,7 +221,9 @@ def feature_apply(
     raise ValueError(f"Language {lang} is not supported. Supported keys: {keys}")
 
 
-def create(ngram_ranges: List[Tuple[int, int]] = [(1, 3)], use_ngrams=True):
+def create(
+    ngram_ranges: List[Tuple[int, int]] = [(1, 3)], use_ngrams=True, parallelisable: bool = True
+):
     """Create the TextFeaturesAnalyser."""
     # Configuration is hard coded this can be changed at some point.
     # token_pattern is the default token pattern with the addition of a optional # before a word
@@ -229,11 +261,18 @@ def create(ngram_ranges: List[Tuple[int, int]] = [(1, 3)], use_ngrams=True):
         "und": {"strip_accents": "unicode"},
     }
 
+    # the processors for kurdish use cyhunspell, which isn't picklable. This means dask cannot
+    # parallelize them.
+    if parallelisable:
+        del default_params["ckb"]
+        del default_params["ku"]
+
     return TextFeaturesAnalyser(
         languages=list(default_params.keys()),
         default_params=default_params,
         ngram_ranges=ngram_ranges,
         use_ngrams=use_ngrams,
+        parallelisable=parallelisable,
     )
 
 
