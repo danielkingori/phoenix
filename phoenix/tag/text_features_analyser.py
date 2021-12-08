@@ -126,11 +126,14 @@ class TextFeaturesAnalyser:
     ngram_ranges.
     """
 
-    dict_countvectorizers: Dict = {}
-    dict_analyser: Dict = {}
+    dict_countvectorizers: Dict
+    dict_analyser: Dict
 
     def __init__(self, languages, ngram_ranges, use_ngrams, default_params):
         """Init the text features Analyser."""
+        self.dict_countvectorizers = {}
+        self.dict_analyser = {}
+
         for lang in languages:
             lang_default_params = {}
             if lang in default_params:
