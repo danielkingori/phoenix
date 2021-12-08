@@ -35,14 +35,17 @@ def get_feature_objects(exploded_features_df, features_key: str = "features") ->
 
 def features_with_is_key_feature(exploded_features_df, key_objects):
     """Return exploded_features_df with is_key_feature."""
-    return exploded_features_df.join(key_objects[["is_key_object"]]).fillna(False)
+    exploded_features_df = exploded_features_df.join(key_objects[["is_key_object"]])
+    exploded_features_df["is_key_object"] = exploded_features_df["is_key_object"].fillna(False)
+    return exploded_features_df
 
 
 def join_all_objects(all_objects, key_objects, objects_features):
     """Join and finalise object with key objects."""
     objects = all_objects.copy()
     objects = objects.set_index("object_id", drop=False)
-    objects = objects.join(key_objects[["is_key_object"]]).fillna(False)
+    objects = objects.join(key_objects[["is_key_object"]])
+    objects["is_key_object"] = objects["is_key_object"].fillna(False)
     objects = objects.join(objects_features[["features", "features_count"]])
     objects = objects.reset_index(drop=True)
     return objects
