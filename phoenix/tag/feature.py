@@ -21,8 +21,21 @@ def features(given_df: pd.DataFrame, text_key: str = "clean_text") -> pd.DataFra
         given_df copy with "features" column.
     """
     df = given_df.copy()
-    tfa = text_features_analyser.create()
-    df["features"] = tfa.features(df[[text_key, "language"]], text_key)
+    tfa_parallelizable = text_features_analyser.create(parallelisable=True)
+    tfa_non_parallelizable = text_features_analyser.create(parallelisable=False)
+
+    df_parallelizable = df[~((df["language"] == "ckb") | (df["language"] == "ku"))]
+    df_non_parallelizable = df[(df["language"] == "ckb") | (df["language"] == "ku")]
+
+    df_non_parallelizable["features"] = tfa_non_parallelizable.features(
+        df_non_parallelizable[[text_key, "language"]], text_key
+    )
+
+    df_parallelizable["features"] = tfa_parallelizable.features(
+        df_parallelizable[[text_key, "language"]], text_key
+    )
+
+    df = df_parallelizable.append(df_non_parallelizable).sort_index()
     return df
 
 
