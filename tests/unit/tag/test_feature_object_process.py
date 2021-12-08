@@ -14,6 +14,7 @@ def exploded_features_df():
             "object_id": [1, 1, 2, 2, 3, 3],
             "features": ["1-f1", "1-f2", "2-f1", "2-f2", "3-f1", "3-f2"],
             "features_count": [2, 1, 1, 2, 3, 3],
+            "non_feature_column": [None, True, False, None, None, None],
         },
         index=pd.Index([1, 1, 2, 2, 3, 3], name="object_id"),
     )
@@ -56,6 +57,7 @@ def test_group_key_objects(exploded_features_df, is_key_feature_s):
         pd.DataFrame(
             {
                 "object_id": [1, 3],
+                "non_feature_column": [True, None],
                 "has_key_feature": [True, True],
             },
             index=pd.Index([1, 3], name="object_id"),
