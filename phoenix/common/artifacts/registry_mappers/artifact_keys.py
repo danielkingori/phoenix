@@ -68,6 +68,7 @@ ArtifactKey = Literal[
     "tagging_runs-youtube_videos_input",
     "tagging_runs-youtube_videos_pulled",
     "tagging_runs-youtube_videos_for_tagging",
+    "tagging_runs-youtube_videos_final",
     "tagging_runs-youtube_comments_input",
     "tagging_runs-youtube_comments_pulled",
     "tagging_runs-youtube_comments_for_tagging",
@@ -108,4 +109,5 @@ ArtifactKey = Literal[
     "final-facebook_comments",
     "final-facebook_comments_topics",
     "final-facebook_comments_classes",
+    "final-youtube_videos",
 ]
