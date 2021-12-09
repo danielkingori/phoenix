@@ -56,6 +56,14 @@ MAPPERS: MapperDict = {
             "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
         ),
     ),
+    "final-tweets_classes": partial(
+        url_mapper,
+        (
+            FINAL_BASE + "tweets_classes/"
+            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
+            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
+        ),
+    ),
     "final-facebook_comments": partial(
         url_mapper,
         (
