@@ -80,4 +80,12 @@ MAPPERS: MapperDict = {
             "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
         ),
     ),
+    "final-facebook_comments_classes": partial(
+        url_mapper,
+        (
+            FINAL_BASE + "facebook_comments_classes/"
+            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
+            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
+        ),
+    ),
 }
