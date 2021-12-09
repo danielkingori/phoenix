@@ -1,5 +1,6 @@
 # Local Artifacts
 local_artifacts/
+local_models/
 
 # Jupyterlab cache
 .jupyter/lab/
