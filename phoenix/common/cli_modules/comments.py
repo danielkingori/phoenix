@@ -42,6 +42,16 @@ def get_files_to_process(url_to_folder) -> List[str]:
         "This is for when the CLI is used in cron jobs so that unnecessary errors aren't created."
     ),
 )
+@click.option(
+    "--include_inference",
+    multiple=True,
+    help=(
+        "Include an inference."
+        "Use this multiple times for each inference"
+        f"Supported inference: {tagging.SUPPORT_INFERENCE}. \n"
+        "eg. --include_inference tensions --include_inference sentiment"
+    ),
+)
 @click.pass_context
 def run_phase(
     ctx,
@@ -50,6 +60,7 @@ def run_phase(
     month_offset,
     start_offset,
     silence_no_files_to_process_exception,
+    include_inference,
 ):
     """Run processing and tagging of the raw comment data.
 
@@ -75,6 +86,8 @@ def run_phase(
         "YEAR_FILTER": year_filter,
         "MONTH_FILTER": month_filter,
     }
+    include_inference = tagging.validate_inferences(include_inference)
+    args_parameters = tagging.append_inference_params(args_parameters, include_inference)
 
     extra_parameters = dict([item.strip("--").split("=") for item in ctx.args])
     parameters = {
@@ -108,7 +121,12 @@ def run_phase(
 
     start_offset = start_offset - 1
     tagging._run_tagging_notebooks(
-        1, "facebook_comments", parameters, cur_run_params.art_url_reg, start_offset
+        1,
+        "facebook_comments",
+        parameters,
+        cur_run_params.art_url_reg,
+        start_offset,
+        include_inference,
     )
 
 
@@ -136,6 +154,16 @@ def run_phase(
         "This is for when the CLI is used in cron jobs so that unnecessary errors aren't created."
     ),
 )
+@click.option(
+    "--include_inference",
+    multiple=True,
+    help=(
+        "Include an inference."
+        "Use this multiple times for each inference"
+        f"Supported inference: {tagging.SUPPORT_INFERENCE}. \n"
+        "eg. --include_inference tensions --include_inference sentiment"
+    ),
+)
 @click.pass_context
 def tag_phase_2(
     ctx,
@@ -144,6 +172,7 @@ def tag_phase_2(
     month_offset,
     start_offset,
     silence_no_files_to_process_exception,
+    include_inference,
 ):
     """Run processing and phase 2 tagging if output for phase 1 exists.
 
@@ -169,6 +198,8 @@ def tag_phase_2(
         "YEAR_FILTER": year_filter,
         "MONTH_FILTER": month_filter,
     }
+    include_inference = tagging.validate_inferences(include_inference)
+    args_parameters = tagging.append_inference_params(args_parameters, include_inference)
 
     extra_parameters = dict([item.strip("--").split("=") for item in ctx.args])
     parameters = {
@@ -188,5 +219,10 @@ def tag_phase_2(
         return
 
     tagging._run_tagging_notebooks(
-        2, "facebook_comments", parameters, cur_run_params.art_url_reg, start_offset
+        2,
+        "facebook_comments",
+        parameters,
+        cur_run_params.art_url_reg,
+        start_offset,
+        include_inference,
     )

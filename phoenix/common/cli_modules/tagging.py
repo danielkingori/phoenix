@@ -1,10 +1,13 @@
 """Tagging CLI commands."""
-from typing import List
+from typing import Any, Dict, List, Optional
 
 import click
 
 from phoenix.common import artifacts, run_datetime, run_params
 from phoenix.common.cli_modules import main_group, utils
+
+
+SUPPORT_INFERENCE = ["topics", "classes", "tensions", "sentiment"]
 
 
 @main_group.main_group.group()
@@ -30,6 +33,16 @@ def tagging():
     default=0,
     help=("Start notebook from offset."),
 )
+@click.option(
+    "--include_inference",
+    multiple=True,
+    help=(
+        "Include an inference."
+        "Use this multiple times for each inference"
+        f"Supported inference: {SUPPORT_INFERENCE}. \n"
+        "eg. --include_inference tensions --include_inference sentiment"
+    ),
+)
 @click.pass_context
 def run_phase(
     ctx,
@@ -40,6 +53,7 @@ def run_phase(
     year_filter,
     month_filter,
     start_offset,
+    include_inference: Optional[List[str]] = [],
 ):
     """Run tagging phase.
 
@@ -68,6 +82,7 @@ def run_phase(
         year_filter,
         month_filter,
         start_offset,
+        include_inference,
     )
 
 
@@ -88,6 +103,16 @@ def run_phase(
     default=0,
     help=("Start notebook from offset."),
 )
+@click.option(
+    "--include_inference",
+    multiple=True,
+    help=(
+        "Include an inference."
+        "Use this multiple times for each inference"
+        "Supported inference: `tensions`, `sentiment`. \n"
+        "eg. --include_inference tensions --include_inference sentiment"
+    ),
+)
 @click.pass_context
 def run_phase_month_offset(
     ctx,
@@ -97,6 +122,7 @@ def run_phase_month_offset(
     object_type,
     month_offset,
     start_offset,
+    include_inference: Optional[List[str]] = [],
 ):
     """Run tagging of offsetting the month and year to the current month and year.
 
@@ -126,6 +152,7 @@ def run_phase_month_offset(
         year_filter,
         month_filter,
         start_offset,
+        include_inference,
     )
 
 
@@ -138,6 +165,7 @@ def _run_phase(
     year_filter,
     month_filter,
     start_offset,
+    include_inference: Optional[List[str]] = [],
 ):
     """Private function for running the tagging phase."""
     cur_run_params = run_params.general.create(artifact_env, tenant_id)
@@ -146,6 +174,8 @@ def _run_phase(
         "YEAR_FILTER": year_filter,
         "MONTH_FILTER": month_filter,
     }
+    include_inference = validate_inferences(include_inference)
+    args_parameters = append_inference_params(args_parameters, include_inference)
 
     extra_parameters = dict([item.strip("--").split("=") for item in ctx.args])
     parameters = {
@@ -155,12 +185,24 @@ def _run_phase(
     }
 
     return _run_tagging_notebooks(
-        phase_number, object_type, parameters, cur_run_params.art_url_reg, start_offset
+        phase_number,
+        object_type,
+        parameters,
+        cur_run_params.art_url_reg,
+        start_offset,
+        include_inference,
     )
 
 
-def _run_tagging_notebooks(phase_number, object_type, parameters, art_url_reg, start_offset):
-    notebooks = get_notebook_keys(phase_number, object_type)
+def _run_tagging_notebooks(
+    phase_number,
+    object_type,
+    parameters,
+    art_url_reg,
+    start_offset,
+    include_inference: List,
+):
+    notebooks = get_notebook_keys(phase_number, object_type, include_inference)
     return _run_notebooks(notebooks, parameters, art_url_reg, start_offset)
 
 
@@ -191,30 +233,39 @@ def tagging_run_notebook(
     utils.run_notebooks(input_nb_url, output_nb_url, parameters)
 
 
-def get_finalisation_notebooks(object_type) -> List[str]:
+def get_finalisation_notebooks(object_type, include_inference: List[str]) -> List[str]:
     """Get the finalisation notebooks for an object type."""
-    return [
+    nbs = [
         f"tag/{object_type}_finalise.ipynb",
-        f"tag/{object_type}_finalise_topics.ipynb",
     ]
+    if "topics" in include_inference or "classes" in include_inference:
+        nbs.append(f"tag/{object_type}_finalise_topics.ipynb")
+    return nbs
 
 
-def get_notebook_keys(phase_number: int, object_type) -> List[str]:
+def get_notebook_keys(
+    phase_number: int, object_type: str, include_inference: List[str]
+) -> List[str]:
     """Get the notebooks keys for phase."""
     if phase_number == 1:
-        return [
+        nbs = [
             get_data_pull_notebook_key(object_type),
-            # "tag/labeling/push_labeling_sheet.ipynb",
-            # "tag/features.ipynb",
-            # "tag/topics.ipynb",
-            # "tag/tensions.ipynb",
-            # "tag/third_party_models/aws_async/start_sentiment.ipynb",
+            "tag/features.ipynb",
         ]
+        if "topics" in include_inference or "classes" in include_inference:
+            nbs.append("tag/topics.ipynb")
+        if "tensions" in include_inference:
+            nbs.append("tag/tensions.ipynb")
+        if "sentiment" in include_inference:
+            nbs.append("tag/third_party_models/aws_async/start_sentiment.ipynb")
+        return nbs
 
     if phase_number == 2:
-        return [
-            "tag/third_party_models/aws_async/complete_sentiment.ipynb",
-        ] + get_finalisation_notebooks(object_type)
+        nbs = []
+        if "sentiment" in include_inference:
+            nbs.append("tag/third_party_models/aws_async/complete_sentiment.ipynb")
+        nbs = nbs + get_finalisation_notebooks(object_type, include_inference)
+        return nbs
 
     raise ValueError(f"Unknown phase number: {phase_number}")
 
@@ -281,3 +332,35 @@ def run_single(
     }
 
     tagging_run_notebook(notebook_key, parameters, cur_run_params.art_url_reg)
+
+
+def append_inference_params(notebook_parameters: Dict[str, Any], include_inference: List[str]):
+    """Append the Analysis parameters to the notebook parameters."""
+    if "classes" in include_inference:
+        notebook_parameters["RENAME_TOPIC_TO_CLASS"] = True
+
+    if "tensions" in include_inference:
+        notebook_parameters["INCLUDE_OBJECTS_TENSIONS"] = True
+    else:
+        notebook_parameters["INCLUDE_OBJECTS_TENSIONS"] = False
+
+    if "sentiment" in include_inference:
+        notebook_parameters["INCLUDE_SENTIMENT"] = True
+    else:
+        notebook_parameters["INCLUDE_SENTIMENT"] = False
+
+    return notebook_parameters
+
+
+def validate_inferences(include_inference: Optional[List[str]] = []) -> List[str]:
+    """Validate the include_inference."""
+    if not include_inference:
+        return []
+    if len(include_inference) == 0:
+        return []
+    difference = list(set(include_inference) - set(SUPPORT_INFERENCE))
+    if len(difference) != 0:
+        raise RuntimeError(
+            "Unsupported inference: {difference}." "Please use one of {SUPPORT_INFERENCE}"
+        )
+    return include_inference
