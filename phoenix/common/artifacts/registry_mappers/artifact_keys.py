@@ -104,6 +104,7 @@ ArtifactKey = Literal[
     "final-facebook_posts_classes",
     "final-tweets",
     "final-tweets_topics",
+    "final-tweets_classes",
     "final-facebook_comments",
     "final-facebook_comments_topics",
 ]
