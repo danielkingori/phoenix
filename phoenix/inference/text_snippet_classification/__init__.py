@@ -20,3 +20,8 @@ Training data should be of format:
       "features" which are strings that are assumed to denote strong signal as to corresponding
       class
 """
+from kotsu import registration
+
+
+validation_registry = registration.ValidationRegistry()
+model_registry = registration.ModelRegistry()
