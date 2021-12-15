@@ -19,7 +19,7 @@ def test_sflm_to_sfm():
     )
 
     expected_df = pd.DataFrame(
-        data={"features": ["woofs", "barks", "buzzes"], "topic": ["dog", "dog", "insect"]}
+        data={"features": ["woof", "bark", "buzz"], "topic": ["dog", "dog", "insect"]}
     )
 
     actual_df = backport_sflm_to_sfm.sflm_to_sfm(input_df)
