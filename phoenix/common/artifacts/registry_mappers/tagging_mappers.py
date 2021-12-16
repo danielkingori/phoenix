@@ -91,6 +91,12 @@ MAPPERS: MapperDict = {
     "tagging_runs-youtube_videos_for_tagging": partial(
         url_mapper, TAGGING_YOUTUBE_VIDEOS_FOR_TAGGING + "youtube_videos_for_tagging.parquet"
     ),
+    "tagging_runs-youtube_videos_final": partial(
+        url_mapper, TAGGING_YOUTUBE_VIDEOS + "youtube_videos_final.parquet"
+    ),
+    "tagging_runs-youtube_videos_topics_final": partial(
+        url_mapper, TAGGING_YOUTUBE_VIDEOS + "youtube_videos_final.parquet"
+    ),
     "tagging_runs-youtube_comments_input": partial(
         url_mapper, shared_urls.GROUP_BY_YOUTUBE_COMMENT_THREADS
     ),
@@ -99,12 +105,6 @@ MAPPERS: MapperDict = {
     ),
     "tagging_runs-youtube_comments_for_tagging": partial(
         url_mapper, TAGGING_YOUTUBE_COMMENTS_FOR_TAGGING + "youtube_comments_for_tagging.parquet"
-    ),
-    "tagging_runs-youtube_videos_final": partial(
-        url_mapper, TAGGING_YOUTUBE_COMMENTS + "youtube_videos_final.parquet"
-    ),
-    "tagging_runs-youtube_videos_topics_final": partial(
-        url_mapper, TAGGING_YOUTUBE_COMMENTS + "youtube_videos_final.parquet"
     ),
     # Utils
     "tagging_runs-pipeline_base": partial(url_mapper, TAGGING_PIPELINE_BASE),
