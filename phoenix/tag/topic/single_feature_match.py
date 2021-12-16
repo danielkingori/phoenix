@@ -1,4 +1,5 @@
 """Single feature match for topic analysis."""
+import numpy as np
 import pandas as pd
 
 
@@ -38,3 +39,14 @@ def get_topics(topic_config, features_df, fill_topic: str = FILL_TOPIC) -> pd.Da
     topics_df = topics_df.reset_index()
 
     return pd.concat([topics_df, no_topic], ignore_index=True)
+
+
+def get_matched_features_count_for_topic(topics_df, topic):
+    """Get the matched_features count for a topic."""
+    topics_filtered_df = topics_df[topics_df["topic"] == topic]
+    uniques, counts = np.unique(
+        sum(list(topics_filtered_df["matched_features"]), []), return_counts=True
+    )
+    matched_features = pd.DataFrame({"matched_feature": uniques, "count": counts})
+    matched_features = matched_features.reset_index()
+    return matched_features.sort_values(by=["count"], ascending=False)
