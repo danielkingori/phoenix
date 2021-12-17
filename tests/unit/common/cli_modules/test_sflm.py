@@ -6,8 +6,8 @@ import mock
 from click.testing import CliRunner
 from freezegun import freeze_time
 
+from phoenix.common import cli
 from phoenix.common.artifacts import registry_environment
-from phoenix.common.cli_modules import sflm
 
 
 URL_PREFIX = "s3://data-lake/"
@@ -25,8 +25,8 @@ class PathEndsWith(str):
 def test_create_from_labels(m_papermill_execute, tenants_template_url_mock):
     runner = CliRunner()
     result = runner.invoke(
-        sflm.create_from_labels,
-        ["production", "tenant_id_1", "facebook_posts", "tweets"],
+        cli.main_group.main_group,
+        ["sflm", "create_from_labels", "production", "tenant_id_1", "facebook_posts", "tweets"],
         catch_exceptions=False,
     )
     assert result.exit_code == 0
