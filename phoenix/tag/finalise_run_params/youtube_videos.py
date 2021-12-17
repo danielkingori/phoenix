@@ -33,7 +33,7 @@ def _get_urls(
     object_type: str,
     year_filter: int,
     month_filter: int,
-    final_url,
+    final_url: Optional[str],
 ) -> dtypes.FinaliseRunParamsURLs:
     """Get FinaliseRunParamsURLs for youtube_videos."""
     art_url_reg = general_run_params.art_url_reg
