@@ -87,18 +87,27 @@ def get_run_objects(
     extra_parameters: Dict[str, str],
 ) -> List[SFLMPapermillRun]:
     """Get the run objects."""
+    base_parameters = {
+        **utils.init_parameters(cur_run_params),
+        **extra_parameters,
+    }
     sflm_papermill_runs = []
     for object_type in object_types:
         sflm_papermill_runs.append(
             single_object_type_notebook_run(
-                "pull_objects_labelling_sheet.ipynb", cur_run_params, object_type, extra_parameters
+                "pull_objects_labelling_sheet.ipynb", cur_run_params, object_type, base_parameters
             )
         )
         sflm_papermill_runs.append(
             single_object_type_notebook_run(
-                "persist_sflm_to_config.ipynb", cur_run_params, object_type, extra_parameters
+                "persist_sflm_to_config.ipynb", cur_run_params, object_type, base_parameters
             )
         )
+
+    sflm_papermill_runs.append(
+        backport_sflm_config_to_sflm_config(cur_run_params, object_types, base_parameters)
+    )
+
     return sflm_papermill_runs
 
 
@@ -106,19 +115,16 @@ def single_object_type_notebook_run(
     notebook_name: str,
     cur_run_params: run_params.general.GeneralRunParams,
     object_type: str,
-    extra_parameters: Dict[str, str],
+    base_parameters: Dict[str, str],
 ) -> SFLMPapermillRun:
     """Get the SFLMPapermillRun for single object type notebook."""
     args_parameters = {"OBJECT_TYPE": object_type}
     parameters = {
-        **utils.init_parameters(cur_run_params),
+        **base_parameters,
         **args_parameters,
-        **extra_parameters,
     }
     return SFLMPapermillRun(
-        input_notebook_url=get_input_notebook_url(
-            notebook_name, cur_run_params
-        ),
+        input_notebook_url=get_input_notebook_url(notebook_name, cur_run_params),
         output_notebook_url=get_output_notebook_url(
             f"{object_type}-{notebook_name}", cur_run_params
         ),
@@ -141,3 +147,22 @@ def get_output_notebook_url(
 ) -> str:
     """Get the output url for the notebook."""
     return cur_run_params.art_url_reg.get_url("sflm-output_notebook_base") + notebook_name
+
+
+def backport_sflm_config_to_sflm_config(
+    cur_run_params: run_params.general.GeneralRunParams,
+    object_types: List[str],
+    base_parameters: Dict[str, Any],
+) -> SFLMPapermillRun:
+    """Get the SFLMPapermillRun for backport_sflm_config_to_sflm_config.ipynb."""
+    args_parameters = {"OBJECT_TYPES": list(object_types)}
+    parameters = {
+        **base_parameters,
+        **args_parameters,
+    }
+    notebook_name = "backport_sflm_config_to_sflm_config.ipynb"
+    return SFLMPapermillRun(
+        input_notebook_url=get_input_notebook_url(notebook_name, cur_run_params),
+        output_notebook_url=get_output_notebook_url(notebook_name, cur_run_params),
+        parameters=parameters,
+    )

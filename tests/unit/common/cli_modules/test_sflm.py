@@ -58,6 +58,11 @@ def test_create_from_labels(m_papermill_execute, tenants_template_url_mock):
             f"{output_base}tweets-persist_sflm_to_config.ipynb",
             {**default_parameters, **{"OBJECT_TYPE": "tweets"}},
         ),
+        mock.call(
+            PathEndsWith("tag/labelling/backport_sflm_config_to_sflm_config.ipynb"),
+            f"{output_base}backport_sflm_config_to_sflm_config.ipynb",
+            {**default_parameters, **{"OBJECT_TYPES": ["facebook_posts", "tweets"]}},
+        ),
     ]
 
     m_papermill_execute.assert_has_calls(calls)
