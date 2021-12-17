@@ -177,7 +177,7 @@ def _run_phase(
     include_inference = validate_inferences(include_inference)
     args_parameters = append_inference_params(args_parameters, include_inference)
 
-    extra_parameters = dict([item.strip("--").split("=") for item in ctx.args])
+    extra_parameters = utils.get_extra_parameters(ctx)
     parameters = {
         **utils.init_parameters(cur_run_params),
         **args_parameters,
