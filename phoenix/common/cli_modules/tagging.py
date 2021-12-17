@@ -235,11 +235,20 @@ def tagging_run_notebook(
 
 def get_finalisation_notebooks(object_type, include_inference: List[str]) -> List[str]:
     """Get the finalisation notebooks for an object type."""
-    nbs = [
-        f"tag/{object_type}_finalise.ipynb",
-    ]
+    if "youtube_videos" == object_type:
+        return get_generalised_finalisation_notebooks(object_type, include_inference)
+
+    nbs = [f"tag/{object_type}_finalise.ipynb"]
     if "topics" in include_inference or "classes" in include_inference:
         nbs.append(f"tag/{object_type}_finalise_topics.ipynb")
+    return nbs
+
+
+def get_generalised_finalisation_notebooks(object_type, include_inference: List[str]) -> List[str]:
+    """Get the generalised finalisation notebooks."""
+    nbs = ["tag/finalise.ipynb"]
+    if "topics" in include_inference or "classes" in include_inference:
+        nbs.append("tag/finalise_topics.ipynb")
     return nbs
 
 

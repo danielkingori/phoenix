@@ -42,6 +42,38 @@ PARTITION_COLUMNS_TO_DROP = [
 ]
 
 
+def for_object_type(
+    object_type: str,
+    df: pd.DataFrame,
+    objects_df: Optional[pd.DataFrame] = None,
+    language_sentiment_objects_df: Optional[pd.DataFrame] = None,
+) -> pd.DataFrame:
+    """Finalise the dataframe for an object type."""
+    if object_type == "youtube_videos":
+        df["object_id"] = df["id"].astype(str)
+        df = df.set_index("object_id")
+        df = df.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
+        return join_to_objects_and_language_sentiment(
+            df, objects_df, language_sentiment_objects_df
+        )
+
+
+def topics_for_object_type(
+    object_type: str,
+    df: pd.DataFrame,
+    topics_df: pd.DataFrame,
+) -> pd.DataFrame:
+    """Finalise the topics dataframe for an object type."""
+    if object_type == "youtube_videos":
+        df = df.copy()
+        df["object_id"] = df["id"].astype(str)
+        df = df.set_index("object_id")
+        return join_to_topics(
+            df,
+            topics_df,
+        )
+
+
 def join_to_objects_and_language_sentiment(
     df: pd.DataFrame,
     objects_df: Optional[pd.DataFrame] = None,

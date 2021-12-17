@@ -88,4 +88,28 @@ MAPPERS: MapperDict = {
             "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
         ),
     ),
+    "final-youtube_videos": partial(
+        url_mapper,
+        (
+            FINAL_BASE + "youtube_videos/"
+            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
+            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
+        ),
+    ),
+    "final-youtube_videos_topics": partial(
+        url_mapper,
+        (
+            FINAL_BASE + "youtube_videos_topics/"
+            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
+            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
+        ),
+    ),
+    "final-youtube_videos_classes": partial(
+        url_mapper,
+        (
+            FINAL_BASE + "youtube_videos_classes/"
+            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
+            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
+        ),
+    ),
 }
