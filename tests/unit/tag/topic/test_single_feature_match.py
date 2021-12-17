@@ -15,9 +15,9 @@ def test_get_topics():
 
     features_df = pd.DataFrame(
         {
-            "features": ["f1", "f2", "f5", "f1", "f5"],
-            "object_id": ["o1", "o1", "o1", "o2", "o3"],
-            "object_type": ["ot1", "ot1", "ot1", "ot1", "ot2"],
+            "features": ["f1", "f2", "f5", "f1", "f5", "f3", "f3 f5"],
+            "object_id": ["o1", "o1", "o1", "o2", "o3", "o4", "o5"],
+            "object_type": ["ot1", "ot1", "ot1", "ot1", "ot2", "ot1", "ot1"],
         }
     )
     result_df = sfm.get_topics(topic_config, features_df)
@@ -25,11 +25,11 @@ def test_get_topics():
         result_df,
         pd.DataFrame(
             {
-                "object_id": ["o1", "o1", "o2", "o2", "o3"],
-                "topic": ["t1", "t2", "t1", "t2", sfm.FILL_TOPIC],
-                "object_type": ["ot1", "ot1", "ot1", "ot1", "ot2"],
-                "matched_features": [["f1"], ["f1", "f2"], ["f1"], ["f1"], None],
-                "has_topic": [True, True, True, True, False],
+                "object_id": ["o1", "o1", "o2", "o2", "o3", "o4", "o5"],
+                "topic": ["t1", "t2", "t1", "t2", sfm.FILL_TOPIC, sfm.FILL_TOPIC, sfm.FILL_TOPIC],
+                "object_type": ["ot1", "ot1", "ot1", "ot1", "ot2", "ot1", "ot1"],
+                "matched_features": [["f1"], ["f1", "f2"], ["f1"], ["f1"], None, None, None],
+                "has_topic": [True, True, True, True, False, False, False],
             }
         ),
     )
