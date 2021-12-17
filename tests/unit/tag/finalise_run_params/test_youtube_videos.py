@@ -19,12 +19,14 @@ TENANT_ID = "tenant_id_1"
     (
         "include_objects_tensions, expected_include_objects_tensions"
         ",include_sentiment, expected_include_sentiment"
+        ",final_url, expected_final_url"
     ),
     [
-        (False, False, True, True),
-        ("False", False, "True", True),
-        ("F", False, "t", True),
-        ("", False, None, False),
+        (False, False, True, True, None, "default"),
+        ("False", False, "True", True, None, "default"),
+        ("F", False, "t", True, None, "default"),
+        ("", False, None, False, None, "default"),
+        ("", False, None, False, "some_url", "some_url"),
     ],
 )
 def test_create(
@@ -32,6 +34,8 @@ def test_create(
     expected_include_objects_tensions,
     include_sentiment,
     expected_include_sentiment,
+    final_url,
+    expected_final_url,
     tenants_template_url_mock,
 ):
     """Test create of the youtube_videos run params."""
@@ -42,7 +46,7 @@ def test_create(
         object_type=OBJECT_TYPE,
         year_filter=2021,
         month_filter=11,
-        final_url=None,
+        final_url=final_url,
         include_objects_tensions=include_objects_tensions,
         include_sentiment=include_sentiment,
     )
@@ -62,7 +66,10 @@ def test_create(
     assert urls.objects_tensions == f"{TAGGING_BASE}objects_tensions.parquet"
     assert urls.language_sentiment_objects == f"{TAGGING_BASE}language_sentiment_objects.parquet"
     assert urls.tagging_final == f"{TAGGING_BASE}youtube_videos_final.parquet"
-    FINAL_BASE = (
-        "s3://data-lake/tenant_id_1/final/youtube_videos/year_filter=2021/month_filter=11/"
-    )
-    assert urls.final == f"{FINAL_BASE}2021-11.parquet"
+    if expected_final_url == "default":
+        FINAL_BASE = (
+            "s3://data-lake/tenant_id_1/final/youtube_videos/year_filter=2021/month_filter=11/"
+        )
+        assert urls.final == f"{FINAL_BASE}2021-11.parquet"
+    else:
+        assert urls.final == expected_final_url
