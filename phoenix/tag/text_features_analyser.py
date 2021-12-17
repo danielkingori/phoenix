@@ -229,7 +229,7 @@ def feature_apply(
 
 
 def create(
-    ngram_ranges: List[Tuple[int, int]] = [(1, 3)], use_ngrams=True, parallelisable: bool = True
+    ngram_ranges: List[Tuple[int, int]] = [(1, 3)], use_ngrams=True, parallelisable: bool = False
 ):
     """Create the TextFeaturesAnalyser."""
     # Configuration is hard coded this can be changed at some point.
