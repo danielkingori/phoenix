@@ -11,7 +11,7 @@ services:
     build:
       context: ../
       dockerfile: ./docker/dev.Dockerfile
-    image: phoenix-dev
+    image: phoenix-undp
     volumes:
       - *default-bind
     # See .jupyter/jupyter_notebook_config.py for setting
@@ -37,7 +37,7 @@ services:
       - "8888"
 
   dask-scheduler:
-    image: phoenix-dev
+    image: phoenix-undp
     volumes:
       - *default-bind
     hostname: scheduler
@@ -47,7 +47,7 @@ services:
     command: ["dask-scheduler"]
 
   dask-worker:
-    image: phoenix-dev
+    image: phoenix-undp
     volumes:
       - *default-bind
     command: ["dask-worker", "tcp://scheduler:8786"]
