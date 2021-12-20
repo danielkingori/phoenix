@@ -1,4 +1,4 @@
-"""Tagging CLI commands."""
+"""SFLM CLI commands."""
 from typing import Any, Dict, List
 
 from dataclasses import dataclass
