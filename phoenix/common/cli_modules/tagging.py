@@ -345,8 +345,12 @@ def run_single(
 
 def append_inference_params(notebook_parameters: Dict[str, Any], include_inference: List[str]):
     """Append the Analysis parameters to the notebook parameters."""
+    if "topics" in include_inference:
+        notebook_parameters["INCLUDE_OBJECTS_TOPICS"] = True
+
     if "classes" in include_inference:
         notebook_parameters["RENAME_TOPIC_TO_CLASS"] = True
+        notebook_parameters["INCLUDE_OBJECTS_TOPICS"] = True
 
     if "tensions" in include_inference:
         notebook_parameters["INCLUDE_OBJECTS_TENSIONS"] = True
