@@ -110,7 +110,7 @@ MAPPERS: MapperDict = {
     "tagging_runs-pipeline_base": partial(url_mapper, TAGGING_PIPELINE_BASE),
     "tagging_runs-for_analyst_base": partial(url_mapper, TAGGING_FOR_ANALYST_BASE),
     # Features
-    "tagging_runs-features_for_tagging": partial(
+    "tagging_runs-objects_for_tagging": partial(
         url_mapper, TAGGING_PIPELINE_BASE + FOR_TAGGING_SUFFIX
     ),
     "tagging_runs-key_objects": partial(url_mapper, TAGGING_PIPELINE_BASE + "key_objects.parquet"),
