@@ -89,3 +89,8 @@ def file_exists(url, silence=False):
         return False
 
     return True
+
+
+def get_extra_parameters(ctx) -> Dict[str, str]:
+    """Get the extra parameters from the click context."""
+    return dict([item.strip("--").split("=") for item in ctx.args])

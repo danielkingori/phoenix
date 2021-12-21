@@ -11,6 +11,7 @@ from phoenix.common.cli_modules import (  # noqa: F401
     scrape_group,
     scrape_twitter,
     scrape_youtube,
+    sflm,
     tagging,
     utils,
 )
