@@ -63,9 +63,7 @@ def get_all_features_for_export(features_df: pd.DataFrame) -> pd.DataFrame:
     """Normalise and transform the features dataframe so it can be persisted correctly."""
     features_df["object_id"] = features_df["object_id"].astype(str)
     features_df["features"] = features_df["features"].astype(str)
-    return features_df[
-        ["object_id", "object_type", "features", "features_count", "is_key_feature"]
-    ]
+    return features_df[["object_id", "object_type", "features", "features_count"]]
 
 
 def get_objects_for_export(objects_df: pd.DataFrame) -> pd.DataFrame:
