@@ -12,4 +12,3 @@ The `features_final` in `features.ipynb` has more variables but these had to be 
 | object_type           | object  | |
 | features              | object  | The feature |
 | features_count        | int64   | The number of times the feature appears in the object |
-| is_key_feature        | bool    | is a relevant feature |
