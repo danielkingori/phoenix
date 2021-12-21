@@ -1,5 +1,6 @@
 """Test text_features_analyser."""
 import pandas as pd
+import pytest
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from snowballstemmer import stemmer
@@ -107,17 +108,17 @@ def test_TextFeaturesAnalyser_default_accepted_languages():
     df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
 
 
-def test_TextFeaturesAnalyser_features():
+@pytest.mark.parametrize("parallelisable", [True, False])
+def test_TextFeaturesAnalyser_features(parallelisable):
     df_test = pd.DataFrame(
         [("1", "succeeding in stemming removes the ends of words", "en")],
         columns=["id", "clean_text", "language"],
     )
-    text_analyser = tfa.create()
-    text_analyser_non_parallelizable = tfa.create(parallelisable=False)
-    df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
-    df_test["features_no_dask"] = text_analyser_non_parallelizable.features(
-        df_test[["clean_text", "language"]], "clean_text"
-    )
+
+    text_analyser = tfa.create(parallelisable=parallelisable)
+    output_features = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+    assert isinstance(output_features, pd.Series)
+    df_test["features"] = output_features
 
     expected_3gram_feature_list = [
         "succeed",
@@ -134,8 +135,7 @@ def test_TextFeaturesAnalyser_features():
         "remov end word",
     ]
 
-    assert df_test["features"][0] == expected_3gram_feature_list
-    assert df_test["features_no_dask"][0] == expected_3gram_feature_list
+    assert df_test.loc[0, "features"] == expected_3gram_feature_list
 
 
 def test_TextFeaturesAnalyser_kurdish():

@@ -178,7 +178,7 @@ class TextFeaturesAnalyser:
         # be able to analyse more then one row.
         return [countvectorizer.build_analyzer(use_ngrams) for countvectorizer in countvectorizers]
 
-    def features(self, df: pd.DataFrame, message_key: str = "message"):
+    def features(self, df: pd.DataFrame, message_key: str = "message") -> pd.Series:
         """Build feature grams.
 
         Args:
