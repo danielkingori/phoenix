@@ -112,8 +112,9 @@ def expected_processed_features() -> List[List[str]]:
     return features
 
 
+@pytest.mark.parametrize("execution_number", range(100))
 def test_TextFeaturesAnalyser_features_unparallelised(
-    unparallelised_tfa, input_df, expected_processed_features
+    execution_number, unparallelised_tfa, input_df, expected_processed_features
 ):
     """Test that the features for a certain row don't skip to another row.
 
@@ -132,9 +133,9 @@ def test_TextFeaturesAnalyser_features_unparallelised(
         assert output == expected
 
 
-@pytest.mark.skip
+@pytest.mark.parametrize("execution_number", range(100))
 def test_TextFeaturesAnalyser_features_skip_rows_parallel_vs_non_parallel(
-    parallelised_tfa, input_df, expected_processed_features
+    execution_number, parallelised_tfa, input_df, expected_processed_features
 ):
     """Test that the features for a certain row don't skip to another row.
 
