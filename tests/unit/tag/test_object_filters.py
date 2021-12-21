@@ -26,15 +26,6 @@ def test_facebook_posts():
     )
 
 
-def test_key_feature():
-    """Test key_feature filter."""
-    df = pd.DataFrame({"object_id": [1, 2], "has_key_feature": [True, False]})
-    result = df[object_filters.key_feature(df)]
-    pd.testing.assert_frame_equal(
-        result, pd.DataFrame({"object_id": [1], "has_key_feature": [True]})
-    )
-
-
 def test_not_retweet():
     """Test not a retweet filter."""
     df = pd.DataFrame({"object_id": [1, 2], "is_retweet": [False, True]})
