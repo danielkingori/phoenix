@@ -4,6 +4,8 @@ Has differing outcomes when run multiple times, but only the full sized
 parallel_vs_non_parallel. You'll need to run this suite multiple (+- 20) times to reliably get
 the differing outcomes.
 """
+from typing import List
+
 import pandas as pd
 import pytest
 from snowballstemmer import stemmer
@@ -46,15 +48,9 @@ def parallelised_tfa():
     )
 
 
-def test_TextFeaturesAnalyser_features_unparallelised(unparallelised_tfa):
-    """Test that the features for a certain row don't skip to another row.
-
-    This is the control to see if unparallelised tfa's always output the same output.  40/40 times
-    it passed the test.
-
-    NOTE: this also worked with two separate instances of unparallelised_tfa,
-    before it was a fixture
-    """
+@pytest.fixture
+def input_df() -> pd.DataFrame:
+    """Input dataframe of Arabic messages."""
     input_df = pd.DataFrame(
         data={
             "message": [
@@ -69,54 +65,93 @@ def test_TextFeaturesAnalyser_features_unparallelised(unparallelised_tfa):
             "language": ["ar"] * 7,
         }
     )
+    return input_df
 
-    non_parallelised_df_1 = input_df.copy()
-    non_parallelised_df_2 = input_df.copy()
 
-    non_parallelised_df_1["processed_features"] = unparallelised_tfa.features(
-        non_parallelised_df_1
-    )
-    non_parallelised_df_2["processed_features"] = unparallelised_tfa.features(
-        non_parallelised_df_2
-    )
+@pytest.fixture
+def expected_processed_features() -> List[List[str]]:
+    """Expected features after processing."""
+    features = [
+        ["#الحدث_اليم"],
+        ["محلل", "سياس", "محلل سياس"],
+        ["هي", "ارك", "عام", "هي ارك", "ارك عام", "هي ارك عام"],
+        ["#العرب"],
+        [
+            "كيل",
+            "زار",
+            "الشو",
+            "قانون",
+            "حقوق",
+            "انس",
+            "كيل زار",
+            "زار الشو",
+            "الشو قانون",
+            "قانون حقوق",
+            "حقوق انس",
+            "كيل زار الشو",
+            "زار الشو قانون",
+            "الشو قانون حقوق",
+            "قانون حقوق انس",
+        ],
+        ["اتفاق_ستوكهولم"],
+        [
+            "رييس",
+            "وزراء",
+            "يمن",
+            "معين",
+            "عبدالمل",
+            "رييس وزراء",
+            "وزراء يمن",
+            "يمن معين",
+            "معين عبدالمل",
+            "رييس وزراء يمن",
+            "وزراء يمن معين",
+            "يمن معين عبدالمل",
+        ],
+    ]
+    return features
 
-    pd.testing.assert_frame_equal(non_parallelised_df_1, non_parallelised_df_2)
+
+def test_TextFeaturesAnalyser_features_unparallelised(
+    unparallelised_tfa, input_df, expected_processed_features
+):
+    """Test that the features for a certain row don't skip to another row.
+
+    This is the control to see if unparallelised tfa's always output the same output.  40/40 times
+    it passed the test.
+
+    NOTE: this also worked with two separate instances of unparallelised_tfa,
+    before it was a fixture
+    """
+    output_processed_features_df = unparallelised_tfa.features(input_df)
+    output_processed_features_series = output_processed_features_df.iloc[:, 0]
+
+    assert isinstance(output_processed_features_series, pd.Series)
+
+    for output, expected in zip(output_processed_features_series, expected_processed_features):
+        assert output == expected
 
 
 @pytest.mark.skip
 def test_TextFeaturesAnalyser_features_skip_rows_parallel_vs_non_parallel(
-    unparallelised_tfa, parallelised_tfa
+    parallelised_tfa, input_df, expected_processed_features
 ):
     """Test that the features for a certain row don't skip to another row.
-    This is the test to see if the unparallelised tfa has a different output to the parallelised
-    tfa
+
+    This is the control to see if parallelised tfa's always output the same output.
+    it passed the test.
     12/40 times it passed the test.
 
     Note: before refactoring to a fixture we instantiated the tfa in the test itself,
     it passed the test 29/40 times.
     """
-    input_df = pd.DataFrame(
-        data={
-            "message": [
-                "#الحدث_اليمني",
-                "المحلل السياسي",
-                "هيئة الأركان العامة",  # this one fails sometimes
-                "#العربية",
-                "وكيل وزارة الشؤون القانونية وحقوق الإنسان",  # this one fails most
-                "اتفاق_ستوكهولم",
-                "رئيس الوزراء اليمني معين عبدالملك",
-            ],
-            "language": ["ar"] * 7,
-        }
-    )
+    output_processed_features_df = parallelised_tfa.features(input_df)
+    output_processed_features_series = output_processed_features_df.iloc[:, 0]
 
-    parallelised_df = input_df.copy()
-    non_parallelised_df = input_df.copy()
+    assert isinstance(output_processed_features_series, pd.Series)
 
-    parallelised_df["processed_features"] = parallelised_tfa.features(parallelised_df)
-    non_parallelised_df["processed_features"] = unparallelised_tfa.features(non_parallelised_df)
-
-    pd.testing.assert_frame_equal(parallelised_df, non_parallelised_df)
+    for output, expected in zip(output_processed_features_series, expected_processed_features):
+        assert output == expected
 
 
 def test_TextFeaturesAnalyser_features_skip_rows_parallel_vs_non_parallel_small(
