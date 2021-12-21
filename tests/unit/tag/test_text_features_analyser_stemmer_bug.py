@@ -23,8 +23,8 @@ ARABIC_STEMMER_PARAMS = {
 
 
 @pytest.fixture
-def unparallelised_featuriser():
-    """Unparallelised featuriser. Does stemming for Arabic."""
+def unparallelised_tfa():
+    """Unparallelised tfa. Does stemming for Arabic."""
     return tfa.TextFeaturesAnalyser(
         languages=list(ARABIC_STEMMER_PARAMS.keys()),
         default_params=ARABIC_STEMMER_PARAMS,
@@ -35,8 +35,8 @@ def unparallelised_featuriser():
 
 
 @pytest.fixture
-def parallelised_featuriser():
-    """Parallelised featuriser. Does stemming for Arabic."""
+def parallelised_tfa():
+    """Parallelised tfa. Does stemming for Arabic."""
     return tfa.TextFeaturesAnalyser(
         languages=list(ARABIC_STEMMER_PARAMS.keys()),
         default_params=ARABIC_STEMMER_PARAMS,
@@ -46,12 +46,14 @@ def parallelised_featuriser():
     )
 
 
-def test_TextFeaturesAnalyser_features_unparallelised(unparallelised_featuriser):
+def test_TextFeaturesAnalyser_features_unparallelised(unparallelised_tfa):
     """Test that the features for a certain row don't skip to another row.
-    This is the control to see if unparallelised tfa's always output the same output.
-    40/40 times it passed the test.
-    NOTE: this also worked with two separate instances of unparallelised_featuriser, before it
-    was a fixture
+
+    This is the control to see if unparallelised tfa's always output the same output.  40/40 times
+    it passed the test.
+
+    NOTE: this also worked with two separate instances of unparallelised_tfa,
+    before it was a fixture
     """
     input_df = pd.DataFrame(
         data={
@@ -71,10 +73,10 @@ def test_TextFeaturesAnalyser_features_unparallelised(unparallelised_featuriser)
     non_parallelised_df_1 = input_df.copy()
     non_parallelised_df_2 = input_df.copy()
 
-    non_parallelised_df_1["processed_features"] = unparallelised_featuriser.features(
+    non_parallelised_df_1["processed_features"] = unparallelised_tfa.features(
         non_parallelised_df_1
     )
-    non_parallelised_df_2["processed_features"] = unparallelised_featuriser.features(
+    non_parallelised_df_2["processed_features"] = unparallelised_tfa.features(
         non_parallelised_df_2
     )
 
@@ -83,7 +85,7 @@ def test_TextFeaturesAnalyser_features_unparallelised(unparallelised_featuriser)
 
 @pytest.mark.skip
 def test_TextFeaturesAnalyser_features_skip_rows_parallel_vs_non_parallel(
-    unparallelised_featuriser, parallelised_featuriser
+    unparallelised_tfa, parallelised_tfa
 ):
     """Test that the features for a certain row don't skip to another row.
     This is the test to see if the unparallelised tfa has a different output to the parallelised
@@ -111,16 +113,14 @@ def test_TextFeaturesAnalyser_features_skip_rows_parallel_vs_non_parallel(
     parallelised_df = input_df.copy()
     non_parallelised_df = input_df.copy()
 
-    parallelised_df["processed_features"] = parallelised_featuriser.features(parallelised_df)
-    non_parallelised_df["processed_features"] = unparallelised_featuriser.features(
-        non_parallelised_df
-    )
+    parallelised_df["processed_features"] = parallelised_tfa.features(parallelised_df)
+    non_parallelised_df["processed_features"] = unparallelised_tfa.features(non_parallelised_df)
 
     pd.testing.assert_frame_equal(parallelised_df, non_parallelised_df)
 
 
 def test_TextFeaturesAnalyser_features_skip_rows_parallel_vs_non_parallel_small(
-    unparallelised_featuriser, parallelised_featuriser
+    unparallelised_tfa, parallelised_tfa
 ):
     """Test that the features for a certain row don't skip to another row.
     This is the test to see if the unparallelised tfa has a different output to the parallelised
@@ -140,9 +140,7 @@ def test_TextFeaturesAnalyser_features_skip_rows_parallel_vs_non_parallel_small(
     parallelised_df = input_df.copy()
     non_parallelised_df = input_df.copy()
 
-    parallelised_df["processed_features"] = parallelised_featuriser.features(parallelised_df)
-    non_parallelised_df["processed_features"] = unparallelised_featuriser.features(
-        non_parallelised_df
-    )
+    parallelised_df["processed_features"] = parallelised_tfa.features(parallelised_df)
+    non_parallelised_df["processed_features"] = unparallelised_tfa.features(non_parallelised_df)
 
     pd.testing.assert_frame_equal(parallelised_df, non_parallelised_df)
