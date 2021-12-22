@@ -12,6 +12,7 @@ from typing import Any, Callable, Dict, List, Tuple
 
 import functools
 import itertools
+import logging
 
 import arabic_reshaper
 import dask.dataframe as dd
@@ -25,6 +26,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 from snowballstemmer import stemmer
 
 from phoenix.tag import kurdish
+
+
+logger = logging.getLogger(__name__)
 
 
 class StemmedCountVectorizer(CountVectorizer):
@@ -112,8 +116,10 @@ def stem_analyzer(stemmer, analyzer, doc):
         if token:
             try:
                 words_list = [stemmer.stemWord(w) for w in token.split(" ")]
+                logger.info(f"[words_list={words_list}]")
                 li.append(" ".join(words_list))
             except IndexError:
+                logger.info("IndexError occured")
                 # Index Errors causes problems
                 li.append(token)
     return li
@@ -193,6 +199,8 @@ class TextFeaturesAnalyser:
                 df, npartitions=30
             )  # Should have npartitions configured in envirnment
             # When using dask have to create a partial rather then a method on a class
+            for p in range(ddf.npartitions):
+                logger.info(f"Partition Index={p}, Number of Rows={len(ddf.get_partition(p))}")
 
             return ddf.apply(fn, axis=1, meta=self._build_meta_return()).compute()
         else:
