@@ -134,7 +134,7 @@ def test_TextFeaturesAnalyser_features_unparallelised(
 
 
 @pytest.mark.parametrize("execution_number", range(100))
-def test_TextFeaturesAnalyser_features_skip_rows_parallel_vs_non_parallel(
+def test_TextFeaturesAnalyser_features_parallel(
     execution_number, parallelised_tfa, input_df, expected_processed_features
 ):
     """Test that the features for a certain row don't skip to another row.
