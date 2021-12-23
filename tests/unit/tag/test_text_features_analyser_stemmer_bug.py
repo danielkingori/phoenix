@@ -152,29 +152,3 @@ def test_TextFeaturesAnalyser_features_parallel(
     for output, expected in zip(output_processed_features, expected_processed_features):
         assert output == expected
 
-
-def test_TextFeaturesAnalyser_features_skip_rows_parallel_vs_non_parallel_small(
-    unparallelised_tfa, parallelised_tfa
-):
-    """Test that the features for a certain row don't skip to another row.
-    This is the test to see if the unparallelised tfa has a different output to the parallelised
-    tfa for a small subset. It contains only the row (index 3) that changes the most in the
-    large test.
-    This one passes, 40/40 times.
-    """
-    input_df = pd.DataFrame(
-        data={
-            "message": [
-                "وكيل وزارة الشؤون القانونية وحقوق الإنسان",
-            ],
-            "language": ["ar"] * 1,
-        }
-    )
-
-    parallelised_df = input_df.copy()
-    non_parallelised_df = input_df.copy()
-
-    parallelised_df["processed_features"] = parallelised_tfa.features(parallelised_df)
-    non_parallelised_df["processed_features"] = unparallelised_tfa.features(non_parallelised_df)
-
-    pd.testing.assert_frame_equal(parallelised_df, non_parallelised_df)
