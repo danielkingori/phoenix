@@ -22,7 +22,7 @@ from phoenix.tag import text_features_analyser as tfa
 
 ARABIC_STEMMER_PARAMS = {
     "ar": {
-        "stemmer": stemmer("arabic"),
+        "stemmer_initialiser": (stemmer, ("arabic",)),
         "stop_words": tfa.get_stopwords(),
         "strip_accents": "unicode",
         "encoding": "utf-8",
@@ -119,7 +119,7 @@ def expected_processed_features() -> List[List[str]]:
     return features
 
 
-@pytest.mark.parametrize("execution_number", range(100))
+@pytest.mark.parametrize("execution_number", range(1))
 def test_TextFeaturesAnalyser_features_unparallelised(
     execution_number, unparallelised_tfa, input_df, expected_processed_features
 ):
@@ -139,7 +139,7 @@ def test_TextFeaturesAnalyser_features_unparallelised(
         assert output == expected
 
 
-@pytest.mark.parametrize("execution_number", range(100))
+@pytest.mark.parametrize("execution_number", range(1))
 def test_TextFeaturesAnalyser_features_parallel(
     execution_number, parallelised_tfa, input_df, expected_processed_features
 ):

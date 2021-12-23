@@ -14,7 +14,9 @@ def test_StemmedCountVectorizer_en():
 
     en_corpus = ["succeeding in stemming removes the ends of words"]
 
-    en_vectorizer = tfa.StemmedCountVectorizer(en_stemmer, stop_words=stopwords.words("english"))
+    en_vectorizer = tfa.StemmedCountVectorizer(
+        stemmer=en_stemmer, stop_words=stopwords.words("english")
+    )
     en_vectorizer.fit_transform(en_corpus)
     expected_feature_names = ["succeed", "stem", "remov", "end", "word"]
     assert set(en_vectorizer.get_feature_names()) == set(expected_feature_names)
@@ -25,7 +27,9 @@ def test_StemmedCountVectorizer_ar():
     """Test if StemmedCountVectorizer is initialized with the right stemmer."""
     ar_stemmer = stemmer("arabic")
 
-    ar_vectorizer = tfa.StemmedCountVectorizer(ar_stemmer, stop_words=stopwords.words("arabic"))
+    ar_vectorizer = tfa.StemmedCountVectorizer(
+        stemmer=ar_stemmer, stop_words=stopwords.words("arabic")
+    )
     ar_corpus = [
         "تقرير عن الأحداث التي ترافقت مع الانتخابات السورية ومقابلات مع سوريين شاهدوا الحلقة الكاملة من برنامج طوني خليفة عبر هذا الرابط"  # noqa
     ]
@@ -56,7 +60,9 @@ def test_StemmedCountVectorizer_ar():
 def test_StemmedCountVectorizer_common_words():
     en_stemmer = stemmer("english")
     en_corpus = ["succeeding in stemming removes the ends of words", "words words words"]
-    en_vectorizer = tfa.StemmedCountVectorizer(en_stemmer, stop_words=stopwords.words("english"))
+    en_vectorizer = tfa.StemmedCountVectorizer(
+        stemmer=en_stemmer, stop_words=stopwords.words("english")
+    )
     en_matrix = en_vectorizer.fit_transform(en_corpus)
     actual_word_dict = en_vectorizer.get_most_common_words(en_matrix)
     expected_word_dict = {
