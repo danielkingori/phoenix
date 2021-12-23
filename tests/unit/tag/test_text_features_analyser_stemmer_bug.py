@@ -124,12 +124,11 @@ def test_TextFeaturesAnalyser_features_unparallelised(
     NOTE: this also worked with two separate instances of unparallelised_tfa,
     before it was a fixture
     """
-    output_processed_features_df = unparallelised_tfa.features(input_df)
-    output_processed_features_series = output_processed_features_df.iloc[:, 0]
+    output_processed_features = unparallelised_tfa.features(input_df)
 
-    assert isinstance(output_processed_features_series, pd.Series)
+    assert isinstance(output_processed_features, pd.Series)
 
-    for output, expected in zip(output_processed_features_series, expected_processed_features):
+    for output, expected in zip(output_processed_features, expected_processed_features):
         assert output == expected
 
 
@@ -146,12 +145,11 @@ def test_TextFeaturesAnalyser_features_parallel(
     Note: before refactoring to a fixture we instantiated the tfa in the test itself,
     it passed the test 29/40 times.
     """
-    output_processed_features_df = parallelised_tfa.features(input_df)
-    output_processed_features_series = output_processed_features_df.iloc[:, 0]
+    output_processed_features = parallelised_tfa.features(input_df)
 
-    assert isinstance(output_processed_features_series, pd.Series)
+    assert isinstance(output_processed_features, pd.Series)
 
-    for output, expected in zip(output_processed_features_series, expected_processed_features):
+    for output, expected in zip(output_processed_features, expected_processed_features):
         assert output == expected
 
 

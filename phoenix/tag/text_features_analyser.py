@@ -202,13 +202,13 @@ class TextFeaturesAnalyser:
             for p in range(ddf.npartitions):
                 logger.info(f"Partition Index={p}, Number of Rows={len(ddf.get_partition(p))}")
 
-            return ddf.apply(fn, axis=1, meta=self._build_meta_return()).compute()
+            return ddf.apply(fn, axis=1, meta=self._build_meta_return()).compute().iloc[:, 0]
         else:
             if len(df) == 0:
                 # An apply on an empty df returns the df itself, which has two columns. The
                 # expected return is a single series.
                 return pd.Series()
-            return df.apply(fn, axis=1)
+            return df.apply(fn, axis=1).iloc[:, 0]
 
 
 def feature_apply(
