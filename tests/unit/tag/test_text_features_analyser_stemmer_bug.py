@@ -158,4 +158,3 @@ def test_TextFeaturesAnalyser_features_parallel(
 
     for output, expected in zip(output_processed_features, expected_processed_features):
         assert output == expected
-
