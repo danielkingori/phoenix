@@ -114,14 +114,10 @@ def stem_analyzer(stemmer, analyzer, doc):
         return li
     for token in filter(None, analyzer(doc)):  # type: ignore
         if token:
-            try:
-                words_list = [stemmer.stemWord(w) for w in token.split(" ")]
-                logger.info(f"[words_list={words_list}]")
-                li.append(" ".join(words_list))
-            except IndexError:
-                logger.info("IndexError occured")
-                # Index Errors causes problems
-                li.append(token)
+            #  words_list = [stemmer.stemWord(w) for w in token.split(" ") if w]
+            words_list = [w for w in token.split(" ") if w]
+            logger.info(f"[words_list={words_list}]")
+            li.append(" ".join(words_list))
     return li
 
 
