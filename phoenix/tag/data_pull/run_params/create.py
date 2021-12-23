@@ -2,12 +2,13 @@
 from typing import Callable, Dict, Optional, Union
 
 from phoenix.common.run_params import general, utils
-from phoenix.tag.data_pull.run_params import dtypes, facebook_posts, tweets
+from phoenix.tag.data_pull.run_params import dtypes, facebook_posts, tweets, youtube_videos
 
 
 _urls_registry_map: Dict[str, Callable] = {
     "facebook_posts": facebook_posts.get_urls,
-    "tweets": tweets.get_urls
+    "tweets": tweets.get_urls,
+    "youtube_videos": youtube_videos.get_urls,
 }
 
 
