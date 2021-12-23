@@ -6,6 +6,9 @@ This creates one schema for all sources that the tagging pipeline will process a
 | Column                | dtype   | Description |
 |-----------------------|---------| ------------|
 | object_id             | object  | The unique object id |
+| object_url            | object  | URL of the object |
+| object_user_url       | object  | URL of the object's user |
+| object_user_name      | object  | Name of the object's user |
 | text                  | object  | Text to analyse |
 | object_type           | object  | Enum based on `phoenix/tag/data_pull/constants.py` |
 | language_from_api     | object  | Language key that came from the scraped data. Thus not computed by phoenix. |
