@@ -13,6 +13,8 @@ from snowballstemmer import stemmer
 from phoenix.tag import text_features_analyser as tfa
 
 
+TEST_REPEAT_COUNT = 100
+
 ARABIC_STEMMER_PARAMS = {
     "ar": {
         "stemmer": stemmer("arabic"),
@@ -54,15 +56,15 @@ def input_df() -> pd.DataFrame:
     input_df = pd.DataFrame(
         data={
             "message": [
-                "#الحدث_اليمني",
-                "المحلل السياسي",
-                "هيئة الأركان العامة",
-                "#العربية",
+                #  "#الحدث_اليمني",
+                #  "المحلل السياسي",
+                #  "هيئة الأركان العامة",
+                #  "#العربية",
                 "وكيل وزارة الشؤون القانونية وحقوق الإنسان",
                 "اتفاق_ستوكهولم",
                 "رئيس الوزراء اليمني معين عبدالملك",
             ],
-            "language": ["ar"] * 7,
+            "language": ["ar"] * 3,
         }
     )
     return input_df
@@ -72,10 +74,10 @@ def input_df() -> pd.DataFrame:
 def expected_processed_features() -> List[List[str]]:
     """Expected features after processing."""
     features = [
-        ["#الحدث_اليم"],
-        ["محلل", "سياس", "محلل سياس"],
-        ["هي", "ارك", "عام", "هي ارك", "ارك عام", "هي ارك عام"],
-        ["#العرب"],
+        #  ["#الحدث_اليم"],
+        #  ["محلل", "سياس", "محلل سياس"],
+        #  ["هي", "ارك", "عام", "هي ارك", "ارك عام", "هي ارك عام"],
+        #  ["#العرب"],
         [
             "كيل",
             "زار",
@@ -112,7 +114,7 @@ def expected_processed_features() -> List[List[str]]:
     return features
 
 
-@pytest.mark.parametrize("execution_number", range(100))
+@pytest.mark.parametrize("execution_number", range(TEST_REPEAT_COUNT))
 def test_TextFeaturesAnalyser_features_unparallelised(
     execution_number, unparallelised_tfa, input_df, expected_processed_features
 ):
@@ -133,7 +135,7 @@ def test_TextFeaturesAnalyser_features_unparallelised(
         assert output == expected
 
 
-@pytest.mark.parametrize("execution_number", range(100))
+@pytest.mark.parametrize("execution_number", range(TEST_REPEAT_COUNT))
 def test_TextFeaturesAnalyser_features_parallel(
     execution_number, parallelised_tfa, input_df, expected_processed_features
 ):
