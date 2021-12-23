@@ -1,8 +1,15 @@
-"""Unit tests for features bug. Is in its own file ONLY because the rest of tfa tests take 5+s.
+"""Unit tests specifically for tracking down the intermittent bug in `tfa.features`.
 
-Has differing outcomes when run multiple times, but only the full sized
-parallel_vs_non_parallel. You'll need to run this suite multiple (+- 20) times to reliably get
-the differing outcomes.
+The `feature` function when ran using `dask` (i.e. parallelised) intermittently gives inconsistent
+results. The bug was tracked down as be caused by a combination of `snowball` stemmer instances not
+being thread-safe combined with running using `dask` parallelised.
+
+The solution is to instantiate a stemmer instance _per thread_ and not share an instance across
+threads.
+
+One can use the `execution_number` range value to vary the number of time a test is repeated. It
+may be required to up the number to 1000 to get failures, depending on the machine you are running
+on.
 """
 from typing import List
 
