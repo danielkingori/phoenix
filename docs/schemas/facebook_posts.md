@@ -56,14 +56,9 @@ CrowdTangle glossary Link [https://help.crowdtangle.com/en/articles/1184978-crow
 | text_hash                              | object              | The hash of the text or link used for calculating the `phoenix_post_id` |
 | scrape_url                             | object              | The scrape url to be used |
 | url_post_id                            | object              | The post id from the URL. |
-| is_economic_labour_tension             | bool                | Economic labour tension flag |
-| is_sectarian_tension                   | bool                | Sectarian tension flag |
-| is_environmental_tension               | bool                | Environmental tension flag |
-| is_political_tension                   | bool                | Political tension flag |
-| is_service_related_tension             | bool                | Service Related tension flag |
-| is_community_insecurity_tension        | bool                | Community Insecurity tension flag |
-| is_geopolitics_tension                 | bool                | Geopolitics tension flag |
-| is_intercommunity_relations_tension    | bool                | Intercommunity relations tension flag |
+
+## Additional columns with the tensions inference
+see (`objects_tensions`)[docs/schemas/objects.md#Objects_tensions]
 
 # Facebook posts topics
 

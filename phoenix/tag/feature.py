@@ -6,7 +6,6 @@ Please update if it is changed.
 """
 import pandas as pd
 
-from phoenix.common import artifacts
 from phoenix.tag import constants, text_features_analyser
 
 
@@ -69,26 +68,6 @@ def explode_features(given_df: pd.DataFrame):
         ],
         axis=1,
     )
-
-
-def key_features(given_df: pd.DataFrame, features_key: str = "features") -> pd.Series:
-    """Get the key features.
-
-    Arguments:
-        given_df: a dataframe containing "features" as a single string.
-        features_key: column in data frame where the list of features are.
-
-    Returns:
-        Subset of given_df that has interesting_features.
-    """
-    df = given_df.copy()
-    interesting_features = get_interesting_features()
-    return df[features_key].isin(interesting_features["interesting_features"])
-
-
-def get_interesting_features() -> pd.DataFrame:
-    """Get interesting features configuration."""
-    return pd.read_csv(f"{artifacts.urls.get_static_data()}/interesting_features.csv")
 
 
 def get_features_to_label(exploded_features_df) -> pd.DataFrame:

@@ -38,25 +38,6 @@ Data is mapped from `objects`, `topics` and data from twitter API: https://devel
 | year_filter               | int64               | Normalised column for filtering by year. Year that the tweet was created |
 | month_filter              | int64               | Normalised column for filtering by month. Month that the tweet was created |
 | day_filter                | int64               | Normalised column for filtering by day. Day of the month that the tweet was created |
-| text                      | object              | The text that the tagging pipeline used  |
-| object_type               | object              | tweet |
-| language_from_api         | object              | repeat of lang |
-| clean_text                | object              | The cleaned version of the text |
-| language                  | object              | The language that phoenix detected |
-| confidence                | float64             | Confidence of the phoenix language detection |
-| is_unofficial_retweet     | bool                | Does phoenix think it is an unofficial tweet |
-| is_retweet                | bool                | Does phoenix think it is a retweet, both official and unofficial |
-| is_key_object             | bool                | Does phoenix think the tweet is relevant |
-| features                  | object              | List of features of the text that phoenix calculated |
-| features_count            | object              | List of counts of the features that phoenix calculated |
-| is_economic_labour_tension| bool                | Economic labour tension flag |
-| is_sectarian_tension      | bool                | Sectarian tension flag |
-| is_environmental_tension  | bool                | Environmental tension flag |
-| is_political_tension      | bool                | Political tension flag |
-| is_service_related_tension| bool                | Service Related tension flag |
-| is_community_insecurity_tension| bool           | Community Insecurity tension flag |
-| is_geopolitics_tension    | bool                | Geopolitics tension flag |
-| is_intercommunity_relations_tension| bool       | Intercommunity relations tension flag |
 | user_id                   | int64               | User id that made the tweet |
 | user_id_str               | object              | User id string that made the tweet |
 | user_name                 | object              | User name that made the tweet |
@@ -69,6 +50,9 @@ Data is mapped from `objects`, `topics` and data from twitter API: https://devel
 | user_geo_enabled          | bool                | If the user that made the tweet has geo enabled |
 | user_verified             | bool                | If the user that made the tweet is verified |
 | user_lang                 | object              | The configured language of the user that made the tweet |
+
+## Additional columns with the tensions inference
+see (`objects_tensions`)[docs/schemas/objects.md#Objects_tensions]
 
 # Tweets topics
 

@@ -76,7 +76,7 @@ ArtifactKey = Literal[
     # Tagging Pipeline
     "tagging_runs-pipeline_base",
     "tagging_runs-for_analyst_base",
-    "tagging_runs-features_for_tagging",
+    "tagging_runs-objects_for_tagging",
     "tagging_runs-key_objects",
     "tagging_runs-objects",
     "tagging_runs-all_features",
