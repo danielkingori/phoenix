@@ -47,6 +47,11 @@ class StemmedCountVectorizer(CountVectorizer):
         if not use_ngrams:
             self._word_ngrams = self._no_ngram_word_ngram_processor
         analyzer = super(StemmedCountVectorizer, self).build_analyzer()
+        # A defined `stemmer_initialiser` means that the stemmer will be initialised inside running
+        # the analyzer. As such we are returning an analyzer function without the stemmer as it
+        # will be passed directly to function at run time - this will be within a specific thread
+        # if used in conjunction with panellisation, thus avoiding race condition bugs from sharing
+        # a stemmer instance which is non-threadsafe across multiple threads.
         if self.stemmer_initialiser is not None:
             fn = functools.partial(stem_analyzer, analyzer)
             return fn
@@ -241,6 +246,8 @@ def block_feature_apply(
             callable and args, together which initialise the stemmer for that language.  Reasoning
             being that the stemmer we use is not thread safe, so we need to instantiate a stemmer
             for each thread.
+            eg.
+               {"en": (stemmer_init_fn, args), "ar": (stemmer_init_fn, args), ...}
         text_key: The key of the column for the text.
 
     Returns:
