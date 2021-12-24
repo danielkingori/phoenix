@@ -160,7 +160,7 @@ def backport_sflm_config_to_sflm_config(
         **base_parameters,
         **args_parameters,
     }
-    notebook_name = "backport_sflm_config_to_sflm_config.ipynb"
+    notebook_name = "backport_sflm_config_to_sfm_config.ipynb"
     return SFLMPapermillRun(
         input_notebook_url=get_input_notebook_url(notebook_name, cur_run_params),
         output_notebook_url=get_output_notebook_url(notebook_name, cur_run_params),
