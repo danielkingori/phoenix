@@ -12,6 +12,7 @@ from typing import Any, Callable, Dict, List, Tuple
 
 import functools
 import itertools
+import logging
 
 import arabic_reshaper
 import dask.dataframe as dd
@@ -27,29 +28,38 @@ from snowballstemmer import stemmer
 from phoenix.tag import kurdish
 
 
+logger = logging.getLogger(__name__)
+
+
 class StemmedCountVectorizer(CountVectorizer):
     """CountVectorizer with stemming.
 
     Extension of the CountVectorizer to include the stemming functionality.
     """
 
-    def __init__(self, stemmer=None, **kwargs):
+    def __init__(self, stemmer=None, stemmer_initialiser=None, **kwargs):
         super(StemmedCountVectorizer, self).__init__(**kwargs)
-        if stemmer:
-            self.stemmer = stemmer
-        else:
-            self.stemmer = None
+        self.stemmer = stemmer
+        self.stemmer_initialiser = stemmer_initialiser
 
     def build_analyzer(self, use_ngrams=True):
         """Build the analyzer with the stemmer. Optionally can build analyzer without ngrams."""
         if not use_ngrams:
             self._word_ngrams = self._no_ngram_word_ngram_processor
         analyzer = super(StemmedCountVectorizer, self).build_analyzer()
-        if not self.stemmer:
+        # A defined `stemmer_initialiser` means that the stemmer will be initialised inside running
+        # the analyzer. As such we are returning an analyzer function without the stemmer as it
+        # will be passed directly to function at run time - this will be within a specific thread
+        # if used in conjunction with panellisation, thus avoiding race condition bugs from sharing
+        # a stemmer instance which is non-threadsafe across multiple threads.
+        if self.stemmer_initialiser is not None:
+            fn = functools.partial(stem_analyzer, analyzer)
+            return fn
+        elif self.stemmer is not None:
+            fn = functools.partial(stem_analyzer, analyzer, self.stemmer)
+            return fn
+        else:
             return analyzer
-
-        fn = functools.partial(stem_analyzer, self.stemmer, analyzer)
-        return fn
 
     def _no_ngram_word_ngram_processor(self, tokens, stop_words=None):
         """Override of the CountVectorizer._word_ngrams which doesn't split text into ngrams.
@@ -103,19 +113,15 @@ class StemmedCountVectorizer(CountVectorizer):
 
 
 # Cannot be a method on object when used by dash.
-def stem_analyzer(stemmer, analyzer, doc):
+def stem_analyzer(analyzer, stemmer, doc):
     """Stem_analyzer."""
     li: List[str] = []
     if not doc:
         return li
     for token in filter(None, analyzer(doc)):  # type: ignore
         if token:
-            try:
-                words_list = [stemmer.stemWord(w) for w in token.split(" ")]
-                li.append(" ".join(words_list))
-            except IndexError:
-                # Index Errors causes problems
-                li.append(token)
+            words_list = [stemmer.stemWord(w) for w in token.split(" ") if w]
+            li.append(" ".join(words_list))
     return li
 
 
@@ -155,6 +161,11 @@ class TextFeaturesAnalyser:
         """
         self.dict_countvectorizers = {}
         self.dict_analyser = {}
+        self.dict_stemmer_initialiser = {
+            lang: d["stemmer_initialiser"]
+            for lang, d in default_params.items()
+            if "stemmer_initialiser" in d
+        }
 
         for lang in languages:
             lang_default_params = {}
@@ -178,7 +189,7 @@ class TextFeaturesAnalyser:
         # be able to analyse more then one row.
         return [countvectorizer.build_analyzer(use_ngrams) for countvectorizer in countvectorizers]
 
-    def features(self, df: pd.DataFrame, message_key: str = "message"):
+    def features(self, df: pd.DataFrame, message_key: str = "message") -> pd.Series:
         """Build feature grams.
 
         Args:
@@ -187,24 +198,80 @@ class TextFeaturesAnalyser:
             message_key (str): name of column that contains the string to be feature-ized.
         """
         self.message_key = message_key
-        fn = functools.partial(feature_apply, self.dict_analyser, self.message_key)
         if self.parallelisable:
             ddf = dd.from_pandas(
                 df, npartitions=30
             )  # Should have npartitions configured in envirnment
             # When using dask have to create a partial rather then a method on a class
+            for p in range(ddf.npartitions):
+                logger.info(f"Partition Index={p}, Number of Rows={len(ddf.get_partition(p))}")
 
-            return ddf.apply(fn, axis=1, meta=self._build_meta_return()).compute()
+            return (
+                ddf.map_partitions(
+                    block_feature_apply,
+                    self.dict_analyser,
+                    self.dict_stemmer_initialiser,
+                    self.message_key,
+                    meta=self._build_meta_return(),
+                )
+                .compute()
+                .iloc[:, 0]
+            )
         else:
             if len(df) == 0:
                 # An apply on an empty df returns the df itself, which has two columns. The
                 # expected return is a single series.
                 return pd.Series()
-            return df.apply(fn, axis=1)
+            return block_feature_apply(
+                df, self.dict_analyser, self.dict_stemmer_initialiser, self.message_key
+            ).iloc[:, 0]
+
+
+def block_feature_apply(
+    partition_df: pd.DataFrame,
+    dict_analyser: Dict[str, List[Callable]],
+    dict_stemmer_initialiser: Dict[str, Tuple[Callable, Tuple]],
+    text_key: str,
+) -> pd.DataFrame:
+    """Produce features for df.
+
+    Expected usage of function is for `dask`s `map_partitions`.
+
+    Arguments:
+        partition_df: Input dataframe for which to compute features for.
+        dict_analyser: a dictionary of analyser for each language.
+            eg.
+                {"en": fn, "ar": fn, ...}
+        dict_stemmer_initialiser: A dictionary, language string as key, and value is tuple of
+            callable and args, together which initialise the stemmer for that language.  Reasoning
+            being that the stemmer we use is not thread safe, so we need to instantiate a stemmer
+            for each thread.
+            eg.
+               {"en": (stemmer_init_fn, args), "ar": (stemmer_init_fn, args), ...}
+        text_key: The key of the column for the text.
+
+    Returns:
+        A list of features:
+            pd.Series(["f1", "f2", ...])
+    """
+    # dict_stemmer = {
+    #    lang: initialiser[0](*initialiser[1])
+    #    for lang, initialiser in dict_stemmer_initialiser.items()
+    # }
+
+    dict_stemmer = {}
+    for lang, initialiser in dict_stemmer_initialiser.items():
+        dict_stemmer[lang] = initialiser[0](*initialiser[1])
+
+    fn = functools.partial(feature_apply, dict_analyser, dict_stemmer, text_key)
+    return partition_df.apply(fn, axis=1)
 
 
 def feature_apply(
-    dict_analyser: Dict[str, List[Callable]], text_key: str, row: pd.Series
+    dict_analyser: Dict[str, List[Callable]],
+    dict_stemmer: Dict[str, Any],
+    text_key: str,
+    row: pd.Series,
 ) -> pd.Series:
     """Get features for row.
 
@@ -221,7 +288,10 @@ def feature_apply(
     """
     message = row[text_key]
     lang = row["language"]
-    if lang in dict_analyser:
+    if lang in dict_analyser and lang in dict_stemmer:
+        analysers = dict_analyser[lang]
+        return pd.Series([analyser_fn(dict_stemmer[lang], message) for analyser_fn in analysers])
+    elif lang in dict_analyser and lang not in dict_stemmer:
         analysers = dict_analyser[lang]
         return pd.Series([analyser_fn(message) for analyser_fn in analysers])
     keys = list(dict_analyser.keys())
@@ -236,6 +306,7 @@ def create(
     # token_pattern is the default token pattern with the addition of a optional # before a word
     default_params: Dict[str, Dict[str, Any]] = {
         "ar": {
+            "stemmer_initialiser": (stemmer, ("arabic",)),
             "stop_words": get_stopwords(),
             "strip_accents": "unicode",
             "encoding": "utf-8",
@@ -243,14 +314,14 @@ def create(
         },
         "ar_izi": {"strip_accents": "unicode"},
         "en": {
-            "stemmer": stemmer("english"),
+            "stemmer_initialiser": (stemmer, ("english",)),
             "stop_words": get_stopwords(),
             "strip_accents": "ascii",
             "encoding": "utf-8",
             "token_pattern": r"#?\b\w\w+\b",
         },
         "ckb": {
-            "stemmer": kurdish.SoraniStemmer(),
+            "stemmer_initialiser": (kurdish.SoraniStemmer, ()),
             "stop_words": kurdish.sorani_stopwords,
             "preprocessor": kurdish.sorani_preprocess,
             "tokenizer": kurdish.sorani_tokenize,
@@ -258,7 +329,7 @@ def create(
             "token_pattern": r"#?\b\w\w+\b",
         },
         "ku": {
-            "stemmer": kurdish.KurmanjiStemmer(),
+            "stemmer_initialiser": (kurdish.KurmanjiStemmer, ()),
             "stop_words": kurdish.kurmanji_stopwords,
             "preprocessor": kurdish.kurmanji_preprocess,
             "tokenizer": kurdish.kurmanji_tokenize,
