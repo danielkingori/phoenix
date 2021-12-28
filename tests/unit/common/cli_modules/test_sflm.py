@@ -59,8 +59,8 @@ def test_create_from_labels(m_papermill_execute, tenants_template_url_mock):
             {**default_parameters, **{"OBJECT_TYPE": "tweets"}},
         ),
         mock.call(
-            PathEndsWith("tag/labelling/backport_sflm_config_to_sflm_config.ipynb"),
-            f"{output_base}backport_sflm_config_to_sflm_config.ipynb",
+            PathEndsWith("tag/labelling/backport_sflm_config_to_sfm_config.ipynb"),
+            f"{output_base}backport_sflm_config_to_sfm_config.ipynb",
             {**default_parameters, **{"OBJECT_TYPES": ["facebook_posts", "tweets"]}},
         ),
     ]
