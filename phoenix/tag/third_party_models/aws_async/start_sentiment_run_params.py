@@ -7,7 +7,7 @@ import os
 from phoenix.common.run_params import base, general
 
 
-ENV_KEY_AWS_DATA_ACCESS_ROLE = "AWS_DATA_ACCESS_ROLE"
+AWS_DATA_ACCESS_ROLE_ENV_KEY = "AWS_DATA_ACCESS_ROLE"
 
 
 @dataclasses.dataclass
@@ -74,12 +74,12 @@ def _get_aws_data_access_role(given_aws_data_access_role: Optional[str]) -> str:
     if given_aws_data_access_role:
         return given_aws_data_access_role
 
-    aws_data_access_role = os.getenv(ENV_KEY_AWS_DATA_ACCESS_ROLE, None)
+    aws_data_access_role = os.getenv(AWS_DATA_ACCESS_ROLE_ENV_KEY, None)
 
     if aws_data_access_role:
         return aws_data_access_role
 
     raise RuntimeError(
         "AWS Data Access Role is not set."
-        f"Please use environment variable: {ENV_KEY_AWS_DATA_ACCESS_ROLE}"
+        f"Please use environment variable: {AWS_DATA_ACCESS_ROLE_ENV_KEY}"
     )

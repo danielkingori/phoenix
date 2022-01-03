@@ -19,7 +19,7 @@ AWS_DATA_ACCESS_ROLE = "env_aws_data_access_role"
     os.environ,
     {
         registry_environment.PRODUCTION_ENV_VAR_KEY: URL_PREFIX,
-        start_sentiment_run_params.ENV_KEY_AWS_DATA_ACCESS_ROLE: AWS_DATA_ACCESS_ROLE,
+        start_sentiment_run_params.AWS_DATA_ACCESS_ROLE_ENV_KEY: AWS_DATA_ACCESS_ROLE,
     },
 )
 @pytest.mark.parametrize(
@@ -67,4 +67,4 @@ def test_get_aws_data_access_role_execption():
     with pytest.raises(RuntimeError) as err:
         start_sentiment_run_params._get_aws_data_access_role(None)
 
-    assert start_sentiment_run_params.ENV_KEY_AWS_DATA_ACCESS_ROLE in str(err.value)
+    assert start_sentiment_run_params.AWS_DATA_ACCESS_ROLE_ENV_KEY in str(err.value)
