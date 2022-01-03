@@ -24,4 +24,4 @@ class DataPullRunParams(base.RunParams):
     general: general.GeneralRunParams
     year_filter: Union[int, None]
     month_filter: Union[int, None]
-    include_all_data_for_month: bool
+    ignore_year_month_filters: bool

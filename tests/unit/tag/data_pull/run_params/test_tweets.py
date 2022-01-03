@@ -19,7 +19,7 @@ TENANT_ID = "tenant_id_1"
     (
         "year_filter, expected_year_filter"
         ",month_filter, expected_month_filter"
-        ",include_all_data_for_month, expected_include_all_data_for_month"
+        ",ignore_year_month_filters, expected_ignore_year_month_filters"
     ),
     [
         (2021, 2021, 11, 11, None, False),
@@ -35,8 +35,8 @@ def test_create(
     expected_year_filter,
     month_filter,
     expected_month_filter,
-    include_all_data_for_month,
-    expected_include_all_data_for_month,
+    ignore_year_month_filters,
+    expected_ignore_year_month_filters,
     tenants_template_url_mock,
 ):
     """Test create of the tweets data pull run params."""
@@ -47,12 +47,12 @@ def test_create(
         object_type=OBJECT_TYPE,
         year_filter=2021,
         month_filter=11,
-        include_all_data_for_month=include_all_data_for_month,
+        ignore_year_month_filters=ignore_year_month_filters,
     )
 
     assert run_params
     assert isinstance(run_params, data_pull.run_params.dtypes.DataPullRunParams)
-    assert run_params.include_all_data_for_month == expected_include_all_data_for_month
+    assert run_params.ignore_year_month_filters == expected_ignore_year_month_filters
 
     TAGGING_BASE = (
         "s3://data-lake/tenant_id_1/" "tagging_runs/year_filter=2021/month_filter=11/tweets/"

@@ -26,7 +26,7 @@ def create(
     object_type: str,
     year_filter: Union[str, int, None],
     month_filter: Union[str, int, None],
-    include_all_data_for_month: Union[bool, str, None],
+    ignore_year_month_filters: Union[bool, str, None],
 ) -> dtypes.DataPullRunParams:
     """Create the data_pull run params for the object type."""
     if object_type not in _urls_registry_map:
@@ -39,8 +39,8 @@ def create(
     # that has been pulled
     applied_year_filter: Union[int, None] = utils.normalise_int(year_filter)
     applied_month_filter: Union[int, None] = utils.normalise_int(month_filter)
-    include_all_data_for_month = utils.normalise_bool(include_all_data_for_month)
-    if include_all_data_for_month:
+    ignore_year_month_filters = utils.normalise_bool(ignore_year_month_filters)
+    if ignore_year_month_filters:
         applied_year_filter = None
         applied_month_filter = None
 
@@ -49,5 +49,5 @@ def create(
         urls=urls,
         year_filter=applied_year_filter,
         month_filter=applied_month_filter,
-        include_all_data_for_month=include_all_data_for_month,
+        ignore_year_month_filters=ignore_year_month_filters,
     )
