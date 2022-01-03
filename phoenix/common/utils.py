@@ -1,4 +1,6 @@
 """General utilities."""
+from typing import Literal, Optional
+
 import datetime
 import logging
 import os
@@ -34,18 +36,32 @@ def setup_notebook_matplotlib_config():
     plt.style.use("ggplot")
 
 
-def setup_notebook_pandas_config():
+def setup_notebook_pandas_config(
+    max_rows: int = 100,
+    max_columns: int = 100,
+    width: int = 100,
+    chained_assignment: Optional[Literal["warn", "raise"]] = None,
+):
     """Sets a good pandas display config, primarily not truncating rows in dataframe outputs.
+
+    Args:
+        max_rows (int): maximum number of rows to display
+        max_columns (int): maximum number of columns to display
+        width (int): display width in number of characters
+        chained_assignment (Optional[Literal["warn", "raise"]]): Trust level
+            in user's volition to do an assignment to a chained indexing expression. Sets
+            pandas' response to that assignment to be an ignore (None), "warn" the user,
+            or "raise" an error.
 
     Affects calls like:
     >>> from IPython.display import display
     >>> display(df)
     Can be called at the start of a notebook to apply config to rest of notebook.
     """
-    pd.options.display.max_rows = 100
-    pd.options.display.max_columns = 100
-    pd.options.display.width = 100
-    pd.options.mode.chained_assignment = None
+    pd.options.display.max_rows = max_rows
+    pd.options.display.max_columns = max_columns
+    pd.options.display.width = width
+    pd.options.mode.chained_assignment = chained_assignment
 
 
 def setup_notebook_output():
