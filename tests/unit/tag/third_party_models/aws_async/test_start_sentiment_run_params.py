@@ -12,28 +12,28 @@ URL_PREFIX = "s3://data-lake/"
 OBJECT_TYPE = "facebook_posts"
 ARTIFACTS_ENVIRONMENT_KEY = "production"
 TENANT_ID = "tenant_id_1"
-AWS_DATA_ACCESS_ROLE = "env_aws_data_access_role"
+AWS_COMPREHEND_ROLE = "env_aws_comprehend_role"
 
 
 @mock.patch.dict(
     os.environ,
     {
         registry_environment.PRODUCTION_ENV_VAR_KEY: URL_PREFIX,
-        start_sentiment_run_params.AWS_DATA_ACCESS_ROLE_ENV_KEY: AWS_DATA_ACCESS_ROLE,
+        start_sentiment_run_params.AWS_COMPREHEND_ROLE_ENV_KEY: AWS_COMPREHEND_ROLE,
     },
 )
 @pytest.mark.parametrize(
-    ("aws_data_access_role, expected_aws_data_access_role"),
+    ("aws_comprehend_role, expected_aws_comprehend_role"),
     [
-        (None, AWS_DATA_ACCESS_ROLE),
-        ("", AWS_DATA_ACCESS_ROLE),
+        (None, AWS_COMPREHEND_ROLE),
+        ("", AWS_COMPREHEND_ROLE),
         ("arg", "arg"),
         ("arg", "arg"),
     ],
 )
 def test_create(
-    aws_data_access_role,
-    expected_aws_data_access_role,
+    aws_comprehend_role,
+    expected_aws_comprehend_role,
     tenants_template_url_mock,
 ):
     """Test create of the StartSentimentRunParams."""
@@ -44,12 +44,12 @@ def test_create(
         object_type=OBJECT_TYPE,
         year_filter=2021,
         month_filter=11,
-        aws_data_access_role=aws_data_access_role,
+        aws_comprehend_role=aws_comprehend_role,
     )
 
     assert run_params
     assert isinstance(run_params, start_sentiment_run_params.StartSentimentRunParams)
-    assert run_params.aws_data_access_role == expected_aws_data_access_role
+    assert run_params.aws_comprehend_role == expected_aws_comprehend_role
 
     TAGGING_BASE = (
         "s3://data-lake/tenant_id_1/"
@@ -62,9 +62,9 @@ def test_create(
     assert urls.comprehend_base == f"{TAGGING_BASE}sentiment_analysis/comprehend_jobs/"
 
 
-def test_get_aws_data_access_role_execption():
-    """Test the _get_aws_data_access_role raises expection if no AWS_DATA_ACCESS_ROLE."""
+def test_get_aws_comprehend_role_execption():
+    """Test the _get_aws_comprehend_role raises expection if no AWS_COMPREHEND_ROLE."""
     with pytest.raises(RuntimeError) as err:
-        start_sentiment_run_params._get_aws_data_access_role(None)
+        start_sentiment_run_params._get_aws_comprehend_role(None)
 
-    assert start_sentiment_run_params.AWS_DATA_ACCESS_ROLE_ENV_KEY in str(err.value)
+    assert start_sentiment_run_params.AWS_COMPREHEND_ROLE_ENV_KEY in str(err.value)

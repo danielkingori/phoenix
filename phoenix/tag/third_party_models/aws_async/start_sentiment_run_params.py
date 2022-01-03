@@ -7,7 +7,7 @@ import os
 from phoenix.common.run_params import base, general
 
 
-AWS_DATA_ACCESS_ROLE_ENV_KEY = "AWS_DATA_ACCESS_ROLE"
+AWS_COMPREHEND_ROLE_ENV_KEY = "AWS_COMPREHEND_ROLE"
 
 
 @dataclasses.dataclass
@@ -26,7 +26,7 @@ class StartSentimentRunParams(base.RunParams):
 
     urls: StartSentimentRunParamsURLs
     general: general.GeneralRunParams
-    aws_data_access_role: str
+    aws_comprehend_role: str
 
 
 def create(
@@ -36,7 +36,7 @@ def create(
     object_type: str,
     year_filter: int,
     month_filter: int,
-    aws_data_access_role: Optional[str],
+    aws_comprehend_role: Optional[str],
 ) -> StartSentimentRunParams:
     """Create the StartSentimentRunParams."""
     general_run_params = general.create(artifacts_environment_key, tenant_id, run_datetime_str)
@@ -44,7 +44,7 @@ def create(
     return StartSentimentRunParams(
         general=general_run_params,
         urls=urls,
-        aws_data_access_role=_get_aws_data_access_role(aws_data_access_role),
+        aws_comprehend_role=_get_aws_comprehend_role(aws_comprehend_role),
     )
 
 
@@ -69,17 +69,17 @@ def _get_urls(
     )
 
 
-def _get_aws_data_access_role(given_aws_data_access_role: Optional[str]) -> str:
-    """Get the aws_data_access_role from given argument or environment."""
-    if given_aws_data_access_role:
-        return given_aws_data_access_role
+def _get_aws_comprehend_role(given_aws_comprehend_role: Optional[str]) -> str:
+    """Get the aws_comprehend_role from given argument or environment."""
+    if given_aws_comprehend_role:
+        return given_aws_comprehend_role
 
-    aws_data_access_role = os.getenv(AWS_DATA_ACCESS_ROLE_ENV_KEY, None)
+    aws_comprehend_role = os.getenv(AWS_COMPREHEND_ROLE_ENV_KEY, None)
 
-    if aws_data_access_role:
-        return aws_data_access_role
+    if aws_comprehend_role:
+        return aws_comprehend_role
 
     raise RuntimeError(
-        "AWS Data Access Role is not set."
-        f"Please use environment variable: {AWS_DATA_ACCESS_ROLE_ENV_KEY}"
+        "AWS Comprehend Role is not set."
+        f"Please use environment variable: {AWS_COMPREHEND_ROLE_ENV_KEY}"
     )
