@@ -27,12 +27,12 @@ def string_to_bool(string_var: str) -> bool:
     return bool(string_var)
 
 
-def normalise_int(to_normalise: Union[int, str, None]) -> int:
+def normalise_int(to_normalise: Union[int, str, None]) -> Union[int, None]:
     """Normalise the parameters from a notebook into a int."""
-    if type(to_normalise) is int:
+    if isinstance(to_normalise, int):
         return to_normalise
 
-    if type(to_normalise) is str and to_normalise.isdigit():
+    if isinstance(to_normalise, str) and to_normalise.isdigit():
         return int(to_normalise)
 
-    return 0
+    return None
