@@ -1,4 +1,5 @@
 """Test of multi feature topic match."""
+import mock
 import pandas as pd
 
 from phoenix.tag.topic import single_feature_match as sfm
@@ -65,3 +66,58 @@ def test_get_topics_set_fill_topic():
             }
         ),
     )
+
+
+def test_get_topics_analysis_df():
+    """Test the get_topic analysis."""
+    input_df = pd.DataFrame(
+        {
+            "topic": ["dog", "dog", "cat", "cat", "cat", "cat"],
+            "matched_features": [
+                ["woof"],
+                ["woof", "bark"],
+                ["meow"],
+                ["meow"],
+                ["meow"],
+                ["meow", "purr"],
+            ],
+            "other_column": ["any", "input", "here", "doesn't", "persist", "further"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        {
+            "topic": ["cat", "cat", "dog", "dog"],
+            "matched_features": ["meow", "purr", "woof", "bark"],
+            "matched_object_count": [4, 1, 2, 1],
+        }
+    )
+
+    actual_df = sfm.get_topics_analysis_df(input_df)
+
+    pd.testing.assert_frame_equal(actual_df, expected_df)
+
+
+@mock.patch("phoenix.tag.topic.single_feature_match.plt.show")
+@mock.patch("phoenix.tag.topic.single_feature_match.get_topics_analysis_df")
+def test_analyse(mock_get_topics_analysis, mock_show):
+    """Test the analyse function."""
+    analysis_df = pd.DataFrame(
+        {
+            "topic": ["cat", "cat", "dog", "dog"],
+            "matched_features": ["meow", "purr", "woof", "bark"],
+            "matched_object_count": [4, 1, 2, 1],
+        }
+    )
+    mock_get_topics_analysis.return_value = analysis_df
+    input_df = pd.DataFrame(
+        {
+            "topic": ["a", "b"],
+            "matched_features": [["aa"], ["bb"]],
+        }
+    )
+    expected_analysis_df = sfm.analyse(input_df)
+
+    mock_get_topics_analysis.assert_called_with(input_df)
+    mock_show.assert_called_once()
+    pd.testing.assert_frame_equal(analysis_df, expected_analysis_df)
