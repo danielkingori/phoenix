@@ -12,6 +12,7 @@ def get_account_object_type(object_type: str) -> str:
         "facebook_posts": "facebook_pages",
         "tweets": "twitter_handles",
         "youtube_videos": "youtube_channels",
+        "youtube_comments": "youtube_channels",
     }
     account_object_type = object_type_mapping.get(object_type, "")
     if not account_object_type:
