@@ -103,6 +103,7 @@ def run_phase(
     default=0,
     help=("Start notebook from offset."),
 )
+@click.option("--include_accounts", is_flag=True)
 @click.option(
     "--include_inference",
     multiple=True,
@@ -122,6 +123,7 @@ def run_phase_month_offset(
     object_type,
     month_offset,
     start_offset,
+    include_accounts,
     include_inference: Optional[List[str]] = [],
 ):
     """Run tagging of offsetting the month and year to the current month and year.
@@ -152,6 +154,7 @@ def run_phase_month_offset(
         year_filter,
         month_filter,
         start_offset,
+        include_accounts,
         include_inference,
     )
 
@@ -165,6 +168,7 @@ def _run_phase(
     year_filter,
     month_filter,
     start_offset,
+    include_accounts,
     include_inference: Optional[List[str]] = [],
 ):
     """Private function for running the tagging phase."""
@@ -190,6 +194,7 @@ def _run_phase(
         parameters,
         cur_run_params.art_url_reg,
         start_offset,
+        include_accounts,
         include_inference,
     )
 
@@ -200,9 +205,10 @@ def _run_tagging_notebooks(
     parameters,
     art_url_reg,
     start_offset,
+    include_accounts,
     include_inference: List,
 ):
-    notebooks = get_notebook_keys(phase_number, object_type, include_inference)
+    notebooks = get_notebook_keys(phase_number, object_type, include_accounts, include_inference)
     return _run_notebooks(notebooks, parameters, art_url_reg, start_offset)
 
 
@@ -233,27 +239,37 @@ def tagging_run_notebook(
     utils.run_notebooks(input_nb_url, output_nb_url, parameters)
 
 
-def get_finalisation_notebooks(object_type, include_inference: List[str]) -> List[str]:
+def get_finalisation_notebooks(
+    object_type, include_accounts, include_inference: List[str]
+) -> List[str]:
     """Get the finalisation notebooks for an object type."""
     if "youtube_videos" == object_type:
-        return get_generalised_finalisation_notebooks(object_type, include_inference)
+        return get_generalised_finalisation_notebooks(
+            object_type, include_accounts, include_inference
+        )
 
     nbs = [f"tag/{object_type}_finalise.ipynb"]
     if "topics" in include_inference or "classes" in include_inference:
         nbs.append(f"tag/{object_type}_finalise_topics.ipynb")
+    if include_accounts:
+        nbs.append("tag/finalise_accounts.ipynb")
     return nbs
 
 
-def get_generalised_finalisation_notebooks(object_type, include_inference: List[str]) -> List[str]:
+def get_generalised_finalisation_notebooks(
+    object_type, include_accounts, include_inference: List[str]
+) -> List[str]:
     """Get the generalised finalisation notebooks."""
     nbs = ["tag/finalise.ipynb"]
     if "topics" in include_inference or "classes" in include_inference:
         nbs.append("tag/finalise_topics.ipynb")
+    if include_accounts:
+        nbs.append("tag/finalise_accounts.ipynb")
     return nbs
 
 
 def get_notebook_keys(
-    phase_number: int, object_type: str, include_inference: List[str]
+    phase_number: int, object_type: str, include_accounts, include_inference: List[str]
 ) -> List[str]:
     """Get the notebooks keys for phase."""
     if phase_number == 1:
@@ -273,7 +289,7 @@ def get_notebook_keys(
         nbs = []
         if "sentiment" in include_inference:
             nbs.append("tag/third_party_models/aws_async/complete_sentiment.ipynb")
-        nbs = nbs + get_finalisation_notebooks(object_type, include_inference)
+        nbs = nbs + get_finalisation_notebooks(object_type, include_accounts, include_inference)
         return nbs
 
     raise ValueError(f"Unknown phase number: {phase_number}")
