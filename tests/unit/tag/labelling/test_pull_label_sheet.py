@@ -238,21 +238,23 @@ def test_get_account_labels():
     input_df = pd.DataFrame(
         {
             "object_user_name": [
+                "Column note",
                 "user_1",
                 "user_2",
                 "user_3",
             ],
             "object_user_url": [
+                "User's URL - Column note",
                 "https://www.facebook.com/user_1",
                 "https://www.facebook.com/user_2",
                 "https://www.facebook.com/user_3",
             ],
-            "labelled_by": ["Andrew", "Andrew", "Andrew"],
-            "account_label_1": ["Bot", "", "Journalist"],
-            "account_label_2": ["", "", "Publisher"],
-            "account_label_3": ["", "", ""],
-            "account_label_4": ["", "", ""],
-            "account_label_5": ["", "", ""],
+            "labelled_by": ["Column note", "Andrew", "Andrew", "Andrew"],
+            "account_label_1": ["Column note", "Bot", "", "Journalist"],
+            "account_label_2": ["Column note", "", "", "Publisher"],
+            "account_label_3": ["Column note", "", "", ""],
+            "account_label_4": ["Column note", "", "", ""],
+            "account_label_5": ["Column note", "", "", ""],
         }
     )
 
