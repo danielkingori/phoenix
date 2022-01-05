@@ -92,6 +92,7 @@ ArtifactKey = Literal[
     "tagging_runs-facebook_posts_to_scrape",
     # Single Feature to Label Mapping
     "sflm-single_object_type",
+    "sflm-account-object_type",
     "sflm-output_notebook_base",
     # Graphing
     "graphing_runs-retweet_pulled",
