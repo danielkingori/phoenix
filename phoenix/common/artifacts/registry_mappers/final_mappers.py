@@ -6,6 +6,7 @@ from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperD
 
 
 FINAL_BASE = "final/"
+OBJECT_BASE = "{OBJECT_TYPE}"
 
 MAPPERS: MapperDict = {
     "final-acled_events": partial(
@@ -108,6 +109,22 @@ MAPPERS: MapperDict = {
         url_mapper,
         (
             FINAL_BASE + "youtube_videos_classes/"
+            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
+            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
+        ),
+    ),
+    "final-accounts": partial(
+        url_mapper,
+        (
+            FINAL_BASE + OBJECT_BASE + "_accounts/"
+            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
+            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
+        ),
+    ),
+    "final-objects_accounts_classes": partial(
+        url_mapper,
+        (
+            FINAL_BASE + OBJECT_BASE + "_objects_accounts_classes/"
             f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
             "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
         ),

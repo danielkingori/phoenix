@@ -115,4 +115,6 @@ ArtifactKey = Literal[
     "final-youtube_videos",
     "final-youtube_videos_topics",
     "final-youtube_videos_classes",
+    "final-accounts",
+    "final-objects_accounts_classes",
 ]
