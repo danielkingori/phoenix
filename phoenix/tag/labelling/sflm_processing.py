@@ -3,6 +3,8 @@ from typing import Union
 
 import pandas as pd
 
+from phoenix.tag.labelling import utils
+
 
 DEDUPLICATIONS_COLUMNS = ["class", "unprocessed_features", "processed_features"]
 
@@ -36,3 +38,28 @@ def normalise_sflm_from_sheets(df: pd.DataFrame) -> pd.DataFrame:
         )
 
     return df
+
+
+def update_changed_processed_features(new_df: pd.DataFrame, old_df: pd.DataFrame) -> pd.DataFrame:
+    """Overwrites rows in old_df with new_df if, and only if the processed feature has changed.
+
+    Args:
+        old_df (pd.DataFrame): dataframe containing at least the cols ["class",
+            "unprocessed_features", "processed_features"]
+        new_df (pd.DataFrame): dataframe containing at least the cols ["class",
+        "unprocessed_features", "processed_features"]
+
+    Returns:
+        pd.DataFrame: df where rows that are duplicates along all three columns come from
+            old_df, any that aren't duplicates come from the new_df
+    """
+    new_processed_features_df = utils.filter_out_duplicates(
+        old_df,
+        new_df,
+        ["class", "unprocessed_features", "processed_features"],
+    )
+    no_change_df = utils.filter_out_duplicates(
+        new_processed_features_df, old_df, ["class", "unprocessed_features"]
+    )
+    returnable_df = no_change_df.append(new_processed_features_df).sort_index()
+    return returnable_df
