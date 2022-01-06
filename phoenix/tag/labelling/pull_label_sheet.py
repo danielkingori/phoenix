@@ -6,6 +6,7 @@ import pandas as pd
 
 from phoenix.tag import language, text_features_analyser
 from phoenix.tag.labelling.generate_label_sheet import (
+    ACCOUNT_NOTES_LIST,
     EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET,
     EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
 )
@@ -137,6 +138,10 @@ def get_account_labels(df: pd.DataFrame) -> pd.DataFrame:
         )
 
     account_df = df[EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET]
+    if (account_df.iloc[0].values == ACCOUNT_NOTES_LIST).all() or "User's" in account_df.iloc[
+        0, 0
+    ]:
+        account_df = account_df.iloc[1:]
     long_account_df = pd.wide_to_long(
         account_df,
         stubnames="account_label",

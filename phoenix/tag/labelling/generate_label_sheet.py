@@ -145,20 +145,21 @@ def get_user_notes_object_df() -> pd.DataFrame:
     return df
 
 
+ACCOUNT_NOTES_LIST = [
+    "User's URL. Click to see the context of this user",
+    "Username of this user's account.",
+    "Who is labelling this post? (name of the person not the org)",
+    "What's the class?",
+    "Is there another class mentioned here as well? If not, please leave empty",
+    "Is there another class mentioned here as well? If not, please leave empty",
+    "Is there another class mentioned here as well? If not, please leave empty",
+    "Is there another class mentioned here as well? If not, please leave empty",
+]
+
+
 def get_user_notes_account_df() -> pd.DataFrame:
     """Adds notes for the users of the account_labelling sheet as the first row of a df."""
-    notes_list = [
-        "User's url. Click to see the context of this user",
-        "Username of this user's account.",
-        "Who is labelling this post? (name of the person not the org)",
-        "What's the class?",
-        "Is there another class mentioned here as well? If not, please leave empty",
-        "Is there another class mentioned here as well? If not, please leave empty",
-        "Is there another class mentioned here as well? If not, please leave empty",
-        "Is there another class mentioned here as well? If not, please leave empty",
-    ]
-
-    data_dict = dict(zip(EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET, notes_list))
+    data_dict = dict(zip(EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET, ACCOUNT_NOTES_LIST))
     df = pd.DataFrame(data=data_dict, columns=EXPECTED_COLUMNS_ACCOUNT_LABELLING_SHEET, index=[0])
     return df
 

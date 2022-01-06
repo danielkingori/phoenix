@@ -95,6 +95,11 @@ def get_run_objects(
     for object_type in object_types:
         sflm_papermill_runs.append(
             single_object_type_notebook_run(
+                "pull_accounts_labelling_sheet.ipynb", cur_run_params, object_type, base_parameters
+            )
+        )
+        sflm_papermill_runs.append(
+            single_object_type_notebook_run(
                 "pull_objects_labelling_sheet.ipynb", cur_run_params, object_type, base_parameters
             )
         )

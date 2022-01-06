@@ -39,6 +39,11 @@ def test_create_from_labels(m_papermill_execute, tenants_template_url_mock):
     output_base = "s3://data-lake/tenant_id_1/process/sflm_run/20000101T010101.000000Z/"
     calls = [
         mock.call(
+            PathEndsWith("tag/labelling/pull_accounts_labelling_sheet.ipynb"),
+            f"{output_base}facebook_posts-pull_accounts_labelling_sheet.ipynb",
+            {**default_parameters, **{"OBJECT_TYPE": "facebook_posts"}},
+        ),
+        mock.call(
             PathEndsWith("tag/labelling/pull_objects_labelling_sheet.ipynb"),
             f"{output_base}facebook_posts-pull_objects_labelling_sheet.ipynb",
             {**default_parameters, **{"OBJECT_TYPE": "facebook_posts"}},
@@ -47,6 +52,11 @@ def test_create_from_labels(m_papermill_execute, tenants_template_url_mock):
             PathEndsWith("tag/labelling/persist_sflm_to_config.ipynb"),
             f"{output_base}facebook_posts-persist_sflm_to_config.ipynb",
             {**default_parameters, **{"OBJECT_TYPE": "facebook_posts"}},
+        ),
+        mock.call(
+            PathEndsWith("tag/labelling/pull_accounts_labelling_sheet.ipynb"),
+            f"{output_base}tweets-pull_accounts_labelling_sheet.ipynb",
+            {**default_parameters, **{"OBJECT_TYPE": "tweets"}},
         ),
         mock.call(
             PathEndsWith("tag/labelling/pull_objects_labelling_sheet.ipynb"),

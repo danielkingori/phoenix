@@ -42,6 +42,7 @@ def get_files_to_process(url_to_folder) -> List[str]:
         "This is for when the CLI is used in cron jobs so that unnecessary errors aren't created."
     ),
 )
+@click.option("--include_accounts", is_flag=True)
 @click.option(
     "--include_inference",
     multiple=True,
@@ -60,6 +61,7 @@ def run_phase(
     month_offset,
     start_offset,
     silence_no_files_to_process_exception,
+    include_accounts,
     include_inference,
 ):
     """Run processing and tagging of the raw comment data.
@@ -126,6 +128,7 @@ def run_phase(
         parameters,
         cur_run_params.art_url_reg,
         start_offset,
+        include_accounts,
         include_inference,
     )
 
@@ -154,6 +157,7 @@ def run_phase(
         "This is for when the CLI is used in cron jobs so that unnecessary errors aren't created."
     ),
 )
+@click.option("--include_accounts", is_flag=True)
 @click.option(
     "--include_inference",
     multiple=True,
@@ -172,6 +176,7 @@ def tag_phase_2(
     month_offset,
     start_offset,
     silence_no_files_to_process_exception,
+    include_accounts,
     include_inference,
 ):
     """Run processing and phase 2 tagging if output for phase 1 exists.
@@ -224,5 +229,6 @@ def tag_phase_2(
         parameters,
         cur_run_params.art_url_reg,
         start_offset,
+        include_accounts,
         include_inference,
     )
