@@ -1,7 +1,9 @@
 """Unit tests for the sflm_processing module."""
+import mock
 import pandas as pd
 
 from phoenix.tag.labelling import sflm_processing
+from phoenix.tag.text_features_analyser import TextFeaturesAnalyser
 
 
 def test_convert_to_bool():
@@ -81,4 +83,53 @@ def test_update_changed_processed_features():
     )
 
     actual_df = sflm_processing.update_changed_processed_features(input_new_df, input_old_df)
+    pd.testing.assert_frame_equal(actual_df, expected_df)
+
+
+@mock.patch("phoenix.tag.labelling.sflm_processing.text_features_analyser")
+def test_reprocess_sflm(mock_tfa_module):
+    """Test reprocess_sflm replaces any rows that have a changed processed_features output.
+
+    It changes the use_processed_features to False when the processed feature changes.
+    It only updates the status to analyst_action needed when the input row's status was active.
+    """
+    mock_tfa = mock.MagicMock(TextFeaturesAnalyser)
+    mock_tfa_module.create.return_value = mock_tfa
+
+    mock_tfa.features.return_value = pd.Series(
+        data=[["woof"], ["meo", "soft"], ["buz"], ["howl"], ["pur"]]
+    )
+
+    input_sflm_df = pd.DataFrame(
+        {
+            "class": ["dog", "cat", "insect", "dog", "cat"],
+            "unprocessed_features": ["woofs", "meows softly", "buzzes", "howls", "purring"],
+            "processed_features": ["woof", "meow soft", "buzz", "howl", "purring"],
+            "use_processed_features": [True, True, True, True, False],
+            "status": ["active", "active", "active", "active", "deleted"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        {
+            "class": ["dog", "cat", "insect", "dog", "cat"],
+            "unprocessed_features": ["woofs", "meows softly", "buzzes", "howls", "purring"],
+            "processed_features": ["woof", "meo soft", "buz", "howl", "pur"],
+            "use_processed_features": [True, False, False, True, False],
+            "status": [
+                "active",
+                "analyst_action_needed",
+                "analyst_action_needed",
+                "active",
+                "deleted",
+            ],
+        }
+    )
+
+    actual_df = sflm_processing.reprocess_sflm(input_sflm_df)
+
+    mock_tfa_module.create.assert_called_with(use_ngrams=False)
+
+    mock_tfa.features.assert_called_once()
+    mock_tfa.features.assert_called_with(mock.ANY, "unprocessed_features")
     pd.testing.assert_frame_equal(actual_df, expected_df)
