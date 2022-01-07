@@ -121,6 +121,87 @@ def get_run_objects(
     return sflm_papermill_runs
 
 
+@sflm.command(
+    "recalculate_sflm_processed_features",
+    context_settings=dict(
+        ignore_unknown_options=True,
+        allow_extra_args=True,
+    ),
+)
+@click.argument("artifact_env")
+@click.argument("tenant_id")
+@click.argument("object_types", type=click.STRING, nargs=-1)
+@click.option(
+    "--start_offset",
+    default=0,
+    help=("Start notebook from offset."),
+)
+@click.pass_context
+def recalculate_sflm_processed_features(
+    ctx,
+    artifact_env,
+    tenant_id,
+    object_types,
+    start_offset,
+):
+    """Recalculate the sflm processed features .
+
+    Example command:
+    ./phoenix-cli sflm recalculate_sflm_processed_features production tenant facebook_posts tweets
+
+    ARTIFACT_ENV:
+        The artifact environment that will be used.
+        Can use "production" which will pick the artifact env from the env var.
+        Or a valid storage URL like "s3://my-phoenix-bucket/"
+    TENANT_ID: The id of the tenant to run phoenix for.
+    OBJECT_TYPES: facebook_posts, facebook_comments, tweets, youtube_videos, youtube_comments
+        Allowed multiple
+
+    Extra options will be added as parameters for all notebooks. E.g.
+    --SOME_URL='s3://other-bucket/` will be a parameter for all notebooks.
+    """
+    cur_run_params = run_params.general.create(artifact_env, tenant_id)
+    extra_parameters = utils.get_extra_parameters(ctx)
+    sflm_papermill_runs = get_process_features_run_objects(
+        cur_run_params, object_types, extra_parameters
+    )
+    notebook_count = 0
+    for sflm_papermill_run in sflm_papermill_runs:
+        notebook_count = notebook_count + 1
+        if notebook_count <= start_offset:
+            continue
+
+        utils.run_notebooks(
+            sflm_papermill_run.input_notebook_url,
+            sflm_papermill_run.output_notebook_url,
+            sflm_papermill_run.parameters,
+        )
+
+
+def get_process_features_run_objects(
+    cur_run_params: run_params.general.GeneralRunParams,
+    object_types: List[str],
+    extra_parameters: Dict[str, str],
+) -> List[SFLMPapermillRun]:
+    """Get the run objects for reprocessing features for SFLM."""
+    base_parameters = {
+        **utils.init_parameters(cur_run_params),
+        **extra_parameters,
+    }
+    sflm_papermill_runs = []
+    for object_type in object_types:
+        sflm_papermill_runs.append(
+            single_object_type_notebook_run(
+                "recalculate_sflm_processed_features.ipynb",
+                cur_run_params,
+                object_type,
+                base_parameters,
+            )
+        )
+
+    return sflm_papermill_runs
+
+
 def single_object_type_notebook_run(
     notebook_name: str,
     cur_run_params: run_params.general.GeneralRunParams,

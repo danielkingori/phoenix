@@ -84,3 +84,44 @@ def test_create_from_labels(m_papermill_execute, tenants_template_url_mock):
     ]
 
     m_papermill_execute.assert_has_calls(calls)
+
+
+@freeze_time("2000-01-1 01:01:01", tz_offset=0)
+@mock.patch.dict(os.environ, {registry_environment.PRODUCTION_ENV_VAR_KEY: URL_PREFIX})
+@mock.patch("phoenix.common.cli_modules.utils.run_notebooks")
+def test_recalculate_sflm_processed_features(m_papermill_execute, tenants_template_url_mock):
+    runner = CliRunner()
+    result = runner.invoke(
+        cli.main_group.main_group,
+        [
+            "sflm",
+            "recalculate_sflm_processed_features",
+            "production",
+            "tenant_id_1",
+            "facebook_posts",
+            "tweets",
+        ],
+        catch_exceptions=False,
+    )
+    assert result.exit_code == 0
+    default_parameters = {
+        "RUN_DATETIME": "20000101T010101.000000Z",
+        "RUN_DATE": "2000-01-01",
+        "TENANT_ID": "tenant_id_1",
+        "ARTIFACTS_ENVIRONMENT_KEY": "production",
+    }
+    output_base = "s3://data-lake/tenant_id_1/process/sflm_run/20000101T010101.000000Z/"
+    calls = [
+        mock.call(
+            PathEndsWith("tag/labelling/recalculate_sflm_processed_features.ipynb"),
+            f"{output_base}facebook_posts-recalculate_sflm_processed_features.ipynb",
+            {**default_parameters, **{"OBJECT_TYPE": "facebook_posts"}},
+        ),
+        mock.call(
+            PathEndsWith("tag/labelling/recalculate_sflm_processed_features.ipynb"),
+            f"{output_base}tweets-recalculate_sflm_processed_features.ipynb",
+            {**default_parameters, **{"OBJECT_TYPE": "tweets"}},
+        ),
+    ]
+
+    m_papermill_execute.assert_has_calls(calls)
