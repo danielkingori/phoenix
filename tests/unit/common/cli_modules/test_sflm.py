@@ -43,11 +43,15 @@ def test_create_from_labels(m_papermill_execute, tenants_template_url_mock):
             f"{output_base}facebook_posts-pull_accounts_labelling_sheet.ipynb",
             {**default_parameters, **{"OBJECT_TYPE": "facebook_posts"}},
         ),
-        mock.call(
-            PathEndsWith("tag/labelling/pull_objects_labelling_sheet.ipynb"),
-            f"{output_base}facebook_posts-pull_objects_labelling_sheet.ipynb",
-            {**default_parameters, **{"OBJECT_TYPE": "facebook_posts"}},
-        ),
+        # Stemming has been turned on which is causing all
+        # labeles to be added as a new row to the mapping
+        # Before this comment can be removed
+        # `make format` needs to run after
+        #  mock.call(
+        #  PathEndsWith("tag/labelling/pull_objects_labelling_sheet.ipynb"),
+        #  f"{output_base}facebook_posts-pull_objects_labelling_sheet.ipynb",
+        #  {**default_parameters, **{"OBJECT_TYPE": "facebook_posts"}},
+        #  ),
         mock.call(
             PathEndsWith("tag/labelling/persist_sflm_to_config.ipynb"),
             f"{output_base}facebook_posts-persist_sflm_to_config.ipynb",
@@ -58,11 +62,15 @@ def test_create_from_labels(m_papermill_execute, tenants_template_url_mock):
             f"{output_base}tweets-pull_accounts_labelling_sheet.ipynb",
             {**default_parameters, **{"OBJECT_TYPE": "tweets"}},
         ),
-        mock.call(
-            PathEndsWith("tag/labelling/pull_objects_labelling_sheet.ipynb"),
-            f"{output_base}tweets-pull_objects_labelling_sheet.ipynb",
-            {**default_parameters, **{"OBJECT_TYPE": "tweets"}},
-        ),
+        # Stemming has been turned on which is causing all
+        # labeles to be added as a new row to the mapping
+        # Before this comment can be removed
+        # `make format` needs to run after
+        #  mock.call(
+        #  PathEndsWith("tag/labelling/pull_objects_labelling_sheet.ipynb"),
+        #  f"{output_base}tweets-pull_objects_labelling_sheet.ipynb",
+        #  {**default_parameters, **{"OBJECT_TYPE": "tweets"}},
+        #  ),
         mock.call(
             PathEndsWith("tag/labelling/persist_sflm_to_config.ipynb"),
             f"{output_base}tweets-persist_sflm_to_config.ipynb",
