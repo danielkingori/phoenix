@@ -33,6 +33,7 @@ def tagging():
     default=0,
     help=("Start notebook from offset."),
 )
+@click.option("--include_accounts", is_flag=True)
 @click.option(
     "--include_inference",
     multiple=True,
@@ -53,6 +54,7 @@ def run_phase(
     year_filter,
     month_filter,
     start_offset,
+    include_accounts,
     include_inference: Optional[List[str]] = [],
 ):
     """Run tagging phase.
@@ -82,6 +84,7 @@ def run_phase(
         year_filter,
         month_filter,
         start_offset,
+        include_accounts,
         include_inference,
     )
 
