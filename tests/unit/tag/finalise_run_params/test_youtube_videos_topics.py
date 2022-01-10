@@ -68,8 +68,8 @@ def test_topic_create(
     assert urls.tagging_final == f"{TAGGING_BASE}youtube_videos_topics_final.parquet"
     if expected_final_url == "default":
         FINAL_BASE = (
-            f"s3://data-lake/tenant_id_1/final/{data_set_name}/year_filter=2021/month_filter=11/"
+            f"s3://data-lake/tenant_id_1/final/{data_set_name}/{data_set_name}_final.parquet"
         )
-        assert urls.final == f"{FINAL_BASE}2021-11.parquet"
+        assert urls.final == FINAL_BASE
     else:
         assert urls.final == expected_final_url

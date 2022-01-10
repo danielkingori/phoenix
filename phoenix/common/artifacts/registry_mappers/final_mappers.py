@@ -55,27 +55,15 @@ MAPPERS: MapperDict = {
     ),
     "final-youtube_videos": partial(
         url_mapper,
-        (
-            FINAL_BASE + "youtube_videos/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + "youtube_videos/youtube_videos_final.parquet"),
     ),
     "final-youtube_videos_topics": partial(
         url_mapper,
-        (
-            FINAL_BASE + "youtube_videos_topics/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + "youtube_videos_topics/youtube_videos_topics_final.parquet"),
     ),
     "final-youtube_videos_classes": partial(
         url_mapper,
-        (
-            FINAL_BASE + "youtube_videos_classes/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + "youtube_videos_classes/youtube_videos_classes_final.parquet"),
     ),
     "final-accounts": partial(
         url_mapper,
