@@ -36,9 +36,8 @@ COMMENT_INHERITED_COLUMNS = [
     "has_tension",
 ]
 
-PARTITION_COLUMNS_TO_DROP = [
-    "year_filter",
-    "month_filter",
+PARTITION_COLUMNS_TO_DROP: List[str] = [
+    # Remove of the columns to drop
 ]
 
 
