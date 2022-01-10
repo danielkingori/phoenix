@@ -19,27 +19,15 @@ MAPPERS: MapperDict = {
     ),
     "final-facebook_posts": partial(
         url_mapper,
-        (
-            FINAL_BASE + "facebook_posts/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + "facebook_posts/facebook_posts_final.parquet"),
     ),
     "final-facebook_posts_topics": partial(
         url_mapper,
-        (
-            FINAL_BASE + "facebook_posts_topics/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + "facebook_posts_topics/facebook_posts_topics_final.parquet"),
     ),
     "final-facebook_posts_classes": partial(
         url_mapper,
-        (
-            FINAL_BASE + "facebook_posts_classes/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + "facebook_posts_classes/facebook_posts_classes_final.parquet"),
     ),
     "final-tweets": partial(
         url_mapper,
