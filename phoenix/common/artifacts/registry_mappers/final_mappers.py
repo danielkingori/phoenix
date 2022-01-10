@@ -43,27 +43,15 @@ MAPPERS: MapperDict = {
     ),
     "final-facebook_comments": partial(
         url_mapper,
-        (
-            FINAL_BASE + "facebook_comments/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + "facebook_comments/facebook_comments_final.parquet"),
     ),
     "final-facebook_comments_topics": partial(
         url_mapper,
-        (
-            FINAL_BASE + "facebook_comments_topics/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + "facebook_comments_topics/facebook_comments_topics_final.parquet"),
     ),
     "final-facebook_comments_classes": partial(
         url_mapper,
-        (
-            FINAL_BASE + "facebook_comments_classes/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + "facebook_comments_classes/facebook_comments_classes_final.parquet"),
     ),
     "final-youtube_videos": partial(
         url_mapper,
