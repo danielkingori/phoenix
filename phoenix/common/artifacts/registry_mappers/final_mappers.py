@@ -31,27 +31,15 @@ MAPPERS: MapperDict = {
     ),
     "final-tweets": partial(
         url_mapper,
-        (
-            FINAL_BASE + "tweets/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + "tweets/tweets_final.parquet"),
     ),
     "final-tweets_topics": partial(
         url_mapper,
-        (
-            FINAL_BASE + "tweets_topics/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + "tweets_topics/tweets_topics_final.parquet"),
     ),
     "final-tweets_classes": partial(
         url_mapper,
-        (
-            FINAL_BASE + "tweets_classes/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + "tweets_classes/tweets_classes_final.parquet"),
     ),
     "final-facebook_comments": partial(
         url_mapper,
