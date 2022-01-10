@@ -1,7 +1,6 @@
 """Registry Final mappers."""
 from functools import partial
 
-from phoenix.common.artifacts.registry_mappers import shared_urls
 from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperDict, url_mapper
 
 
@@ -67,18 +66,10 @@ MAPPERS: MapperDict = {
     ),
     "final-accounts": partial(
         url_mapper,
-        (
-            FINAL_BASE + OBJECT_BASE + "_accounts/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + OBJECT_BASE + "_accounts/accounts_final.parquet"),
     ),
     "final-objects_accounts_classes": partial(
         url_mapper,
-        (
-            FINAL_BASE + OBJECT_BASE + "_objects_accounts_classes/"
-            f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
-            "{YEAR_FILTER}-{MONTH_FILTER}.parquet"
-        ),
+        (FINAL_BASE + OBJECT_BASE + "_objects_accounts_classes/accounts_classes_final.parquet"),
     ),
 }
