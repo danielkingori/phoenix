@@ -23,4 +23,7 @@ def normalise_sflm_from_sheets(df: pd.DataFrame) -> pd.DataFrame:
     for col in DEDUPLICATIONS_COLUMNS:
         df[col] = df[col].astype(str)
 
+    if "object_id" in df.columns:
+        df["object_id"] = df["object_id"].astype(str)
+
     return df
