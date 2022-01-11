@@ -61,6 +61,7 @@ def topics_for_object_type(
     object_type: str,
     df: pd.DataFrame,
     topics_df: pd.DataFrame,
+    rename_topic_to_class: bool = False,
 ) -> pd.DataFrame:
     """Finalise the topics dataframe for an object type."""
     if object_type == "youtube_videos":
@@ -70,6 +71,7 @@ def topics_for_object_type(
         return join_to_topics(
             df,
             topics_df,
+            rename_topic_to_class,
         )
 
 
