@@ -67,9 +67,7 @@ def test_create(
     assert urls.language_sentiment_objects == f"{TAGGING_BASE}language_sentiment_objects.parquet"
     assert urls.tagging_final == f"{TAGGING_BASE}youtube_videos_final.parquet"
     if expected_final_url == "default":
-        FINAL_BASE = (
-            "s3://data-lake/tenant_id_1/final/youtube_videos/year_filter=2021/month_filter=11/"
-        )
-        assert urls.final == f"{FINAL_BASE}2021-11.parquet"
+        FINAL_BASE = "s3://data-lake/tenant_id_1/final/youtube_videos/youtube_videos_final.parquet"
+        assert urls.final == FINAL_BASE
     else:
         assert urls.final == expected_final_url
