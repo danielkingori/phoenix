@@ -26,4 +26,13 @@ def normalise_sflm_from_sheets(df: pd.DataFrame) -> pd.DataFrame:
     if "object_id" in df.columns:
         df["object_id"] = df["object_id"].astype(str)
 
+    # Having problems with `language_confidence` being an empty string
+    # this normalises it to 0
+    if "language_confidence" in df.columns:
+        df["language_confidence"] = (
+            df["language_confidence"]
+            .apply(lambda x: x.strip() if isinstance(x, str) else x)
+            .replace("", 0)
+        )
+
     return df

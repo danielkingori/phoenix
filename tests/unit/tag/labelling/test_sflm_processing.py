@@ -35,6 +35,7 @@ def test_normalise_sflm_from_sheets():
             "unprocessed_features": ["unpf1", 100],
             "processed_features": ["pf1", 2],
             "int_col": [1, 2],
+            "language_confidence": ["", 0.342],
         }
     )
     expected_df = pd.DataFrame(
@@ -43,6 +44,7 @@ def test_normalise_sflm_from_sheets():
             "unprocessed_features": ["unpf1", "100"],
             "processed_features": ["pf1", "2"],
             "int_col": [1, 2],
+            "language_confidence": [0.0, 0.342],
         }
     )
     result = sflm_processing.normalise_sflm_from_sheets(input_df)
