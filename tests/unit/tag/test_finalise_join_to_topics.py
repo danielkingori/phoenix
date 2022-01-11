@@ -190,3 +190,62 @@ def test_join_topics_to_facebook_comments_rename(topics_to_join, facebook_commen
             }
         ),
     )
+
+
+@pytest.fixture
+def youtube_videos_to_join():
+    return pd.DataFrame(
+        {
+            "id": ["1", "2"],
+            "url": ["url1", "url2"],
+            "text": ["text", "text"],
+            "object_type": ["ot", "ot"],
+        }
+    )
+
+
+def test_topics_for_objects_type_youtube_videos(topics_to_join, youtube_videos_to_join):
+    """Test the join of topics to youtube_videos."""
+    result_df = finalise.topics_for_object_type(
+        "youtube_videos", df=youtube_videos_to_join, topics_df=topics_to_join
+    )
+    pd.testing.assert_frame_equal(
+        result_df,
+        pd.DataFrame(
+            {
+                "object_id": ["1", "1", "2"],
+                "topic": ["o1", "o1", "o2"],
+                "matched_features": ["mf", "mf", "mf"],
+                "has_topic": [True, True, True],
+                "id": ["1", "1", "2"],
+                "url": ["url1", "url1", "url2"],
+                "text": ["text", "text", "text"],
+                "object_type": ["ot", "ot", "ot"],
+            }
+        ),
+    )
+
+
+def test_topics_for_objects_type_youtube_videos_rename(topics_to_join, youtube_videos_to_join):
+    """Test the join of topics to youtube_videos with rename."""
+    result_df = finalise.topics_for_object_type(
+        "youtube_videos",
+        df=youtube_videos_to_join,
+        topics_df=topics_to_join,
+        rename_topic_to_class=True,
+    )
+    pd.testing.assert_frame_equal(
+        result_df,
+        pd.DataFrame(
+            {
+                "object_id": ["1", "1", "2"],
+                "class": ["o1", "o1", "o2"],
+                "matched_features": ["mf", "mf", "mf"],
+                "has_class": [True, True, True],
+                "id": ["1", "1", "2"],
+                "url": ["url1", "url1", "url2"],
+                "text": ["text", "text", "text"],
+                "object_type": ["ot", "ot", "ot"],
+            }
+        ),
+    )
