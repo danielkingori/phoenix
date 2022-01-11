@@ -158,7 +158,7 @@ def test_TextFeaturesAnalyser_kurdish():
 
     kurmanji_feats = ["Min", "nizanibû", "Min nizanibû"]
 
-    sorani_feats = ["ساڵەکانی", "1950دا", "ساڵەکانی 1950دا"]
+    sorani_feats = ["ساڵ", "1950", "ساڵ 1950"]
 
     assert df_test["features"][0] == kurmanji_feats
     assert df_test["features"][1] == sorani_feats
