@@ -43,6 +43,7 @@ def persist(
     issues.
     """
     worksheet = _get_worksheet(gspread_client, folder_id, sheet_name, worksheet_name)
+    worksheet.clear()
     worksheet.update([df.columns.values.tolist()] + df.values.tolist())
 
 

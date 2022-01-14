@@ -122,7 +122,8 @@ def test_persist_overwrite_google_sheet(tmp_google_drive_folder_id):
     """
     in_df = pd.DataFrame(
         {
-            "col A": [1],
+            "col A": [1, 2, 3],
+            "col B": [1, 2],
         }
     )
     client = google_sheets.get_client()
@@ -136,6 +137,7 @@ def test_persist_overwrite_google_sheet(tmp_google_drive_folder_id):
 
     in_df = pd.DataFrame(
         {
+            "col A": [1, 2],
             "col B": [1, 2],
         }
     )
