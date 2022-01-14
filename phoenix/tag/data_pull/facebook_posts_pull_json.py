@@ -13,6 +13,21 @@ from phoenix.common import pd_utils
 from phoenix.tag.data_pull import constants, utils
 
 
+MEDIUM_MAP = {
+    "link": constants.MEDIUM_TYPE_LINK,
+    "album": constants.MEDIUM_TYPE_PHOTO,
+    "photo": constants.MEDIUM_TYPE_PHOTO,
+    "igtv": constants.MEDIUM_TYPE_VIDEO,
+    "live_video": constants.MEDIUM_TYPE_VIDEO,
+    "live_video_complete": constants.MEDIUM_TYPE_VIDEO,
+    "live_video_scheduled": constants.MEDIUM_TYPE_VIDEO,
+    "native_video": constants.MEDIUM_TYPE_VIDEO,
+    "video": constants.MEDIUM_TYPE_VIDEO,
+    "vine": constants.MEDIUM_TYPE_VIDEO,
+    "youtube": constants.MEDIUM_TYPE_VIDEO,
+}
+
+
 def from_json(
     url_to_folder: str, year_filter: Optional[int] = None, month_filter: Optional[int] = None
 ) -> pd.DataFrame:
@@ -82,6 +97,7 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
     df["month_filter"] = df["post_created"].dt.month
     df["day_filter"] = df["post_created"].dt.day
     df["updated"] = pd.to_datetime(df["updated"]).dt.tz_localize("UTC")
+    df["medium_type"] = medium_type(df)
     # This will be hashed so that links are in the hash
     df["text_link"] = df["text"] + "-" + df["link"].fillna("")
     df["text_hash"] = df["text_link"].apply(utils.hash_message)
@@ -108,6 +124,13 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
         # Using ignore as missing data is not imporant
         errors="ignore",
     )
+
+
+def medium_type(df: pd.DataFrame) -> pd.Series:
+    """Get the medium_type from the dataframe."""
+    ser = df["type"].map(MEDIUM_MAP)
+    ser.name = "medium_type"
+    return ser
 
 
 def map_score(sort_by_api: str, df: pd.DataFrame) -> pd.DataFrame:

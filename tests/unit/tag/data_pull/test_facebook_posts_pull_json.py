@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 
-from phoenix.tag.data_pull import facebook_posts_pull_json
+from phoenix.tag.data_pull import constants, facebook_posts_pull_json
 
 
 def test_map_score():
@@ -18,5 +18,36 @@ def test_map_score():
                 "interaction_rate": [np.nan, np.nan],
                 "underperforming_score": [np.nan, np.nan],
             }
+        ),
+    )
+
+
+def test_medium_type():
+    """Test medium_type."""
+    df = pd.DataFrame(
+        {
+            "type": [
+                "link",
+                "album",
+                "photo",
+                "igtv",
+                "live_video",
+                "live_video_complete",
+                "live_video_scheduled",
+                "native_video",
+                "video",
+                "vine",
+                "youtube",
+            ]
+        }
+    )
+    r_ser = facebook_posts_pull_json.medium_type(df)
+    pd.testing.assert_series_equal(
+        r_ser,
+        pd.Series(
+            [constants.MEDIUM_TYPE_LINK]
+            + [constants.MEDIUM_TYPE_PHOTO] * 2
+            + [constants.MEDIUM_TYPE_VIDEO] * 8,
+            name="medium_type",
         ),
     )
