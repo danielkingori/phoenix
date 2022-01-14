@@ -44,6 +44,7 @@ def normalise_json(raw_df: pd.DataFrame):
     df["year_filter"] = df["created_at"].dt.year
     df["month_filter"] = df["created_at"].dt.month
     df["day_filter"] = df["created_at"].dt.day
+    df["medium_type"] = medium_type(df)
     df = df.rename(columns={"full_text": "text", "lang": "language_from_api"})
     df = user_normalise(df)
     # Dropping nested data for the moment
@@ -82,6 +83,40 @@ def user_normalise(df: pd.DataFrame) -> pd.DataFrame:
     user_df["created_at"] = pd.to_datetime(df["created_at"])
     user_df = user_df.add_prefix("user_")
     return df.join(user_df)
+
+
+def map_medium_type(row: pd.Series) -> str:
+    """Map the medium type."""
+    includes = {}
+    if "includes" in row:
+        includes = row["includes"]
+
+    media = includes.get("media")
+    type_of_first_media = None
+    if media and len(media) > 0:
+        type_of_first_media = media[0].get("type")
+
+    if type_of_first_media == "video":
+        return constants.MEDIUM_TYPE_VIDEO
+
+    if type_of_first_media in ["photo", "animated_gif"]:
+        return constants.MEDIUM_TYPE_PHOTO
+
+    entities = {}
+    if "entities" in row:
+        entities = row["entities"]
+    urls = entities.get("urls")
+    if urls and len(urls) > 0:
+        return constants.MEDIUM_TYPE_LINK
+
+    return constants.MEDIUM_TYPE_TEXT
+
+
+def medium_type(df: pd.DataFrame) -> pd.DataFrame:
+    """Medium type."""
+    ser = df.apply(map_medium_type, axis=1)
+    ser.name = "medium_type"
+    return ser
 
 
 def for_tagging(given_df: pd.DataFrame):
