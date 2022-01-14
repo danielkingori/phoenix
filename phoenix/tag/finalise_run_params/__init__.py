@@ -5,12 +5,17 @@ from phoenix.tag.finalise_run_params import (
     accounts,
     dtypes,
     topics_dtypes,
+    youtube_comments,
+    youtube_comments_topics,
     youtube_videos,
     youtube_videos_topics,
 )
 
 
-_registry_map = {"youtube_videos": youtube_videos.create}
+_registry_map = {
+    "youtube_videos": youtube_videos.create,
+    "youtube_comments": youtube_comments.create,
+}
 
 
 def create(
@@ -42,7 +47,10 @@ def create(
     )
 
 
-_topics_registry_map = {"youtube_videos": youtube_videos_topics.create}
+_topics_registry_map = {
+    "youtube_videos": youtube_videos_topics.create,
+    "youtube_comments": youtube_comments_topics.create,
+}
 
 
 def topics_create(
