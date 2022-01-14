@@ -48,13 +48,15 @@ def for_object_type(
     language_sentiment_objects_df: Optional[pd.DataFrame] = None,
 ) -> pd.DataFrame:
     """Finalise the dataframe for an object type."""
-    if object_type == "youtube_videos":
+    if object_type in ["youtube_videos", "youtube_comments"]:
         df["object_id"] = df["id"].astype(str)
         df = df.set_index("object_id")
         df = df.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
         return join_to_objects_and_language_sentiment(
             df, objects_df, language_sentiment_objects_df
         )
+
+    raise RuntimeError(f"Object Type: {object_type}. Not supported.")
 
 
 def topics_for_object_type(
@@ -64,7 +66,7 @@ def topics_for_object_type(
     rename_topic_to_class: bool = False,
 ) -> pd.DataFrame:
     """Finalise the topics dataframe for an object type."""
-    if object_type == "youtube_videos":
+    if object_type in ["youtube_videos", "youtube_comments"]:
         df = df.copy()
         df["object_id"] = df["id"].astype(str)
         df = df.set_index("object_id")
@@ -73,6 +75,8 @@ def topics_for_object_type(
             topics_df,
             rename_topic_to_class,
         )
+
+    raise RuntimeError(f"Object Type: {object_type}. Not supported.")
 
 
 def join_to_objects_and_language_sentiment(
