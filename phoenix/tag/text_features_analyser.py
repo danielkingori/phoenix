@@ -118,6 +118,8 @@ def stem_analyzer(analyzer, stemmer, doc):
     li: List[str] = []
     if not doc:
         return li
+    if not isinstance(doc, str):
+        doc = str(doc)
     for token in filter(None, analyzer(doc)):  # type: ignore
         if token:
             words_list = [stemmer.stemWord(w) for w in token.split(" ") if w]

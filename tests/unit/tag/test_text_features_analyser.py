@@ -23,6 +23,21 @@ def test_StemmedCountVectorizer_en():
     assert isinstance(en_vectorizer, CountVectorizer)
 
 
+def test_StemmedCountVectorizer_numbers():
+    """Test if StemmedCountVectorizer can handle only numbers."""
+    en_stemmer = stemmer("english")
+
+    en_corpus = [15.0, 12, 13]
+
+    en_vectorizer = tfa.StemmedCountVectorizer(
+        stemmer=en_stemmer, stop_words=stopwords.words("english")
+    )
+    en_vectorizer.fit_transform(en_corpus)
+    expected_feature_names = ["12", "13", "15"]
+    assert set(en_vectorizer.get_feature_names()) == set(expected_feature_names)
+    assert isinstance(en_vectorizer, CountVectorizer)
+
+
 def test_StemmedCountVectorizer_ar():
     """Test if StemmedCountVectorizer is initialized with the right stemmer."""
     ar_stemmer = stemmer("arabic")
