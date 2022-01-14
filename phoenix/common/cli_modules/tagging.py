@@ -246,7 +246,7 @@ def get_finalisation_notebooks(
     object_type, include_accounts, include_inference: List[str]
 ) -> List[str]:
     """Get the finalisation notebooks for an object type."""
-    if "youtube_videos" == object_type:
+    if object_type in ["youtube_videos", "youtube_comments"]:
         return get_generalised_finalisation_notebooks(
             object_type, include_accounts, include_inference
         )
