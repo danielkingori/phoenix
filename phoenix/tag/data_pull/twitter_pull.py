@@ -44,7 +44,7 @@ def normalise_json(raw_df: pd.DataFrame):
     df["year_filter"] = df["created_at"].dt.year
     df["month_filter"] = df["created_at"].dt.month
     df["day_filter"] = df["created_at"].dt.day
-    df["medium_type"] = medium_type(df)
+    df = add_medium_type_and_determinants(df)
     df = df.rename(columns={"full_text": "text", "lang": "language_from_api"})
     df = user_normalise(df)
     # Dropping nested data for the moment
@@ -85,8 +85,31 @@ def user_normalise(df: pd.DataFrame) -> pd.DataFrame:
     return df.join(user_df)
 
 
-def map_medium_type(row: pd.Series) -> str:
-    """Map the medium type."""
+def get_medium_type_and_determinants(row: pd.Series) -> str:
+    """Map the medium type and it's determinants."""
+    type_of_first_media = get_type_of_first_media(row)
+    url_of_first_entity = get_url_of_first_entity(row)
+    medium_type = get_medium_type(type_of_first_media, url_of_first_entity)
+
+    return pd.Series([medium_type, type_of_first_media, url_of_first_entity])
+
+
+def get_medium_type(type_of_first_media: Optional[str], url_of_first_entity: Optional[str]) -> str:
+    """Get the medium_type."""
+    if type_of_first_media == "video":
+        return constants.MEDIUM_TYPE_VIDEO
+
+    if type_of_first_media in ["photo", "animated_gif"]:
+        return constants.MEDIUM_TYPE_PHOTO
+
+    if url_of_first_entity:
+        return constants.MEDIUM_TYPE_LINK
+
+    return constants.MEDIUM_TYPE_TEXT
+
+
+def get_type_of_first_media(row: pd.Series) -> Optional[str]:
+    """Get the media of the first media."""
     includes = {}
     if "includes" in row:
         includes = row["includes"]
@@ -96,27 +119,27 @@ def map_medium_type(row: pd.Series) -> str:
     if media and len(media) > 0:
         type_of_first_media = media[0].get("type")
 
-    if type_of_first_media == "video":
-        return constants.MEDIUM_TYPE_VIDEO
+    return type_of_first_media
 
-    if type_of_first_media in ["photo", "animated_gif"]:
-        return constants.MEDIUM_TYPE_PHOTO
 
+def get_url_of_first_entity(row: pd.Series) -> Optional[str]:
+    """Get the urls of the first entity."""
     entities = {}
     if "entities" in row:
         entities = row["entities"]
     urls = entities.get("urls")
+    url_of_first_url = None
     if urls and len(urls) > 0:
-        return constants.MEDIUM_TYPE_LINK
+        url_of_first_url = urls[0].get("url")
 
-    return constants.MEDIUM_TYPE_TEXT
+    return url_of_first_url
 
 
-def medium_type(df: pd.DataFrame) -> pd.DataFrame:
-    """Medium type."""
-    ser = df.apply(map_medium_type, axis=1)
-    ser.name = "medium_type"
-    return ser
+def add_medium_type_and_determinants(df: pd.DataFrame) -> pd.DataFrame:
+    """Add the medium_type and it's determinants to the dataframe."""
+    medium_type_series = df.apply(get_medium_type_and_determinants, axis=1)
+    df[["medium_type", "platform_media_type", "url_within_text"]] = medium_type_series
+    return df
 
 
 def for_tagging(given_df: pd.DataFrame):
