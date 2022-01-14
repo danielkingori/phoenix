@@ -106,6 +106,7 @@ def test_TextFeaturesAnalyser_default_accepted_languages():
             ("1", "yas", "ckb"),
             ("1", "yas sentance", "ar"),
             ("1", "yas sentances", "ar_izi"),
+            ("1", "on peut aussi analyser le français", "fr"),
         ],
         columns=["id", "clean_text", "language"],
     )
