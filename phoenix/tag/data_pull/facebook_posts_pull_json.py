@@ -14,6 +14,7 @@ from phoenix.tag.data_pull import constants, utils
 
 
 MEDIUM_MAP = {
+    "status": constants.MEDIUM_TYPE_TEXT,
     "link": constants.MEDIUM_TYPE_LINK,
     "album": constants.MEDIUM_TYPE_PHOTO,
     "photo": constants.MEDIUM_TYPE_PHOTO,
@@ -126,9 +127,17 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
     )
 
 
+def medium_type_for_value(type_value: str) -> str:
+    """Medium type for a value."""
+    if type_value in MEDIUM_MAP:
+        return MEDIUM_MAP[type_value]
+
+    raise RuntimeError(f"Type of post not mappable to medium_type: {type_value}")
+
+
 def medium_type(df: pd.DataFrame) -> pd.Series:
     """Get the medium_type from the dataframe."""
-    ser = df["type"].map(MEDIUM_MAP)
+    ser = df["type"].apply(medium_type_for_value)
     ser.name = "medium_type"
     return ser
 
