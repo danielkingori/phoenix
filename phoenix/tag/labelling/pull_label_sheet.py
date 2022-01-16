@@ -142,6 +142,14 @@ def get_account_labels(df: pd.DataFrame) -> pd.DataFrame:
         0, 0
     ]:
         account_df = account_df.iloc[1:]
+
+    duplicate_accounts = account_df[account_df.duplicated(subset=["object_user_url"], keep=False)]
+    if len(duplicate_accounts) > 0:
+        raise ValueError(
+            "Duplicate accounts found in account labelling sheet. "
+            f"Duplicates: \n {duplicate_accounts}"
+        )
+
     long_account_df = pd.wide_to_long(
         account_df,
         stubnames="account_label",

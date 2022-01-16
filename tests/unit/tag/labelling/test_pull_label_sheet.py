@@ -311,6 +311,36 @@ def test_get_account_labels():
     pd.testing.assert_frame_equal(actual_df, expected_df, check_like=True)
 
 
+def test_get_account_labels_duplicates():
+    """Test get_account_labels will return an informative error when there are duplicates."""
+    input_df = pd.DataFrame(
+        {
+            "object_user_name": [
+                "Column note",
+                "user_1",
+                "user_2_but_actually_user_1",
+                "user_3",
+            ],
+            "object_user_url": [
+                "User's URL - Column note",
+                "https://www.facebook.com/duplicated_user_1",
+                "https://www.facebook.com/duplicated_user_1",
+                "https://www.facebook.com/user_3",
+            ],
+            "labelled_by": ["Column note", "Andrew", "Andrew", "Andrew"],
+            "account_label_1": ["Column note", "Bot", "", "Journalist"],
+            "account_label_2": ["Column note", "", "", "Publisher"],
+            "account_label_3": ["Column note", "", "", ""],
+            "account_label_4": ["Column note", "", "", ""],
+            "account_label_5": ["Column note", "", "", ""],
+        }
+    )
+
+    with pytest.raises(ValueError) as e:
+        _ = pull_label_sheet.get_account_labels(input_df)
+    assert "duplicated_user_1" in str(e.value)
+
+
 def test_clean_feature_to_label_df():
     """Test the clean_feature_to_label_df outputs correct cols and deduplicates.
 
