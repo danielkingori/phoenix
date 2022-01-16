@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from phoenix.tag import finalise
+from phoenix.tag import finalise_facebook_comments
 
 
 @pytest.fixture
@@ -52,7 +52,7 @@ def input_facebook_posts_topics_df():
     )
 
 
-def test_inherit_facebook_comment_topics_from_posts(
+def test_facebook_comments_inherit_from_facebook_posts_topics(
     input_comments_df, input_facebook_posts_topics_df
 ):
     # Default does not inherit the `topic` or `has_topic` columns
@@ -76,14 +76,18 @@ def test_inherit_facebook_comment_topics_from_posts(
         }
     )
 
-    output_df = finalise.inherit_facebook_comment_topics_from_facebook_posts_topics_df(
-        input_facebook_posts_topics_df, input_comments_df
+    inherited_columns = finalise_facebook_comments.inherited_columns_for_facebook_comments(
+        posts_topics_df=input_facebook_posts_topics_df,
+    )
+
+    output_df = finalise_facebook_comments.inherit_from_facebook_posts_topics_df(
+        input_facebook_posts_topics_df, input_comments_df, inherited_columns
     )
 
     pd.testing.assert_frame_equal(output_df, expected_comments_df, check_like=True)
 
 
-def test_inherit_facebook_comment_topics_from_posts_rename(
+def test_facebook_comments_inherit_from_facebook_posts_topics_rename(
     input_comments_df, input_facebook_posts_topics_df
 ):
     # Default does not inherit the `topic` or `has_topic` columns
@@ -107,77 +111,62 @@ def test_inherit_facebook_comment_topics_from_posts_rename(
         }
     )
 
-    output_df = finalise.inherit_facebook_comment_topics_from_facebook_posts_topics_df(
-        input_facebook_posts_topics_df, input_comments_df, rename_topic_to_class=True
+    inherited_columns = finalise_facebook_comments.inherited_columns_for_facebook_comments(
+        posts_topics_df=input_facebook_posts_topics_df,
     )
 
-    pd.testing.assert_frame_equal(output_df, expected_comments_df, check_like=True)
-
-
-def test_inherit_facebook_comment_topics_from_posts_inherit_every_row(
-    input_facebook_posts_topics_df, input_comments_df
-):
-    row_count = 4
-    expected_comments_df = pd.DataFrame(
-        {
-            "id": ["1", "2", "2", "3"],
-            "post_id": [123, 456, 456, 789],
-            "topics": [["a"], ["a", "b"], ["a", "b"], ["non_topic"]],
-            "has_topics": [True, True, True, False],
-            "is_economic_labour_tension": [True] * row_count,
-            "is_political_tension": [True] * row_count,
-            "is_service_related_tension": [True] * row_count,
-            "is_community_insecurity_tension": [True] * row_count,
-            "is_sectarian_tension": [True] * row_count,
-            "is_environmental_tension": [True] * row_count,
-            "is_geopolitics_tension": [True] * row_count,
-            "is_intercommunity_relations_tension": [True] * row_count,
-            "has_tension": [True] * row_count,
-            "comments_only_column": ["some_str"] * row_count,
-        }
-    )
-
-    output_df = finalise.inherit_facebook_comment_topics_from_facebook_posts_topics_df(
-        input_facebook_posts_topics_df, input_comments_df, inherit_every_row_per_id=True
-    )
-
-    pd.testing.assert_frame_equal(output_df, expected_comments_df, check_like=True)
-
-
-def test_inherit_facebook_comment_topics_from_posts_inherit_every_row_rename(
-    input_facebook_posts_topics_df, input_comments_df
-):
-    row_count = 4
-    expected_comments_df = pd.DataFrame(
-        {
-            "id": ["1", "2", "2", "3"],
-            "post_id": [123, 456, 456, 789],
-            "classes": [["a"], ["a", "b"], ["a", "b"], ["non_topic"]],
-            "has_classes": [True, True, True, False],
-            "is_economic_labour_tension": [True] * row_count,
-            "is_political_tension": [True] * row_count,
-            "is_service_related_tension": [True] * row_count,
-            "is_community_insecurity_tension": [True] * row_count,
-            "is_sectarian_tension": [True] * row_count,
-            "is_environmental_tension": [True] * row_count,
-            "is_geopolitics_tension": [True] * row_count,
-            "is_intercommunity_relations_tension": [True] * row_count,
-            "has_tension": [True] * row_count,
-            "comments_only_column": ["some_str"] * row_count,
-        }
-    )
-
-    output_df = finalise.inherit_facebook_comment_topics_from_facebook_posts_topics_df(
+    output_df = finalise_facebook_comments.inherit_from_facebook_posts_topics_df(
         input_facebook_posts_topics_df,
         input_comments_df,
-        inherit_every_row_per_id=True,
+        inherited_columns,
         rename_topic_to_class=True,
     )
 
     pd.testing.assert_frame_equal(output_df, expected_comments_df, check_like=True)
 
 
-def test_inherit_facebook_comment_topics_from_posts_inherit_every_row_extra_inherited_col(
+def test_facebook_comments_inherit_from_facebook_posts_topics_dropped(
+    input_facebook_posts_topics_df, input_comments_df
+):
+    row_count = 4
+    to_drop = [
+        "is_economic_labour_tension",
+        "is_political_tension",
+        "is_service_related_tension",
+        "is_community_insecurity_tension",
+        "is_sectarian_tension",
+        "is_environmental_tension",
+        "is_geopolitics_tension",
+        "is_intercommunity_relations_tension",
+        "has_tension",
+    ]
+    input_comments_df = input_comments_df.drop(columns=to_drop, axis=1)
+    input_facebook_posts_topics_df = input_facebook_posts_topics_df.drop(columns=to_drop, axis=1)
+    expected_comments_df = pd.DataFrame(
+        {
+            "id": ["1", "2", "2", "3"],
+            "post_id": [123, 456, 456, 789],
+            "topics": [["a"], ["a", "b"], ["a", "b"], ["non_topic"]],
+            "has_topics": [True, True, True, False],
+            "comments_only_column": ["some_str"] * row_count,
+        }
+    )
+
+    inherited_columns = finalise_facebook_comments.inherited_columns_for_facebook_comments(
+        posts_topics_df=input_facebook_posts_topics_df,
+    )
+
+    output_df = finalise_facebook_comments.inherit_from_facebook_posts_topics_df(
+        input_facebook_posts_topics_df,
+        input_comments_df,
+        inherited_columns,
+        inherit_every_row_per_id=True,
+    )
+
+    pd.testing.assert_frame_equal(output_df, expected_comments_df, check_like=True)
+
+
+def test_facebook_comments_topics_inherit_from_facebook_posts_topics(
     input_facebook_posts_topics_df, input_comments_df
 ):
     row_count = 4
@@ -202,17 +191,21 @@ def test_inherit_facebook_comment_topics_from_posts_inherit_every_row_extra_inhe
         }
     )
 
-    output_df = finalise.inherit_facebook_comment_topics_from_facebook_posts_topics_df(
+    inherited_columns = finalise_facebook_comments.inherited_columns_for_facebook_comments_topics(
+        posts_topics_df=input_facebook_posts_topics_df,
+    )
+
+    output_df = finalise_facebook_comments.inherit_from_facebook_posts_topics_df(
         input_facebook_posts_topics_df,
         input_comments_df,
+        inherited_columns,
         inherit_every_row_per_id=True,
-        extra_inherited_cols=["topic", "has_topic"],
     )
 
     pd.testing.assert_frame_equal(output_df, expected_comments_df, check_like=True)
 
 
-def test_inherit_facebook_comment_topics_from_posts_inherit_every_row_extra_inherited_col_rename(
+def test_facebook_comments_topics_inherit_from_facebook_posts_topics_rename(
     input_facebook_posts_topics_df, input_comments_df
 ):
     row_count = 4
@@ -237,11 +230,15 @@ def test_inherit_facebook_comment_topics_from_posts_inherit_every_row_extra_inhe
         }
     )
 
-    output_df = finalise.inherit_facebook_comment_topics_from_facebook_posts_topics_df(
+    inherited_columns = finalise_facebook_comments.inherited_columns_for_facebook_comments_topics(
+        posts_topics_df=input_facebook_posts_topics_df,
+    )
+
+    output_df = finalise_facebook_comments.inherit_from_facebook_posts_topics_df(
         input_facebook_posts_topics_df,
         input_comments_df,
+        inherited_columns,
         inherit_every_row_per_id=True,
-        extra_inherited_cols=["topic", "has_topic"],
         rename_topic_to_class=True,
     )
 

@@ -6,6 +6,8 @@ from typing import List
 
 import pandas as pd
 
+from phoenix.tag import finalise
+
 
 FACEBOOK_COMMENT_INHERITABLE_COLUMNS = [
     "topics",
@@ -72,3 +74,57 @@ def build_inherited_columns_from_posts_topics_df(
     avaliable_columns = set(posts_topics_df.columns)
     to_inherit = set(inheritable_columns)
     return list(avaliable_columns.intersection(to_inherit))
+
+
+def inherit_from_facebook_posts_topics_df(
+    posts_topics_df: pd.DataFrame,
+    comments_df: pd.DataFrame,
+    inherited_columns: List[str],
+    inherit_every_row_per_id: bool = False,
+    rename_topic_to_class: bool = False,
+) -> pd.DataFrame:
+    """Joins comments to their parent posts and inherits tensions and topic(s) from parents.
+
+    Args:
+        posts_topics_df (pd.DataFrame): fb_posts dataframe with topics
+            and other columns to inherit.
+        comments_df (pd.DataFrame): base comments which inherit certain
+            characteristics from parents.
+        inherited_columns: columns that will be inherited from the posts_topics_df.
+        inherit_every_row_per_id (bool): If there are multiple rows
+            per post_id (eg two `topic`s for a post),
+            should we inherit each of those rows.
+        rename_topic_to_class (boolean): if the `topic` column is rename to `class`.
+            Default is False
+
+    Returns:
+        Dataframe with the comments inheriting from the posts topics.
+    """
+    for col in inherited_columns:
+        if col not in posts_topics_df.columns:
+            raise Exception(f"Column {col} not found in posts dataframe.")
+    if "post_id" not in comments_df.columns:
+        raise Exception("Column 'post_id' not found in comments dataframe.")
+
+    comments_df = comments_df.drop(inherited_columns, axis=1, errors="ignore")
+
+    # Remove any duplicate comment_ids from any other processing step.
+    comments_df = comments_df.groupby("id").first().reset_index()
+
+    posts_topics_df = posts_topics_df[["url_post_id"] + inherited_columns]
+    posts_topics_df["url_post_id"] = posts_topics_df["url_post_id"].astype(int)
+
+    # only take the last one if you're only interested in the aggregated columns in
+    # COMMENT_INHERITED_COLUMNS. If there are multiple rows per post (multiple `topic`s per
+    # post) that need to be inherited, turn this flag on.
+    if not inherit_every_row_per_id:
+        posts_topics_df = posts_topics_df.groupby("url_post_id").last().reset_index()
+
+    comments_df = pd.merge(
+        comments_df, posts_topics_df, left_on="post_id", right_on="url_post_id", how="left"
+    ).drop("url_post_id", axis=1)
+
+    if rename_topic_to_class:
+        comments_df = finalise.topic_to_class(comments_df)
+
+    return comments_df
