@@ -10,6 +10,8 @@ from phoenix.tag import finalise
 
 
 FACEBOOK_COMMENT_INHERITABLE_COLUMNS = [
+    "classes",
+    "has_classes",
     "topics",
     "has_topics",
     "is_economic_labour_tension",
@@ -24,6 +26,8 @@ FACEBOOK_COMMENT_INHERITABLE_COLUMNS = [
 ]
 
 FACEBOOK_COMMENT_TOPICS_INHERITABLE_COLUMNS = [
+    "class",
+    "has_class",
     "topic",
     "has_topic",
 ] + FACEBOOK_COMMENT_INHERITABLE_COLUMNS
@@ -106,6 +110,8 @@ def inherit_from_facebook_posts_topics_df(
     if "post_id" not in comments_df.columns:
         raise Exception("Column 'post_id' not found in comments dataframe.")
 
+    if rename_topic_to_class:
+        comments_df = finalise.topic_to_class(comments_df)
     comments_df = comments_df.drop(inherited_columns, axis=1, errors="ignore")
 
     # Remove any duplicate comment_ids from any other processing step.
@@ -123,8 +129,5 @@ def inherit_from_facebook_posts_topics_df(
     comments_df = pd.merge(
         comments_df, posts_topics_df, left_on="post_id", right_on="url_post_id", how="left"
     ).drop("url_post_id", axis=1)
-
-    if rename_topic_to_class:
-        comments_df = finalise.topic_to_class(comments_df)
 
     return comments_df

@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from phoenix.tag import finalise_facebook_comments
+from phoenix.tag import finalise, finalise_facebook_comments
 
 
 @pytest.fixture
@@ -52,6 +52,11 @@ def input_facebook_posts_topics_df():
     )
 
 
+@pytest.fixture
+def input_facebook_posts_classes_df(input_facebook_posts_topics_df):
+    return finalise.topic_to_class(input_facebook_posts_topics_df)
+
+
 def test_facebook_comments_inherit_from_facebook_posts_topics(
     input_comments_df, input_facebook_posts_topics_df
 ):
@@ -88,7 +93,7 @@ def test_facebook_comments_inherit_from_facebook_posts_topics(
 
 
 def test_facebook_comments_inherit_from_facebook_posts_topics_rename(
-    input_comments_df, input_facebook_posts_topics_df
+    input_comments_df, input_facebook_posts_classes_df
 ):
     # Default does not inherit the `topic` or `has_topic` columns
     row_count = 3
@@ -112,11 +117,11 @@ def test_facebook_comments_inherit_from_facebook_posts_topics_rename(
     )
 
     inherited_columns = finalise_facebook_comments.inherited_columns_for_facebook_comments(
-        posts_topics_df=input_facebook_posts_topics_df,
+        posts_topics_df=input_facebook_posts_classes_df,
     )
 
     output_df = finalise_facebook_comments.inherit_from_facebook_posts_topics_df(
-        input_facebook_posts_topics_df,
+        input_facebook_posts_classes_df,
         input_comments_df,
         inherited_columns,
         rename_topic_to_class=True,
@@ -206,7 +211,7 @@ def test_facebook_comments_topics_inherit_from_facebook_posts_topics(
 
 
 def test_facebook_comments_topics_inherit_from_facebook_posts_topics_rename(
-    input_facebook_posts_topics_df, input_comments_df
+    input_facebook_posts_classes_df, input_comments_df
 ):
     row_count = 4
     expected_comments_df = pd.DataFrame(
@@ -231,11 +236,11 @@ def test_facebook_comments_topics_inherit_from_facebook_posts_topics_rename(
     )
 
     inherited_columns = finalise_facebook_comments.inherited_columns_for_facebook_comments_topics(
-        posts_topics_df=input_facebook_posts_topics_df,
+        posts_topics_df=input_facebook_posts_classes_df,
     )
 
     output_df = finalise_facebook_comments.inherit_from_facebook_posts_topics_df(
-        input_facebook_posts_topics_df,
+        input_facebook_posts_classes_df,
         input_comments_df,
         inherited_columns,
         inherit_every_row_per_id=True,
