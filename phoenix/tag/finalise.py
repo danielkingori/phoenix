@@ -118,14 +118,18 @@ def join_objects_to_facebook_posts(
     )
 
 
-def join_objects_to_facebook_comments(objects, language_sentiment_objects, facebook_comments):
+def join_objects_to_facebook_comments(
+    facebook_comments_df: pd.DataFrame,
+    objects_df: Optional[pd.DataFrame] = None,
+    language_sentiment_objects_df: Optional[pd.DataFrame] = None,
+):
     """Join the objects to the facebook_comments."""
-    objects = objects.set_index("object_id")
-    language_sentiment_objects = language_sentiment_objects.set_index("object_id")
-    objects = objects.join(language_sentiment_objects[LANGUAGE_SENTIMENT_COLUMNS])
-    facebook_comments["object_id"] = facebook_comments["id"].astype(str)
-    facebook_comments = facebook_comments.set_index("object_id")
-    return facebook_comments.join(objects, rsuffix="_objects")
+    facebook_comments_df["object_id"] = facebook_comments_df["id"].astype(str)
+    facebook_comments_df = facebook_comments_df.set_index("object_id")
+    facebook_comments_df = facebook_comments_df.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
+    return join_to_objects_and_language_sentiment(
+        facebook_comments_df, objects_df, language_sentiment_objects_df
+    )
 
 
 def join_objects_to_tweets(
