@@ -151,6 +151,7 @@ def get_account_labels(df: pd.DataFrame) -> pd.DataFrame:
     )
     long_account_df = long_account_df.reset_index().drop("position", axis=1).replace("", np.nan)
     long_account_df = long_account_df.dropna(subset=["account_label"], how="any", axis=0)
+    long_account_df["account_label"] = long_account_df["account_label"].str.lower()
     return long_account_df
 
 

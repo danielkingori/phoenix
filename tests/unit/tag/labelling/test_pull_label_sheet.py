@@ -234,7 +234,10 @@ def test_extract_features_to_label_mapping_no_features(mock_execute):
 
 
 def test_get_account_labels():
-    """Test that get_account_labels returns correct df."""
+    """Test that get_account_labels returns correct df.
+
+    Checks that the account label is to_lower()'ed
+    """
     input_df = pd.DataFrame(
         {
             "object_user_name": [
@@ -271,7 +274,7 @@ def test_get_account_labels():
                 "https://www.facebook.com/user_3",
             ],
             "labelled_by": ["Andrew", "Andrew", "Andrew"],
-            "account_label": ["Bot", "Journalist", "Publisher"],
+            "account_label": ["bot", "journalist", "publisher"],
         },
         index=[0, 10, 11],
     )
