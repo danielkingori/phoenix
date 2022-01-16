@@ -133,7 +133,7 @@ def get_account_labels(df: pd.DataFrame) -> pd.DataFrame:
         df (pd.DataFrame): account labelling dataframe.
     """
     if not is_valid_account_labelling_sheet(df):
-        ValueError(
+        raise ValueError(
             f"Dataframe doesn't have correct cols to be an account labelling sheet. {df.columns}"
         )
 
