@@ -22,20 +22,6 @@ TOPICS_COLUMNS = [
     "has_topic",
 ]
 
-COMMENT_INHERITED_COLUMNS = [
-    "topics",
-    "has_topics",
-    "is_economic_labour_tension",
-    "is_political_tension",
-    "is_service_related_tension",
-    "is_community_insecurity_tension",
-    "is_sectarian_tension",
-    "is_environmental_tension",
-    "is_geopolitics_tension",
-    "is_intercommunity_relations_tension",
-    "has_tension",
-]
-
 PARTITION_COLUMNS_TO_DROP: List[str] = [
     # Remove of the columns to drop
 ]
