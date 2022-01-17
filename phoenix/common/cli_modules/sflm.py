@@ -98,16 +98,11 @@ def get_run_objects(
                 "pull_accounts_labelling_sheet.ipynb", cur_run_params, object_type, base_parameters
             )
         )
-        # Stemming has been turned on which is causing all
-        # labeles to be added as a new row to the mapping
-        # Before this comment can be removed
-        # `make format` needs to run after
-        #  sflm_papermill_runs.append(
-        #      single_object_type_notebook_run(
-        #          "pull_objects_labelling_sheet.ipynb",
-        #          cur_run_params, object_type, base_parameters
-        #      )
-        #  )
+        sflm_papermill_runs.append(
+            single_object_type_notebook_run(
+                "pull_objects_labelling_sheet.ipynb", cur_run_params, object_type, base_parameters
+            )
+        )
         sflm_papermill_runs.append(
             single_object_type_notebook_run(
                 "persist_sflm_to_config.ipynb", cur_run_params, object_type, base_parameters
