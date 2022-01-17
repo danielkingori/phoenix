@@ -6,8 +6,6 @@ from typing import List
 
 import pandas as pd
 
-from phoenix.tag import finalise
-
 
 FACEBOOK_COMMENT_INHERITABLE_COLUMNS = [
     "classes",
@@ -101,7 +99,6 @@ def inherit_from_facebook_posts_topics_df(
     comments_df: pd.DataFrame,
     inherited_columns: List[str],
     inherit_every_row_per_id: bool = False,
-    rename_topic_to_class: bool = False,
 ) -> pd.DataFrame:
     """Joins comments to their parent posts and inherits tensions and topic(s) from parents.
 
@@ -126,8 +123,6 @@ def inherit_from_facebook_posts_topics_df(
     if "post_id" not in comments_df.columns:
         raise Exception("Column 'post_id' not found in comments dataframe.")
 
-    if rename_topic_to_class:
-        comments_df = finalise.topic_to_class(comments_df)
     comments_df = comments_df.drop(inherited_columns, axis=1, errors="ignore")
 
     # Remove any duplicate comment_ids from any other processing step.
