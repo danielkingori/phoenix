@@ -116,13 +116,14 @@ def join_objects_to_facebook_comments(
     facebook_comments_df: pd.DataFrame,
     objects_df: Optional[pd.DataFrame] = None,
     language_sentiment_objects_df: Optional[pd.DataFrame] = None,
+    rename_topic_to_class: Optional[bool] = False,
 ):
     """Join the objects to the facebook_comments."""
     facebook_comments_df["object_id"] = facebook_comments_df["id"].astype(str)
     facebook_comments_df = facebook_comments_df.set_index("object_id")
     facebook_comments_df = facebook_comments_df.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
     return join_to_objects_and_language_sentiment(
-        facebook_comments_df, objects_df, language_sentiment_objects_df
+        facebook_comments_df, objects_df, language_sentiment_objects_df, rename_topic_to_class
     )
 
 
