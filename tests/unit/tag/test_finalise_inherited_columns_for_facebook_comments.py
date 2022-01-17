@@ -31,6 +31,17 @@ def input_facebook_posts_topics_df():
     )
 
 
+@pytest.fixture()
+def input_facebook_posts_objects_accounts_classes():
+    return pd.DataFrame(
+        {
+            "id": ["1", "2", "2", "3"],
+            "url_post_id": ["123", "456", "456", "789"],
+            "account_label": ["a", "a", "b", "non_topic"],
+        }
+    )
+
+
 @pytest.mark.parametrize(
     "posts_topics_df, expected_result",
     [
@@ -71,3 +82,15 @@ def test_inherited_columns_for_facebook_comments_topics(posts_topics_df, expecte
         posts_topics_df=posts_topics_df,
     )
     assert result.sort() == expected_result.sort()
+
+
+def test_inherited_columns_for_facebook_comments_account_classes(
+    input_facebook_posts_objects_accounts_classes,
+):
+    """Test inherited_columns_for_facebook_comments_account_classes."""
+    result = finalise_facebook_comments.inherited_columns_for_facebook_comments_account_classes(
+        posts_accounts_objects_df=input_facebook_posts_objects_accounts_classes
+    )
+    assert (
+        result == finalise_facebook_comments.FACEBOOK_COMMENT_ACCOUNT_CLASSES_INHERITABLE_COLUMNS
+    )
