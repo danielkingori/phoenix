@@ -47,9 +47,7 @@ def inherited_columns_for_facebook_comments(
         posts_topics_df (pd.DataFrame): facebook posts topics dataframe to get the
             inherited columns from.
     """
-    return build_inherited_columns_from_posts_topics_df(
-        posts_topics_df, FACEBOOK_COMMENT_INHERITABLE_COLUMNS
-    )
+    return get_inheritable_column_names(posts_topics_df, FACEBOOK_COMMENT_INHERITABLE_COLUMNS)
 
 
 def inherited_columns_for_facebook_comments_topics(
@@ -61,7 +59,7 @@ def inherited_columns_for_facebook_comments_topics(
         posts_topics_df (pd.DataFrame): facebook posts topics dataframe to get the
             inherited columns from.
     """
-    return build_inherited_columns_from_posts_topics_df(
+    return get_inheritable_column_names(
         posts_topics_df, FACEBOOK_COMMENT_TOPICS_INHERITABLE_COLUMNS
     )
 
@@ -75,16 +73,16 @@ def inherited_columns_for_facebook_comments_account_classes(
         posts_accounts_objects_df (pd.DataFrame): facebook posts objects account
             classes dataframe to get the inherited columns from.
     """
-    return build_inherited_columns_from_posts_topics_df(
+    return get_inheritable_column_names(
         posts_accounts_objects_df, FACEBOOK_COMMENT_ACCOUNT_CLASSES_INHERITABLE_COLUMNS
     )
 
 
-def build_inherited_columns_from_posts_topics_df(
+def get_inheritable_column_names(
     df: pd.DataFrame,
     inheritable_columns: List[str],
 ) -> List[str]:
-    """Build the inheritable_columns.
+    """Get the inheritable columns that the dataframe contains.
 
     Args:
         df (pd.DataFrame): dataframe to get the inherited columns from.
