@@ -92,6 +92,7 @@ def test_reprocess_sflm(mock_tfa_module):
 
     It changes the use_processed_features to False when the processed feature changes.
     It only updates the status to analyst_action needed when the input row's status was active.
+    It removes any duplicates in the input sflm
     """
     mock_tfa = mock.MagicMock(TextFeaturesAnalyser)
     mock_tfa_module.create.return_value = mock_tfa
@@ -102,11 +103,18 @@ def test_reprocess_sflm(mock_tfa_module):
 
     input_sflm_df = pd.DataFrame(
         {
-            "class": ["dog", "cat", "insect", "dog", "cat"],
-            "unprocessed_features": ["woofs", "meows softly", "buzzes", "howls", "purring"],
-            "processed_features": ["woof", "meow soft", "buzz", "howl", "purring"],
-            "use_processed_features": [True, True, True, True, False],
-            "status": ["active", "active", "active", "active", "deleted"],
+            "class": ["dog", "cat", "insect", "dog", "cat", "dog"],
+            "unprocessed_features": [
+                "woofs",
+                "meows softly",
+                "buzzes",
+                "howls",
+                "purring",
+                "woofs",
+            ],
+            "processed_features": ["woof", "meow soft", "buzz", "howl", "purring", "woof"],
+            "use_processed_features": [True, True, True, True, False, True],
+            "status": ["active", "active", "active", "active", "deleted", "active"],
         }
     )
 

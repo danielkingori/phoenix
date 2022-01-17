@@ -68,6 +68,7 @@ def update_changed_processed_features(new_df: pd.DataFrame, old_df: pd.DataFrame
 
 def reprocess_sflm(sflm_df: pd.DataFrame) -> pd.DataFrame:
     """Reprocess the processed_features in the sflm dataframe."""
+    sflm_df = sflm_df.drop_duplicates(subset=["class", "unprocessed_features"])
     reprocessed_labelled_objects = sflm_df.copy()
     reprocessed_labelled_objects["use_processed_features"] = False
     # only change the status to analyst_action_needed if it was previously active
