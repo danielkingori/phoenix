@@ -1,8 +1,9 @@
 """Test facebook JSON pull."""
 import numpy as np
 import pandas as pd
+import pytest
 
-from phoenix.tag.data_pull import facebook_posts_pull_json
+from phoenix.tag.data_pull import constants, facebook_posts_pull_json
 
 
 def test_map_score():
@@ -20,3 +21,44 @@ def test_map_score():
             }
         ),
     )
+
+
+def test_medium_type():
+    """Test medium_type."""
+    df = pd.DataFrame(
+        {
+            "type": [
+                "link",
+                "album",
+                "photo",
+                "igtv",
+                "live_video",
+                "live_video_complete",
+                "live_video_scheduled",
+                "native_video",
+                "video",
+                "vine",
+                "youtube",
+                "status",
+            ]
+        }
+    )
+    r_ser = facebook_posts_pull_json.medium_type(df)
+    pd.testing.assert_series_equal(
+        r_ser,
+        pd.Series(
+            [constants.MEDIUM_TYPE_LINK]
+            + [constants.MEDIUM_TYPE_PHOTO] * 2
+            + [constants.MEDIUM_TYPE_VIDEO] * 8
+            + [constants.MEDIUM_TYPE_TEXT] * 1,
+            name="medium_type",
+        ),
+    )
+
+
+def test_medium_type_unknown_type():
+    """Test raises error if unsupported medium_type."""
+    df = pd.DataFrame({"type": ["unknown"]})
+    with pytest.raises(RuntimeError) as e:
+        facebook_posts_pull_json.medium_type(df)
+        assert "unknown" in str(e.value)
