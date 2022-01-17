@@ -131,6 +131,7 @@ def join_objects_to_tweets(
     tweets_df: pd.DataFrame,
     objects_df: Optional[pd.DataFrame] = None,
     language_sentiment_objects_df: Optional[pd.DataFrame] = None,
+    rename_topic_to_class: Optional[bool] = False,
 ):
     """Join the objects_df to the tweets_df."""
     tweets_df["object_id"] = tweets_df["id_str"].astype(str)
@@ -139,7 +140,10 @@ def join_objects_to_tweets(
     if objects_df is not None:
         objects_df = objects_df.drop(columns=["retweeted", "text", "language_from_api"])
     return join_to_objects_and_language_sentiment(
-        tweets_df, objects_df, language_sentiment_objects_df
+        tweets_df,
+        objects_df,
+        language_sentiment_objects_df,
+        rename_topic_to_class,
     )
 
 
