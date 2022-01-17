@@ -32,6 +32,7 @@ def for_object_type(
     df: pd.DataFrame,
     objects_df: Optional[pd.DataFrame] = None,
     language_sentiment_objects_df: Optional[pd.DataFrame] = None,
+    rename_topic_to_class: bool = False,
 ) -> pd.DataFrame:
     """Finalise the dataframe for an object type."""
     if object_type in ["youtube_videos", "youtube_comments"]:
@@ -39,7 +40,10 @@ def for_object_type(
         df = df.set_index("object_id")
         df = df.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
         return join_to_objects_and_language_sentiment(
-            df, objects_df, language_sentiment_objects_df
+            df,
+            objects_df,
+            language_sentiment_objects_df,
+            rename_topic_to_class,
         )
 
     raise RuntimeError(f"Object Type: {object_type}. Not supported.")
