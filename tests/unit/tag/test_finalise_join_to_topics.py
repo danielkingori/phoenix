@@ -61,8 +61,10 @@ def test_join_topics_to_facebook_posts_rename(
         pd.DataFrame(
             {
                 "object_id": ["o1", "o1", "o2"],
-                "class": ["o1", "o1", "o2"],
+                "topic": ["o1", "o1", "o2"],
                 "matched_features": ["mf", "mf", "mf"],
+                "has_topic": [True, True, True],
+                "class": ["o1", "o1", "o2"],
                 "has_class": [True, True, True],
                 "phoenix_post_id": ["o1", "o1", "o2"],
                 "object_type": ["ot", "ot", "ot"],
@@ -125,8 +127,10 @@ def test_join_topics_to_tweets_rename(topics_to_join, tweets_to_join):
         pd.DataFrame(
             {
                 "object_id": ["1", "1", "2"],
-                "class": ["o1", "o1", "o2"],
+                "topic": ["o1", "o1", "o2"],
                 "matched_features": ["mf", "mf", "mf"],
+                "has_topic": [True, True, True],
+                "class": ["o1", "o1", "o2"],
                 "has_class": [True, True, True],
                 "id_str": [1, 1, 2],
                 "url": ["url1", "url1", "url2"],
@@ -180,8 +184,10 @@ def test_join_topics_to_facebook_comments_rename(topics_to_join, facebook_commen
         pd.DataFrame(
             {
                 "object_id": ["1", "1", "2"],
-                "class": ["o1", "o1", "o2"],
+                "topic": ["o1", "o1", "o2"],
                 "matched_features": ["mf", "mf", "mf"],
+                "has_topic": [True, True, True],
+                "class": ["o1", "o1", "o2"],
                 "has_class": [True, True, True],
                 "id": [1, 1, 2],
                 "url": ["url1", "url1", "url2"],
@@ -239,8 +245,10 @@ def test_topics_for_objects_type_youtube_videos_rename(topics_to_join, youtube_v
         pd.DataFrame(
             {
                 "object_id": ["1", "1", "2"],
-                "class": ["o1", "o1", "o2"],
+                "topic": ["o1", "o1", "o2"],
                 "matched_features": ["mf", "mf", "mf"],
+                "has_topic": [True, True, True],
+                "class": ["o1", "o1", "o2"],
                 "has_class": [True, True, True],
                 "id": ["1", "1", "2"],
                 "url": ["url1", "url1", "url2"],

@@ -135,7 +135,7 @@ def join_objects_to_tweets(
 
 
 def topic_to_class(df: pd.DataFrame) -> pd.DataFrame:
-    """Rename the topic columns to class columns.
+    """Normalise the topic columns duplicating to class columns.
 
     Args:
         df (dataframe): with possible "topic" or "topics"
@@ -144,10 +144,10 @@ def topic_to_class(df: pd.DataFrame) -> pd.DataFrame:
         DataFrame with `has_class` and `class` or `has_classes` and `classes`
     """
     if "topic" in df.columns:
-        df = df.rename(columns={"has_topic": "has_class", "topic": "class"})
+        df[["class", "has_class"]] = df[["topic", "has_topic"]]
 
     if "topics" in df.columns:
-        df = df.rename(columns={"has_topics": "has_classes", "topics": "classes"})
+        df[["classes", "has_classes"]] = df[["topics", "has_topics"]]
     return df
 
 
