@@ -212,6 +212,8 @@ google-resumable-media==1.3.3
     # via google-cloud-storage
 googleapis-common-protos==1.53.0
     # via google-api-core
+graphistry==0.20.5
+    # via -r requirements/tag.in
 gspread==4.0.1
     # via -r requirements/common.in
 heapdict==1.0.1
@@ -369,6 +371,7 @@ numpy==1.21.2
     #   dask
     #   fastparquet
     #   fasttext
+    #   graphistry
     #   matplotlib
     #   pandas
     #   pyarrow
@@ -397,6 +400,7 @@ pandas==1.1.3
     #   awswrangler
     #   dask
     #   fastparquet
+    #   graphistry
     #   seaborn
     #   tentaclio
 pandocfilters==1.4.3
@@ -437,6 +441,7 @@ protobuf==3.17.3
     # via
     #   google-api-core
     #   googleapis-common-protos
+    #   graphistry
 psutil==5.8.0
     # via
     #   cacheman
@@ -453,6 +458,7 @@ pyarrow==4.0.1
     # via
     #   -r requirements/common.in
     #   awswrangler
+    #   graphistry
 pyasn1==0.4.8
     # via
     #   pyasn1-modules
@@ -545,6 +551,7 @@ requests[socks]==2.25.1
     # via
     #   google-api-core
     #   google-cloud-storage
+    #   graphistry
     #   jupyterlab-server
     #   papermill
     #   redshift-connector
