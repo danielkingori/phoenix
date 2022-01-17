@@ -58,3 +58,8 @@ def plot(
     g = g.edges(edges)
     g = g.nodes(nodes)
     return g.plot(name=graph_name, description=config.graph_description, render=False)
+
+
+def form_redirect_html(url: str) -> str:
+    """Produce string of HTML file that automatically redirects to given URL when loaded."""
+    return f'<meta http-equiv="refresh" content="0; url={url}" />'
