@@ -20,6 +20,10 @@ MAPPERS: MapperDict = {
         url_mapper,
         (GRAPHING + OBJECT_TYPE_GRAPH_TYPE + "nodes.parquet"),
     ),
+    "graphing-graphistry-redirect_html": partial(
+        shared_url_mapper.dashboard_url_mapper,
+        (GRAPHING + OBJECT_TYPE_GRAPH_TYPE + "graphistry/redirect.html"),
+    ),
     # Legacy below this comment
     # Retweet
     "graphing_runs-retweet_pulled": partial(
