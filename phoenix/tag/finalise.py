@@ -69,8 +69,12 @@ def join_to_objects_and_language_sentiment(
     df: pd.DataFrame,
     objects_df: Optional[pd.DataFrame] = None,
     language_sentiment_objects_df: Optional[pd.DataFrame] = None,
+    rename_topic_to_class: Optional[bool] = False,
 ):
     """Generalised join of objects_df and language_sentiment_objects_df to a final dataframe."""
+    if rename_topic_to_class:
+        objects_df = topic_to_class(objects_df)
+
     if objects_df is None and language_sentiment_objects_df is not None:
         language_sentiment_objects_df = language_sentiment_objects_df.set_index("object_id")
         return df.join(
@@ -94,13 +98,17 @@ def join_objects_to_facebook_posts(
     facebook_posts_df: pd.DataFrame,
     objects_df: Optional[pd.DataFrame] = None,
     language_sentiment_objects_df: Optional[pd.DataFrame] = None,
+    rename_topic_to_class: bool = False,
 ):
     """Join the objects_df to the facebook_posts."""
     facebook_posts_df["object_id"] = facebook_posts_df["phoenix_post_id"].astype(str)
     facebook_posts_df = facebook_posts_df.set_index("object_id")
     facebook_posts_df = facebook_posts_df.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
     return join_to_objects_and_language_sentiment(
-        facebook_posts_df, objects_df, language_sentiment_objects_df
+        facebook_posts_df,
+        objects_df,
+        language_sentiment_objects_df,
+        rename_topic_to_class,
     )
 
 
