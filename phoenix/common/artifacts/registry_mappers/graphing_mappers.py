@@ -5,10 +5,22 @@ from phoenix.common.artifacts.registry_mappers import shared_url_mapper, shared_
 from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperDict, url_mapper
 
 
+GRAPHING = "graphing/"
+OBJECT_TYPE_GRAPH_TYPE = "{OBJECT_TYPE}_{GRAPH_TYPE}/"
 # graphing used to match the naming the phoenix repo
 GRAPHING_PIPELINE_BASE = f"{shared_urls.TAGGING_PIPELINE_BASE}graphing/"
 
+
 MAPPERS: MapperDict = {
+    "graphing-edges": partial(
+        url_mapper,
+        (GRAPHING + OBJECT_TYPE_GRAPH_TYPE + "edges.parquet"),
+    ),
+    "graphing-nodes": partial(
+        url_mapper,
+        (GRAPHING + OBJECT_TYPE_GRAPH_TYPE + "nodes.parquet"),
+    ),
+    # Legacy below this comment
     # Retweet
     "graphing_runs-retweet_pulled": partial(
         url_mapper, GRAPHING_PIPELINE_BASE + "retweet_pulled.parquet"
