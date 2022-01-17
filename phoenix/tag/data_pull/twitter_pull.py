@@ -56,7 +56,8 @@ def normalise_json(raw_df: pd.DataFrame):
             "place",
             "retweeted_status",
             "quoted_status",
-        ]
+        ],
+        errors="ignore",
     )
     return df
 
