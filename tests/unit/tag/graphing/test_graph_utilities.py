@@ -41,3 +41,14 @@ def test_save_dashboard_graph_not_set(m_save_graph):
     path = None
     graph_utilities.save_dashboard_graph(graph, path)
     m_save_graph.assert_not_called()
+
+
+@mock.patch("tentaclio.open")
+def test_save_string_as_html_to_s3(m_open):
+    """Test save string as HMTL with s3 url."""
+    string = "< some html >"
+    path = "s3://bucket/something.html"
+    graph_utilities.save_str_as_html(string, path)
+    content_type = "text/html"
+    m_open.assert_called_once_with(path, "w", upload_extra_args={"ContentType": content_type})
+    m_open.return_value.__enter__().write.assert_called_once_with(string)
