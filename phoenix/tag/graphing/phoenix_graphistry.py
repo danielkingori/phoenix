@@ -35,7 +35,15 @@ def plot(
     config: PlotConfig,
     graph_name_prefix: Optional[str] = None,
 ) -> str:
-    """Generate a Graphistry plot from edges, nodes, and config given, returning graph URL."""
+    """Generate a Graphistry plot from edges, nodes, and config given, returning graph URL.
+
+    Args:
+        edges: Dataframe of edges, can include extra arbitrary columns of attributes for edges.
+        nodes: Dataframe of nodes, can include extra arbitrary columns of attributes for edges.
+        config: The phoenix_graphistry dataclass config.
+        graph_name_prefix: Optional string that will be prefixed onto the graph name when uploaded
+            to Graphistry. Primarily used to inject tenant ID as graph prefix.
+    """
     graphistry.register(
         api=3,
         username=os.environ["GRAPHISTRY_USERNAME"],
