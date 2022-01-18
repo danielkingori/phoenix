@@ -38,6 +38,7 @@ def input_facebook_posts_objects_accounts_classes():
             "id": ["1", "2", "2", "3"],
             "url_post_id": ["123", "456", "456", "789"],
             "account_label": ["a", "a", "b", "non_topic"],
+            "account_name": ["a1", "a2", "a2", "a3"],
         }
     )
 
@@ -92,5 +93,6 @@ def test_inherited_columns_for_facebook_comments_account_classes(
         posts_accounts_objects_df=input_facebook_posts_objects_accounts_classes
     )
     assert (
-        result == finalise_facebook_comments.FACEBOOK_COMMENT_ACCOUNT_CLASSES_INHERITABLE_COLUMNS
+        result.sort()
+        == finalise_facebook_comments.FACEBOOK_COMMENT_ACCOUNT_CLASSES_INHERITABLE_COLUMNS.sort()
     )
