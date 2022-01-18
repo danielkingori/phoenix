@@ -42,3 +42,15 @@ def save_dashboard_graph(graph, url):
 
     save_graph(graph, url)
     logging.info(f"Saved graph to optional dashboard URL: {url}")
+
+
+def save_str_as_html(string: str, path: str):
+    """Saves the string as HTML file to the specified path with Tentaclio."""
+    parsed_url = tentaclio.urls.URL(path)
+    open_extra_args = {}
+    if parsed_url.scheme == "s3":
+        content_type = "text/html"
+        open_extra_args["upload_extra_args"] = {"ContentType": content_type}
+
+    with tentaclio.open(path, "w", **open_extra_args) as f:
+        f.write(string)

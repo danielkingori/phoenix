@@ -97,6 +97,10 @@ ArtifactKey = Literal[
     "sflm-account-object_type",
     "sflm-output_notebook_base",
     # Graphing
+    "graphing-edges",
+    "graphing-nodes",
+    "graphing-graphistry-redirect_html",
+    # Legacy graphing below this comment
     "graphing_runs-retweet_pulled",
     "graphing_runs-retweet_input",
     "graphing_runs-retweet_output_graph",

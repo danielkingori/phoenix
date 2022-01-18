@@ -49,17 +49,16 @@ def test_create(
     )
 
     if accounts_final_url is None:
-        urls.accounts_final == (
-            "s3://data-lake/tenant_id_1/final/youtube_videos_accounts/"
-            "year_filter=2022/month_filter=1/2022-1.parquet"
+        assert urls.accounts_final == (
+            "s3://data-lake/tenant_id_1/final/youtube_videos_accounts/accounts_final.parquet"
         )
     else:
-        urls.accounts_final == "some_url"
+        assert urls.accounts_final == "some_url"
 
     if objects_accounts_classes_final_url is None:
-        urls.objects_accounts_classes_final == (
+        assert urls.objects_accounts_classes_final == (
             "s3://data-lake/tenant_id_1/final/youtube_videos_objects_accounts_classes/"
-            "year_filter=2022/month_filter=1/2022-1.parquet"
+            "accounts_classes_final.parquet"
         )
     else:
-        urls.accounts_final == "some_url_2"
+        assert urls.objects_accounts_classes_final == "some_url_2"
