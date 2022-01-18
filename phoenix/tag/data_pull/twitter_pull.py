@@ -47,6 +47,7 @@ def normalise_json(raw_df: pd.DataFrame):
     df = add_medium_type_and_determinants(df)
     df = df.rename(columns={"full_text": "text", "lang": "language_from_api"})
     df = user_normalise(df)
+    df = retweeted_status_normalise(df)
     # Dropping nested data for the moment
     df = df.drop(
         columns=[
@@ -84,6 +85,19 @@ def user_normalise(df: pd.DataFrame) -> pd.DataFrame:
     user_df["created_at"] = pd.to_datetime(df["created_at"])
     user_df = user_df.add_prefix("user_")
     return df.join(user_df)
+
+
+def retweeted_status_normalise(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalise retweet data and join back to input df."""
+    if "retweeted_status" not in df.columns:
+        return df
+    retweet_df = df[["retweeted_status"]].copy()
+    retweet_df["retweeted_status"] = retweet_df["retweeted_status"].map(
+        lambda x: {} if pd.isnull(x) else x
+    )
+    retweet_df = pd.json_normalize(retweet_df["retweeted_status"])
+    retweet_df["retweeted_user_screen_name"] = retweet_df["user.screen_name"]
+    return df.join(retweet_df[["retweeted_user_screen_name"]])
 
 
 def get_medium_type_and_determinants(row: pd.Series) -> str:

@@ -68,6 +68,7 @@ def processed_df() -> pd.DataFrame:
                 "user_geo_enabled": False,
                 "user_verified": False,
                 "user_lang": None,
+                "retweeted_user_screen_name": "YemenShaawtar",
             },
             {
                 "id_str": "1461749682200358912",
@@ -124,6 +125,7 @@ def processed_df() -> pd.DataFrame:
                 "user_geo_enabled": False,
                 "user_verified": False,
                 "user_lang": None,
+                "retweeted_user_screen_name": None,
             },
         ]
     )
