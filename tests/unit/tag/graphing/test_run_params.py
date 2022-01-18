@@ -12,7 +12,7 @@ URL_PREFIX = "s3://data-lake/"
 URL_PREFIX_PUBLIC_BUCKET = "s3://public-bucket/"
 OBJECT_TYPE = "tweets"
 GRAPH_TYPE = "retweet"
-INPUT_DATASET_URL = "input_dataset_url"
+INPUT_DATASETS_ARTIFACT_KEYS = ["final-accounts", "final-tweets"]
 ARTIFACTS_ENVIRONMENT_KEY = "production"
 TENANT_ID = "tenant_id_1"
 
@@ -40,23 +40,28 @@ def test_create(
         year_filter=2022,
         month_filter=1,
         graph_type=GRAPH_TYPE,
-        input_dataset_url=INPUT_DATASET_URL,
+        input_datasets_artifact_keys=INPUT_DATASETS_ARTIFACT_KEYS,
         edges_url=edges_url,
         nodes_url=nodes_url,
         graphistry_redirect_html_url=graphistry_redirect_html_url,
     )
     assert run_params
     assert isinstance(run_params, graphing_run_params.GraphingRunParams)
-    ROOT_URL_FOR_TEST = "s3://data-lake/tenant_id_1/graphing/tweets_retweet/"
+    ROOT_GRAPH_URL = "s3://data-lake/tenant_id_1/graphing/tweets_retweet/"
+    ROOT_FINAL_URL = "s3://data-lake/tenant_id_1/final/"
 
     urls = run_params.urls
-    assert urls.input_dataset == INPUT_DATASET_URL
+    assert urls.input_datasets == {
+        "final-accounts": ROOT_FINAL_URL + "tweets_accounts/accounts_final.parquet",
+        "final-tweets": ROOT_FINAL_URL + "tweets/tweets_final.parquet",
+    }
+
     if edges_url is None:
-        assert urls.edges == ROOT_URL_FOR_TEST + "edges.parquet"
+        assert urls.edges == ROOT_GRAPH_URL + "edges.parquet"
     else:
         assert urls.edges == "some_url"
     if nodes_url is None:
-        assert urls.nodes == ROOT_URL_FOR_TEST + "nodes.parquet"
+        assert urls.nodes == ROOT_GRAPH_URL + "nodes.parquet"
     else:
         assert urls.nodes == "some_url_2"
     if graphistry_redirect_html_url is None:

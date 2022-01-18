@@ -1,5 +1,5 @@
 """Run params for graphing."""
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import dataclasses
 
@@ -14,7 +14,7 @@ class GraphingRunParamsURLs(base.RunParams):
     """
 
     config: Dict[str, Any]
-    input_dataset: str
+    input_datasets: Dict[str, str]  # Dict[`artifact_key`, `corresponding_artifact_url`]
     edges: str
     nodes: str
     graphistry_redirect_html: Optional[str]
@@ -39,7 +39,7 @@ def create(
     year_filter: int,
     month_filter: int,
     graph_type: str,
-    input_dataset_url: str,
+    input_datasets_artifact_keys: List[str],
     edges_url: Optional[str] = None,
     nodes_url: Optional[str] = None,
     graphistry_redirect_html_url: Optional[str] = None,
@@ -55,6 +55,11 @@ def create(
         "GRAPH_TYPE": graph_type,
     }
 
+    input_datasets_urls = {
+        artifact_key: art_url_reg.get_url(artifact_key, url_config)
+        for artifact_key in input_datasets_artifact_keys
+    }
+
     if edges_url is None:
         edges_url = art_url_reg.get_url("graphing-edges", url_config)
     if nodes_url is None:
@@ -66,7 +71,7 @@ def create(
 
     urls = GraphingRunParamsURLs(
         config=url_config,
-        input_dataset=input_dataset_url,
+        input_datasets=input_datasets_urls,
         edges=edges_url,
         nodes=nodes_url,
         graphistry_redirect_html=graphistry_redirect_html_url,
