@@ -3,6 +3,8 @@ from typing import Tuple
 
 import pandas as pd
 
+from phoenix.tag.graphing import phoenix_graphistry
+
 
 def process(
     final_tweets: pd.DataFrame, final_accounts: pd.DataFrame
@@ -40,3 +42,18 @@ def process(
     )
 
     return (edges_df, nodes_df)
+
+
+plot_config = phoenix_graphistry.PlotConfig(
+    edge_source_col="retweeted_user_screen_name",
+    edge_destination_col="tweeting_user_screen_name",
+    nodes_col="user_screen_name",
+    graph_name="tweets_retweets",
+    graph_description="""
+        Graph showing retweets between Twitter accounts.
+        Nodes: Twitter accounts
+        Edges: Exist where any retweeting of source by destination account has occurred. Edge
+            weight is number of times retweeting has occurred.
+    """,
+    edge_weight_col="times_retweeted",
+)
