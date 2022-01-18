@@ -32,6 +32,7 @@ def for_object_type(
     df: pd.DataFrame,
     objects_df: Optional[pd.DataFrame] = None,
     language_sentiment_objects_df: Optional[pd.DataFrame] = None,
+    rename_topic_to_class: bool = False,
 ) -> pd.DataFrame:
     """Finalise the dataframe for an object type."""
     if object_type in ["youtube_videos", "youtube_comments"]:
@@ -39,7 +40,10 @@ def for_object_type(
         df = df.set_index("object_id")
         df = df.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
         return join_to_objects_and_language_sentiment(
-            df, objects_df, language_sentiment_objects_df
+            df,
+            objects_df,
+            language_sentiment_objects_df,
+            rename_topic_to_class,
         )
 
     raise RuntimeError(f"Object Type: {object_type}. Not supported.")
@@ -69,8 +73,12 @@ def join_to_objects_and_language_sentiment(
     df: pd.DataFrame,
     objects_df: Optional[pd.DataFrame] = None,
     language_sentiment_objects_df: Optional[pd.DataFrame] = None,
+    rename_topic_to_class: Optional[bool] = False,
 ):
     """Generalised join of objects_df and language_sentiment_objects_df to a final dataframe."""
+    if rename_topic_to_class:
+        objects_df = topic_to_class(objects_df)
+
     if objects_df is None and language_sentiment_objects_df is not None:
         language_sentiment_objects_df = language_sentiment_objects_df.set_index("object_id")
         return df.join(
@@ -94,13 +102,17 @@ def join_objects_to_facebook_posts(
     facebook_posts_df: pd.DataFrame,
     objects_df: Optional[pd.DataFrame] = None,
     language_sentiment_objects_df: Optional[pd.DataFrame] = None,
+    rename_topic_to_class: bool = False,
 ):
     """Join the objects_df to the facebook_posts."""
     facebook_posts_df["object_id"] = facebook_posts_df["phoenix_post_id"].astype(str)
     facebook_posts_df = facebook_posts_df.set_index("object_id")
     facebook_posts_df = facebook_posts_df.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
     return join_to_objects_and_language_sentiment(
-        facebook_posts_df, objects_df, language_sentiment_objects_df
+        facebook_posts_df,
+        objects_df,
+        language_sentiment_objects_df,
+        rename_topic_to_class,
     )
 
 
@@ -108,13 +120,14 @@ def join_objects_to_facebook_comments(
     facebook_comments_df: pd.DataFrame,
     objects_df: Optional[pd.DataFrame] = None,
     language_sentiment_objects_df: Optional[pd.DataFrame] = None,
+    rename_topic_to_class: Optional[bool] = False,
 ):
     """Join the objects to the facebook_comments."""
     facebook_comments_df["object_id"] = facebook_comments_df["id"].astype(str)
     facebook_comments_df = facebook_comments_df.set_index("object_id")
     facebook_comments_df = facebook_comments_df.drop(PARTITION_COLUMNS_TO_DROP, axis=1)
     return join_to_objects_and_language_sentiment(
-        facebook_comments_df, objects_df, language_sentiment_objects_df
+        facebook_comments_df, objects_df, language_sentiment_objects_df, rename_topic_to_class
     )
 
 
@@ -122,6 +135,7 @@ def join_objects_to_tweets(
     tweets_df: pd.DataFrame,
     objects_df: Optional[pd.DataFrame] = None,
     language_sentiment_objects_df: Optional[pd.DataFrame] = None,
+    rename_topic_to_class: Optional[bool] = False,
 ):
     """Join the objects_df to the tweets_df."""
     tweets_df["object_id"] = tweets_df["id_str"].astype(str)
@@ -130,12 +144,15 @@ def join_objects_to_tweets(
     if objects_df is not None:
         objects_df = objects_df.drop(columns=["retweeted", "text", "language_from_api"])
     return join_to_objects_and_language_sentiment(
-        tweets_df, objects_df, language_sentiment_objects_df
+        tweets_df,
+        objects_df,
+        language_sentiment_objects_df,
+        rename_topic_to_class,
     )
 
 
 def topic_to_class(df: pd.DataFrame) -> pd.DataFrame:
-    """Rename the topic columns to class columns.
+    """Normalise the topic columns duplicating to class columns.
 
     Args:
         df (dataframe): with possible "topic" or "topics"
@@ -144,10 +161,10 @@ def topic_to_class(df: pd.DataFrame) -> pd.DataFrame:
         DataFrame with `has_class` and `class` or `has_classes` and `classes`
     """
     if "topic" in df.columns:
-        df = df.rename(columns={"has_topic": "has_class", "topic": "class"})
+        df[["class", "has_class"]] = df[["topic", "has_topic"]]
 
     if "topics" in df.columns:
-        df = df.rename(columns={"has_topics": "has_classes", "topics": "classes"})
+        df[["classes", "has_classes"]] = df[["topics", "has_topics"]]
     return df
 
 
