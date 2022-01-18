@@ -1,8 +1,9 @@
 """Functions for running the Facebook comment parsing process."""
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple, Union
 
 import logging
 import os
+from itertools import islice
 
 import tentaclio
 
@@ -78,10 +79,15 @@ def process_single_file(file_url, parsed_url, fail_url) -> Optional[Dict[Any, An
         return None
 
 
-def run_fb_page_parser(file_url, parsed_url, fail_url):
+def run_fb_page_parser(
+    file_url, parsed_url, fail_url, max_files_to_process: Union[int, bool] = False
+):
     """Run the parser and return a list of parsed pages."""
     pages = []
-    for file_url in get_files(file_url):
+    iterator = get_files(file_url)
+    if max_files_to_process and isinstance(max_files_to_process, int):
+        iterator = islice(iterator, 0, max_files_to_process)
+    for file_url in iterator:
         page = process_single_file(file_url, parsed_url, fail_url)
         if page is not None:
             pages.append(page)

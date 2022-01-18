@@ -53,6 +53,11 @@ def get_files_to_process(url_to_folder) -> List[str]:
         "eg. --include_inference tensions --include_inference sentiment"
     ),
 )
+@click.option(
+    "--max_files_to_process",
+    type=click.INT,
+    help="Max number of files to process",
+)
 @click.pass_context
 def run_phase(
     ctx,
@@ -63,6 +68,7 @@ def run_phase(
     silence_no_files_to_process_exception,
     include_accounts,
     include_inference,
+    max_files_to_process,
 ):
     """Run processing and tagging of the raw comment data.
 
@@ -97,6 +103,8 @@ def run_phase(
         **args_parameters,
         **extra_parameters,
     }
+    if max_files_to_process:
+        parameters["MAX_FILES_TO_PROCESS"] = max_files_to_process
 
     BASE_URL_FACEBOOK_COMMENTS_PAGES_TO_PARSE = cur_run_params.art_url_reg.get_url(
         "base-facebook_comments_pages_to_parse", parameters
