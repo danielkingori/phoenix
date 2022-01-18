@@ -122,3 +122,53 @@ def test_get_unprocessed_features():
     actual_df = feature.get_unprocessed_features(input_df)
 
     pd.testing.assert_frame_equal(actual_df, expected_df)
+
+
+def test_explode_features():
+    """Test explode features explodes features correctly."""
+    input_df = pd.DataFrame(
+        {
+            "object_id": ["id_1", "id_2"],
+            "features": [
+                ["so", "tell", "me", "what", "you", "want"],
+                ["what", "you", "really", "really", "want"],
+            ],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        {
+            "object_id": [
+                "id_1",
+                "id_1",
+                "id_1",
+                "id_1",
+                "id_1",
+                "id_1",
+                "id_2",
+                "id_2",
+                "id_2",
+                "id_2",
+            ],
+            "features": [
+                "so",
+                "tell",
+                "me",
+                "what",
+                "you",
+                "want",
+                "what",
+                "you",
+                "really",
+                "want",
+            ],
+            "features_count": [1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
+        }
+    )
+
+    actual_df = feature.explode_features(input_df)
+
+    pd.testing.assert_frame_equal(
+        actual_df.sort_values(by="features").reset_index(drop=True),
+        expected_df.sort_values(by="features").reset_index(drop=True),
+    )
