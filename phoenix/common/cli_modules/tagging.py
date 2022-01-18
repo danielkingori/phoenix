@@ -254,8 +254,11 @@ def get_finalisation_notebooks(
     nbs = [f"tag/{object_type}_finalise.ipynb"]
     if "topics" in include_inference or "classes" in include_inference:
         nbs.append(f"tag/{object_type}_finalise_topics.ipynb")
-    if include_accounts:
+    if include_accounts and not object_type == "facebook_comments":
         nbs.append("tag/finalise_accounts.ipynb")
+
+    if include_accounts and object_type == "facebook_comments":
+        nbs.append("tag/facebook_comments_finalise_inherit_accounts.ipynb")
     return nbs
 
 
