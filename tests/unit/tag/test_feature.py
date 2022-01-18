@@ -56,3 +56,69 @@ def test_features(mock_create):
     )
 
     pd.testing.assert_frame_equal(expected_df, actual_df)
+
+
+def test_get_unprocessed_features():
+    """Test the noop features returns correct ngrams."""
+    input_df = pd.DataFrame(
+        data={
+            "clean_text": [
+                "hello",
+                "Min nizanibû a ku",
+                "لە ســـاڵەکانی ١٩٥٠دا",
+                " مبادرة #البابا_فرنسيس #لبنان ",
+                ":muscle:",
+            ],
+            "language": ["en", "ku", "ckb", "ar", "und"],
+            "another_column": ["foo", "bar", "baz", "spam", "ham"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        data={
+            "clean_text": [
+                "hello",
+                "Min nizanibû a ku",
+                "لە ســـاڵەکانی ١٩٥٠دا",
+                " مبادرة #البابا_فرنسيس #لبنان ",
+                ":muscle:",
+            ],
+            "language": ["en", "ku", "ckb", "ar", "und"],
+            "another_column": ["foo", "bar", "baz", "spam", "ham"],
+            "features": [
+                ["hello"],
+                [
+                    "min",
+                    "nizanibû",
+                    "a",
+                    "ku",
+                    "min nizanibû",
+                    "nizanibû a",
+                    "a ku",
+                    "min nizanibû a",
+                    "nizanibû a ku",
+                ],
+                [
+                    "لە",
+                    "ســـاڵەکانی",
+                    "١٩٥٠دا",
+                    "لە ســـاڵەکانی",
+                    "ســـاڵەکانی ١٩٥٠دا",
+                    "لە ســـاڵەکانی ١٩٥٠دا",
+                ],
+                [
+                    "مبادرة",
+                    "#البابا_فرنسيس",
+                    "#لبنان",
+                    "مبادرة #البابا_فرنسيس",
+                    "#البابا_فرنسيس #لبنان",
+                    "مبادرة #البابا_فرنسيس #لبنان",
+                ],
+                ["muscle"],
+            ],
+        }
+    )
+
+    actual_df = feature.get_unprocessed_features(input_df)
+
+    pd.testing.assert_frame_equal(actual_df, expected_df)
