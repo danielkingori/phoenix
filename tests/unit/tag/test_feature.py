@@ -172,3 +172,33 @@ def test_explode_features():
         actual_df.sort_values(by="features").reset_index(drop=True),
         expected_df.sort_values(by="features").reset_index(drop=True),
     )
+
+
+@mock.patch(
+    "phoenix.tag.feature.SFLM_NECESSARY_FEATURES_COLUMNS",
+    ["object_id", "object_type", "language", "features"],
+)
+def test_keep_neccesary_columns_sflm():
+    """Test keep_necessary columns for sflm."""
+    input_df = pd.DataFrame(
+        {
+            "object_id": ["id_1"],
+            "object_type": ["obj_type_1"],
+            "language": ["lang_1"],
+            "features": ["feature_1"],
+            "unnecessary_column": ["unnecessary"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        {
+            "object_id": ["id_1"],
+            "object_type": ["obj_type_1"],
+            "language": ["lang_1"],
+            "features": ["feature_1"],
+        }
+    )
+
+    actual_df = feature.keep_neccesary_columns_sflm(input_df)
+
+    pd.testing.assert_frame_equal(expected_df, actual_df)

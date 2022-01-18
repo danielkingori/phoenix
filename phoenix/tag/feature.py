@@ -10,6 +10,10 @@ from sklearn.feature_extraction.text import CountVectorizer
 from phoenix.tag import constants, text_features_analyser
 
 
+# Only the necessary columns of features for running the SFLM inference pipeline.
+SFLM_NECESSARY_FEATURES_COLUMNS = ["object_id", "object_type", "language", "features"]
+
+
 def features(given_df: pd.DataFrame, text_key: str = "clean_text") -> pd.DataFrame:
     """Append features column.
 
@@ -113,3 +117,20 @@ def get_unprocessed_features(given_df: pd.DataFrame, text_key: str = "clean_text
     given_df["features"] = given_df[text_key].apply(analyser)
 
     return given_df
+
+
+def keep_neccesary_columns_sflm(given_df: pd.DataFrame):
+    """Keep only the necessary columns of the features df to run SFLM inference pipeline.
+
+    schema also found here: docs/schemas/features.md
+    Please update if it is changed.
+
+    Arguments:
+        given_df: A dataframe with many columns seen in docs/schemas/features.md.
+
+    Returns:
+        pd.DataFrame: Dataframe with only the necessary columns to run SFLM inference.
+    """
+    df = given_df[SFLM_NECESSARY_FEATURES_COLUMNS]
+
+    return df
