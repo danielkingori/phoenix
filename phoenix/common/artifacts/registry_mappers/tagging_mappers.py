@@ -124,6 +124,9 @@ MAPPERS: MapperDict = {
     "tagging_runs-all_features": partial(
         url_mapper, TAGGING_PIPELINE_BASE + "all_features.parquet"
     ),
+    "tagging_runs-sflm_unprocessed_features": partial(
+        url_mapper, TAGGING_PIPELINE_BASE + "sflm_unprocessed_features.parquet"
+    ),
     # Topics
     "tagging_runs-topics": partial(url_mapper, TAGGING_PIPELINE_BASE + "topics.parquet"),
     "tagging_runs-objects_topics": partial(
