@@ -28,6 +28,12 @@ def get_topics(topic_config, features_df, fill_topic: str = FILL_TOPIC) -> pd.Da
     features_indexed_df = features_df.set_index("object_id")
     topic_config_i = topic_config.set_index("features")
     topics_df = features_indexed_df.join(topic_config_i, on="features")
+    topics_df = process_joined_topics(fill_topic, topics_df)
+    return topics_df
+
+
+def process_joined_topics(fill_topic: str, topics_df: pd.DataFrame):
+    """Process joined topics by aggregating matched features, and fill nulls."""
     no_topic = topics_df[topics_df["topic"].isnull()]
     topics_df = topics_df[~topics_df["topic"].isnull()]
     topics_df = (
@@ -44,7 +50,6 @@ def get_topics(topic_config, features_df, fill_topic: str = FILL_TOPIC) -> pd.Da
     no_topic["matched_features"] = None
     no_topic["has_topic"] = False
     topics_df = topics_df.reset_index()
-
     return pd.concat([topics_df, no_topic], ignore_index=True)
 
 
