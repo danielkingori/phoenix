@@ -6,6 +6,7 @@ from phoenix.common.cli_modules import (  # noqa: F401
     events,
     facebook_comments_pages,
     graphing,
+    labelling,
     main_group,
     scrape_facebook,
     scrape_group,

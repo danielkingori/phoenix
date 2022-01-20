@@ -93,6 +93,8 @@ ArtifactKey = Literal[
     "tagging_runs-language_sentiment_objects",
     "tagging_runs-facebook_posts_final",
     "tagging_runs-facebook_posts_to_scrape",
+    # Labelling
+    "labelling-output_notebook_base",
     # Single Feature to Label Mapping
     "sflm-single_object_type",
     "sflm-account-object_type",
