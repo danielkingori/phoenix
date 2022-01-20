@@ -20,13 +20,13 @@ def get_files(dir_url):
         # facebook_comments_pages have a # in
         # https://gitlab.com/howtobuildup/phoenix/-/issues/65
         url_str = str(entry.url)
-        logging.info(entry.url)
+        logging.debug(entry.url)
         if url_str.endswith(".html"):
-            logging.info(f"Processing {url_str}...")
+            logging.debug(f"Processing {url_str}...")
             yield url_str
 
         if entry.is_dir:
-            logging.info("Folder found {url_str}")
+            logging.debug("Folder found {url_str}")
             yield from get_files(url_str)
 
 
@@ -88,6 +88,7 @@ def run_fb_page_parser(
     if max_files_to_process and isinstance(max_files_to_process, int):
         iterator = islice(iterator, 0, max_files_to_process)
     for file_url in iterator:
+        logging.info(f"PROCESSING: {file_url}")
         page = process_single_file(file_url, parsed_url, fail_url)
         if page is not None:
             pages.append(page)
