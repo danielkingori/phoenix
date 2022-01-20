@@ -178,7 +178,10 @@ def get_goal_number_rows(
         pd.DataFrame: excluded rows
         pd.DataFrame: included rows
     """
-    if df[stratify_col].nunique() > n:
+    if n < 0:
+        excluded_df = df.copy()
+        df = pd.DataFrame(columns=df.columns)
+    elif df[stratify_col].nunique() > n:
         # If there are more unique items in the stratify columns than `n`, do a simple sample
         df_copy = df.copy()
         df = df.sample(n, random_state=2021)

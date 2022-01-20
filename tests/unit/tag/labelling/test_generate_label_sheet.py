@@ -110,6 +110,30 @@ def test_get_goal_number_rows_many_unique():
     pd.testing.assert_frame_equal(actual_df, expected_df)
 
 
+def test_get_goal_number_rows_negative_n():
+    """Test get_goal_number_rows doesn't break when entering a negative number."""
+    input_df = pd.DataFrame(
+        data={
+            "object_id": ["id_1", "id_2", "id_3"],
+            "data_col": ["1", "2", "3"],
+            "stratify_col": ["a", "b", "c"],
+        }
+    )
+
+    expected_df = pd.DataFrame(
+        data={
+            "object_id": ["id_1", "id_2", "id_3"],
+            "data_col": ["1", "2", "3"],
+            "stratify_col": ["a", "b", "c"],
+        }
+    )
+    excluded_df, actual_df = generate_label_sheet.get_goal_number_rows(
+        input_df, "stratify_col", -15
+    )
+    pd.testing.assert_frame_equal(excluded_df, expected_df)
+    assert actual_df.empty
+
+
 def test_get_user_notes_object_df():
     """Test basic assumptions for get_user_notes_object_df."""
     notes_object_df = generate_label_sheet.get_user_notes_object_df()
