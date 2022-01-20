@@ -11,10 +11,10 @@ def input_final_tweets_classes() -> pd.DataFrame:
     """Input dataframe of tweets with classes."""
     return pd.DataFrame(
         {
-            "id": [2, 2, 1, 3, 4, 4, 5],
-            "user_screen_name": ["u_1", "u_1", "u_2", "u_1", "u_3", "u_3", "u_3"],
-            "retweeted_user_screen_name": [None, None, "u_1", "u_2", "u_1", "u_1", "u_1"],
-            "class": ["foo", "foo", "c_1", "c_3", "c_1", "c_3", "c_2"],
+            "id": [2, 2, 1, 3, 4, 4, 5, 5],
+            "user_screen_name": ["u_1", "u_1", "u_2", "u_1", "u_3", "u_3", "u_3", "u_3"],
+            "retweeted_user_screen_name": [None, None, "u_1", "u_2", "u_1", "u_1", "u_1", "u_1"],
+            "class": ["foo", "foo", "c_1", "c_3", "c_1", "c_3", "c_3", "c_2"],
         }
     )
 

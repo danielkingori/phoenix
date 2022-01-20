@@ -27,7 +27,7 @@ def reduce_concat_classes(
     concat_classes_df = df.groupby(row_id_cols)[class_col].apply(list)
     concat_classes_df = concat_classes_df.reset_index()
     concat_classes_df[class_col] = concat_classes_df[class_col].apply(
-        lambda l: ", ".join(sorted(l))
+        lambda l: ", ".join(sorted(set(l)))
     )
 
     out_df = one_to_one_df.merge(
