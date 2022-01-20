@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from phoenix.tag.graphing import process
+from phoenix.tag.graphing import processing_utilities
 
 
 def test_reduce_concat_classes():
@@ -21,7 +21,7 @@ def test_reduce_concat_classes():
             "class": ["class_1, class_2", "class_2"],
         }
     )
-    output_df = process.reduce_concat_classes(input_df, "id_col", "class")
+    output_df = processing_utilities.reduce_concat_classes(input_df, "id_col", "class")
     pd.testing.assert_frame_equal(output_df, expected_df)
 
 
@@ -39,5 +39,5 @@ def test_reduce_concat_classes_no_one_to_one_columns():
             "class": ["class_1, class_2", "class_2"],
         }
     )
-    output_df = process.reduce_concat_classes(input_df, "id_col", "class")
+    output_df = processing_utilities.reduce_concat_classes(input_df, "id_col", "class")
     pd.testing.assert_frame_equal(output_df, expected_df)
