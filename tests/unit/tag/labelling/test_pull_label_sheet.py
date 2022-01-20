@@ -178,6 +178,48 @@ def test_extract_features_to_label_mapping(
 
 
 @mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
+def test_extract_features_to_label_mapping_non_text(mock_execute):
+    mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 1)
+
+    input_df = pd.DataFrame(
+        {
+            "object_id": ["note to user about the object_id", "id_1"],
+            "text": ["note to user about the text", 12],
+            "label_1": ["note to user about label_1", "number"],
+            "label_1_features": ["note to user about label_1_features", 12],
+        },
+        columns=EXPECTED_COLUMNS_OBJECT_LABELLING_SHEET,
+    )
+
+    expected_df = pd.DataFrame(
+        {
+            "object_id": ["id_1"],
+            "class": ["number"],
+            "unprocessed_features": ["12"],
+            "language": ["en"],
+            "language_confidence": [99.5],
+            "processed_features": ["12"],
+            "use_processed_features": [False],
+            "status": ["active"],
+        },
+        columns=[
+            "object_id",
+            "class",
+            "unprocessed_features",
+            "language",
+            "language_confidence",
+            "processed_features",
+            "use_processed_features",
+            "status",
+        ],
+    )
+
+    actual_df, _ = pull_label_sheet.extract_features_to_label_mapping_objects(input_df)
+
+    pd.testing.assert_frame_equal(actual_df, expected_df)
+
+
+@mock.patch("phoenix.tag.labelling.pull_label_sheet.language.execute")
 def test_extract_features_to_label_mapping_no_features(mock_execute):
     mock_execute.return_value = pd.DataFrame(data=[("en", 99.5)] * 8)
     input_df = pd.DataFrame(
@@ -226,7 +268,7 @@ def test_extract_features_to_label_mapping_no_features(mock_execute):
     )
 
     _, actual_df = pull_label_sheet.extract_features_to_label_mapping_objects(input_df)
-
+    expected_df["text"] = expected_df["text"].astype("string")
     pd.testing.assert_frame_equal(
         actual_df.sort_values(by=["object_id", "class"]).reset_index(drop=True),
         expected_df.sort_values(by=["object_id", "class"]).reset_index(drop=True),
