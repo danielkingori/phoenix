@@ -50,7 +50,7 @@ def extract_features_to_label_mapping_objects(
     # The first row of the df is made up of notes to the users doing the manual labelling and does
     # not contain data.
     df = df.drop(0)
-
+    df["text"] = df["text"].astype("string")
     feature_to_label_df = wide_to_long_labels_features(df)
     feature_to_label_df = feature_to_label_df.merge(
         df[["object_id", "text"]], how="left", on="object_id"
@@ -177,6 +177,7 @@ def wide_to_long_labels_features(df: pd.DataFrame) -> pd.DataFrame:
         temp_df = temp_df.rename(
             {f"label_{i}": "class", f"label_{i}_features": "unprocessed_features"}, axis=1
         )
+        temp_df["unprocessed_features"] = temp_df["unprocessed_features"].astype("string")
         # replace empty strings with NaN to be able to use dropna
         temp_df[["class", "unprocessed_features"]] = temp_df[
             ["class", "unprocessed_features"]
