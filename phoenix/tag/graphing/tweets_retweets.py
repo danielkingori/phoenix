@@ -3,7 +3,7 @@ from typing import Tuple
 
 import pandas as pd
 
-from phoenix.tag.graphing import phoenix_graphistry
+from phoenix.tag.graphing import phoenix_graphistry, processing_utilities
 
 
 def process(
@@ -23,22 +23,19 @@ def process(
     )
     nodes_df = nodes_df.rename(columns={0: "user_screen_name"})
     nodes_df = nodes_df.drop_duplicates(ignore_index=True)
-    account_labels_df = final_accounts.groupby("object_user_name")["account_label"].apply(list)
-    account_labels_df = account_labels_df.reset_index()
-    account_labels_df["account_label"] = account_labels_df["account_label"].apply(
-        lambda l: ", ".join(sorted(l))
+    account_labels_df = final_accounts[["object_user_name", "account_label"]]
+    account_labels_df = processing_utilities.reduce_concat_classes(
+        account_labels_df, "object_user_name", "account_label"
     )
+
     nodes_df = nodes_df.merge(
         account_labels_df, how="outer", left_on="user_screen_name", right_on="object_user_name"
     )
     nodes_df["user_screen_name"] = nodes_df["user_screen_name"].fillna(
         nodes_df["object_user_name"]
     )
-    nodes_df = (
-        nodes_df[["user_screen_name", "account_label"]]
-        .sort_values(by="user_screen_name")
-        .reset_index(drop=True)
-    )
+    nodes_df = nodes_df[["user_screen_name", "account_label"]]
+    nodes_df = nodes_df.sort_values(by="user_screen_name").reset_index(drop=True)
 
     return (edges_df, nodes_df)
 
