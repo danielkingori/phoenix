@@ -18,7 +18,6 @@ def process(
     )
 
     # nodes
-    df = final_tweets[["user_screen_name", "retweeted_user_screen_name"]]
     nodes_df = pd.DataFrame(
         pd.concat([edges_df["retweeted_user_screen_name"], edges_df["tweeting_user_screen_name"]])
     )
