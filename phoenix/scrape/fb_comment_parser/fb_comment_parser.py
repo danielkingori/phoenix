@@ -30,7 +30,8 @@ def test_is_file_mbasic(file, file_name):  # noqa
     # because they're either too big, or the url: saved with SingleFile
     # is wrong
     length = 0
-    while True:
+    max_length = len(file)
+    while length < max_length:
         # Increase the search at the head of the file until a comment is found.
         # It will be SingleFile's comment.
         soup = BeautifulSoup(file[:length], "html.parser")
