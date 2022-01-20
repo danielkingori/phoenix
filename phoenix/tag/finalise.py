@@ -76,7 +76,7 @@ def join_to_objects_and_language_sentiment(
     rename_topic_to_class: Optional[bool] = False,
 ):
     """Generalised join of objects_df and language_sentiment_objects_df to a final dataframe."""
-    if rename_topic_to_class:
+    if objects_df is not None and rename_topic_to_class:
         objects_df = topic_to_class(objects_df)
 
     if objects_df is None and language_sentiment_objects_df is not None:
