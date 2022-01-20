@@ -111,12 +111,13 @@ def get_unprocessed_features(given_df: pd.DataFrame, text_key: str = "clean_text
     Returns
         given_df copy with "features" column.
     """
+    df = given_df.copy()
     cv = CountVectorizer(ngram_range=(1, 3), token_pattern=r"#?\b\w+\b")
     analyser = cv.build_analyzer()
 
-    given_df["features"] = given_df[text_key].apply(analyser)
+    df["features"] = df[text_key].apply(analyser)
 
-    return given_df
+    return df
 
 
 def keep_neccesary_columns_sflm(given_df: pd.DataFrame):
