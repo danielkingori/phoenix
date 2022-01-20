@@ -1,11 +1,13 @@
 """Test of multi feature topic match."""
 import mock
 import pandas as pd
+import pytest
 
 from phoenix.tag.topic import single_feature_match as sfm
 
 
-def test_get_topics():
+@pytest.mark.parametrize("unprocessed_features_df", [pd.DataFrame({"some": ["data"]}), None])
+def test_get_topics(unprocessed_features_df):
     """Test the get_topics."""
     topic_config = pd.DataFrame(
         {
@@ -21,7 +23,7 @@ def test_get_topics():
             "object_type": ["ot1", "ot1", "ot1", "ot1", "ot2", "ot1", "ot1"],
         }
     )
-    result_df = sfm.get_topics(topic_config, features_df)
+    result_df = sfm.get_topics(topic_config, features_df, unprocessed_features_df)
     pd.testing.assert_frame_equal(
         result_df,
         pd.DataFrame(
@@ -31,6 +33,52 @@ def test_get_topics():
                 "object_type": ["ot1", "ot1", "ot1", "ot1", "ot2", "ot1", "ot1"],
                 "matched_features": [["f1"], ["f1", "f2"], ["f1"], ["f1"], None, None, None],
                 "has_topic": [True, True, True, True, False, False, False],
+            }
+        ),
+    )
+
+
+def test_get_topics_with_unprocessed_features():
+    """Test the get_topics works with the use_processed_features flag.
+
+    The difference with `test_get_topics` is that the "f2" feature/"f2'ed" unprocessed feature
+    row is set to use_processed_features:False. There is no exact match for object "o2" anymore
+    for "t2".
+    The "f1_exact" does have an exact match, and "f1_exact" is added to the matched features.
+    """
+    topic_config = pd.DataFrame(
+        {
+            "features": ["f1", "f1", "f2", "f3 f4", "f3 f4", "f3 f4"],
+            "topic": ["t1", "t2", "t2", "t3", "t4", "t5"],
+            "unprocessed_features": ["f1'ed", "f1_exact", "f2'ed", "f3 f4", "f3 f4", "f3 f4"],
+            "use_processed_features": [True, False, False, False, False, False],
+        }
+    )
+
+    features_df = pd.DataFrame(
+        {
+            "features": ["f1", "f2", "f5", "f1", "f5", "f3", "f3 f5"],
+            "object_id": ["o1", "o1", "o1", "o2", "o3", "o4", "o5"],
+            "object_type": ["ot1", "ot1", "ot1", "ot1", "ot2", "ot1", "ot1"],
+        }
+    )
+    unprocessed_features_df = pd.DataFrame(
+        {
+            "features": ["f1_exact", "f2_not_exact", "f5", "f1_not_exact", "f5", "f3", "f3 f5"],
+            "object_id": ["o1", "o1", "o1", "o2", "o3", "o4", "o5"],
+            "object_type": ["ot1", "ot1", "ot1", "ot1", "ot2", "ot1", "ot1"],
+        }
+    )
+    result_df = sfm.get_topics(topic_config, features_df, unprocessed_features_df)
+    pd.testing.assert_frame_equal(
+        result_df,
+        pd.DataFrame(
+            {
+                "object_id": ["o1", "o1", "o2", "o3", "o4", "o5"],
+                "topic": ["t1", "t2", "t1", sfm.FILL_TOPIC, sfm.FILL_TOPIC, sfm.FILL_TOPIC],
+                "object_type": ["ot1", "ot1", "ot1", "ot2", "ot1", "ot1"],
+                "matched_features": [["f1"], ["f1_exact"], ["f1"], None, None, None],
+                "has_topic": [True, True, True, False, False, False],
             }
         ),
     )

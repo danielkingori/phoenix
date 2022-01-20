@@ -1,4 +1,6 @@
 """Single feature match for topic analysis."""
+from typing import Optional
+
 import logging
 
 import arabic_reshaper
@@ -13,21 +15,67 @@ FILL_TOPIC = "irrelevant"
 logger = logging.getLogger(__name__)
 
 
-def get_topics(topic_config, features_df, fill_topic: str = FILL_TOPIC) -> pd.DataFrame:
-    """Get the topics.
+def get_topics(
+    topic_config: pd.DataFrame,
+    features_df: pd.DataFrame,
+    unprocessed_features_df: Optional[pd.DataFrame] = None,
+    fill_topic: str = FILL_TOPIC,
+) -> pd.DataFrame:
+    """Get the topics for objects based on the topic config.
+
+    If unprocessed_features_df is added AND the column `use_processed_features` (dtype: bool) is in
+    the topic_config df, it will use that flag to match the topic based on the topic_config's
+    processed_features with the `features_df` and the topic_config's `unprocessed_features` with
+    the `unprocessed_features_df`.
 
     Arguments:
         topic_config: see phoenix/tag/topic/single_feature_match_topic_config.py
         features_df: data frame with schema docs/schemas/features.md
         fill_topic: the topic that will be given to all objects that don't have a topic.
             Default is "irrelevant".
+        unprocessed_features_df (Optional[pd.DataFrame]): dataframe with schema SFLM Necessary
+            Features docs/schemas/features.md
 
     Return:
         pd.DataFrame with schema: docs/schemas/topics.md
     """
+    if unprocessed_features_df is not None and "use_processed_features" in topic_config.columns:
+        unprocessed_features_topics_df = join_features_on_topic_config(
+            unprocessed_features_df,
+            topic_config[~topic_config["use_processed_features"]],
+            "unprocessed_features",
+        )
+        processed_features_topics_df = join_features_on_topic_config(
+            features_df, topic_config[topic_config["use_processed_features"]]
+        )
+        topics_df = pd.concat([unprocessed_features_topics_df, processed_features_topics_df])
+    else:
+        topics_df = join_features_on_topic_config(features_df, topic_config)
+    topics_df = process_joined_topics(fill_topic, topics_df)
+    return topics_df
+
+
+def join_features_on_topic_config(
+    features_df: pd.DataFrame,
+    topic_config: pd.DataFrame,
+    topic_config_join_column: str = "features",
+):
+    """Join features on a column in the topic_config."""
+    topic_config_copy = topic_config.copy()
+    if topic_config_join_column != "features":
+        topic_config_copy = topic_config_copy.drop(columns=["features"])
+        topic_config_copy = topic_config_copy.rename(
+            {topic_config_join_column: "features"}, axis=1
+        )
     features_indexed_df = features_df.set_index("object_id")
-    topic_config_i = topic_config.set_index("features")
+    topic_config_i = topic_config_copy.set_index("features")
+
     topics_df = features_indexed_df.join(topic_config_i, on="features")
+    return topics_df[["features", "object_type", "topic"]]
+
+
+def process_joined_topics(fill_topic: str, topics_df: pd.DataFrame):
+    """Process joined topics by aggregating matched features, and fill nulls."""
     no_topic = topics_df[topics_df["topic"].isnull()]
     topics_df = topics_df[~topics_df["topic"].isnull()]
     topics_df = (
@@ -44,7 +92,6 @@ def get_topics(topic_config, features_df, fill_topic: str = FILL_TOPIC) -> pd.Da
     no_topic["matched_features"] = None
     no_topic["has_topic"] = False
     topics_df = topics_df.reset_index()
-
     return pd.concat([topics_df, no_topic], ignore_index=True)
 
 
