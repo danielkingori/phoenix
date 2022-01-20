@@ -65,6 +65,14 @@ def plot(
 
     g = g.edges(edges)
     g = g.nodes(nodes)
+
+    g = g.addStyle(
+        logo={
+            "url": "https://buildup-undp-dashboard.s3.amazonaws.com/datavaluepeople/logo.png",
+            "dimensions": {"maxWidth": 200, "maxHeight": 200},
+        }
+    )
+
     return g.plot(name=graph_name, description=config.graph_description, render=False)
 
 
