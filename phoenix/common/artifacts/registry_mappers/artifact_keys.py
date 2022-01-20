@@ -95,6 +95,8 @@ ArtifactKey = Literal[
     "tagging_runs-facebook_posts_to_scrape",
     # Labelling
     "labelling-output_notebook_base",
+    # Clustering
+    "tagging_runs-clustering",
     # Single Feature to Label Mapping
     "sflm-single_object_type",
     "sflm-account-object_type",
