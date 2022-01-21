@@ -1,6 +1,10 @@
 """Utils for youtube."""
 from typing import Any, List, Optional, Protocol
 
+import logging
+
+from googleapiclient import errors
+
 
 ListResults = List[Any]
 
@@ -53,8 +57,16 @@ def paginate_list_resource(
 
     page_counter = 0
     while request is not None and page_counter < max_pages:
-        page_counter += 1
-        found_resource = request.execute()
-        result = process_function(result, found_resource)
-        request = resource_client.list_next(request, found_resource)
+        try:
+            page_counter += 1
+            found_resource = request.execute()
+            result = process_function(result, found_resource)
+            request = resource_client.list_next(request, found_resource)
+        except errors.HttpError as e:
+            # We are catching the errors due to getting 403 HttpErrors
+            # due to this issue:
+            # https://stackoverflow.com/questions/70013112/commentthreads-with-chennel-id-parameter-returns-403-error-that-refers-to-video
+            logging.info("Error with youtube request. Returning collected data.")
+            logging.error(e)
+
     return result
