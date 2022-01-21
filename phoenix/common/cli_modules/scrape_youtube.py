@@ -24,7 +24,9 @@ from phoenix.common.cli_modules import scrape_group, utils
     default=None,
     help=(
         "Set the static_youtube_channels URL."
-        " Currently only works for 'search_videos_from_channel_ids'"
+        " Currently implemented for: "
+        "'search_videos_from_channel_ids'"
+        "'comment_threads_from_channel_ids'"
     ),
 )
 def youtube(
