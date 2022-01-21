@@ -19,11 +19,20 @@ from phoenix.common.cli_modules import scrape_group, utils
         " Will overwrite scrape_start_date and scrape_end_date."
     ),
 )
+@click.option(
+    "--static_youtube_channels",
+    default=None,
+    help=(
+        "Set the static_youtube_channels URL."
+        " Currently only works for 'search_videos_from_channel_ids'"
+    ),
+)
 def youtube(
     artifact_env,
     tenant_id,
     endpoint,
     scrape_since_days,
+    static_youtube_channels,
 ):
     """Run scrape of the youtube.
 
@@ -65,4 +74,6 @@ def youtube(
     }
     if scrape_since_days:
         parameters["SCRAPE_SINCE_DAYS"] = scrape_since_days
+    if static_youtube_channels:
+        parameters["STATIC_YOUTUBE_CHANNELS"] = static_youtube_channels
     utils.run_notebooks(input_nb_url, output_nb_url, parameters)
