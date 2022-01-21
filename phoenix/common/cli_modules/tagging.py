@@ -7,7 +7,7 @@ from phoenix.common import artifacts, run_datetime, run_params
 from phoenix.common.cli_modules import main_group, utils
 
 
-SUPPORT_INFERENCE = ["topics", "classes", "tensions", "sentiment"]
+SUPPORT_INFERENCE = ["topics", "classes", "tensions", "sentiment", "lda"]
 
 
 @main_group.main_group.group()
@@ -296,6 +296,8 @@ def get_notebook_keys(
         if "sentiment" in include_inference:
             nbs.append("tag/third_party_models/aws_async/complete_sentiment.ipynb")
         nbs = nbs + get_finalisation_notebooks(object_type, include_accounts, include_inference)
+        if "lda" in include_inference:
+            nbs.append("tag/clustering/run_latent_dirichlet_allocator.ipynb")
         return nbs
 
     raise ValueError(f"Unknown phase number: {phase_number}")
