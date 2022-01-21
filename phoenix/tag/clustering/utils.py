@@ -4,6 +4,7 @@ from typing import List, Optional
 import pandas as pd
 
 from phoenix.common import artifacts
+from phoenix.tag.clustering import latent_dirichlet_allocation
 
 
 OBJECTS_DF_COL = ["object_id", "clean_text"]
@@ -45,3 +46,12 @@ def apply_grouping_to_objects_topics(
     if len(exclude_groupings) > 0:
         object_df = object_df[~object_df["topic"].isin(exclude_groupings)]
     return object_df
+
+
+def save_for_dashboard(
+    lda: latent_dirichlet_allocation.LatentDirichletAllocator, dashboard_url: Optional[str] = None
+) -> Optional[str]:
+    """Save the LDA to be accessed by the dashboard."""
+    if dashboard_url:
+        lda.save_plot(dashboard_url)
+    return dashboard_url

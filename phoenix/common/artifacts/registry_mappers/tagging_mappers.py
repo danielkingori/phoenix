@@ -151,4 +151,7 @@ MAPPERS: MapperDict = {
         url_mapper, TAGGING_PIPELINE_BASE + "language_sentiment_objects.parquet"
     ),
     "tagging_runs-clustering": partial(url_mapper, TAGGING_PIPELINE_BASE + "clustering/"),
+    "tagging_runs-clustering_dashboard": partial(
+        shared_url_mapper.dashboard_url_mapper, TAGGING_PIPELINE_BASE + "clustering/"
+    ),
 }

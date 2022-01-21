@@ -71,3 +71,27 @@ def test_apply_grouping_objects_none(input_object_df):
         object_df=input_object_df,
     )
     pd.testing.assert_frame_equal(result_df, input_object_df[["object_id", "clean_text"]])
+
+
+@mock.patch("phoenix.tag.clustering.latent_dirichlet_allocation.LatentDirichletAllocator")
+def test_save_for_dashboard(m_lda):
+    """Test of save_for_dashboard."""
+    dashboard_url = "dashboard_url"
+    url = utils.save_for_dashboard(
+        lda=m_lda,
+        dashboard_url=dashboard_url,
+    )
+    assert url == dashboard_url
+    m_lda.save_plot.assert_called_once_with(dashboard_url)
+
+
+@mock.patch("phoenix.tag.clustering.latent_dirichlet_allocation.LatentDirichletAllocator")
+def test_save_for_dashboard_none(m_lda):
+    """Test of save_for_dashboard when dashboard_url is None."""
+    dashboard_url = None
+    url = utils.save_for_dashboard(
+        lda=m_lda,
+        dashboard_url=dashboard_url,
+    )
+    assert url is dashboard_url
+    m_lda.save_plot.assert_not_called()
