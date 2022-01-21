@@ -59,6 +59,7 @@ def plot(
         source=config.edge_source_col,
         destination=config.edge_destination_col,
         node=config.nodes_col,
+        point_title=config.nodes_col,
     )
     if config.edge_weight_col is not None:
         g = g.bind(edge_weight=config.edge_weight_col)
