@@ -24,6 +24,28 @@ def test_get_urls():
         result, search_videos_from_channel_ids.ScrapeYouTubeSearchVideosFromChannelIdsURLs
     )
     assert result.config == config
+    assert result.static_youtube_channels == art_url_reg.get_url.return_value
+    assert result.source_youtube_search_videos_from_channel_ids == art_url_reg.get_url.return_value
+    assert result.base_youtube_search_videos == art_url_reg.get_url.return_value
+
+
+def test_get_urls_given_static_youtube_channels():
+    """Test get urls."""
+    general_run_params = mock.Mock()
+    art_url_reg = general_run_params.art_url_reg
+    static_youtube_channels = "static_youtube_channels"
+    result = search_videos_from_channel_ids._get_urls(general_run_params, static_youtube_channels)
+    config = general_run_params.run_dt.to_url_config.return_value
+    calls = [
+        mock.call("source-youtube_search_videos_from_channel_ids", config),
+        mock.call("base-grouped_by_youtube_search_videos", config),
+    ]
+    art_url_reg.get_url.assert_has_calls(calls)
+    assert isinstance(
+        result, search_videos_from_channel_ids.ScrapeYouTubeSearchVideosFromChannelIdsURLs
+    )
+    assert result.config == config
+    assert result.static_youtube_channels == static_youtube_channels
     assert result.source_youtube_search_videos_from_channel_ids == art_url_reg.get_url.return_value
     assert result.base_youtube_search_videos == art_url_reg.get_url.return_value
 
@@ -37,11 +59,12 @@ def test_create(m_general_create, m_get_urls, m_published_after):
     tenant_id = "tenant_id"
     run_datetime_str = "run_datetime_str"
     scrape_since_days = 3
+    static_youtube_channels = "static_youtube_channels"
     result = search_videos_from_channel_ids.create(
-        artifact_env, tenant_id, run_datetime_str, scrape_since_days
+        artifact_env, tenant_id, run_datetime_str, scrape_since_days, static_youtube_channels
     )
     m_general_create.assert_called_once_with(artifact_env, tenant_id, run_datetime_str)
-    m_get_urls.assert_called_once_with(m_general_create.return_value)
+    m_get_urls.assert_called_once_with(m_general_create.return_value, static_youtube_channels)
     m_published_after.assert_called_once_with(scrape_since_days)
     assert isinstance(
         result, search_videos_from_channel_ids.ScrapeYouTubeSearchVideosFromChannelIds
@@ -62,7 +85,7 @@ def test_create_default(m_general_create, m_get_urls, m_published_after):
     run_datetime_str = "run_datetime_str"
     result = search_videos_from_channel_ids.create(artifact_env, tenant_id, run_datetime_str)
     m_general_create.assert_called_once_with(artifact_env, tenant_id, run_datetime_str)
-    m_get_urls.assert_called_once_with(m_general_create.return_value)
+    m_get_urls.assert_called_once_with(m_general_create.return_value, None)
     m_published_after.assert_called_once_with(None)
     assert isinstance(
         result, search_videos_from_channel_ids.ScrapeYouTubeSearchVideosFromChannelIds
