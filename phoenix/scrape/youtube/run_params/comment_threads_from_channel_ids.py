@@ -31,12 +31,14 @@ def create(
     tenant_id: str,
     run_datetime_str: Optional[str] = None,
     max_pages: Optional[Union[str, int]] = None,
+    static_youtube_channels: Optional[str] = None,
 ) -> ScrapeYouTubeCommentThreadsFromChannelIds:
     """Create run params ScrapeYouTubeCommentThreadsFromChannelIds."""
     general_run_params = general.create(artifact_env, tenant_id, run_datetime_str)
 
     urls = _get_urls(
         general_run_params,
+        static_youtube_channels,
     )
     nor_max_pages = utils.normalise_int(max_pages)
     if not nor_max_pages:
@@ -51,14 +53,17 @@ def create(
 
 def _get_urls(
     general_run_params: general.GeneralRunParams,
+    static_youtube_channels: Optional[str] = None,
 ) -> ScrapeYouTubeCommentThreadsFromChannelsURLs:
     """Get the URLs for ScrapeYouTubeCommentThreadsFromChannelsURLS."""
     config = general_run_params.run_dt.to_url_config()
+    if not static_youtube_channels:
+        static_youtube_channels = general_run_params.art_url_reg.get_url(
+            "static-youtube_channels", config
+        )
     return ScrapeYouTubeCommentThreadsFromChannelsURLs(
         config=config,
-        static_youtube_channels=general_run_params.art_url_reg.get_url(
-            "static-youtube_channels", config
-        ),
+        static_youtube_channels=static_youtube_channels,
         source_youtube_comment_threads_from_channel_ids=general_run_params.art_url_reg.get_url(
             "source-youtube_comment_threads_from_channel_ids", config
         ),
