@@ -1,10 +1,10 @@
 """Run params for scraping comment threads from channel ids."""
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 import dataclasses
 
 from phoenix.common import artifacts
-from phoenix.common.run_params import base, general
+from phoenix.common.run_params import base, general, utils
 
 
 @dataclasses.dataclass
@@ -23,12 +23,14 @@ class ScrapeYouTubeCommentThreadsFromChannelIds(base.RunParams):
 
     urls: ScrapeYouTubeCommentThreadsFromChannelsURLs
     general: general.GeneralRunParams
+    max_pages: int
 
 
 def create(
     artifact_env: artifacts.registry_environment.Environments,
     tenant_id: str,
     run_datetime_str: Optional[str] = None,
+    max_pages: Optional[Union[str, int]] = None,
 ) -> ScrapeYouTubeCommentThreadsFromChannelIds:
     """Create run params ScrapeYouTubeCommentThreadsFromChannelIds."""
     general_run_params = general.create(artifact_env, tenant_id, run_datetime_str)
@@ -36,10 +38,14 @@ def create(
     urls = _get_urls(
         general_run_params,
     )
+    nor_max_pages = utils.normalise_int(max_pages)
+    if not nor_max_pages:
+        nor_max_pages = 10
 
     return ScrapeYouTubeCommentThreadsFromChannelIds(
         urls=urls,
         general=general_run_params,
+        max_pages=nor_max_pages,
     )
 
 
