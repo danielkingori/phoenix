@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from phoenix.tag.graphing import class_cooccurences_count
+from phoenix.tag.graphing import class_cooccurences_count, phoenix_graphistry
 
 
 @pytest.fixture
@@ -92,3 +92,14 @@ def test_process(input_objects_classes, nodes, edges):
 
     pd.testing.assert_frame_equal(actual_edges, edges)
     pd.testing.assert_frame_equal(actual_nodes, nodes)
+
+
+def test_get_plot_config():
+    """Test get_plot_config returns a plot config with the important options set."""
+    plot_config = class_cooccurences_count.get_plot_config("class_col", "object_type")
+    assert isinstance(plot_config, phoenix_graphistry.PlotConfig)
+    assert plot_config.edge_source_col == "class_col_0"
+    assert plot_config.edge_destination_col == "class_col_1"
+    assert plot_config.nodes_col == "class_col"
+    assert plot_config.graph_name == "object_type_class_col_co-occurrences"
+    assert plot_config.edge_weight_col == "times_co-occur"

@@ -5,6 +5,8 @@ from itertools import combinations
 
 import pandas as pd
 
+from phoenix.tag.graphing import phoenix_graphistry
+
 
 def process(
     objects_df: pd.DataFrame,
@@ -56,3 +58,22 @@ def get_class_combinations(
     )
 
     return class_combination_df
+
+
+def get_plot_config(class_col: str, object_type: str) -> phoenix_graphistry.PlotConfig:
+    """Get plot config for class_co-occurences."""
+    plot_config = phoenix_graphistry.PlotConfig(
+        edge_source_col=f"{class_col}_0",
+        edge_destination_col=f"{class_col}_1",
+        nodes_col=class_col,
+        graph_name=f"{object_type}_{class_col}_co-occurrences",
+        graph_description=f"""
+            Graph showing co-occurrences of {class_col} between {object_type}.
+            Nodes: {object_type}
+            Edges: Exist where {object_type} have both of the {class_col}s. Edge
+                weight is number of {object_type} that have both of the {class_col}.
+        """,
+        edge_weight_col="times_co-occur",
+    )
+
+    return plot_config
