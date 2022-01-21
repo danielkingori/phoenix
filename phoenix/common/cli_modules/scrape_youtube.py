@@ -29,12 +29,22 @@ from phoenix.common.cli_modules import scrape_group, utils
         "'comment_threads_from_channel_ids'"
     ),
 )
+@click.option(
+    "--max_pages",
+    default=None,
+    help=(
+        "Set the Max pages to pull."
+        " Currently implemented for: "
+        "'comment_threads_from_channel_ids'"
+    ),
+)
 def youtube(
     artifact_env,
     tenant_id,
     endpoint,
     scrape_since_days,
     static_youtube_channels,
+    max_pages,
 ):
     """Run scrape of the youtube.
 
@@ -78,4 +88,6 @@ def youtube(
         parameters["SCRAPE_SINCE_DAYS"] = scrape_since_days
     if static_youtube_channels:
         parameters["STATIC_YOUTUBE_CHANNELS"] = static_youtube_channels
+    if max_pages:
+        parameters["MAX_PAGES"] = max_pages
     utils.run_notebooks(input_nb_url, output_nb_url, parameters)
