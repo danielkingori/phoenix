@@ -17,6 +17,28 @@ def input_objects_classes() -> pd.DataFrame:
     )
 
 
+@pytest.fixture
+def edges() -> pd.DataFrame:
+    """Expected output edges dataframe."""
+    return pd.DataFrame(
+        {
+            "class_0": ["class_1", "class_1", "class_1", "class_3"],
+            "class_1": ["class_2", "class_3", "class_4", "class_4"],
+            "times_co-occur": [1, 2, 1, 1],
+        }
+    )
+
+
+@pytest.fixture
+def nodes() -> pd.DataFrame:
+    """Expected output nodes dataframe."""
+    return pd.DataFrame(
+        {
+            "class": ["class_1", "class_2", "class_3", "class_4"],
+        }
+    )
+
+
 def test_get_class_combinations(input_objects_classes):
     """Test the get_class_combinations returns combinations"""
     expected_df = pd.DataFrame(
@@ -62,3 +84,11 @@ def test_get_class_combinations_with_kwargs(
     actual_df = class_cooccurences_count.get_class_combinations(input_df, object_id_col, class_col)
 
     pd.testing.assert_frame_equal(actual_df, expected_df)
+
+
+def test_process(input_objects_classes, nodes, edges):
+    """Test processing inputs for classes' co-occurence."""
+    actual_edges, actual_nodes = class_cooccurences_count.process(input_objects_classes)
+
+    pd.testing.assert_frame_equal(actual_edges, edges)
+    pd.testing.assert_frame_equal(actual_nodes, nodes)
