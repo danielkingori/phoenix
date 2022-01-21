@@ -134,8 +134,7 @@ class LatentDirichletAllocator:
                 fig.suptitle(f"{DATASET_NAME} {title}", fontsize=40)
 
             plt.subplots_adjust(top=0.90, bottom=0.05, wspace=0.90, hspace=0.3)
-            with tentaclio.open(f"{base_url}{DATASET_NAME}_lda_wordcloud.png", mode="wb") as w:
-                plt.savefig(w)
+            persist_to_png(plt, f"{base_url}{DATASET_NAME}_lda_wordcloud.png")
             plt.show()
 
     def tag_dataframe(self):
@@ -174,3 +173,15 @@ class LatentDirichletAllocator:
         """Persist model."""
         with tentaclio.open(f"{output_dir_url}latent_dirichlet_allocator_model.sav", "wb") as f:
             pickle.dump(self, f)
+
+
+def persist_to_png(plt, path: str):
+    """Saves the string as HTML file to the specified path with Tentaclio."""
+    parsed_url = tentaclio.urls.URL(path)
+    open_extra_args = {}
+    if parsed_url.scheme == "s3":
+        content_type = "image/png"
+        open_extra_args["upload_extra_args"] = {"ContentType": content_type}
+
+    with tentaclio.open(path, "wb", **open_extra_args) as f:
+        plt.savefig(f)
