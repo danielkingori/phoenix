@@ -44,6 +44,9 @@ def plot(
         graph_name_prefix: Optional string that will be prefixed onto the graph name when uploaded
             to Graphistry. Primarily used to inject tenant ID as graph prefix.
     """
+    edges = fillna_string_type_cols(edges)
+    nodes = fillna_string_type_cols(nodes)
+
     graphistry.register(
         api=3,
         username=os.environ["GRAPHISTRY_USERNAME"],
