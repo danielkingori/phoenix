@@ -84,7 +84,11 @@ def plot(
         "pointOpacity": 0.95,
         "edgeInfluence": 2,
     }
-    g = g.settings(url_params=default_settings)
+    if config.directed:
+        directed_settings = {"showArrows": True, "edgeCurvature": 0.2}
+    else:
+        directed_settings = {"showArrows": False, "edgeCurvature": 0.05}
+    g = g.settings(url_params={**default_settings, **directed_settings})
 
     return g.plot(name=graph_name, description=config.graph_description, render=False)
 
