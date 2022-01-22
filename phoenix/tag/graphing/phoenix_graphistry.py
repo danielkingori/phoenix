@@ -27,6 +27,7 @@ class PlotConfig(base.RunParams):
     graph_name: str
     graph_description: str
     edge_weight_col: Optional[str] = None
+    directed: bool = True
 
 
 def plot(
