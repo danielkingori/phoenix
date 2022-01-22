@@ -80,3 +80,20 @@ def plot(
 def form_redirect_html(url: str) -> str:
     """Produce string of HTML file that automatically redirects to given URL when loaded."""
     return f'<meta http-equiv="refresh" content="0; url={url}" />'
+
+
+def fillna_string_type_cols(df: pd.DataFrame) -> pd.DataFrame:
+    """Fill string type cols nan/None values with empty string.
+
+    Usage reasons:
+    - Doing `CONTAINS(some_attribute, "some_string")` filters on a attribute e (col) which
+      contained null/None values would (use to) cause an Graphistry error (a bug, now fixed)
+    - When selecting a node/edge that has a null/None value for that attribute, then the attribute
+      doesn't show up in the data popup for that node/edge. This might be confusing for a user, so
+      better to make it always show with an empty string.
+    """
+    df = df.copy()
+    for col in df:
+        if pd.api.types.is_string_dtype(df[col]):
+            df[col] = df[col].fillna("")
+    return df
