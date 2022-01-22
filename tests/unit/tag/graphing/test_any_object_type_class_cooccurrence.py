@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from phoenix.tag.graphing import class_cooccurences_count, phoenix_graphistry
+from phoenix.tag.graphing import any_object_type_class_cooccurrence, phoenix_graphistry
 
 
 @pytest.fixture
@@ -49,7 +49,7 @@ def test_get_class_combinations(input_objects_classes):
         }
     )
 
-    actual_df = class_cooccurences_count.get_class_combinations(input_objects_classes)
+    actual_df = any_object_type_class_cooccurrence.get_class_combinations(input_objects_classes)
 
     pd.testing.assert_frame_equal(actual_df, expected_df)
 
@@ -81,14 +81,16 @@ def test_get_class_combinations_with_kwargs(
         }
     )
 
-    actual_df = class_cooccurences_count.get_class_combinations(input_df, object_id_col, class_col)
+    actual_df = any_object_type_class_cooccurrence.get_class_combinations(
+        input_df, object_id_col, class_col
+    )
 
     pd.testing.assert_frame_equal(actual_df, expected_df)
 
 
 def test_process(input_objects_classes, nodes, edges):
     """Test processing inputs for classes' co-occurence."""
-    actual_edges, actual_nodes = class_cooccurences_count.process(input_objects_classes)
+    actual_edges, actual_nodes = any_object_type_class_cooccurrence.process(input_objects_classes)
 
     pd.testing.assert_frame_equal(actual_edges, edges)
     pd.testing.assert_frame_equal(actual_nodes, nodes)
@@ -96,7 +98,7 @@ def test_process(input_objects_classes, nodes, edges):
 
 def test_get_plot_config():
     """Test get_plot_config returns a plot config with the important options set."""
-    plot_config = class_cooccurences_count.get_plot_config("class_col", "object_type")
+    plot_config = any_object_type_class_cooccurrence.get_plot_config("class_col", "object_type")
     assert isinstance(plot_config, phoenix_graphistry.PlotConfig)
     assert plot_config.edge_source_col == "class_col_0"
     assert plot_config.edge_destination_col == "class_col_1"
