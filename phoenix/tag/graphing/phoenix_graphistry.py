@@ -78,6 +78,14 @@ def plot(
         }
     )
 
+    default_settings = {
+        "pointsOfInterestMax": 20,
+        "gravity": 0.7,
+        "pointOpacity": 0.95,
+        "edgeInfluence": 2,
+    }
+    g = g.settings(url_params=default_settings)
+
     return g.plot(name=graph_name, description=config.graph_description, render=False)
 
 
