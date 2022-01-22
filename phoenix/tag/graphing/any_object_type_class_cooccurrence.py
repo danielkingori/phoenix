@@ -73,6 +73,7 @@ def get_plot_config(class_col: str, object_type: str) -> phoenix_graphistry.Plot
             Edges: Exist where {object_type} have both of the {class_col}s. Edge
                 weight is number of {object_type} that have both of the {class_col}.
         """,
+        directed=False,
         edge_weight_col="times_co-occur",
     )
 
