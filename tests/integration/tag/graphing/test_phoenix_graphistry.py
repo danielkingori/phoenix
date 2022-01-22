@@ -17,6 +17,9 @@ def test_plot():
 
     This test also serves as a handy interface for creating Graphistry graphs with certain
     attributes or properties for testing I functionality.
+
+    Use `pytest -s` to get the url print output for checking out the graph. Note that things like
+    `urls_params` only appear in the URL it process and aren't hard backed into the plot.
     """
     edges = pd.DataFrame(
         {
@@ -41,5 +44,6 @@ def test_plot():
         edge_weight_col="edge_weights",
     )
     url = phoenix_graphistry.plot(edges, nodes, plot_config, "test_prefix")
+    print(url)
     assert isinstance(url, str)
     assert url.startswith("https://hub.graphistry.com/graph/graph.html")
