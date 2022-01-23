@@ -26,7 +26,7 @@ def test_plot():
             "source": [0, 0, 0, -1, -2],
             "destination": [1, 2, 3, -2, -1],
             "attribute_1": ["x", "y", "z", "foo", "baa"],
-            "edge_weights": [0.1, 0.5, 1, 0, 0],
+            "edge_weights": [0.1, 0.5, 1, 0.001, 0.001],
         }
     )
     nodes = pd.DataFrame(

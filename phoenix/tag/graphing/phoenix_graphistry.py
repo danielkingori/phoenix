@@ -6,12 +6,17 @@ https://github.com/graphistry/pygraphistry/
 from typing import Optional, Tuple
 
 import dataclasses
+import logging
 import os
 
 import graphistry
 import pandas as pd
+from igraph._igraph import InternalError as IGraphInternalError
 
 from phoenix.common.run_params import base
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclasses.dataclass
@@ -143,15 +148,21 @@ def compute_graph_metrics(
     ig.es["edge_betweenness"] = ig.edge_betweenness(
         directed=config.directed, weights=config.edge_weight_col
     )
-    ig.vs["community_spin_glass"] = ig.community_spinglass(
-        spins=12, stop_temp=0.1, cool_fact=0.9, weights=config.edge_weight_col
-    ).membership
+    try:
+        ig.vs["community_spin_glass"] = ig.community_spinglass(
+            spins=12, stop_temp=0.1, cool_fact=0.9, weights=config.edge_weight_col
+        ).membership
+    except IGraphInternalError:
+        logger.info("Graph contains disconnected components, so Spin-Glass clustering failed.")
     uig = ig.copy()
     uig.to_undirected()
     ig.vs["community_infomap"] = uig.community_infomap().membership
-    ig.vs["community_louvain"] = uig.community_multilevel(
-        weights=config.edge_weight_col
-    ).membership
+    try:
+        ig.vs["community_louvain"] = uig.community_multilevel(
+            weights=config.edge_weight_col
+        ).membership
+    except IGraphInternalError:
+        logger.info("Graph contains disconnected components, so Louvain clustering failed.")
 
     ig_nodes = pd.DataFrame([x.attributes() for x in ig.vs])
     ig_edges = pd.DataFrame([x.attributes() for x in ig.es])

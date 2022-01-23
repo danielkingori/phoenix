@@ -171,3 +171,31 @@ def test_compute_graph_metrics_undirected_edge_weight(in_edges, in_nodes):
     pd.testing.assert_frame_equal(
         out_nodes.drop(columns=["community_spin_glass"]), expected_nodes, check_less_precise=True
     )
+
+
+def test_compute_graph_metrics_disconnected_graph():
+    """Test computing and concating metrics when a graph with unconnected sub-graphs."""
+    in_edges = pd.DataFrame(
+        {
+            "start": [0, 0, 0, 4, 5],
+            "end": [1, 2, 3, 5, 4],
+            "edge_attrib": ["a", "b", "c", "d", "e"],
+            "weights": [0.1, 1, 0.2, 0.1, 0.5],
+        }
+    )
+    in_nodes = pd.DataFrame(
+        {"node_col": [0, 1, 2, 3, 4, 5], "node_attrib": ["a", "b", "c", "d", "e", "f"]}
+    )
+    plot_config = phoenix_graphistry.PlotConfig(
+        edge_source_col="start",
+        edge_destination_col="end",
+        nodes_col="node_col",
+        graph_name="foo",
+        graph_description="bar",
+        edge_weight_col="weights",
+        directed=True,
+    )
+    out_edges, out_nodes = phoenix_graphistry.compute_graph_metrics(
+        in_edges, in_nodes, plot_config
+    )
+    assert "community_spin_glass" not in out_nodes.columns
