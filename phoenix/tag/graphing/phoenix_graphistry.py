@@ -3,7 +3,7 @@
 https://www.graphistry.com/
 https://github.com/graphistry/pygraphistry/
 """
-from typing import Optional
+from typing import Optional, Tuple
 
 import dataclasses
 import os
@@ -113,3 +113,50 @@ def fillna_string_type_cols(df: pd.DataFrame) -> pd.DataFrame:
         if pd.api.types.is_string_dtype(df[col]):
             df[col] = df[col].fillna("")
     return df
+
+
+def compute_graph_metrics(
+    edges: pd.DataFrame,
+    nodes: pd.DataFrame,
+    config: PlotConfig,
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """Compute metrics for graph and concating as new columns onto edges and nodes dfs.
+
+    Metrics are things like centrality, node importance, and clusters.
+    """
+    g = graphistry.bind(
+        source=config.edge_source_col,
+        destination=config.edge_destination_col,
+        node=config.nodes_col,
+        point_title=config.nodes_col,
+    )
+    ig = g.pandas2igraph(edges, directed=config.directed)
+
+    # This is only needed for `igraph.betweenness` which bugs out if you give it the attrib name :/
+    if config.edge_weight_col is not None:
+        weight_values = edges[config.edge_weight_col].values
+    else:
+        weight_values = None
+
+    ig.vs["pagerank"] = ig.pagerank(directed=config.directed, weights=config.edge_weight_col)
+    ig.vs["betweenness"] = ig.betweenness(directed=config.directed, weights=weight_values)
+    ig.es["edge_betweenness"] = ig.edge_betweenness(
+        directed=config.directed, weights=config.edge_weight_col
+    )
+    ig.vs["community_spin_glass"] = ig.community_spinglass(
+        spins=12, stop_temp=0.1, cool_fact=0.9, weights=config.edge_weight_col
+    ).membership
+    uig = ig.copy()
+    uig.to_undirected()
+    ig.vs["community_infomap"] = uig.community_infomap().membership
+    ig.vs["community_louvain"] = uig.community_multilevel(
+        weights=config.edge_weight_col
+    ).membership
+
+    ig_nodes = pd.DataFrame([x.attributes() for x in ig.vs])
+    ig_edges = pd.DataFrame([x.attributes() for x in ig.es])
+
+    edges = pd.concat([edges, ig_edges["edge_betweenness"]], axis=1)
+    nodes = nodes.merge(ig_nodes, how="left", left_on=config.nodes_col, right_on=config.nodes_col)
+
+    return (edges, nodes)
