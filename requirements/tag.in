@@ -13,6 +13,7 @@ sklearn
 freezegun
 dacite
 # Network graphing viz
+igraph
 graphistry
 webweb
 python-louvain
