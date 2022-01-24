@@ -4,6 +4,7 @@ from typing import Tuple
 import pandas as pd
 
 from phoenix.tag.graphing import processing_utilities
+from phoenix.tag.graphing import phoenix_graphistry
 
 
 ARTIFACT_KEYS = [
@@ -91,3 +92,19 @@ def process(
     nodes = account_nodes.append(post_nodes).append(commenter_nodes)
 
     return edges, nodes
+
+
+plot_config = phoenix_graphistry.PlotConfig(
+    edge_source_col="source_node",
+    edge_destination_col="destination_node",
+    nodes_col="node_name",
+    graph_name="facebook_commenters",
+    graph_description="""
+        Graph showing accounts, their posts, and commenters on those posts.
+        Nodes: three types; accounts, posts, commenters
+        Edges: two types
+            - from account to post; denote account made post
+            - from commenter to post; denote number of times (if any) commenter commented on post
+    """,
+    directed=True,
+)
