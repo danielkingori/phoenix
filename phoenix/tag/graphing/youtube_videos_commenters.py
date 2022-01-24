@@ -50,3 +50,12 @@ def process_commenter_nodes(final_youtube_comments_classes: pd.DataFrame) -> pd.
     df["node_name"] = df["author_channel_id"]
     df["type"] = "youtube_commenter"
     return df
+
+
+def process_channel_video_edges(final_youtube_videos_classes: pd.DataFrame) -> pd.DataFrame:
+    """Process edges from channels to videos."""
+    df = final_youtube_videos_classes[["object_id", "channel_id"]]
+    df = df.drop_duplicates()
+    df["source_node"] = df["channel_id"]
+    df["destination_node"] = df["object_id"]
+    return df
