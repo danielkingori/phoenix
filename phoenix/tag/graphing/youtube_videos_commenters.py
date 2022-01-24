@@ -5,6 +5,7 @@ from phoenix.tag.graphing import processing_utilities
 
 
 INPUT_DATASETS_ARTIFACT_KEYS = [
+    "final-youtube_videos_classes",
     "final-accounts",
 ]
 
@@ -17,4 +18,24 @@ def process_channel_nodes(final_accounts: pd.DataFrame) -> pd.DataFrame:
     df = processing_utilities.reduce_concat_classes(df, ["channel_id"], "account_label")
     df["node_name"] = df["channel_id"]
     df["type"] = "youtube_channel"
+    return df
+
+
+def process_video_nodes(final_youtube_videos_classes: pd.DataFrame) -> pd.DataFrame:
+    """Process youtube videos to create set of nodes of type `youtube_video`."""
+    cols_to_keep = [
+        "object_id",
+        "title",
+        "description",
+        "video_url",
+        "channel_title",
+        "channel_id",
+        "channel_url",
+        "language_sentiment",
+        "class",
+    ]
+    df = final_youtube_videos_classes[cols_to_keep]
+    df = processing_utilities.reduce_concat_classes(df, ["object_id"], "class")
+    df["node_name"] = df["object_id"]
+    df["type"] = "youtube_video"
     return df
