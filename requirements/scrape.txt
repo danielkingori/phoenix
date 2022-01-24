@@ -424,8 +424,6 @@ pyrsistent==0.18.0
     # via jsonschema
 pysftp==0.2.9
     # via tentaclio
-pysocks==1.7.1
-    # via requests
 pytest==6.2.4
     # via
     #   -r requirements/development.in
@@ -464,7 +462,7 @@ redshift-connector==2.0.885
     # via awswrangler
 regex==2021.8.3
     # via black
-requests[socks]==2.25.1
+requests==2.25.1
     # via
     #   google-api-core
     #   google-cloud-storage
@@ -515,7 +513,6 @@ six==1.16.0
     #   pynacl
     #   python-dateutil
     #   thrift
-    #   tweepy
 sniffio==1.2.0
     # via anyio
 snowballstemmer==2.1.0
@@ -579,7 +576,7 @@ traitlets==5.0.5
     #   nbconvert
     #   nbformat
     #   notebook
-tweepy==3.10.0
+tweepy==4.4.0
     # via -r requirements/scrape.in
 types-freezegun==1.1.0
     # via -r requirements/development.in
