@@ -59,3 +59,13 @@ def process_channel_video_edges(final_youtube_videos_classes: pd.DataFrame) -> p
     df["source_node"] = df["channel_id"]
     df["destination_node"] = df["object_id"]
     return df
+
+
+def process_commenter_video_edges(final_youtube_comments_classes: pd.DataFrame) -> pd.DataFrame:
+    """Process edges from commenters to videos."""
+    df = final_youtube_comments_classes[["video_id", "author_display_name", "author_channel_id"]]
+    df = df.groupby(["video_id", "author_channel_id"]).size().reset_index()
+    df = df.rename(columns={0: "times_commented"})
+    df["source_node"] = df["author_channel_id"]
+    df["destination_node"] = df["video_id"]
+    return df
