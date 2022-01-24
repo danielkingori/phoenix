@@ -3,7 +3,7 @@ from typing import Tuple
 
 import pandas as pd
 
-from phoenix.tag.graphing import processing_utilities
+from phoenix.tag.graphing import phoenix_graphistry, processing_utilities
 
 
 INPUT_DATASETS_ARTIFACT_KEYS = [
@@ -93,3 +93,19 @@ def process(
     nodes = nodes.reset_index(drop=True)
 
     return edges, nodes
+
+
+plot_config = phoenix_graphistry.PlotConfig(
+    edge_source_col="source_node",
+    edge_destination_col="destination_node",
+    nodes_col="node_name",
+    graph_name="youtube_commenters",
+    graph_description="""
+        Graph showing channels, their videos, and commenters on those videos.
+        Nodes: three types; channels, videos, commenters
+        Edges: two types
+            - from channel to video; denote channel made video
+            - from commenter to video; denote number of times (if any) commenter commented on video
+    """,
+    directed=True,
+)
