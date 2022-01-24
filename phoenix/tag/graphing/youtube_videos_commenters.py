@@ -1,4 +1,6 @@
 """Processing and config for youtube_videos_commentors graph."""
+from typing import Tuple
+
 import pandas as pd
 
 from phoenix.tag.graphing import processing_utilities
@@ -69,3 +71,25 @@ def process_commenter_video_edges(final_youtube_comments_classes: pd.DataFrame) 
     df["source_node"] = df["author_channel_id"]
     df["destination_node"] = df["video_id"]
     return df
+
+
+def process(
+    final_youtube_comments_classes: pd.DataFrame,
+    final_youtube_videos_classes: pd.DataFrame,
+    final_accounts: pd.DataFrame,
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """Process youtube channels, videos, and commenters into three type network graph."""
+    # edges
+    channel_videos_edges = process_channel_video_edges(final_youtube_videos_classes)
+    commenter_videos_edges = process_commenter_video_edges(final_youtube_comments_classes)
+    edges = channel_videos_edges.append(commenter_videos_edges)
+    edges = edges.reset_index(drop=True)
+
+    # nodes
+    channel_nodes = process_channel_nodes(final_accounts)
+    video_nodes = process_video_nodes(final_youtube_videos_classes)
+    commenter_nodes = process_commenter_nodes(final_youtube_comments_classes)
+    nodes = channel_nodes.append(video_nodes).append(commenter_nodes)
+    nodes = nodes.reset_index(drop=True)
+
+    return edges, nodes
