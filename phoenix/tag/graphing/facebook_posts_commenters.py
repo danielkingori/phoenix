@@ -3,8 +3,7 @@ from typing import Tuple
 
 import pandas as pd
 
-from phoenix.tag.graphing import processing_utilities
-from phoenix.tag.graphing import phoenix_graphistry
+from phoenix.tag.graphing import phoenix_graphistry, processing_utilities
 
 
 INPUT_DATASETS_ARTIFACT_KEYS = [
