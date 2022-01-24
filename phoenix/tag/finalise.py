@@ -35,6 +35,9 @@ def for_object_type(
     rename_topic_to_class: bool = False,
 ) -> pd.DataFrame:
     """Finalise the dataframe for an object type."""
+    if object_type == "youtube_comments":
+        # Compute video_url from the video_id
+        df["video_url"] = "https://www.youtube.com/watch?v=" + df["video_id"]
     if object_type in ["youtube_videos", "youtube_comments"]:
         df["object_id"] = df["id"].astype(str)
         df = df.set_index("object_id")
