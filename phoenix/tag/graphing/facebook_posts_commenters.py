@@ -29,3 +29,11 @@ def process_post_nodes(final_facebook_posts_classes: pd.DataFrame) -> pd.DataFra
     df = final_facebook_posts_classes[cols_to_keep]
     df = processing_utilities.reduce_concat_classes(df, ["object_id"], "class")
     return df
+
+
+def process_commenter_nodes(final_facebook_comments_classes: pd.DataFrame) -> pd.DataFrame:
+    """Process facebook comments to create set of nodes of type `commenter`."""
+    cols_to_keep = ["user_name", "class"]
+    df = final_facebook_comments_classes[cols_to_keep]
+    df = processing_utilities.reduce_concat_classes(df, ["user_name"], "class")
+    return df
