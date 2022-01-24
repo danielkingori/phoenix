@@ -20,8 +20,8 @@ def organize_users(friends: dict) -> list:
         for friend in friends[user]:
             relations.append(
                 {
-                    "user_1": user,
-                    "user_2": friend,
+                    "user_screen_name": user,
+                    "followed_user_id": friend,
                 }
             )
     return relations
