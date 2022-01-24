@@ -19,12 +19,18 @@ from phoenix.common.cli_modules import scrape_group, utils
     default=None,
     help=("Maximum number of tweets to scrape." "Use 0 for no maximum."),
 )
+@click.option(
+    "--static_url_queries",
+    default=None,
+    help=("Set the URL for the CSV that contains the twitter handels."),
+)
 def tw(
     artifact_env,
     tenant_id,
     endpoint,
     scrape_since_days,
     num_items,
+    static_url_queries,
 ):
     """Run scrape of the tweets.
 
@@ -65,5 +71,8 @@ def tw(
 
     if num_items:
         parameters["NUM_ITEMS"] = num_items
+
+    if static_url_queries:
+        parameters["STATIC_URL_QUERIES"] = static_url_queries
 
     utils.run_notebooks(input_nb_url, output_nb_url, parameters)
