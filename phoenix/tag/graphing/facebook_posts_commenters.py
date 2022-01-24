@@ -45,3 +45,10 @@ def process_commenter_nodes(final_facebook_comments_classes: pd.DataFrame) -> pd
     df = final_facebook_comments_classes[cols_to_keep]
     df = processing_utilities.reduce_concat_classes(df, ["user_name"], "class")
     return df
+
+
+def process_account_post_edges(final_facebook_posts_classes: pd.DataFrame) -> pd.DataFrame:
+    """Process edges from accounts to posts."""
+    df = final_facebook_posts_classes[["object_id", "account_handle"]]
+    df = df.drop_duplicates()
+    return df
