@@ -12,6 +12,14 @@ ARTIFACT_KEYS = [
 ]
 
 
+def process_account_nodes(final_accounts: pd.DataFrame) -> pd.DataFrame:
+    """Process facebook accounts to create set of nodes of type `account`."""
+    cols_to_keep = ["object_user_name", "object_user_url", "account_label"]
+    df = final_accounts[cols_to_keep]
+    df = processing_utilities.reduce_concat_classes(df, ["object_user_name"], "account_label")
+    return df
+
+
 def process_post_nodes(final_facebook_posts_classes: pd.DataFrame) -> pd.DataFrame:
     """Process facebook posts to create set of nodes of type `post`."""
     cols_to_keep = [
