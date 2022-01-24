@@ -1,5 +1,7 @@
 """Artifact keys."""
 from typing import Literal
+
+
 ArtifactKey = Literal[
     # static
     "static-twitter_users",
@@ -114,6 +116,7 @@ ArtifactKey = Literal[
     "graphing_runs-facebook_topics_dashboard_graph",
     "base-twitter_friends_raw",
     "source_runs-twitter_friends_raw",
+    "graphing_runs-twitter_friends_pulled",
     # Final
     "final-facebook_posts",
     "final-facebook_posts_topics",
@@ -133,5 +136,3 @@ ArtifactKey = Literal[
     "final-accounts",
     "final-objects_accounts_classes",
 ]
-
-
