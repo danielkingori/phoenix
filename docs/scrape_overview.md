@@ -93,6 +93,37 @@ Our expectation is that most activity around individual tweets reduces after the
 
 The Twitter data will conform to the following [Tweet schema](docs/tweets_table.md).
 
+### Config
+In order to gather data from user timelines and do keyword searches, you need to set up your search parameters.
+Please add the config file to `local_artifacts/config/` or the cloud bucket you are working on.
+
+The file is a .csv called `twitter_query_users.csv` with the following format:
+
+|cell | data            | 
+|---- |----------------------|
+|A1 |screen name 1|
+|A2 |screen name 2|
+|A3 |screen name 3|
+|...|....|
+
+
+Follow the [Twitter standard query guidelines](https://developer.twitter.com/en/docs/twitter-api/v1/rules-and-filtering/search-operators) when setting up your keyword queries.
+
+**Warning**: Be specific with keywords! 
+If you search common keywords, you will end up with a _huge_ amount of data with a lot of noise.
+Your data gathering process will also take a long time.
+
+## Twitter Friends
+The Twitter `twitter_user_friends.ipynb` script is there to facilitate creation of network maps of connections between accounts in your user list.
+This utility scrapes the `friends_id` list for each user in your query list.
+This means the graph will be the people that your user list *follows*, not their *followers*.
+You must have a `twitter_query_users.csv` set up as above for the user timeline data collection.
+
+Here is the command for the `friends` scrape:
+
+We intend this script to run infrequently, perhaps once a month, as the friends list does not change rapidly.
+This data gathering process takes a comparatively long time because of the rate limits in the [GET/friends/ids endpoint](https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-friends-ids). 
+
 ## Facebook comments
 The facebook comments pipeline is more complex and includes a mix of manual and automatic processes.
 

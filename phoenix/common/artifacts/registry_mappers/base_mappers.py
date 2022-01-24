@@ -36,6 +36,11 @@ MAPPERS: MapperDict = {
     "base-facebook_comments_pages_failed_parse": partial(
         url_mapper, GROUP_BY_FACEBOOK_COMMENT_PAGES + "failed_parse/{RUN_DATETIME}/"
     ),
+    # Twitter Friends
+    "base-twitter_friends_raw": partial(
+        url_mapper,
+        shared_urls.GROUP_BY_TWITTER_FRIENDS + "twitter_friends_raw.json",
+    ),
     # Acled events
     "base-acled_events_input": partial(url_mapper, shared_urls.BASE_BASE + "acled_events/"),
     "base-undp_events_input": partial(url_mapper, shared_urls.BASE_BASE + "undp_events/"),

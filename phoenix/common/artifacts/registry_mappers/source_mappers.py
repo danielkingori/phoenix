@@ -49,4 +49,8 @@ MAPPERS: MapperDict = {
         url_mapper,
         f"{SOURCE_BASE}" + "source-youtube_comment_threads_from_channel_ids-{RUN_DATETIME}.json",
     ),
+    # Twitter friends
+    "source_runs-twitter_friends_raw": partial(
+        url_mapper, "source_runs/{RUN_DATE}/source-twitter_friends_raw-{RUN_DATETIME}.json"
+    ),
 }
