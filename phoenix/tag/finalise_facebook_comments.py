@@ -21,6 +21,7 @@ FACEBOOK_COMMENT_INHERITABLE_COLUMNS = [
     "is_geopolitics_tension",
     "is_intercommunity_relations_tension",
     "has_tension",
+    "post_url",
 ]
 
 FACEBOOK_COMMENT_TOPICS_INHERITABLE_COLUMNS = [

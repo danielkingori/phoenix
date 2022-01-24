@@ -48,6 +48,12 @@ def input_facebook_posts_topics_df():
             "is_geopolitics_tension": [True] * row_count,
             "is_intercommunity_relations_tension": [True] * row_count,
             "has_tension": [True] * row_count,
+            "post_url": [
+                "facebook.com/post_123",
+                "facebook.com/post_456",
+                "facebook.com/post_456",
+                "facebook.com/post_789",
+            ],
         }
     )
 
@@ -77,6 +83,11 @@ def test_facebook_comments_inherit_from_facebook_posts_topics(
             "is_geopolitics_tension": [True] * row_count,
             "is_intercommunity_relations_tension": [True] * row_count,
             "has_tension": [True] * row_count,
+            "post_url": [
+                "facebook.com/post_123",
+                "facebook.com/post_456",
+                "facebook.com/post_789",
+            ],
             "comments_only_column": ["some_str"] * row_count,
         }
     )
@@ -117,6 +128,11 @@ def test_facebook_comments_inherit_from_facebook_posts_topics_rename(
             "is_geopolitics_tension": [True] * row_count,
             "is_intercommunity_relations_tension": [True] * row_count,
             "has_tension": [True] * row_count,
+            "post_url": [
+                "facebook.com/post_123",
+                "facebook.com/post_456",
+                "facebook.com/post_789",
+            ],
             "comments_only_column": ["some_str"] * row_count,
         }
     )
@@ -157,6 +173,12 @@ def test_facebook_comments_inherit_from_facebook_posts_topics_dropped(
             "post_id": [123, 456, 456, 789],
             "topics": [["a"], ["a", "b"], ["a", "b"], ["non_topic"]],
             "has_topics": [True, True, True, False],
+            "post_url": [
+                "facebook.com/post_123",
+                "facebook.com/post_456",
+                "facebook.com/post_456",
+                "facebook.com/post_789",
+            ],
             "comments_only_column": ["some_str"] * row_count,
         }
     )
@@ -196,6 +218,12 @@ def test_facebook_comments_topics_inherit_from_facebook_posts_topics(
             "is_geopolitics_tension": [True] * row_count,
             "is_intercommunity_relations_tension": [True] * row_count,
             "has_tension": [True] * row_count,
+            "post_url": [
+                "facebook.com/post_123",
+                "facebook.com/post_456",
+                "facebook.com/post_456",
+                "facebook.com/post_789",
+            ],
             "comments_only_column": ["some_str"] * row_count,
         }
     )
@@ -241,6 +269,12 @@ def test_facebook_comments_topics_inherit_from_facebook_posts_topics_rename(
             "is_geopolitics_tension": [True] * row_count,
             "is_intercommunity_relations_tension": [True] * row_count,
             "has_tension": [True] * row_count,
+            "post_url": [
+                "facebook.com/post_123",
+                "facebook.com/post_456",
+                "facebook.com/post_456",
+                "facebook.com/post_789",
+            ],
             "comments_only_column": ["some_str"] * row_count,
         }
     )
