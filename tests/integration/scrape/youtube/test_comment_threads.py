@@ -59,7 +59,7 @@ def test_get_comment_threads_for_channel_config(
     assert len(result) == 2
     mocked_get_comment_threads.assert_has_calls(
         [
-            mock.call(cur_channels_config["channel_id"][0]),
-            mock.call(cur_channels_config["channel_id"][1]),
+            mock.call(cur_channels_config["channel_id"][0], max_pages=10),
+            mock.call(cur_channels_config["channel_id"][1], max_pages=10),
         ]
     )

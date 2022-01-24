@@ -1,4 +1,5 @@
 """Test Utils."""
+import googleapiclient
 import mock
 
 from phoenix.scrape.youtube import lists
@@ -49,6 +50,25 @@ def test_paginate_list_resource_max_pages(m_default_list_process_function):
     """Test paginate_list_resource with max pages set."""
     resource_client = mock.Mock()
     request = mock.Mock()
+    list_next_fn = resource_client.list_next
+    list_next_fn.return_value = request
+    execute_fn = request.execute
+    init_result = mock.Mock()
+    _ = lists.paginate_list_resource(
+        resource_client, request, max_pages=3, process_function=None, result=init_result
+    )
+    assert execute_fn.call_count == 3
+
+
+@mock.patch("phoenix.scrape.youtube.lists.default_list_process_function")
+def test_paginate_list_resource_http_error(m_default_list_process_function):
+    """Test paginate_list_resource with max pages set and gets
+
+    Still does a request for each page.
+    """
+    resource_client = mock.Mock()
+    request = mock.Mock()
+    request.side_effect = googleapiclient.errors.HttpError
     list_next_fn = resource_client.list_next
     list_next_fn.return_value = request
     execute_fn = request.execute

@@ -60,11 +60,12 @@ def get_comment_threads(
 
 def get_comment_threads_for_channels_config(
     channels_config: pd.DataFrame,
+    max_pages: int = 10,
 ) -> lists.ListResults:
     """Get all the comment threads data for all the channels specified in the config."""
     result: lists.ListResults = []
     for channel_id in channels_config["channel_id"].values:
         logger.info(f"Scraping comment threads for [channel_id={channel_id}]")
-        found_results = get_comment_threads(channel_id)
+        found_results = get_comment_threads(channel_id, max_pages=max_pages)
         result = result + found_results
     return result
