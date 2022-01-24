@@ -1,4 +1,5 @@
 """Processing and config for facebook_posts_commentors graph."""
+from typing import Tuple
 
 import pandas as pd
 
@@ -70,3 +71,23 @@ def process_commenter_post_edges(final_facebook_comments_classes: pd.DataFrame) 
     df["source_node"] = df["user_name"]
     df["destination_node"] = df["post_id"]
     return df
+
+
+def process(
+    final_facebook_comments_classes: pd.DataFrame,
+    final_facebook_posts_classes: pd.DataFrame,
+    final_accounts: pd.DataFrame,
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """Process facebook accounts, posts, and commenters into three type network graph."""
+    # edges
+    account_post_edges = process_account_post_edges(final_facebook_posts_classes)
+    commenter_post_edges = process_commenter_post_edges(final_facebook_comments_classes)
+    edges = account_post_edges.append(commenter_post_edges)
+
+    # nodes
+    account_nodes = process_account_nodes(final_accounts)
+    post_nodes = process_post_nodes(final_facebook_posts_classes)
+    commenter_nodes = process_commenter_nodes(final_facebook_comments_classes)
+    nodes = account_nodes.append(post_nodes).append(commenter_nodes)
+
+    return edges, nodes
