@@ -49,6 +49,7 @@ def process_commenter_nodes(final_facebook_comments_classes: pd.DataFrame) -> pd
     """Process facebook comments to create set of nodes of type `commenter`."""
     cols_to_keep = ["user_name", "class"]
     df = final_facebook_comments_classes[cols_to_keep]
+    df = df.dropna()
     df = processing_utilities.reduce_concat_classes(df, ["user_name"], "class")
     df["node_name"] = df["user_name"]
     df["type"] = "facebook_commenter"
@@ -59,6 +60,7 @@ def process_account_post_edges(final_facebook_posts_classes: pd.DataFrame) -> pd
     """Process edges from accounts to posts."""
     df = final_facebook_posts_classes[["object_id", "account_handle"]]
     df = df.drop_duplicates()
+    df = df.dropna(subset=["account_handle"])
     df["source_node"] = df["account_handle"]
     df["destination_node"] = df["object_id"]
     return df
@@ -67,6 +69,7 @@ def process_account_post_edges(final_facebook_posts_classes: pd.DataFrame) -> pd
 def process_commenter_post_edges(final_facebook_comments_classes: pd.DataFrame) -> pd.DataFrame:
     """Process edges from commenters to posts."""
     df = final_facebook_comments_classes[["post_id", "user_name"]]
+    df["post_id"] = df["post_id"].astype(str)
     df = df.groupby(["post_id", "user_name"]).size().reset_index()
     df = df.rename(columns={0: "times_commented"})
     df["source_node"] = df["user_name"]
@@ -84,12 +87,14 @@ def process(
     account_post_edges = process_account_post_edges(final_facebook_posts_classes)
     commenter_post_edges = process_commenter_post_edges(final_facebook_comments_classes)
     edges = account_post_edges.append(commenter_post_edges)
+    edges = edges.reset_index(drop=True)
 
     # nodes
     account_nodes = process_account_nodes(final_accounts)
     post_nodes = process_post_nodes(final_facebook_posts_classes)
     commenter_nodes = process_commenter_nodes(final_facebook_comments_classes)
     nodes = account_nodes.append(post_nodes).append(commenter_nodes)
+    nodes = nodes.reset_index(drop=True)
 
     return edges, nodes
 
