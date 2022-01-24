@@ -54,6 +54,8 @@ def process_account_post_edges(final_facebook_posts_classes: pd.DataFrame) -> pd
     """Process edges from accounts to posts."""
     df = final_facebook_posts_classes[["object_id", "account_handle"]]
     df = df.drop_duplicates()
+    df["source_node"] = df["account_handle"]
+    df["destination_node"] = df["object_id"]
     return df
 
 
@@ -62,4 +64,6 @@ def process_commenter_post_edges(final_facebook_comments_classes: pd.DataFrame) 
     df = final_facebook_comments_classes[["post_id", "user_name"]]
     df = df.groupby(["post_id", "user_name"]).size().reset_index()
     df = df.rename(columns={0: "times_commented"})
+    df["source_node"] = df["user_name"]
+    df["destination_node"] = df["post_id"]
     return df
