@@ -7,7 +7,7 @@ from phoenix.tag.graphing import processing_utilities
 from phoenix.tag.graphing import phoenix_graphistry
 
 
-ARTIFACT_KEYS = [
+INPUT_DATASETS_ARTIFACT_KEYS = [
     "final-facebook_comments_classes",
     "final-facebook_posts_classes",
     "final-accounts",
