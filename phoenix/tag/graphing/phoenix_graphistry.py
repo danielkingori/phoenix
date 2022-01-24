@@ -80,7 +80,7 @@ def plot(
 
     g = g.addStyle(
         logo={
-            "url": "https://buildup-undp-dashboard.s3.amazonaws.com/datavaluepeople/logo.png",
+            "url": "https://phoenix-dmaps-dashboard.s3.amazonaws.com/datavaluepeople/logo.png",
             "dimensions": {"maxWidth": 100, "maxHeight": 100},
         }
     )
