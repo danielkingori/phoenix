@@ -13,7 +13,7 @@ def find_hashtags_in_tweet_text(full_text) -> list:
     return [h.strip("#").lower() for h in hashtags_found]
 
 
-def is_tweet_a_retweet(tweet: tweepy.Status) -> bool:
+def is_tweet_a_retweet(tweet: tweepy.cursor.Cursor) -> bool:
     """Check if tweet is a retweet from tweepy status."""
     retweet_re = r"(RT @)"
     if re.match(retweet_re, tweet.full_text) or tweet.retweeted:
@@ -29,7 +29,7 @@ def is_tweet_a_retweet_dict(tweet: dict) -> bool:
     return False
 
 
-def is_recent_tweet(since_days, status: tweepy.Status) -> bool:
+def is_recent_tweet(since_days, status: tweepy.cursor.Cursor) -> bool:
     """Check if the tweet is recent within given dates."""
     today = datetime.datetime.now()
     compare_time = today - datetime.timedelta(since_days)

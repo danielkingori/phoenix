@@ -1,6 +1,7 @@
 """Twitter query connections through the Twitter API."""
 import logging
 import os
+from math import inf
 
 import tweepy
 
@@ -51,12 +52,14 @@ def get_auth_handler() -> tweepy.auth.AuthHandler:
 def connect_twitter_api() -> tweepy.API:
     """Connect to twitter API v1."""
     auth = get_auth_handler()
-    api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+    api = tweepy.API(auth, wait_on_rate_limit=True)
     return api
 
 
-def _tweet_search_cursor(api, query, num_items) -> tweepy.Cursor:
+def _tweet_search_cursor(api, query, num_items) -> tweepy.cursor.ItemIterator:
     """Manages the cursor for Twitter api.search endpoint."""
+    if num_items < 1:
+        num_items = inf
     return tweepy.Cursor(
         api.search,
         q=query,
@@ -66,8 +69,10 @@ def _tweet_search_cursor(api, query, num_items) -> tweepy.Cursor:
     ).items(num_items)
 
 
-def _get_user_tweet_cursor(api, id, num_items) -> tweepy.Status:
+def _get_user_tweet_cursor(api, id, num_items) -> tweepy.cursor.ItemIterator:
     """Manages the cursor for Twitter api.user_timeline endpoint."""
+    if num_items < 1:
+        num_items = inf
     return tweepy.Cursor(
         api.user_timeline,
         id=id,
@@ -76,7 +81,9 @@ def _get_user_tweet_cursor(api, id, num_items) -> tweepy.Status:
     ).items(num_items)
 
 
-def get_tweets_since_days(query_type, query, since_days, num_items, api=None) -> tweepy.Status:
+def get_tweets_since_days(
+    query_type, query, since_days, num_items, api=None
+) -> tweepy.cursor.ItemIterator:
     """Decides if query is for users or keywords, and checks \
     if the returns are within the since_days timeframe."""
     # Check API
@@ -98,12 +105,12 @@ def get_tweets_since_days(query_type, query, since_days, num_items, api=None) ->
                 yield status
             else:
                 break
-    except tweepy.error.TweepError as e:
-        if e.response.status_code == 401:
-            logging.info(
-                "401 Unauthorized: either bad api tokens or not \
-                authorized to access the query due to a locked account"
-            )
+    except tweepy.errors.Unauthorized as e:
+        logging.info(
+            "401 Unauthorized: either bad api tokens or not \
+            authorized to access the query due to a locked account. Error:"
+            + e
+        )
 
 
 def get_tweets(query_type, queries, num_items, since_days, api) -> list:
