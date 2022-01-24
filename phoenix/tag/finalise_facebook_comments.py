@@ -140,7 +140,7 @@ def inherit_from_facebook_posts_topics_df(
         posts_topics_df = posts_topics_df.groupby("url_post_id").last().reset_index()
 
     comments_df = pd.merge(
-        comments_df, posts_topics_df, left_on="post_id", right_on="url_post_id", how="left"
+        comments_df, posts_topics_df, left_on="post_id", right_on="url_post_id", how="inner"
     ).drop("url_post_id", axis=1)
 
     return comments_df

@@ -291,3 +291,56 @@ def test_facebook_comments_topics_inherit_from_facebook_posts_topics_rename(
     )
 
     pd.testing.assert_frame_equal(output_df, expected_comments_df, check_like=True)
+
+
+def test_facebook_comments_topics_inherit_from_facebook_posts_orphan_comments(
+    input_facebook_posts_classes_df,
+):
+    """Test that orphaned comments are removed during class inheritance.
+
+    Note: topic_to_class duplicates the topic into class, and topics into classes. Thus we have
+    both the topics and classes columns here
+    """
+    row_count = 3
+    input_comments_df = pd.DataFrame(
+        {
+            "id": ["1", "4", "5"],
+            "post_id": [123, 999, 42],
+            "classes": [[], [], []],
+            "has_classes": [False, False, False],
+            "comments_only_column": ["some_str"] * row_count,
+        }
+    )
+
+    to_drop = [
+        "is_economic_labour_tension",
+        "is_political_tension",
+        "is_service_related_tension",
+        "is_community_insecurity_tension",
+        "is_sectarian_tension",
+        "is_environmental_tension",
+        "is_geopolitics_tension",
+        "is_intercommunity_relations_tension",
+        "has_tension",
+    ]
+    facebook_posts_classes_df = input_facebook_posts_classes_df.drop(columns=to_drop, axis=1)
+    inherited_columns = finalise_facebook_comments.inherited_columns_for_facebook_comments(
+        posts_topics_df=facebook_posts_classes_df,
+    )
+    expected_comments_df = pd.DataFrame(
+        {
+            "id": ["1"],
+            "post_id": [123],
+            "comments_only_column": ["some_str"],
+            "has_classes": [True],
+            "post_url": ["facebook.com/post_123"],
+            "classes": [["a"]],
+            "topics": [["a"]],
+            "has_topics": [True],
+        }
+    )
+    actual_comments_df = finalise_facebook_comments.inherit_from_facebook_posts_topics_df(
+        facebook_posts_classes_df, input_comments_df, inherited_columns
+    )
+
+    pd.testing.assert_frame_equal(actual_comments_df, expected_comments_df, check_like=True)
