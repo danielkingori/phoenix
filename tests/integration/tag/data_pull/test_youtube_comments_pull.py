@@ -30,6 +30,7 @@ def processed_comments_df() -> pd.DataFrame:
                 "author_display_name": "comment_6-author_display_name",
                 "channel_id": "channel_id_6",
                 "video_id": "video_id_6",
+                "video_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_6",
                 "etag": "comment_6-response_2-etag_1",
                 "response_etag": "response_2-etag_1",
                 "timestamp_filter": datetime.datetime(
@@ -61,6 +62,7 @@ def processed_comments_df() -> pd.DataFrame:
                 "author_display_name": "comment_5-author_display_name",
                 "channel_id": "channel_id_3",
                 "video_id": "video_id_3",
+                "video_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_3",
                 "etag": "comment_5-response_2-etag_1",
                 "response_etag": "response_2-etag_1",
                 "timestamp_filter": datetime.datetime(
@@ -92,6 +94,7 @@ def processed_comments_df() -> pd.DataFrame:
                 "author_display_name": "comment_4-author_display_name",
                 "channel_id": "channel_id_3",
                 "video_id": "video_id_3",
+                "video_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_3",
                 "etag": "comment_4-response_2-etag_1",
                 "response_etag": "response_2-etag_1",
                 "timestamp_filter": datetime.datetime(
@@ -121,6 +124,7 @@ def processed_comments_df() -> pd.DataFrame:
                 "author_display_name": "comment_3-author_display_name",
                 "channel_id": "channel_id_3",
                 "video_id": "video_id_3",
+                "video_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_3",
                 "etag": "comment_3-response_2-etag_1",
                 "response_etag": "response_2-etag_1",
                 "timestamp_filter": datetime.datetime(
@@ -150,6 +154,7 @@ def processed_comments_df() -> pd.DataFrame:
                 "author_display_name": "comment_1-author_display_name",
                 "channel_id": "channel_id_1",
                 "video_id": "video_id_1",
+                "video_url": data_pull.constants.YOUTUBE_VIDEOS_URL + "video_id_1",
                 "etag": "comment_1-response_2-etag_1",
                 "response_etag": "response_2-etag_1",
                 "timestamp_filter": datetime.datetime(
