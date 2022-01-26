@@ -21,6 +21,7 @@ FACEBOOK_COMMENT_INHERITABLE_COLUMNS = [
     "is_geopolitics_tension",
     "is_intercommunity_relations_tension",
     "has_tension",
+    "post_url",
 ]
 
 FACEBOOK_COMMENT_TOPICS_INHERITABLE_COLUMNS = [
@@ -103,6 +104,9 @@ def inherit_from_facebook_posts_topics_df(
 ) -> pd.DataFrame:
     """Joins comments to their parent posts and inherits tensions and topic(s) from parents.
 
+    WARNING: Comments within the data that don't have their corresponding post also within the data
+    will be dropped.
+
     Args:
         posts_topics_df (pd.DataFrame): fb_posts dataframe with topics
             and other columns to inherit.
@@ -139,7 +143,7 @@ def inherit_from_facebook_posts_topics_df(
         posts_topics_df = posts_topics_df.groupby("url_post_id").last().reset_index()
 
     comments_df = pd.merge(
-        comments_df, posts_topics_df, left_on="post_id", right_on="url_post_id", how="left"
+        comments_df, posts_topics_df, left_on="post_id", right_on="url_post_id", how="inner"
     ).drop("url_post_id", axis=1)
 
     return comments_df
