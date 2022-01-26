@@ -24,6 +24,7 @@ def from_json(
                 dfs.append(df)
 
     df = utils.concat_dedupe_sort_objects(dfs, "published_at")
+    df["video_url"] = constants.YOUTUBE_VIDEOS_URL + df["video_id"]
     df = df[
         [
             "id",
@@ -39,6 +40,7 @@ def from_json(
             "author_display_name",
             "channel_id",
             "video_id",
+            "video_url",
             "etag",
             "response_etag",
             "timestamp_filter",
