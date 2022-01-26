@@ -157,7 +157,7 @@ def for_tagging(given_df: pd.DataFrame):
         }
     )
     df["object_type"] = constants.OBJECT_TYPE_YOUTUBE_COMMENT
-    df["object_url"] = constants.YOUTUBE_VIDEOS_URL + df["video_id"]
+    df["object_url"] = df["video_url"]
     df["object_user_url"] = constants.YOUTUBE_CHANNEL_URL + df["author_channel_id"]
     df["object_user_name"] = df["author_display_name"]
     df = df[
