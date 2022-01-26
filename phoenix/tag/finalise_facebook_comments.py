@@ -104,6 +104,9 @@ def inherit_from_facebook_posts_topics_df(
 ) -> pd.DataFrame:
     """Joins comments to their parent posts and inherits tensions and topic(s) from parents.
 
+    WARNING: Comments within the data that don't have their corresponding post also within the data
+    will be dropped.
+
     Args:
         posts_topics_df (pd.DataFrame): fb_posts dataframe with topics
             and other columns to inherit.
