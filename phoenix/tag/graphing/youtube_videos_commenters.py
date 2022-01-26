@@ -1,4 +1,4 @@
-"""Processing and config for youtube_videos_commentors graph."""
+"""Processing and config for youtube_videos_commenters graph."""
 from typing import Tuple
 
 import pandas as pd
