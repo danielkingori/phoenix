@@ -32,6 +32,7 @@ class PlotConfig(base.RunParams):
     nodes_col: str
     graph_name: str
     graph_description: str
+    node_label_col: Optional[str] = None
     edge_weight_col: Optional[str] = None
     directed: bool = True
     pointcolor_col: Optional[str] = None
@@ -89,10 +90,18 @@ def plot(
         node=config.nodes_col,
         point_title=config.nodes_col,
     )
+
+    if config.node_label_col is not None:
+        g = g.bind(point_title=config.node_label_col)
+    else:
+        g = g.bind(point_title=config.nodes_col)
+
     if config.edge_weight_col is not None:
         g = g.bind(edge_weight=config.edge_weight_col)
+
     if config.pointcolor_col is not None:
         g = g.bind(pointColor=config.pointcolor_col)
+
     if config.color_by_type:
         types = nodes["type"].unique()
         type_color_mapping = {
