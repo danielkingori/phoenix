@@ -21,6 +21,10 @@ def twitter_json(
             df = pd.read_json(file_io)
             li.append(df)
 
+        # Guard against empty files
+        if df.shape[0] == 0:
+            continue
+
         df["file_timestamp"] = file_timestamp
 
     df = pd.concat(li, axis=0, ignore_index=True)

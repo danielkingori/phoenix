@@ -50,6 +50,10 @@ def from_json(
         with tentaclio.open(entry) as file_io:
             df_read = pd.read_json(file_io)
 
+        # Gaurd against empty files
+        if df_read.shape[0] == 0:
+            continue
+
         df = normalise(df_read, df_flattened)
         df["file_timestamp"] = file_timestamp
         li.append(df)
