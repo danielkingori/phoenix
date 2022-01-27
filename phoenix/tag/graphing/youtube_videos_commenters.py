@@ -99,7 +99,6 @@ def process(
         channel_videos_edges["object_id"].isin(commenter_videos_edges["video_id"])
     ]
     edges = channel_videos_edges.append(commenter_videos_edges)
-    edges = edges.reset_index(drop=True)
 
     # nodes
     channel_nodes = process_channel_nodes(final_accounts)
@@ -112,6 +111,10 @@ def process(
     ]
     nodes = channel_nodes.append(video_nodes).append(commenter_nodes)
     nodes = nodes.reset_index(drop=True)
+
+    edges = edges[edges["source_node"].isin(nodes["node_name"])]
+    edges = edges[edges["destination_node"].isin(nodes["node_name"])]
+    edges = edges.reset_index(drop=True)
 
     return edges, nodes
 
