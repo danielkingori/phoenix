@@ -100,7 +100,6 @@ def process(
         account_post_edges["object_id"].isin(commenter_post_edges["post_id"])
     ]
     edges = account_post_edges.append(commenter_post_edges)
-    edges = edges.reset_index(drop=True)
 
     # nodes
     account_nodes = process_account_nodes(final_accounts)
@@ -111,6 +110,10 @@ def process(
     commenter_nodes = commenter_nodes[commenter_nodes["user_name"].isin(edges["user_name"])]
     nodes = account_nodes.append(post_nodes).append(commenter_nodes)
     nodes = nodes.reset_index(drop=True)
+
+    edges = edges[edges["source_node"].isin(nodes["node_name"])]
+    edges = edges[edges["destination_node"].isin(nodes["node_name"])]
+    edges = edges.reset_index(drop=True)
 
     return edges, nodes
 
