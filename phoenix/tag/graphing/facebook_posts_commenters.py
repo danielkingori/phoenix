@@ -19,7 +19,7 @@ def process_account_nodes(final_accounts: pd.DataFrame) -> pd.DataFrame:
     df = final_accounts[cols_to_keep]
     df = processing_utilities.reduce_concat_classes(df, ["object_user_name"], "account_label")
     df["node_name"] = df["object_user_name"]
-    df["type"] = "facebook_account"
+    df["type"] = "account"
     return df
 
 
@@ -40,7 +40,7 @@ def process_post_nodes(final_facebook_posts_classes: pd.DataFrame) -> pd.DataFra
     df = final_facebook_posts_classes[cols_to_keep]
     df = processing_utilities.reduce_concat_classes(df, ["object_id"], "class")
     df["node_name"] = df["object_id"]
-    df["type"] = "facebook_post"
+    df["type"] = "post"
     return df
 
 
@@ -51,7 +51,7 @@ def process_commenter_nodes(final_facebook_comments_classes: pd.DataFrame) -> pd
     df = df.dropna()
     df = processing_utilities.reduce_concat_classes(df, ["user_name"], "class")
     df["node_name"] = df["user_name"]
-    df["type"] = "facebook_commenter"
+    df["type"] = "commenter"
     return df
 
 

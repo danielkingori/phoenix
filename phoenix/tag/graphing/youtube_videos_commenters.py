@@ -20,7 +20,7 @@ def process_channel_nodes(final_accounts: pd.DataFrame) -> pd.DataFrame:
     df["channel_id"] = df["object_user_url"].str.split("/").str[-1]
     df = processing_utilities.reduce_concat_classes(df, ["channel_id"], "account_label")
     df["node_name"] = df["channel_id"]
-    df["type"] = "youtube_channel"
+    df["type"] = "channel"
     return df
 
 
@@ -40,7 +40,7 @@ def process_video_nodes(final_youtube_videos_classes: pd.DataFrame) -> pd.DataFr
     df = final_youtube_videos_classes[cols_to_keep]
     df = processing_utilities.reduce_concat_classes(df, ["object_id"], "class")
     df["node_name"] = df["object_id"]
-    df["type"] = "youtube_video"
+    df["type"] = "video"
     return df
 
 
@@ -50,7 +50,7 @@ def process_commenter_nodes(final_youtube_comments_classes: pd.DataFrame) -> pd.
     df = final_youtube_comments_classes[cols_to_keep]
     df = processing_utilities.reduce_concat_classes(df, ["author_channel_id"], "class")
     df["node_name"] = df["author_channel_id"]
-    df["type"] = "youtube_commenter"
+    df["type"] = "commenter"
     return df
 
 
