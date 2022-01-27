@@ -21,6 +21,7 @@ def process_channel_nodes(final_accounts: pd.DataFrame) -> pd.DataFrame:
     df = processing_utilities.reduce_concat_classes(df, ["channel_id"], "account_label")
     df["node_name"] = df["channel_id"]
     df["type"] = "channel"
+    df["node_label"] = df["object_user_name"]
     return df
 
 
@@ -41,6 +42,7 @@ def process_video_nodes(final_youtube_videos_classes: pd.DataFrame) -> pd.DataFr
     df = processing_utilities.reduce_concat_classes(df, ["object_id"], "class")
     df["node_name"] = df["object_id"]
     df["type"] = "video"
+    df["node_label"] = df["title"]
     return df
 
 
@@ -51,6 +53,7 @@ def process_commenter_nodes(final_youtube_comments_classes: pd.DataFrame) -> pd.
     df = processing_utilities.reduce_concat_classes(df, ["author_channel_id"], "class")
     df["node_name"] = df["author_channel_id"]
     df["type"] = "commenter"
+    df["node_label"] = df["author_display_name"]
     return df
 
 
@@ -133,4 +136,5 @@ plot_config = phoenix_graphistry.PlotConfig(
     """,
     directed=True,
     color_by_type=True,
+    node_label_col="node_label",
 )

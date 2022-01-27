@@ -20,6 +20,7 @@ def process_account_nodes(final_accounts: pd.DataFrame) -> pd.DataFrame:
     df = processing_utilities.reduce_concat_classes(df, ["object_user_name"], "account_label")
     df["node_name"] = df["object_user_name"]
     df["type"] = "account"
+    df["node_label"] = df["object_user_name"]
     return df
 
 
@@ -41,17 +42,19 @@ def process_post_nodes(final_facebook_posts_classes: pd.DataFrame) -> pd.DataFra
     df = processing_utilities.reduce_concat_classes(df, ["object_id"], "class")
     df["node_name"] = df["object_id"]
     df["type"] = "post"
+    df["node_label"] = df["object_id"]
     return df
 
 
 def process_commenter_nodes(final_facebook_comments_classes: pd.DataFrame) -> pd.DataFrame:
     """Process facebook comments to create set of nodes of type `commenter`."""
-    cols_to_keep = ["user_name", "class"]
+    cols_to_keep = ["user_name", "class", "user_display_name"]
     df = final_facebook_comments_classes[cols_to_keep]
     df = df.dropna()
     df = processing_utilities.reduce_concat_classes(df, ["user_name"], "class")
     df["node_name"] = df["user_name"]
     df["type"] = "commenter"
+    df["node_label"] = df["user_display_name"]
     return df
 
 
@@ -132,4 +135,5 @@ plot_config = phoenix_graphistry.PlotConfig(
     """,
     directed=True,
     color_by_type=True,
+    node_label_col="node_label",
 )
