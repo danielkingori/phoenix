@@ -125,6 +125,7 @@ def plot(
         "pointsOfInterestMax": 20,
         "gravity": 0.7,
         "pointOpacity": 0.95,
+        "edgeOpacity": 0.80,
         "edgeInfluence": 2,
     }
     if config.directed:
