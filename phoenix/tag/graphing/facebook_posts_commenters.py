@@ -128,4 +128,5 @@ plot_config = phoenix_graphistry.PlotConfig(
             - from commenter to post; denote number of times (if any) commenter commented on post
     """,
     directed=True,
+    color_by_type=True,
 )

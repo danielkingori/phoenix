@@ -129,4 +129,5 @@ plot_config = phoenix_graphistry.PlotConfig(
             - from commenter to video; denote number of times (if any) commenter commented on video
     """,
     directed=True,
+    color_by_type=True,
 )
