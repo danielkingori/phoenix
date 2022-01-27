@@ -82,12 +82,17 @@ def process(
     # edges
     channel_videos_edges = process_channel_video_edges(final_youtube_videos_classes)
     commenter_videos_edges = process_commenter_video_edges(final_youtube_comments_classes)
+    channel_videos_edges = channel_videos_edges[
+        channel_videos_edges["object_id"].isin(commenter_videos_edges["video_id"])
+    ]
     edges = channel_videos_edges.append(commenter_videos_edges)
     edges = edges.reset_index(drop=True)
 
     # nodes
     channel_nodes = process_channel_nodes(final_accounts)
+    channel_nodes = channel_nodes[channel_nodes["channel_id"].isin(edges["channel_id"])]
     video_nodes = process_video_nodes(final_youtube_videos_classes)
+    video_nodes = video_nodes[video_nodes["object_id"].isin(edges["video_id"])]
     commenter_nodes = process_commenter_nodes(final_youtube_comments_classes)
     nodes = channel_nodes.append(video_nodes).append(commenter_nodes)
     nodes = nodes.reset_index(drop=True)
