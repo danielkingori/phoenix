@@ -67,6 +67,17 @@ def process_account_post_edges(final_facebook_posts_classes: pd.DataFrame) -> pd
 
 def process_commenter_post_edges(final_facebook_comments_classes: pd.DataFrame) -> pd.DataFrame:
     """Process edges from commenters to posts."""
+    # Filter for only top 1% of commenters
+    commenter_comment_counts = final_facebook_comments_classes["user_name"].value_counts()
+    cut_off = commenter_comment_counts.quantile(0.99)
+    filtered_commenter_comment_counts = commenter_comment_counts[
+        commenter_comment_counts >= cut_off
+    ]
+    filtered_commenter_comment_counts
+    final_facebook_comments_classes = final_facebook_comments_classes[
+        final_facebook_comments_classes["user_name"].isin(filtered_commenter_comment_counts.index)
+    ]
+
     df = final_facebook_comments_classes[["post_id", "user_name"]]
     df["post_id"] = df["post_id"].astype(str)
     df = df.groupby(["post_id", "user_name"]).size().reset_index()
@@ -97,6 +108,7 @@ def process(
     post_nodes = process_post_nodes(final_facebook_posts_classes)
     post_nodes = post_nodes[post_nodes["object_id"].isin(edges["post_id"])]
     commenter_nodes = process_commenter_nodes(final_facebook_comments_classes)
+    commenter_nodes = commenter_nodes[commenter_nodes["user_name"].isin(edges["user_name"])]
     nodes = account_nodes.append(post_nodes).append(commenter_nodes)
     nodes = nodes.reset_index(drop=True)
 
