@@ -6,6 +6,7 @@ https://github.com/graphistry/pygraphistry/
 from typing import Optional, Tuple
 
 import dataclasses
+import itertools
 import logging
 import os
 
@@ -33,6 +34,22 @@ class PlotConfig(base.RunParams):
     graph_description: str
     edge_weight_col: Optional[str] = None
     directed: bool = True
+    pointcolor_col: Optional[str] = None
+    color_by_type: bool = False
+
+
+TYPE_HEX_COLORS = [
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+]
 
 
 def plot(
@@ -74,6 +91,16 @@ def plot(
     )
     if config.edge_weight_col is not None:
         g = g.bind(edge_weight=config.edge_weight_col)
+    if config.pointcolor_col is not None:
+        g = g.bind(pointColor=config.pointcolor_col)
+    if config.color_by_type:
+        types = nodes["type"].unique()
+        type_color_mapping = {
+            _type: hex_color for _type, hex_color in zip(types, itertools.cycle(TYPE_HEX_COLORS))
+        }
+        g = g.encode_point_color(
+            "type", categorical_mapping=type_color_mapping, default_mapping="black"
+        )
 
     g = g.edges(edges)
     g = g.nodes(nodes)
