@@ -27,7 +27,7 @@ def process_account_nodes(final_accounts: pd.DataFrame) -> pd.DataFrame:
 def process_post_nodes(final_facebook_posts_classes: pd.DataFrame) -> pd.DataFrame:
     """Process facebook posts to create set of nodes of type `post`."""
     cols_to_keep = [
-        "object_id",
+        "url_post_id",
         "platform_id",
         "account_handle",
         "account_platform_id",
@@ -39,10 +39,10 @@ def process_post_nodes(final_facebook_posts_classes: pd.DataFrame) -> pd.DataFra
         col for col in final_facebook_posts_classes.columns if "statistics" in col
     ]
     df = final_facebook_posts_classes[cols_to_keep]
-    df = processing_utilities.reduce_concat_classes(df, ["object_id"], "class")
-    df["node_name"] = df["object_id"]
+    df = processing_utilities.reduce_concat_classes(df, ["url_post_id"], "class")
+    df["node_name"] = df["url_post_id"]
     df["type"] = "post"
-    df["node_label"] = df["object_id"]
+    df["node_label"] = df["url_post_id"]
     return df
 
 
@@ -60,11 +60,11 @@ def process_commenter_nodes(final_facebook_comments_classes: pd.DataFrame) -> pd
 
 def process_account_post_edges(final_facebook_posts_classes: pd.DataFrame) -> pd.DataFrame:
     """Process edges from accounts to posts."""
-    df = final_facebook_posts_classes[["object_id", "account_handle"]]
+    df = final_facebook_posts_classes[["url_post_id", "account_handle"]]
     df = df.drop_duplicates()
     df = df.dropna(subset=["account_handle"])
     df["source_node"] = df["account_handle"]
-    df["destination_node"] = df["object_id"]
+    df["destination_node"] = df["url_post_id"]
     return df
 
 
@@ -100,7 +100,7 @@ def process(
     account_post_edges = process_account_post_edges(final_facebook_posts_classes)
     commenter_post_edges = process_commenter_post_edges(final_facebook_comments_classes)
     account_post_edges = account_post_edges[
-        account_post_edges["object_id"].isin(commenter_post_edges["post_id"])
+        account_post_edges["url_post_id"].isin(commenter_post_edges["post_id"])
     ]
     edges = account_post_edges.append(commenter_post_edges)
 
@@ -108,7 +108,7 @@ def process(
     account_nodes = process_account_nodes(final_accounts)
     account_nodes = account_nodes[account_nodes["object_user_name"].isin(edges["account_handle"])]
     post_nodes = process_post_nodes(final_facebook_posts_classes)
-    post_nodes = post_nodes[post_nodes["object_id"].isin(edges["post_id"])]
+    post_nodes = post_nodes[post_nodes["url_post_id"].isin(edges["post_id"])]
     commenter_nodes = process_commenter_nodes(final_facebook_comments_classes)
     commenter_nodes = commenter_nodes[commenter_nodes["user_name"].isin(edges["user_name"])]
     nodes = account_nodes.append(post_nodes).append(commenter_nodes)
