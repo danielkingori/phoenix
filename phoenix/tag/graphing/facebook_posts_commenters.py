@@ -85,12 +85,17 @@ def process(
     # edges
     account_post_edges = process_account_post_edges(final_facebook_posts_classes)
     commenter_post_edges = process_commenter_post_edges(final_facebook_comments_classes)
+    account_post_edges = account_post_edges[
+        account_post_edges["object_id"].isin(commenter_post_edges["post_id"])
+    ]
     edges = account_post_edges.append(commenter_post_edges)
     edges = edges.reset_index(drop=True)
 
     # nodes
     account_nodes = process_account_nodes(final_accounts)
+    account_nodes = account_nodes[account_nodes["object_user_name"].isin(edges["account_handle"])]
     post_nodes = process_post_nodes(final_facebook_posts_classes)
+    post_nodes = post_nodes[post_nodes["object_id"].isin(edges["post_id"])]
     commenter_nodes = process_commenter_nodes(final_facebook_comments_classes)
     nodes = account_nodes.append(post_nodes).append(commenter_nodes)
     nodes = nodes.reset_index(drop=True)
