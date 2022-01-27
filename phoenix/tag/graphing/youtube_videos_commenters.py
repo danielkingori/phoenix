@@ -65,6 +65,19 @@ def process_channel_video_edges(final_youtube_videos_classes: pd.DataFrame) -> p
 
 def process_commenter_video_edges(final_youtube_comments_classes: pd.DataFrame) -> pd.DataFrame:
     """Process edges from commenters to videos."""
+    # Filter for only top 1% of commenters
+    commenter_comment_counts = final_youtube_comments_classes["author_channel_id"].value_counts()
+    cut_off = commenter_comment_counts.quantile(0.99)
+    filtered_commenter_comment_counts = commenter_comment_counts[
+        commenter_comment_counts >= cut_off
+    ]
+    filtered_commenter_comment_counts
+    final_youtube_comments_classes = final_youtube_comments_classes[
+        final_youtube_comments_classes["author_channel_id"].isin(
+            filtered_commenter_comment_counts.index
+        )
+    ]
+
     df = final_youtube_comments_classes[["video_id", "author_display_name", "author_channel_id"]]
     df = df.groupby(["video_id", "author_channel_id"]).size().reset_index()
     df = df.rename(columns={0: "times_commented"})
@@ -94,6 +107,9 @@ def process(
     video_nodes = process_video_nodes(final_youtube_videos_classes)
     video_nodes = video_nodes[video_nodes["object_id"].isin(edges["video_id"])]
     commenter_nodes = process_commenter_nodes(final_youtube_comments_classes)
+    commenter_nodes = commenter_nodes[
+        commenter_nodes["author_channel_id"].isin(edges["author_channel_id"])
+    ]
     nodes = channel_nodes.append(video_nodes).append(commenter_nodes)
     nodes = nodes.reset_index(drop=True)
 
