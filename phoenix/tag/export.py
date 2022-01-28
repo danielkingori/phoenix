@@ -37,9 +37,14 @@ def get_posts_to_scrape(posts_df: pd.DataFrame) -> pd.DataFrame:
         ]
     ]
     posts_to_scrape.sort_values(by="total_interactions", inplace=True, ascending=False)
-    ten_percent = min(constants.TO_LABEL_CSV_MAX, round(posts_to_scrape.shape[0] * 0.1))
+    # Ten percent
+    sample_len = min(constants.TO_LABEL_CSV_MAX, round(posts_to_scrape.shape[0] * 0.1))
+    # If percent is smaller then the minimum
+    if sample_len < constants.TO_LABEL_CSV_MIN:
+        min_sample = min(constants.TO_LABEL_CSV_MIN, posts_to_scrape.shape[0])
+        sample_len = min_sample
 
-    return posts_to_scrape[:ten_percent]
+    return posts_to_scrape[:sample_len]
 
 
 def persist_posts_to_scrape(
