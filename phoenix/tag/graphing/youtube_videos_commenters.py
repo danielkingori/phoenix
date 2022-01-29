@@ -139,4 +139,5 @@ plot_config = phoenix_graphistry.PlotConfig(
     directed=False,
     color_by_type=False,
     node_label_col="node_label",
+    edge_weight_col="joint_num_comments",
 )
