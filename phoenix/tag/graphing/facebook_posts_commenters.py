@@ -118,6 +118,10 @@ def process(
     edges = edges[edges["destination_node"].isin(nodes["node_name"])]
     edges = edges.reset_index(drop=True)
 
+    edges, nodes = processing_utilities.account_post_commenter_graph_to_commenter_edges(
+        edges, nodes
+    )
+
     return edges, nodes
 
 
@@ -127,13 +131,11 @@ plot_config = phoenix_graphistry.PlotConfig(
     nodes_col="node_name",
     graph_name="facebook_commenters",
     graph_description="""
-        Graph showing accounts, their posts, and commenters on those posts.
-        Nodes: three types; accounts, posts, commenters
-        Edges: two types
-            - from account to post; denote account made post
-            - from commenter to post; denote number of times (if any) commenter commented on post
+        Graph showing how commenters are connected.
+        Nodes: commenters
+        Edges: when commenters comment on the same posts.
     """,
-    directed=True,
-    color_by_type=True,
+    directed=False,
+    color_by_type=False,
     node_label_col="node_label",
 )
