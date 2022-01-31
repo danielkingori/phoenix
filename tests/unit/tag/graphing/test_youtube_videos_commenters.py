@@ -272,6 +272,7 @@ def test_process(
         final_youtube_videos_classes=input_final_youtube_videos_classes,
         final_youtube_comments_objects_accounts_classes=ycoac,
         final_youtube_videos_objects_accounts_classes=yvoac,
+        quantile_of_commenters=0.1,
     )
     r_edges = edges.sort_values(by=["account_id_1", "account_id_2"]).reset_index(drop=True)
     r_output_edges = output_edges.sort_values(by=["account_id_1", "account_id_2"]).reset_index(

@@ -1,6 +1,8 @@
 """Processing and config for youtube_videos_commenters graph."""
 from typing import Tuple
 
+import logging
+
 import pandas as pd
 
 from phoenix.tag.graphing import phoenix_graphistry, processing_utilities
@@ -102,23 +104,43 @@ def process(
     final_youtube_videos_classes: pd.DataFrame,
     final_youtube_comments_objects_accounts_classes: pd.DataFrame,
     final_youtube_videos_objects_accounts_classes: pd.DataFrame,
+    quantile_of_commenters=0.99,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Process youtube channels, videos, and commenters into network graph."""
+    comments_objects_accounts_classes = final_youtube_comments_objects_accounts_classes
+    if quantile_of_commenters:
+        commenters_videos = comments_objects_accounts_classes[
+            ["author_channel_id", "video_id"]
+        ].drop_duplicates()
+        commenter_comment_counts = commenters_videos["author_channel_id"].value_counts()
+        cut_off = commenter_comment_counts.quantile(quantile_of_commenters)
+        filtered_commenter_comment_counts = commenter_comment_counts[
+            commenter_comment_counts >= cut_off
+        ]
+        number_of_commenters = filtered_commenter_comment_counts.shape[0]
+        logging.info(
+            f"Commenters have been filtered to include a subset of: {number_of_commenters}."
+        )
+        comments_objects_accounts_classes = comments_objects_accounts_classes[
+            comments_objects_accounts_classes["author_channel_id"].isin(
+                filtered_commenter_comment_counts.index
+            )
+        ]
     # edges
     channel_videos_edges = process_channel_video_edges(
         final_youtube_videos_classes,
-        final_youtube_comments_objects_accounts_classes,
+        comments_objects_accounts_classes,
     )
     commenter_videos_edges = process_commenter_video_edges(
         final_youtube_videos_classes,
-        final_youtube_comments_objects_accounts_classes,
+        comments_objects_accounts_classes,
     )
     edges = channel_videos_edges.append(commenter_videos_edges)
 
     # nodes
     account_nodes = process_channel_nodes(final_youtube_videos_objects_accounts_classes)
     commenter_nodes = process_commenter_nodes(
-        final_youtube_comments_objects_accounts_classes,
+        comments_objects_accounts_classes,
         final_youtube_videos_objects_accounts_classes,
     )
     commenter_nodes = commenter_nodes[
