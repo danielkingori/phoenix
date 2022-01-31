@@ -16,6 +16,7 @@ def reduce_concat_classes(
     Output will have the one-to-many row-to-class label relationship turned into one-to-one with
     class labels concatenated with `, ` separator.
     """
+    df[class_col] = df[class_col].fillna("")
     one_to_one_df = (
         df.groupby(row_id_cols)[
             [col for col in df.columns if col not in row_id_cols + [class_col]]

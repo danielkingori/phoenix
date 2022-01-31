@@ -48,7 +48,7 @@ def input_final_youtube_videos_classes() -> pd.DataFrame:
             {
                 "id": "fp_4",
                 "channel_id": "u_3",
-                "class": "c_4",
+                "class": None,
                 "language_sentiment": "POS",
             },
         ]
@@ -200,7 +200,7 @@ def edges() -> pd.DataFrame:
                 "account_id_1": "u_3",
                 "account_id_2": "u_1",
                 "video_count": 1,
-                "class": "c_4",
+                "class": "",
                 "language_sentiment": "POS",
             },
             # Commenter 1 commented on Video 1
