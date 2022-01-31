@@ -130,7 +130,7 @@ def input_final_facebook_posts_objects_accounts_classes() -> pd.DataFrame:
     """Input dataframe of facebook posts objects account classes."""
     return pd.DataFrame(
         {
-            "url_post_id": ["fp1", "fp2", "fp3", "fp3", "fp_4"],
+            "url_post_id": ["fp_1", "fp_2", "fp_3", "fp_3", "fp_4"],
             "account_handle": ["u_1", "u_1", "u_2", "u_2", "u_3"],
             "account_name": ["u_1", "u_1", "u_2", "u_2", "u_3"],
             "account_label": [
