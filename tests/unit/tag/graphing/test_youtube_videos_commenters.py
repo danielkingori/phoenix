@@ -107,19 +107,64 @@ def input_final_youtube_comments_objects_accounts_classes() -> pd.DataFrame:
                 "video_id": "fp_3",
                 "account_label": "commenter_label_1",
             },
-            # Commenter 3 for post 3
-            {
-                "author_channel_id": "ca_3",
-                "author_display_name": "ca_3",
-                "video_id": "fp_3",
-                "account_label": "commenter_label_1",
-            },
+            # Commenter 3 has no account_label so is excluded from this
             # User 1 for post 4
             {
                 "author_channel_id": "u_1",
                 "author_display_name": "u_1",
                 "video_id": "fp_4",
                 "account_label": "commenter_label_3",
+            },
+        ]
+    )
+
+
+@pytest.fixture
+def input_final_youtube_comments() -> pd.DataFrame:
+    """Input dataframe of youtube comments accounts classes."""
+    return pd.DataFrame(
+        [
+            # Commenter 1 for Video 1
+            {
+                "author_channel_id": "ca_1",
+                "author_display_name": "ca_d_1",
+                "video_id": "fp_1",
+            },
+            # Commenter 1 for post not found
+            {
+                "author_channel_id": "ca_1",
+                "author_display_name": "ca_d_1",
+                "video_id": "fp_non",
+            },
+            # Commenter 2 for post 1
+            {
+                "author_channel_id": "ca_2",
+                "author_display_name": "ca_2",
+                "video_id": "fp_1",
+            },
+            # Commenter 2 for post 2
+            {
+                "author_channel_id": "ca_2",
+                "author_display_name": "ca_2",
+                "video_id": "fp_2",
+            },
+            # Commenter 2 for post 3
+            {
+                "author_channel_id": "ca_2",
+                "author_display_name": "ca_2",
+                "video_id": "fp_3",
+            },
+            # Commenter 3 for post 3
+            {
+                "author_channel_id": "ca_3",
+                "author_display_name": "ca_3",
+                "video_id": "fp_3",
+            },
+            # User 1 for post 4
+            {
+                "author_channel_id": "u_1",
+                "author_display_name": "u_1",
+                "video_id": "fp_4",
             },
         ]
     )
@@ -251,7 +296,8 @@ def nodes() -> pd.DataFrame:
                 "node_name": "ca_3",
                 "node_label": "ca_3",
                 # Inherits the account label from the connected u_2
-                "account_label": "acc_label_1, acc_label_2, commenter_label_1",
+                # It has no account labale
+                "account_label": "acc_label_1, acc_label_2",
                 "type": "commenter",
             },
         ]
@@ -260,6 +306,7 @@ def nodes() -> pd.DataFrame:
 
 def test_process(
     input_final_youtube_videos_classes,
+    input_final_youtube_comments,
     input_final_youtube_comments_objects_accounts_classes,
     input_final_youtube_videos_objects_accounts_classes,
     edges,
@@ -270,6 +317,7 @@ def test_process(
     yvoac = input_final_youtube_videos_objects_accounts_classes
     output_edges, output_nodes = youtube_videos_commenters.process(
         final_youtube_videos_classes=input_final_youtube_videos_classes,
+        final_youtube_comments=input_final_youtube_comments,
         final_youtube_comments_objects_accounts_classes=ycoac,
         final_youtube_videos_objects_accounts_classes=yvoac,
         quantile_of_commenters=0.1,

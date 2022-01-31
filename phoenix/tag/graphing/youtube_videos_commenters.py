@@ -13,6 +13,10 @@ INPUT_DATASETS_ARTIFACT_KEYS = {
         "artifact_key": "final-youtube_videos_classes",
         "url_config_override": {},
     },
+    "final_youtube_comments": {
+        "artifact_key": "final-youtube_comments",
+        "url_config_override": {},
+    },
     "final_youtube_comments_objects_accounts_classes": {
         "artifact_key": "final-objects_accounts_classes",
         "url_config_override": {"OBJECT_TYPE": "youtube_comments"},
@@ -39,12 +43,13 @@ def process_channel_nodes(
 
 
 def process_commenter_nodes(
+    final_youtube_comments: pd.DataFrame,
     final_youtube_comments_objects_accounts_classes: pd.DataFrame,
     final_youtube_videos_objects_accounts_classes: pd.DataFrame,
 ) -> pd.DataFrame:
     """Process youtube comments to create set of nodes of type `youtube_commenter`."""
     inheritable_labels = final_youtube_videos_objects_accounts_classes[["id", "account_label"]]
-    to_join = final_youtube_comments_objects_accounts_classes[["author_channel_id", "video_id"]]
+    to_join = final_youtube_comments[["author_channel_id", "author_display_name", "video_id"]]
     to_join = to_join.rename(columns={"video_id": "id"})
     inherited_classes_df = to_join.merge(inheritable_labels, on="id", how="inner")
     inherited_classes_df = inherited_classes_df.drop("id", axis=1)
@@ -102,16 +107,15 @@ def process_commenter_video_edges(
 
 def process(
     final_youtube_videos_classes: pd.DataFrame,
+    final_youtube_comments: pd.DataFrame,
     final_youtube_comments_objects_accounts_classes: pd.DataFrame,
     final_youtube_videos_objects_accounts_classes: pd.DataFrame,
     quantile_of_commenters=0.99,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Process youtube channels, videos, and commenters into network graph."""
-    comments_objects_accounts_classes = final_youtube_comments_objects_accounts_classes
-    if quantile_of_commenters:
-        commenters_videos = comments_objects_accounts_classes[
-            ["author_channel_id", "video_id"]
-        ].drop_duplicates()
+    comments = final_youtube_comments
+    commenters_videos = comments[["author_channel_id", "video_id"]].drop_duplicates()
+    if quantile_of_commenters and commenters_videos.shape[0] > 3000:
         commenter_comment_counts = commenters_videos["author_channel_id"].value_counts()
         cut_off = commenter_comment_counts.quantile(quantile_of_commenters)
         filtered_commenter_comment_counts = commenter_comment_counts[
@@ -121,26 +125,25 @@ def process(
         logging.info(
             f"Commenters have been filtered to include a subset of: {number_of_commenters}."
         )
-        comments_objects_accounts_classes = comments_objects_accounts_classes[
-            comments_objects_accounts_classes["author_channel_id"].isin(
-                filtered_commenter_comment_counts.index
-            )
+        comments = comments[
+            comments["author_channel_id"].isin(filtered_commenter_comment_counts.index)
         ]
     # edges
     channel_videos_edges = process_channel_video_edges(
         final_youtube_videos_classes,
-        comments_objects_accounts_classes,
+        comments,
     )
     commenter_videos_edges = process_commenter_video_edges(
         final_youtube_videos_classes,
-        comments_objects_accounts_classes,
+        comments,
     )
     edges = channel_videos_edges.append(commenter_videos_edges)
 
     # nodes
     account_nodes = process_channel_nodes(final_youtube_videos_objects_accounts_classes)
     commenter_nodes = process_commenter_nodes(
-        comments_objects_accounts_classes,
+        comments,
+        final_youtube_comments_objects_accounts_classes,
         final_youtube_videos_objects_accounts_classes,
     )
     commenter_nodes = commenter_nodes[
@@ -149,8 +152,6 @@ def process(
     nodes = account_nodes.append(commenter_nodes)
     nodes = nodes.reset_index(drop=True)
 
-    edges = edges[edges["account_id_1"].isin(nodes["node_name"])]
-    edges = edges[edges["account_id_2"].isin(nodes["node_name"])]
     edges = edges.reset_index(drop=True)
 
     return edges, nodes
