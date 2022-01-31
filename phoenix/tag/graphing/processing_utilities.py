@@ -117,3 +117,34 @@ def account_post_commenter_graph_to_commenter_edges(
     nodes_df = nodes[nodes["type"] == "commenter"]
     nodes_df = nodes_df.drop(columns=["type"])
     return df, nodes_df
+
+
+def commenters_group_edges(
+    df: pd.DataFrame, object_id_column_name: str, size_column_name: str
+) -> pd.DataFrame:
+    """Group the edges for commenters.
+
+    Creating `class` `language_sentiment` and size column with given name.
+    """
+    df_classes = reduce_concat_classes(
+        df[["account_id_1", "account_id_2", "class"]], ["account_id_1", "account_id_2"], "class"
+    )
+    df_language_sentiment = reduce_concat_classes(
+        df[["account_id_1", "account_id_2", "language_sentiment"]],
+        ["account_id_1", "account_id_2"],
+        "language_sentiment",
+    )
+    df_class_language_sentiment = df_classes.merge(
+        df_language_sentiment, on=["account_id_1", "account_id_2"], how="inner"
+    )
+    # Remove the class duplication
+    df_size = df[["account_id_1", "account_id_2", object_id_column_name]]
+    # DataFrame with row per post and user name
+    df_size = df_size.drop_duplicates()
+    df_size = (
+        df_size.groupby(["account_id_1", "account_id_2"]).size().reset_index(name=size_column_name)
+    )
+    df = df_size.merge(
+        df_class_language_sentiment, on=["account_id_1", "account_id_2"], validate="one_to_one"
+    )
+    return df

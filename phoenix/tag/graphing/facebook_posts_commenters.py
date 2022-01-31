@@ -21,6 +21,8 @@ INPUT_DATASETS_ARTIFACT_KEYS = {
     },
 }
 
+SIZE_COLUMN_NAME = "post_count"
+
 
 def process_account_nodes(
     final_facebook_posts_objects_accounts_classes: pd.DataFrame,
@@ -47,35 +49,6 @@ def process_commenter_nodes(
     return df
 
 
-def group_edges(df: pd.DataFrame) -> pd.DataFrame:
-    """Group the edges.
-
-    Creating `class` `language_sentiment` and `post_count`.
-    """
-    df_classes = processing_utilities.reduce_concat_classes(
-        df[["account_id_1", "account_id_2", "class"]], ["account_id_1", "account_id_2"], "class"
-    )
-    df_language_sentiment = processing_utilities.reduce_concat_classes(
-        df[["account_id_1", "account_id_2", "language_sentiment"]],
-        ["account_id_1", "account_id_2"],
-        "language_sentiment",
-    )
-    df_class_language_sentiment = df_classes.merge(
-        df_language_sentiment, on=["account_id_1", "account_id_2"], how="inner"
-    )
-    # Remove the class duplication
-    df_size = df[["account_id_1", "account_id_2", "url_post_id"]]
-    # DataFrame with row per post and user name
-    df_size = df_size.drop_duplicates()
-    df_size = (
-        df_size.groupby(["account_id_1", "account_id_2"]).size().reset_index(name="post_count")
-    )
-    df = df_size.merge(
-        df_class_language_sentiment, on=["account_id_1", "account_id_2"], validate="one_to_one"
-    )
-    return df
-
-
 def process_account_commenter_edges(
     final_facebook_posts_classes: pd.DataFrame,
     final_facebook_comments_inherited_accounts_classes: pd.DataFrame,
@@ -90,7 +63,7 @@ def process_account_commenter_edges(
     df = facebook_posts_classes.merge(facebook_comments, on="url_post_id")
     df["account_id_1"] = df["account_handle"]
     df["account_id_2"] = df["user_name"]
-    return group_edges(df)
+    return processing_utilities.commenters_group_edges(df, "url_post_id", SIZE_COLUMN_NAME)
 
 
 def process_commenter_commenter_edges(
@@ -111,7 +84,7 @@ def process_commenter_commenter_edges(
     df = df.merge(facebook_comments, on="url_post_id")
     df["account_id_2"] = df["user_name"]
     df = df[df["account_id_1"] != df["account_id_2"]]
-    df = group_edges(df)
+    df = processing_utilities.commenters_group_edges(df, "url_post_id", SIZE_COLUMN_NAME)
     # Doing a deduplicate columns which contains the sorted account ids
     # to deduplicate the dataframe from have two vesion of the same commeter
     # connection but in both directions
