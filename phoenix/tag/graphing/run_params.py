@@ -55,10 +55,15 @@ def create(
         "GRAPH_TYPE": graph_type,
     }
 
-    input_datasets_urls = {
-        artifact_key: art_url_reg.get_url(artifact_key, url_config)
-        for artifact_key in input_datasets_artifact_keys
-    }
+    if isinstance(input_datasets_artifact_keys, dict):
+        input_datasets_urls = get_input_datasets_urls_from_dict(
+            input_datasets_artifact_keys, url_config, art_url_reg
+        )
+    else:
+        input_datasets_urls = {
+            artifact_key: art_url_reg.get_url(artifact_key, url_config)
+            for artifact_key in input_datasets_artifact_keys
+        }
 
     if edges_url is None:
         edges_url = art_url_reg.get_url("graphing-edges", url_config)
@@ -81,3 +86,16 @@ def create(
         general=general_run_params,
         urls=urls,
     )
+
+
+def get_input_datasets_urls_from_dict(
+    d: Dict[str, Dict[str, Any]], url_config, art_url_reg
+) -> Dict[str, str]:
+    """Get the input_datasets_urls from a dictionary."""
+    input_datasets_urls: Dict[str, str] = {}
+    for input_key, art_config in d.items():
+        artifact_key = art_config.get("artifact_key")
+        url_config_override = art_config.get("url_config_override", {})
+        url = art_url_reg.get_url(artifact_key, url_config | url_config_override)
+        input_datasets_urls[input_key] = url
+    return input_datasets_urls

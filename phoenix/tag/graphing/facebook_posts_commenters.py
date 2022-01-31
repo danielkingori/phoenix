@@ -6,11 +6,20 @@ import pandas as pd
 from phoenix.tag.graphing import phoenix_graphistry, processing_utilities
 
 
-INPUT_DATASETS_ARTIFACT_KEYS = [
-    "tagging_runs-facebook_comments_classes_final",
-    "tagging_runs-facebook_posts_classes_final",
-    "final-accounts",
-]
+INPUT_DATASETS_ARTIFACT_KEYS = {
+    "final_facebook_posts_classes": {
+        "artifact_key": "final-facebook_posts_classes",
+        "url_config_override": {},
+    },
+    "final_facebook_comments_inherited_accounts_classes": {
+        "artifact_key": "final-objects_accounts_classes",
+        "url_config_override": {"OBJECT_TYPE": "facebook_comments_inherited"},
+    },
+    "final_facebook_posts_objects_accounts_classes": {
+        "artifact_key": "final-objects_accounts_classes",
+        "url_config_override": {},
+    },
+}
 
 
 def process_account_nodes(
