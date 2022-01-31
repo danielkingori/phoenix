@@ -269,6 +269,7 @@ def test_process(
         final_facebook_posts_classes=input_final_facebook_posts_classes,
         final_facebook_comments_inherited_accounts_classes=fciac,
         final_facebook_posts_objects_accounts_classes=fpoac,
+        quantile_of_commenters=0.1,
     )
     r_edges = edges.sort_values(by=["account_id_1", "account_id_2"]).reset_index(drop=True)
     r_output_edges = output_edges.sort_values(by=["account_id_1", "account_id_2"]).reset_index(

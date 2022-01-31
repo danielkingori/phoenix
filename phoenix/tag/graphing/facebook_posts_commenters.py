@@ -1,6 +1,8 @@
 """Processing and config for facebook_posts_commentors graph."""
 from typing import Tuple
 
+import logging
+
 import pandas as pd
 
 from phoenix.tag.graphing import phoenix_graphistry, processing_utilities
@@ -99,10 +101,25 @@ def process(
     final_facebook_posts_classes: pd.DataFrame,
     final_facebook_comments_inherited_accounts_classes: pd.DataFrame,
     final_facebook_posts_objects_accounts_classes: pd.DataFrame,
+    quantile_of_commenters=0.99,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Process facebook accounts, posts, and commenters into three type network graph."""
     fciac_df = final_facebook_comments_inherited_accounts_classes
     fciac_df["url_post_id"] = fciac_df["post_id"].astype("string")
+    if quantile_of_commenters:
+        commenter_comment_counts = (
+            fciac_df[["user_name", "url_post_id"]].drop_duplicates()["user_name"].value_counts()
+        )
+        cut_off = commenter_comment_counts.quantile(quantile_of_commenters)
+        filtered_commenter_comment_counts = commenter_comment_counts[
+            commenter_comment_counts >= cut_off
+        ]
+        number_of_commenters = filtered_commenter_comment_counts.shape[0]
+        logging.info(
+            f"Commenters have been filtered to include a subset of: {number_of_commenters}."
+        )
+        fciac_df = fciac_df[fciac_df["user_name"].isin(filtered_commenter_comment_counts.index)]
+
     # edges
     account_commenter_edges = process_account_commenter_edges(
         final_facebook_posts_classes, fciac_df
@@ -114,7 +131,7 @@ def process(
 
     # nodes
     account_nodes = process_account_nodes(final_facebook_posts_objects_accounts_classes)
-    commenter_nodes = process_commenter_nodes(final_facebook_comments_inherited_accounts_classes)
+    commenter_nodes = process_commenter_nodes(fciac_df)
     commenter_nodes = commenter_nodes[
         ~commenter_nodes["node_name"].isin(account_nodes["node_name"])
     ]
