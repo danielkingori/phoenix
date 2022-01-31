@@ -6,129 +6,137 @@ import pandas as pd
 from phoenix.tag.graphing import phoenix_graphistry, processing_utilities
 
 
-INPUT_DATASETS_ARTIFACT_KEYS = [
-    "tagging_runs-youtube_comments_classes_final",
-    "tagging_runs-youtube_videos_classes_final",
-    "final-accounts",
-]
+INPUT_DATASETS_ARTIFACT_KEYS = {
+    "final_youtube_videos_classes": {
+        "artifact_key": "final-youtube_videos_classes",
+        "url_config_override": {},
+    },
+    "final_youtube_comments_objects_accounts_classes": {
+        "artifact_key": "final-objects_accounts_classes",
+        "url_config_override": {"OBJECT_TYPE": "youtube_comments"},
+    },
+    "final_youtube_videos_objects_accounts_classes": {
+        "artifact_key": "final-objects_accounts_classes",
+        "url_config_override": {},
+    },
+}
+
+SIZE_COLUMN_NAME = "video_count"
 
 
-def process_channel_nodes(final_accounts: pd.DataFrame) -> pd.DataFrame:
+def process_channel_nodes(
+    final_youtube_videos_objects_accounts_classes: pd.DataFrame,
+) -> pd.DataFrame:
     """Process youtube accounts (channels) to create set of nodes of type `youtube_channel`."""
-    cols_to_keep = ["object_user_name", "object_user_url", "account_label"]
-    df = final_accounts[cols_to_keep]
-    df["channel_id"] = df["object_user_url"].str.split("/").str[-1]
+    cols_to_keep = ["channel_id", "channel_title", "account_label"]
+    df = final_youtube_videos_objects_accounts_classes[cols_to_keep]
     df = processing_utilities.reduce_concat_classes(df, ["channel_id"], "account_label")
-    df["node_name"] = df["channel_id"]
+    df = df.rename(columns={"channel_id": "node_name", "channel_title": "node_label"})
     df["type"] = "channel"
-    df["node_label"] = df["object_user_name"]
     return df
 
 
-def process_video_nodes(final_youtube_videos_classes: pd.DataFrame) -> pd.DataFrame:
-    """Process youtube videos to create set of nodes of type `youtube_video`."""
-    cols_to_keep = [
-        "object_id",
-        "title",
-        "description",
-        "video_url",
-        "channel_title",
-        "channel_id",
-        "channel_url",
-        "language_sentiment",
-        "class",
-    ]
-    df = final_youtube_videos_classes[cols_to_keep]
-    df = processing_utilities.reduce_concat_classes(df, ["object_id"], "class")
-    df["node_name"] = df["object_id"]
-    df["type"] = "video"
-    df["node_label"] = df["title"]
-    return df
-
-
-def process_commenter_nodes(final_youtube_comments_classes: pd.DataFrame) -> pd.DataFrame:
+def process_commenter_nodes(
+    final_youtube_comments_objects_accounts_classes: pd.DataFrame,
+    final_youtube_videos_objects_accounts_classes: pd.DataFrame,
+) -> pd.DataFrame:
     """Process youtube comments to create set of nodes of type `youtube_commenter`."""
-    cols_to_keep = ["author_channel_id", "author_display_name", "class"]
-    df = final_youtube_comments_classes[cols_to_keep]
-    df = processing_utilities.reduce_concat_classes(df, ["author_channel_id"], "class")
-    df["node_name"] = df["author_channel_id"]
+    inheritable_labels = final_youtube_videos_objects_accounts_classes[["id", "account_label"]]
+    to_join = final_youtube_comments_objects_accounts_classes[["author_channel_id", "video_id"]]
+    to_join = to_join.rename(columns={"video_id": "id"})
+    inherited_classes_df = to_join.merge(inheritable_labels, on="id", how="inner")
+    inherited_classes_df = inherited_classes_df.drop("id", axis=1)
+    cols_to_keep = ["author_channel_id", "author_display_name", "account_label"]
+    df = final_youtube_comments_objects_accounts_classes[cols_to_keep]
+    df = df.append(inherited_classes_df)
+    df = processing_utilities.reduce_concat_classes(df, ["author_channel_id"], "account_label")
+    df = df.rename(columns={"author_channel_id": "node_name", "author_display_name": "node_label"})
     df["type"] = "commenter"
-    df["node_label"] = df["author_display_name"]
     return df
 
 
-def process_channel_video_edges(final_youtube_videos_classes: pd.DataFrame) -> pd.DataFrame:
+def process_channel_video_edges(
+    final_youtube_videos_classes: pd.DataFrame,
+    final_youtube_comments_objects_accounts_classes: pd.DataFrame,
+) -> pd.DataFrame:
     """Process edges from channels to videos."""
-    df = final_youtube_videos_classes[["object_id", "channel_id"]]
-    df = df.drop_duplicates()
-    df["source_node"] = df["channel_id"]
-    df["destination_node"] = df["object_id"]
-    return df
+    comments = final_youtube_comments_objects_accounts_classes[["author_channel_id", "video_id"]]
+    comments = comments.rename(columns={"video_id": "id"})
+    comments = comments.drop_duplicates()
+    to_keep = ["channel_id", "id", "language_sentiment", "class"]
+    classes = final_youtube_videos_classes[to_keep]
+    df = classes.merge(comments, on="id")
+    df["account_id_1"] = df["channel_id"]
+    df["account_id_2"] = df["author_channel_id"]
+    return processing_utilities.commenters_group_edges(df, "id", SIZE_COLUMN_NAME)
 
 
-def process_commenter_video_edges(final_youtube_comments_classes: pd.DataFrame) -> pd.DataFrame:
+def process_commenter_video_edges(
+    final_youtube_videos_classes: pd.DataFrame,
+    final_youtube_comments_objects_accounts_classes: pd.DataFrame,
+) -> pd.DataFrame:
     """Process edges from commenters to videos."""
     # Filter for only top 1% of commenters
-    commenter_comment_counts = final_youtube_comments_classes["author_channel_id"].value_counts()
-    cut_off = commenter_comment_counts.quantile(0.99)
-    filtered_commenter_comment_counts = commenter_comment_counts[
-        commenter_comment_counts >= cut_off
-    ]
-    filtered_commenter_comment_counts
-    final_youtube_comments_classes = final_youtube_comments_classes[
-        final_youtube_comments_classes["author_channel_id"].isin(
-            filtered_commenter_comment_counts.index
-        )
-    ]
-
-    df = final_youtube_comments_classes[["video_id", "author_display_name", "author_channel_id"]]
-    df = df.groupby(["video_id", "author_channel_id"]).size().reset_index()
-    df = df.rename(columns={0: "times_commented"})
-    df["source_node"] = df["author_channel_id"]
-    df["destination_node"] = df["video_id"]
+    classes = final_youtube_videos_classes[["id", "class", "language_sentiment"]]
+    # We don't need the class from the comments because they are inherited
+    comments = final_youtube_comments_objects_accounts_classes[["author_channel_id", "video_id"]]
+    comments = comments.rename(columns={"video_id": "id"})
+    comments = comments.drop_duplicates()
+    df = classes.merge(comments, on="id")
+    df = df.rename(columns={"author_channel_id": "account_id_1"})
+    df = df.merge(comments, on="id")
+    df["account_id_2"] = df["author_channel_id"]
+    df = df[df["account_id_1"] != df["account_id_2"]]
+    df = processing_utilities.commenters_group_edges(df, "id", SIZE_COLUMN_NAME)
+    # Doing a deduplicate columns which contains the sorted account ids
+    # to deduplicate the dataframe from have two vesion of the same commeter
+    # connection but in both directions
+    df_ids = df[["account_id_1", "account_id_2"]]
+    df["deduplicate"] = [", ".join(sorted(filter(None, x))) for x in df_ids.to_numpy()]
+    df = df.drop_duplicates(subset=["deduplicate"])
+    df = df.drop(["deduplicate"], axis=1)
     return df
 
 
 def process(
-    final_youtube_comments_classes: pd.DataFrame,
     final_youtube_videos_classes: pd.DataFrame,
-    final_accounts: pd.DataFrame,
+    final_youtube_comments_objects_accounts_classes: pd.DataFrame,
+    final_youtube_videos_objects_accounts_classes: pd.DataFrame,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """Process youtube channels, videos, and commenters into three type network graph."""
+    """Process youtube channels, videos, and commenters into network graph."""
     # edges
-    channel_videos_edges = process_channel_video_edges(final_youtube_videos_classes)
-    commenter_videos_edges = process_commenter_video_edges(final_youtube_comments_classes)
-    channel_videos_edges = channel_videos_edges[
-        channel_videos_edges["object_id"].isin(commenter_videos_edges["video_id"])
-    ]
+    channel_videos_edges = process_channel_video_edges(
+        final_youtube_videos_classes,
+        final_youtube_comments_objects_accounts_classes,
+    )
+    commenter_videos_edges = process_commenter_video_edges(
+        final_youtube_videos_classes,
+        final_youtube_comments_objects_accounts_classes,
+    )
     edges = channel_videos_edges.append(commenter_videos_edges)
 
     # nodes
-    channel_nodes = process_channel_nodes(final_accounts)
-    channel_nodes = channel_nodes[channel_nodes["channel_id"].isin(edges["channel_id"])]
-    video_nodes = process_video_nodes(final_youtube_videos_classes)
-    video_nodes = video_nodes[video_nodes["object_id"].isin(edges["video_id"])]
-    commenter_nodes = process_commenter_nodes(final_youtube_comments_classes)
+    account_nodes = process_channel_nodes(final_youtube_videos_objects_accounts_classes)
+    commenter_nodes = process_commenter_nodes(
+        final_youtube_comments_objects_accounts_classes,
+        final_youtube_videos_objects_accounts_classes,
+    )
     commenter_nodes = commenter_nodes[
-        commenter_nodes["author_channel_id"].isin(edges["author_channel_id"])
+        ~commenter_nodes["node_name"].isin(account_nodes["node_name"])
     ]
-    nodes = channel_nodes.append(video_nodes).append(commenter_nodes)
+    nodes = account_nodes.append(commenter_nodes)
     nodes = nodes.reset_index(drop=True)
 
-    edges = edges[edges["source_node"].isin(nodes["node_name"])]
-    edges = edges[edges["destination_node"].isin(nodes["node_name"])]
+    edges = edges[edges["account_id_1"].isin(nodes["node_name"])]
+    edges = edges[edges["account_id_2"].isin(nodes["node_name"])]
     edges = edges.reset_index(drop=True)
-
-    edges, nodes = processing_utilities.account_post_commenter_graph_to_commenter_edges(
-        edges, nodes
-    )
 
     return edges, nodes
 
 
 plot_config = phoenix_graphistry.PlotConfig(
-    edge_source_col="source_node",
-    edge_destination_col="destination_node",
+    edge_source_col="account_id_1",
+    edge_destination_col="account_id_2",
     nodes_col="node_name",
     graph_name="youtube_commenters",
     graph_description="""
@@ -139,5 +147,5 @@ plot_config = phoenix_graphistry.PlotConfig(
     directed=False,
     color_by_type=False,
     node_label_col="node_label",
-    edge_weight_col="joint_num_comments",
+    edge_weight_col="video_count",
 )
