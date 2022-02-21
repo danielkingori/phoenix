@@ -41,6 +41,14 @@ def sflm():
     default=0,
     help=("Start notebook from offset."),
 )
+@click.option(
+    "--exclude_class_mappings_update",
+    is_flag=True,
+    help=(
+        "Exclude update of the class mappings google sheet."
+        " Still includes the Accounts labels being pulled from the google sheet."
+    ),
+)
 @click.pass_context
 def create_from_labels(
     ctx,
@@ -48,6 +56,7 @@ def create_from_labels(
     tenant_id,
     object_types,
     start_offset,
+    exclude_class_mappings_update,
 ):
     """Run create of the sflm from the labels.
 
@@ -67,7 +76,9 @@ def create_from_labels(
     """
     cur_run_params = run_params.general.create(artifact_env, tenant_id)
     extra_parameters = utils.get_extra_parameters(ctx)
-    sflm_papermill_runs = get_run_objects(cur_run_params, object_types, extra_parameters)
+    sflm_papermill_runs = get_run_objects(
+        cur_run_params, object_types, extra_parameters, exclude_class_mappings_update
+    )
     notebook_count = 0
     for sflm_papermill_run in sflm_papermill_runs:
         notebook_count = notebook_count + 1
@@ -85,6 +96,7 @@ def get_run_objects(
     cur_run_params: run_params.general.GeneralRunParams,
     object_types: List[str],
     extra_parameters: Dict[str, str],
+    exclude_class_mappings_update: bool,
 ) -> List[SFLMPapermillRun]:
     """Get the run objects."""
     base_parameters = {
@@ -95,14 +107,21 @@ def get_run_objects(
     for object_type in object_types:
         sflm_papermill_runs.append(
             single_object_type_notebook_run(
-                "pull_accounts_labelling_sheet.ipynb", cur_run_params, object_type, base_parameters
+                "pull_accounts_labelling_sheet.ipynb",
+                cur_run_params,
+                object_type,
+                base_parameters,
             )
         )
-        sflm_papermill_runs.append(
-            single_object_type_notebook_run(
-                "pull_objects_labelling_sheet.ipynb", cur_run_params, object_type, base_parameters
+        if not exclude_class_mappings_update:
+            sflm_papermill_runs.append(
+                single_object_type_notebook_run(
+                    "pull_objects_labelling_sheet.ipynb",
+                    cur_run_params,
+                    object_type,
+                    base_parameters,
+                )
             )
-        )
         sflm_papermill_runs.append(
             single_object_type_notebook_run(
                 "persist_sflm_to_config.ipynb", cur_run_params, object_type, base_parameters
