@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import dataclasses
 import datetime
 
+from phoenix.common.config import tenant
 from phoenix.common.run_params import base, general
 from phoenix.scrape import crowdtangle
 
@@ -47,7 +48,7 @@ def create(
     art_url_reg = general_run_params.art_url_reg
 
     crowdtangle_list_ids = get_crowdtangle_list_ids(
-        crowdtangle_list_ids, general_run_params.tenant_config
+        general_run_params.tenant_config, crowdtangle_list_ids
     )
 
     url_config: Dict[str, Any] = {}
@@ -75,13 +76,16 @@ def parse_scrape_date(date_str: str) -> datetime.datetime:
     return dt
 
 
-def get_crowdtangle_list_ids(crowdtangle_list_ids, tenant_config) -> List[str]:
+def get_crowdtangle_list_ids(
+    tenant_config: tenant.TenantConfig,
+    crowdtangle_list_ids: Optional[Union[List[str], str]] = None,
+) -> List[str]:
     """Get the crowdtangle_list_ids."""
     if isinstance(crowdtangle_list_ids, str):
         crowdtangle_list_ids = crowdtangle.process_scrape_list_id(crowdtangle_list_ids)
     elif isinstance(crowdtangle_list_ids, list):
         crowdtangle_list_ids = crowdtangle_list_ids
-    else:
+    elif tenant_config.crowdtangle_scrape_list_id:
         crowdtangle_list_ids = crowdtangle.process_scrape_list_id(
             tenant_config.crowdtangle_scrape_list_id
         )
