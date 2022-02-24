@@ -1,5 +1,5 @@
 """RunParams facebook posts."""
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import dataclasses
 import datetime
@@ -9,6 +9,7 @@ from phoenix.scrape import crowdtangle
 
 
 DATE_FORMAT = "%Y-%m-%d"
+DEFAULT_SCRAPE_SINCE_DAYS = 3
 
 
 @dataclasses.dataclass
@@ -45,15 +46,6 @@ def create(
 
     art_url_reg = general_run_params.art_url_reg
 
-    if scrape_since_days:
-        scrape_since_days = int(scrape_since_days)
-        scrape_end_date = general_run_params.run_dt.dt
-        scrape_start_date = general_run_params.run_dt.dt - datetime.timedelta(
-            days=int(scrape_since_days)
-        )
-    else:
-        scrape_since_days = None
-
     crowdtangle_list_ids = get_crowdtangle_list_ids(
         crowdtangle_list_ids, general_run_params.tenant_config
     )
@@ -63,14 +55,15 @@ def create(
         config=url_config,
         source=art_url_reg.get_url("source-posts", url_config),
     )
-    nor_scrape_start_date = normalise_scrape_start_date(general_run_params, scrape_start_date)
-    nor_scrape_end_date = normalise_scrape_end_date(general_run_params, scrape_end_date)
+    scrape_since_days, scrape_start_date, scrape_end_date = get_scraping_range(
+        general_run_params, scrape_since_days, scrape_start_date, scrape_end_date
+    )
     return FacebookPostsScrapeRunParams(
         general=general_run_params,
         urls=urls,
         scrape_since_days=scrape_since_days,
-        scrape_start_date=nor_scrape_start_date,
-        scrape_end_date=nor_scrape_end_date,
+        scrape_start_date=scrape_start_date,
+        scrape_end_date=scrape_end_date,
         crowdtangle_list_ids=crowdtangle_list_ids,
     )
 
@@ -99,34 +92,33 @@ def get_crowdtangle_list_ids(crowdtangle_list_ids, tenant_config) -> List[str]:
     return crowdtangle_list_ids
 
 
-def normalise_scrape_start_date(
-    general_run_params,
+def get_scraping_range(
+    general_run_params: general.GeneralRunParams,
+    scrape_since_days: Optional[Union[str, int]] = None,
     scrape_start_date: Optional[Union[datetime.datetime, str]] = None,
-) -> datetime.datetime:
-    """Normalise the scrape_start_date."""
-    if isinstance(scrape_start_date, str):
-        scrape_start_date = parse_scrape_date(scrape_start_date)
-
-    if scrape_start_date is None:
-        scrape_start_date = general_run_params.run_dt.dt - datetime.timedelta(days=3)
-
-    if not isinstance(scrape_start_date, datetime.datetime):
-        raise RuntimeError("Scrape start date must be a datetime")
-
-    return scrape_start_date
-
-
-def normalise_scrape_end_date(
-    general_run_params,
     scrape_end_date: Optional[Union[datetime.datetime, str]] = None,
-) -> datetime.datetime:
-    """Normalise the scrape_start_date."""
+) -> Tuple[Union[int, None], datetime.datetime, datetime.datetime]:
+    """Get the scraping range."""
+    if scrape_since_days and scrape_start_date:
+        raise ValueError("Cannot set scrape_since_days and scrape_start_date.")
+
+    if scrape_since_days or scrape_since_days == 0:
+        scrape_since_days = int(scrape_since_days)
+    else:
+        scrape_since_days = DEFAULT_SCRAPE_SINCE_DAYS
+
     if isinstance(scrape_end_date, str):
         scrape_end_date = parse_scrape_date(scrape_end_date)
 
-    if scrape_end_date is None:
+    if not scrape_end_date:
         scrape_end_date = general_run_params.run_dt.dt
 
-    if not isinstance(scrape_end_date, datetime.datetime):
-        raise RuntimeError("Scrape end date must be a datetime")
-    return scrape_end_date
+    if isinstance(scrape_start_date, str):
+        scrape_start_date = parse_scrape_date(scrape_start_date)
+
+    if scrape_start_date:
+        scrape_since_days = None
+    else:
+        scrape_start_date = scrape_end_date - datetime.timedelta(days=int(scrape_since_days))
+
+    return (scrape_since_days, scrape_start_date, scrape_end_date)
