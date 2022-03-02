@@ -88,13 +88,13 @@ cryptography==3.4.7
     # via paramiko
 cycler==0.10.0
     # via matplotlib
-dask[complete]==2021.09.1
+dask[complete]==2022.2.1
     # via
     #   -r requirements/common.in
     #   distributed
 dataclasses==0.6
     # via tentaclio
-distributed==2021.09.1
+distributed==2022.02.1
     # via dask
 docutils==0.15.2
     # via awscli
@@ -229,6 +229,7 @@ packaging==21.0
     # via
     #   bokeh
     #   dask
+    #   distributed
     #   google-api-core
     #   redshift-connector
 pandas==1.1.3
