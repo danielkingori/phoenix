@@ -55,7 +55,15 @@ def get(
         ArtifactDaskDataFrame object
     """
     url = artifacts_dataframe_url
-    ddf = dd.read_parquet(url, **from_parquet_params)
+    try:
+        ddf = dd.read_parquet(url, **from_parquet_params)
+    except ValueError as e:
+        not_found_error = (
+            "No files satisfy the `require_extension` criteria"
+            " (files must end with ('.parq', '.parquet'))."
+        )
+        if not_found_error in str(e):
+            raise FileNotFoundError(e)
 
     return dtypes.ArtifactDaskDataFrame(url=artifacts_dataframe_url, dataframe=ddf)
 
