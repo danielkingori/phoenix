@@ -22,10 +22,9 @@ def test_dataframe_artifact_partitions(tmp_s3_dir):
         }
     )
     df["id"] = df["id"].astype("Int64")
-    df["group"] = df["group"].astype("category")
     ddf = artifacts.utils.pandas_to_dask(df)
 
-    a_df = artifacts.dask_dataframes.persist(artefact_url, ddf, ["group"])
+    a_df = artifacts.dask_dataframes.persist(artefact_url, ddf)
     e_url = f"{test_artefact_dir}{artefact_basename}"
     assert a_df.url == e_url
     pd.testing.assert_frame_equal(a_df.dataframe.compute(), df)

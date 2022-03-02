@@ -1,5 +1,5 @@
 """Artifacts Dask DataFrame interface."""
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import shutil
 from pathlib import Path
@@ -14,7 +14,6 @@ from phoenix.common.artifacts import dtypes
 def persist(
     artifacts_dataframe_url: str,
     dataframe: dd.DataFrame,
-    partition_cols: List[str],
     to_parquet_params: Dict[str, Any] = {},
 ) -> dtypes.ArtifactDaskDataFrame:
     """Persist a DataFrame as a partitioned parquet creating a ArtifactDataFrame.
