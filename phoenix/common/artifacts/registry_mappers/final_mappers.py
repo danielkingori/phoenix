@@ -18,7 +18,7 @@ MAPPERS: MapperDict = {
     ),
     "final-facebook_posts": partial(
         url_mapper,
-        (FINAL_BASE + "facebook_posts/facebook_posts_final.parquet"),
+        (FINAL_BASE + "facebook_posts/"),
     ),
     "final-facebook_posts_topics": partial(
         url_mapper,
