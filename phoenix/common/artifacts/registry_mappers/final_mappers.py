@@ -42,15 +42,15 @@ MAPPERS: MapperDict = {
     ),
     "final-facebook_comments": partial(
         url_mapper,
-        (FINAL_BASE + "facebook_comments/facebook_comments_final.parquet"),
+        (FINAL_BASE + "facebook_comments/"),
     ),
     "final-facebook_comments_topics": partial(
         url_mapper,
-        (FINAL_BASE + "facebook_comments_topics/facebook_comments_topics_final.parquet"),
+        (FINAL_BASE + "facebook_comments_topics/"),
     ),
     "final-facebook_comments_classes": partial(
         url_mapper,
-        (FINAL_BASE + "facebook_comments_classes/facebook_comments_classes_final.parquet"),
+        (FINAL_BASE + "facebook_comments_classes/"),
     ),
     "final-youtube_videos": partial(
         url_mapper,
