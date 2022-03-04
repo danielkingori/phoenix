@@ -22,11 +22,11 @@ MAPPERS: MapperDict = {
     ),
     "final-facebook_posts_topics": partial(
         url_mapper,
-        (FINAL_BASE + "facebook_posts_topics/facebook_posts_topics_final.parquet"),
+        (FINAL_BASE + "facebook_posts_topics/"),
     ),
     "final-facebook_posts_classes": partial(
         url_mapper,
-        (FINAL_BASE + "facebook_posts_classes/facebook_posts_classes_final.parquet"),
+        (FINAL_BASE + "facebook_posts_classes/"),
     ),
     "final-tweets": partial(
         url_mapper,
