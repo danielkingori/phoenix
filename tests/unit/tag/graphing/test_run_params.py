@@ -47,13 +47,20 @@ def test_create(
     )
     assert run_params
     assert isinstance(run_params, graphing_run_params.GraphingRunParams)
-    ROOT_GRAPH_URL = "s3://data-lake/tenant_id_1/graphing/tweets_retweet/"
-    ROOT_TAGGING_URL = "s3://data-lake/tenant_id_1/tagging_runs/year_filter=2022/month_filter=1/"
+    ROOT_TAGGING_URL = (
+        "s3://data-lake/tenant_id_1/tagging_runs/year_filter=2022/month_filter=1/tweets/"
+    )
+    ROOT_GRAPH_SUFFIX = (
+        "tenant_id_1/tagging_runs/year_filter=2022/month_filter=1/tweets/"
+        "graphing/tweets_retweet/"
+    )
+    ROOT_PUBLIC_GRAPH_URL = f"s3://public-bucket/{ROOT_GRAPH_SUFFIX}"
+    ROOT_GRAPH_URL = f"s3://data-lake/{ROOT_GRAPH_SUFFIX}"
 
     urls = run_params.urls
     assert urls.input_datasets == {
-        "tagging_runs-accounts_final": ROOT_TAGGING_URL + "tweets/accounts_final.parquet",
-        "tagging_runs-tweets_final": ROOT_TAGGING_URL + "tweets/tweets_final.parquet",
+        "tagging_runs-accounts_final": ROOT_TAGGING_URL + "accounts_final.parquet",
+        "tagging_runs-tweets_final": ROOT_TAGGING_URL + "tweets_final.parquet",
     }
 
     if edges_url is None:
@@ -66,7 +73,7 @@ def test_create(
         assert urls.nodes == "some_url_2"
     if graphistry_redirect_html_url is None:
         assert urls.graphistry_redirect_html == (
-            "s3://public-bucket/tenant_id_1/graphing/tweets_retweet/graphistry/redirect.html"
+            ROOT_PUBLIC_GRAPH_URL + "graphistry/redirect.html"
         )
     else:
         assert urls.graphistry_redirect_html == "some_url_3"
