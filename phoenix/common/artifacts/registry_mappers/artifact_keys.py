@@ -93,6 +93,9 @@ ArtifactKey = Literal[
     "tagging_runs-language_sentiment_objects",
     "tagging_runs-facebook_posts_final",
     "tagging_runs-facebook_posts_to_scrape",
+    # Tagging accounts
+    "tagging_runs-accounts_final",
+    "tagging_runs-objects_accounts_classes_final",
     # Labelling
     "labelling-output_notebook_base",
     # Clustering

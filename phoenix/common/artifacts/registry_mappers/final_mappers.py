@@ -78,10 +78,10 @@ MAPPERS: MapperDict = {
     ),
     "final-accounts": partial(
         url_mapper,
-        (FINAL_BASE + OBJECT_BASE + "_accounts/accounts_final.parquet"),
+        (FINAL_BASE + OBJECT_BASE + "_accounts/"),
     ),
     "final-objects_accounts_classes": partial(
         url_mapper,
-        (FINAL_BASE + OBJECT_BASE + "_objects_accounts_classes/accounts_classes_final.parquet"),
+        (FINAL_BASE + OBJECT_BASE + "_objects_accounts_classes/"),
     ),
 }

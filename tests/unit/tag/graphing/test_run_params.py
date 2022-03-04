@@ -12,7 +12,7 @@ URL_PREFIX = "s3://data-lake/"
 URL_PREFIX_PUBLIC_BUCKET = "s3://public-bucket/"
 OBJECT_TYPE = "tweets"
 GRAPH_TYPE = "retweet"
-INPUT_DATASETS_ARTIFACT_KEYS = ["final-accounts", "tagging_runs-tweets_final"]
+INPUT_DATASETS_ARTIFACT_KEYS = ["tagging_runs-accounts_final", "tagging_runs-tweets_final"]
 ARTIFACTS_ENVIRONMENT_KEY = "production"
 TENANT_ID = "tenant_id_1"
 
@@ -48,12 +48,11 @@ def test_create(
     assert run_params
     assert isinstance(run_params, graphing_run_params.GraphingRunParams)
     ROOT_GRAPH_URL = "s3://data-lake/tenant_id_1/graphing/tweets_retweet/"
-    ROOT_FINAL_URL = "s3://data-lake/tenant_id_1/final/"
     ROOT_TAGGING_URL = "s3://data-lake/tenant_id_1/tagging_runs/year_filter=2022/month_filter=1/"
 
     urls = run_params.urls
     assert urls.input_datasets == {
-        "final-accounts": ROOT_FINAL_URL + "tweets_accounts/accounts_final.parquet",
+        "tagging_runs-accounts_final": ROOT_TAGGING_URL + "tweets/accounts_final.parquet",
         "tagging_runs-tweets_final": ROOT_TAGGING_URL + "tweets/tweets_final.parquet",
     }
 

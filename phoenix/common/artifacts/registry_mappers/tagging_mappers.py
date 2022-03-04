@@ -154,4 +154,12 @@ MAPPERS: MapperDict = {
     "tagging_runs-clustering_dashboard": partial(
         shared_url_mapper.dashboard_url_mapper, TAGGING_PIPELINE_BASE + "clustering/"
     ),
+    "tagging_runs-accounts_final": partial(
+        url_mapper,
+        (TAGGING_PIPELINE_BASE + "accounts_final.parquet"),
+    ),
+    "tagging_runs-objects_accounts_classes_final": partial(
+        url_mapper,
+        (TAGGING_PIPELINE_BASE + "objects_accounts_classes_final.parquet"),
+    ),
 }
