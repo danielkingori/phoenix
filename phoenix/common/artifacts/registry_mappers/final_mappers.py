@@ -34,11 +34,11 @@ MAPPERS: MapperDict = {
     ),
     "final-tweets_topics": partial(
         url_mapper,
-        (FINAL_BASE + "tweets_topics/tweets_topics_final.parquet"),
+        (FINAL_BASE + "tweets_topics/"),
     ),
     "final-tweets_classes": partial(
         url_mapper,
-        (FINAL_BASE + "tweets_classes/tweets_classes_final.parquet"),
+        (FINAL_BASE + "tweets_classes/"),
     ),
     "final-facebook_comments": partial(
         url_mapper,
