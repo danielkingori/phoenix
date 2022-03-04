@@ -66,15 +66,15 @@ MAPPERS: MapperDict = {
     ),
     "final-youtube_comments": partial(
         url_mapper,
-        (FINAL_BASE + "youtube_comments/youtube_comments_final.parquet"),
+        (FINAL_BASE + "youtube_comments/"),
     ),
     "final-youtube_comments_topics": partial(
         url_mapper,
-        (FINAL_BASE + "youtube_comments_topics/youtube_comments_topics_final.parquet"),
+        (FINAL_BASE + "youtube_comments_topics/"),
     ),
     "final-youtube_comments_classes": partial(
         url_mapper,
-        (FINAL_BASE + "youtube_comments_classes/youtube_comments_classes_final.parquet"),
+        (FINAL_BASE + "youtube_comments_classes/"),
     ),
     "final-accounts": partial(
         url_mapper,
