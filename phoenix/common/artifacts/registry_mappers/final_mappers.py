@@ -30,7 +30,7 @@ MAPPERS: MapperDict = {
     ),
     "final-tweets": partial(
         url_mapper,
-        (FINAL_BASE + "tweets/tweets_final.parquet"),
+        (FINAL_BASE + "tweets/"),
     ),
     "final-tweets_topics": partial(
         url_mapper,
