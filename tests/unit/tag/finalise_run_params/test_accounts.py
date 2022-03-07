@@ -55,7 +55,9 @@ def test_create(
     )
 
     if accounts_final_url is None:
-        assert urls.accounts_final == ("s3://data-lake/tenant_id_1/final/youtube_videos_accounts/")
+        assert urls.accounts_final == (
+            "s3://data-lake/tenant_id_1/final/youtube_videos_accounts/accounts_final.parquet"
+        )
     else:
         assert urls.accounts_final == "some_url"
 
