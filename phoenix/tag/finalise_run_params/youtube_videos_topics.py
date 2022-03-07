@@ -52,12 +52,20 @@ def _get_urls(
         final_url = art_url_reg.get_url("final-youtube_videos_topics", url_config)
     if not final_url and rename_topic_to_class:
         final_url = art_url_reg.get_url("final-youtube_videos_classes", url_config)
+
+    if rename_topic_to_class:
+        tagging_final = art_url_reg.get_url(
+            "tagging_runs-youtube_videos_classes_final", url_config
+        )
+    else:
+        tagging_final = art_url_reg.get_url("tagging_runs-youtube_videos_topics_final", url_config)
+
     if not final_url:
         raise RuntimeError("Final URL is not set.")
     return topics_dtypes.TopicsFinaliseRunParamsURLs(
         config=url_config,
         input_dataset=art_url_reg.get_url("tagging_runs-youtube_videos_final", url_config),
         topics=art_url_reg.get_url("tagging_runs-topics", url_config),
-        tagging_final=art_url_reg.get_url("tagging_runs-youtube_videos_topics_final", url_config),
+        tagging_final=tagging_final,
         final=final_url,
     )

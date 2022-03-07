@@ -14,15 +14,15 @@ GRAPHING_PIPELINE_BASE = f"{shared_urls.TAGGING_PIPELINE_BASE}graphing/"
 MAPPERS: MapperDict = {
     "graphing-edges": partial(
         url_mapper,
-        (GRAPHING + OBJECT_TYPE_GRAPH_TYPE + "edges.parquet"),
+        (GRAPHING_PIPELINE_BASE + OBJECT_TYPE_GRAPH_TYPE + "edges.parquet"),
     ),
     "graphing-nodes": partial(
         url_mapper,
-        (GRAPHING + OBJECT_TYPE_GRAPH_TYPE + "nodes.parquet"),
+        (GRAPHING_PIPELINE_BASE + OBJECT_TYPE_GRAPH_TYPE + "nodes.parquet"),
     ),
     "graphing-graphistry-redirect_html": partial(
         shared_url_mapper.dashboard_url_mapper,
-        (GRAPHING + OBJECT_TYPE_GRAPH_TYPE + "graphistry/redirect.html"),
+        (GRAPHING_PIPELINE_BASE + OBJECT_TYPE_GRAPH_TYPE + "graphistry/redirect.html"),
     ),
     # Legacy below this comment
     # Retweet

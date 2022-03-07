@@ -78,7 +78,7 @@ MAPPERS: MapperDict = {
     ),
     "final-accounts": partial(
         url_mapper,
-        (FINAL_BASE + OBJECT_BASE + "_accounts/"),
+        (FINAL_BASE + OBJECT_BASE + "_accounts/accounts_final.parquet"),
     ),
     "final-objects_accounts_classes": partial(
         url_mapper,

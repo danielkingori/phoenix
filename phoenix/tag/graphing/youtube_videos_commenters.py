@@ -7,8 +7,8 @@ from phoenix.tag.graphing import phoenix_graphistry, processing_utilities
 
 
 INPUT_DATASETS_ARTIFACT_KEYS = [
-    "final-youtube_comments_classes",
-    "final-youtube_videos_classes",
+    "tagging_runs-youtube_comments_classes_final",
+    "tagging_runs-youtube_videos_classes_final",
     "final-accounts",
 ]
 
