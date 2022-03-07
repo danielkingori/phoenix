@@ -13,6 +13,8 @@ class AccountsFinaliseRunParamsURLs(base.RunParams):
     config: Dict[str, Any]
     input_objects_dataset: str
     input_accounts_classes: str
+    tagging_runs_accounts_final: str
+    tagging_runs_objects_accounts_classes_final: str
     accounts_final: str
     objects_accounts_classes_final: str
 
@@ -58,6 +60,10 @@ def create(
             f"tagging_runs-{object_type}_pulled", url_config
         ),
         input_accounts_classes=art_url_reg.get_url("sflm-account-object_type", url_config),
+        tagging_runs_accounts_final=art_url_reg.get_url("tagging_runs-accounts_final", url_config),
+        tagging_runs_objects_accounts_classes_final=art_url_reg.get_url(
+            "tagging_runs-objects_accounts_classes_final", url_config
+        ),
         accounts_final=accounts_final_url,
         objects_accounts_classes_final=objects_accounts_classes_final_url,
     )

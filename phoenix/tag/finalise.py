@@ -6,6 +6,8 @@ from typing import List, Optional
 
 import pandas as pd
 
+from phoenix.common import artifacts
+
 
 LANGUAGE_SENTIMENT_COLUMNS = [
     "language_sentiment",
@@ -256,3 +258,24 @@ def join_topics_to_facebook_comments(
     facebook_comments_df["object_id"] = facebook_comments_df["id"].astype(str)
     facebook_comments_df = facebook_comments_df.set_index("object_id")
     return join_to_topics(facebook_comments_df, topics_df, rename_topic_to_class)
+
+
+def persist_partitions(artifact_url: str, df: pd.DataFrame):
+    """Persist the final datasets as partitioned dataset by `year_filter`, `month_filter`.
+
+    This is also configured to overwrite the partitions dynamically.
+    Meaning all the partitions that are included in the given dataframe
+    will be overwritten. Partitions not included in the dataset will be
+    left.
+
+    For an further explanation of this see:
+    tests/integration/common/artifacts/test_dask_dataframes_local.py
+    """
+    to_parquet_params = {
+        "engine": "pyarrow",
+        "partition_on": ["year_filter", "month_filter"],
+        "overwrite": False,
+        "write_metadata_file": False,
+    }
+    ddf = artifacts.utils.pandas_to_dask(df)
+    artifacts.dask_dataframes.persist(artifact_url, ddf, to_parquet_params)

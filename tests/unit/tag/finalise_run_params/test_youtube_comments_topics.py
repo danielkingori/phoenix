@@ -65,11 +65,12 @@ def test_topic_create(
     urls = run_params.urls
     assert urls.input_dataset == f"{TAGGING_BASE}youtube_comments_final.parquet"
     assert urls.topics == f"{TAGGING_BASE}topics.parquet"
-    assert urls.tagging_final == f"{TAGGING_BASE}youtube_comments_topics_final.parquet"
+    if rename_topic_to_class:
+        assert urls.tagging_final == f"{TAGGING_BASE}youtube_comments_classes_final.parquet"
+    else:
+        assert urls.tagging_final == f"{TAGGING_BASE}youtube_comments_topics_final.parquet"
     if expected_final_url == "default":
-        FINAL_BASE = (
-            f"s3://data-lake/tenant_id_1/final/{data_set_name}/{data_set_name}_final.parquet"
-        )
+        FINAL_BASE = f"s3://data-lake/tenant_id_1/final/{data_set_name}/"
         assert urls.final == FINAL_BASE
     else:
         assert urls.final == expected_final_url

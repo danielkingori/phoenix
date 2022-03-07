@@ -7,8 +7,8 @@ from phoenix.tag.graphing import phoenix_graphistry, processing_utilities
 
 
 INPUT_DATASETS_ARTIFACT_KEYS = [
-    "final-facebook_comments_classes",
-    "final-facebook_posts_classes",
+    "tagging_runs-facebook_comments_classes_final",
+    "tagging_runs-facebook_posts_classes_final",
     "final-accounts",
 ]
 

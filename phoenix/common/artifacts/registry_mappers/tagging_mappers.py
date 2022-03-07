@@ -55,6 +55,9 @@ MAPPERS: MapperDict = {
     "tagging_runs-facebook_posts_topics_final": partial(
         url_mapper, TAGGING_FACEBOOK_POSTS + "facebook_posts_topics_final.parquet"
     ),
+    "tagging_runs-facebook_posts_classes_final": partial(
+        url_mapper, TAGGING_FACEBOOK_POSTS + "facebook_posts_classes_final.parquet"
+    ),
     # Tweets
     "tagging_runs-tweets_input": partial(url_mapper, shared_urls.GROUP_BY_TWEETS),
     "tagging_runs-tweets_pulled": partial(url_mapper, TAGGING_TWEETS + "tweets_pulled.parquet"),
@@ -64,6 +67,9 @@ MAPPERS: MapperDict = {
     "tagging_runs-tweets_final": partial(url_mapper, TAGGING_TWEETS + "tweets_final.parquet"),
     "tagging_runs-tweets_topics_final": partial(
         url_mapper, TAGGING_TWEETS + "tweets_topics_final.parquet"
+    ),
+    "tagging_runs-tweets_classes_final": partial(
+        url_mapper, TAGGING_TWEETS + "tweets_classes_final.parquet"
     ),
     # Facebook Comments
     "tagging_runs-facebook_comments_input": partial(
@@ -81,6 +87,9 @@ MAPPERS: MapperDict = {
     "tagging_runs-facebook_comments_topics_final": partial(
         url_mapper, TAGGING_FACEBOOK_COMMENTS + "facebook_comments_topics_final.parquet"
     ),
+    "tagging_runs-facebook_comments_classes_final": partial(
+        url_mapper, TAGGING_FACEBOOK_COMMENTS + "facebook_comments_classes_final.parquet"
+    ),
     # Youtube
     "tagging_runs-youtube_videos_input": partial(
         url_mapper, shared_urls.GROUP_BY_YOUTUBE_SEARCH_VIDEOS
@@ -97,6 +106,9 @@ MAPPERS: MapperDict = {
     "tagging_runs-youtube_videos_topics_final": partial(
         url_mapper, TAGGING_YOUTUBE_VIDEOS + "youtube_videos_topics_final.parquet"
     ),
+    "tagging_runs-youtube_videos_classes_final": partial(
+        url_mapper, TAGGING_YOUTUBE_VIDEOS + "youtube_videos_classes_final.parquet"
+    ),
     "tagging_runs-youtube_comments_input": partial(
         url_mapper, shared_urls.GROUP_BY_YOUTUBE_COMMENT_THREADS
     ),
@@ -111,6 +123,9 @@ MAPPERS: MapperDict = {
     ),
     "tagging_runs-youtube_comments_topics_final": partial(
         url_mapper, TAGGING_YOUTUBE_COMMENTS + "youtube_comments_topics_final.parquet"
+    ),
+    "tagging_runs-youtube_comments_classes_final": partial(
+        url_mapper, TAGGING_YOUTUBE_COMMENTS + "youtube_comments_classes_final.parquet"
     ),
     # Utils
     "tagging_runs-pipeline_base": partial(url_mapper, TAGGING_PIPELINE_BASE),
@@ -153,5 +168,13 @@ MAPPERS: MapperDict = {
     "tagging_runs-clustering": partial(url_mapper, TAGGING_PIPELINE_BASE + "clustering/"),
     "tagging_runs-clustering_dashboard": partial(
         shared_url_mapper.dashboard_url_mapper, TAGGING_PIPELINE_BASE + "clustering/"
+    ),
+    "tagging_runs-accounts_final": partial(
+        url_mapper,
+        (TAGGING_PIPELINE_BASE + "accounts_final.parquet"),
+    ),
+    "tagging_runs-objects_accounts_classes_final": partial(
+        url_mapper,
+        (TAGGING_PIPELINE_BASE + "objects_accounts_classes_final.parquet"),
     ),
 }

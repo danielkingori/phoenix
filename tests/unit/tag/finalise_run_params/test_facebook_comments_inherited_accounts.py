@@ -30,6 +30,7 @@ def test_create(
         facebook_comments_inherited_accounts.FacebookCommentsInheritedAccountsFinaliseRunParams,
     )
     TENANT_BASE = "s3://data-lake/tenant_id_1/"
+    TAGGING_BASE = TENANT_BASE + "tagging_runs/year_filter=2022/month_filter=1/"
 
     urls = run_params.urls
     assert urls.facebook_comments_final == (
@@ -38,10 +39,11 @@ def test_create(
         "facebook_comments/facebook_comments_final.parquet"
     )
     assert urls.facebook_posts_objects_accounts_classes == (
-        f"{TENANT_BASE}"
-        "final/facebook_posts_objects_accounts_classes/accounts_classes_final.parquet"
+        TAGGING_BASE + "facebook_posts/objects_accounts_classes_final.parquet"
     )
     assert urls.objects_accounts_classes_final == (
-        f"{TENANT_BASE}"
-        "final/facebook_comments_inherited_objects_accounts_classes/accounts_classes_final.parquet"
+        f"{TENANT_BASE}" "final/facebook_comments_inherited_objects_accounts_classes/"
+    )
+    assert urls.tagging_runs_objects_accounts_classes_final == (
+        TAGGING_BASE + "facebook_comments/objects_accounts_classes_final.parquet"
     )

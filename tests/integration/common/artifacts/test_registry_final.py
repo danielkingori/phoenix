@@ -12,7 +12,7 @@ from tests.integration.common.artifacts import conftest
         (
             "final-facebook_posts",
             {"YEAR_FILTER": 2021, "MONTH_FILTER": 1},
-            "final/facebook_posts/facebook_posts_final.parquet",
+            "final/facebook_posts/",
         ),
     ],
 )

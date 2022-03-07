@@ -6,6 +6,9 @@ import boto3
 import pytest
 
 
+S3_INTEGRATION_BUCKET = "phoenix-integration-testing"
+
+
 @pytest.fixture
 def tmp_s3_dir(request):
     """Get a temporary s3 storage path for the function.
@@ -46,17 +49,16 @@ def tmp_s3_dir(request):
     Unfortunately the CLI commands do not work ??
     You can then do the lifecycle configuration via the s3 aws console.
     """
-    s3_integration_bucket = "phoenix-integration-testing"
     temp_folder = uuid.uuid4()
     name = request.node.name
     name = re.sub(r"[\W]", "_", name)
     MAXVAL = 40
     name = name[:MAXVAL]
     tmp_dir = f"{name}/{temp_folder}/"
-    yield f"s3://{s3_integration_bucket}/{tmp_dir}"
+    yield f"s3://{S3_INTEGRATION_BUCKET}/{tmp_dir}"
 
     s3 = boto3.resource("s3")
-    bucket = s3.Bucket(s3_integration_bucket)
+    bucket = s3.Bucket(S3_INTEGRATION_BUCKET)
     for key in bucket.objects.filter(Prefix=tmp_dir):
         key.delete()
 
@@ -65,3 +67,16 @@ def tmp_s3_dir(request):
 def tmpdir_url(tmpdir):
     """Return the tmpdir as a url."""
     return f"file:///{tmpdir}"
+
+
+def get_s3_keys(bucket, prefix=None, client=None):
+    """Get a list of keys in an S3 bucket."""
+    if not client:
+        s3 = boto3.client("s3")
+    resp = s3.list_objects(Bucket=bucket, Prefix=prefix)
+    if "Contents" not in resp:
+        return []
+    files = []
+    for obj in resp["Contents"]:
+        files.append(obj["Key"])
+    return files

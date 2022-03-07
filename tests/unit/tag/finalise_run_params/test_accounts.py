@@ -48,6 +48,12 @@ def test_create(
         "s3://data-lake/tenant_id_1/config/sflm/youtube_videos_account_labels.parquet"
     )
 
+    assert urls.tagging_runs_accounts_final == f"{TAGGING_BASE}accounts_final.parquet"
+    assert (
+        urls.tagging_runs_objects_accounts_classes_final
+        == f"{TAGGING_BASE}objects_accounts_classes_final.parquet"
+    )
+
     if accounts_final_url is None:
         assert urls.accounts_final == (
             "s3://data-lake/tenant_id_1/final/youtube_videos_accounts/accounts_final.parquet"
@@ -58,7 +64,6 @@ def test_create(
     if objects_accounts_classes_final_url is None:
         assert urls.objects_accounts_classes_final == (
             "s3://data-lake/tenant_id_1/final/youtube_videos_objects_accounts_classes/"
-            "accounts_classes_final.parquet"
         )
     else:
         assert urls.objects_accounts_classes_final == "some_url_2"

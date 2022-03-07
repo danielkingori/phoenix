@@ -13,6 +13,7 @@ class FacebookCommentsInheritedAccountsFinaliseRunParamsURLs(base.RunParams):
     config: Dict[str, Any]
     facebook_comments_final: str
     facebook_posts_objects_accounts_classes: str
+    tagging_runs_objects_accounts_classes_final: str
     objects_accounts_classes_final: str
 
 
@@ -47,7 +48,12 @@ def create(
             "tagging_runs-facebook_comments_final", url_config
         ),
         facebook_posts_objects_accounts_classes=art_url_reg.get_url(
-            "final-objects_accounts_classes", url_config | {"OBJECT_TYPE": "facebook_posts"}
+            "tagging_runs-objects_accounts_classes_final",
+            url_config | {"OBJECT_TYPE": "facebook_posts"},
+        ),
+        tagging_runs_objects_accounts_classes_final=art_url_reg.get_url(
+            "tagging_runs-objects_accounts_classes_final",
+            url_config,
         ),
         objects_accounts_classes_final=art_url_reg.get_url(
             "final-objects_accounts_classes",
