@@ -106,6 +106,9 @@ MAPPERS: MapperDict = {
     "tagging_runs-youtube_videos_topics_final": partial(
         url_mapper, TAGGING_YOUTUBE_VIDEOS + "youtube_videos_topics_final.parquet"
     ),
+    "tagging_runs-youtube_videos_classes_final": partial(
+        url_mapper, TAGGING_YOUTUBE_VIDEOS + "youtube_videos_classes_final.parquet"
+    ),
     "tagging_runs-youtube_comments_input": partial(
         url_mapper, shared_urls.GROUP_BY_YOUTUBE_COMMENT_THREADS
     ),

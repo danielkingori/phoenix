@@ -73,6 +73,7 @@ ArtifactKey = Literal[
     "tagging_runs-youtube_videos_for_tagging",
     "tagging_runs-youtube_videos_final",
     "tagging_runs-youtube_videos_topics_final",
+    "tagging_runs-youtube_videos_classes_final",
     "tagging_runs-youtube_comments_input",
     "tagging_runs-youtube_comments_pulled",
     "tagging_runs-youtube_comments_for_tagging",
