@@ -55,6 +55,9 @@ MAPPERS: MapperDict = {
     "tagging_runs-facebook_posts_topics_final": partial(
         url_mapper, TAGGING_FACEBOOK_POSTS + "facebook_posts_topics_final.parquet"
     ),
+    "tagging_runs-facebook_posts_classes_final": partial(
+        url_mapper, TAGGING_FACEBOOK_POSTS + "facebook_posts_classes_final.parquet"
+    ),
     # Tweets
     "tagging_runs-tweets_input": partial(url_mapper, shared_urls.GROUP_BY_TWEETS),
     "tagging_runs-tweets_pulled": partial(url_mapper, TAGGING_TWEETS + "tweets_pulled.parquet"),
