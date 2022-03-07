@@ -59,6 +59,7 @@ ArtifactKey = Literal[
     "tagging_runs-tweets_for_tagging",
     "tagging_runs-tweets_final",
     "tagging_runs-tweets_topics_final",
+    "tagging_runs-tweets_classes_final",
     # Tagging facebook comments
     "tagging_runs-facebook_comments_input",
     "tagging_runs-facebook_comments_pulled",

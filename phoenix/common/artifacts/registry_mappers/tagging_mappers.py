@@ -68,6 +68,9 @@ MAPPERS: MapperDict = {
     "tagging_runs-tweets_topics_final": partial(
         url_mapper, TAGGING_TWEETS + "tweets_topics_final.parquet"
     ),
+    "tagging_runs-tweets_classes_final": partial(
+        url_mapper, TAGGING_TWEETS + "tweets_classes_final.parquet"
+    ),
     # Facebook Comments
     "tagging_runs-facebook_comments_input": partial(
         url_mapper, shared_urls.GROUP_BY_FACEBOOK_COMMENTS
