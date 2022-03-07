@@ -78,6 +78,7 @@ ArtifactKey = Literal[
     "tagging_runs-youtube_comments_for_tagging",
     "tagging_runs-youtube_comments_final",
     "tagging_runs-youtube_comments_topics_final",
+    "tagging_runs-youtube_comments_classes_final",
     # Tagging Pipeline
     "tagging_runs-pipeline_base",
     "tagging_runs-for_analyst_base",
