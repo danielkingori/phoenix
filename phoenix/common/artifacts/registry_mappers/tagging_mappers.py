@@ -87,6 +87,9 @@ MAPPERS: MapperDict = {
     "tagging_runs-facebook_comments_topics_final": partial(
         url_mapper, TAGGING_FACEBOOK_COMMENTS + "facebook_comments_topics_final.parquet"
     ),
+    "tagging_runs-facebook_comments_classes_final": partial(
+        url_mapper, TAGGING_FACEBOOK_COMMENTS + "facebook_comments_classes_final.parquet"
+    ),
     # Youtube
     "tagging_runs-youtube_videos_input": partial(
         url_mapper, shared_urls.GROUP_BY_YOUTUBE_SEARCH_VIDEOS

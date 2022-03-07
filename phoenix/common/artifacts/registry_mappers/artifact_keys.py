@@ -66,6 +66,7 @@ ArtifactKey = Literal[
     "tagging_runs-facebook_comments_for_tagging",
     "tagging_runs-facebook_comments_final",
     "tagging_runs-facebook_comments_topics_final",
+    "tagging_runs-facebook_comments_classes_final",
     # Tagging Youtube
     "tagging_runs-youtube_videos_input",
     "tagging_runs-youtube_videos_pulled",
