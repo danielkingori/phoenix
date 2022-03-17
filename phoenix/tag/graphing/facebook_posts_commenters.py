@@ -1,114 +1,162 @@
 """Processing and config for facebook_posts_commentors graph."""
 from typing import Tuple
 
+import logging
+
 import pandas as pd
 
 from phoenix.tag.graphing import phoenix_graphistry, processing_utilities
 
 
-INPUT_DATASETS_ARTIFACT_KEYS = [
-    "tagging_runs-facebook_comments_classes_final",
-    "tagging_runs-facebook_posts_classes_final",
-    "final-accounts",
-]
+INPUT_DATASETS_ARTIFACT_KEYS = {
+    "tagging_runs_facebook_posts_classes_final": {
+        "artifact_key": "tagging_runs-facebook_posts_classes_final",
+        "url_config_override": {},
+    },
+    "tagging_runs_facebook_comments_classes_final": {
+        "artifact_key": "tagging_runs-objects_accounts_classes_final",
+        "url_config_override": {"OBJECT_TYPE": "facebook_comments"},
+    },
+    "tagging_runs_facebook_posts_objects_accounts_classes_final": {
+        "artifact_key": "tagging_runs-objects_accounts_classes_final",
+        "url_config_override": {},
+    },
+}
+
+SIZE_COLUMN_NAME = "post_count"
 
 
-def process_account_nodes(final_accounts: pd.DataFrame) -> pd.DataFrame:
+def process_account_nodes(
+    final_facebook_posts_objects_accounts_classes: pd.DataFrame,
+) -> pd.DataFrame:
     """Process facebook accounts to create set of nodes of type `account`."""
-    cols_to_keep = ["object_user_name", "object_user_url", "account_label"]
-    df = final_accounts[cols_to_keep]
-    df = processing_utilities.reduce_concat_classes(df, ["object_user_name"], "account_label")
-    df["node_name"] = df["object_user_name"]
-    df["type"] = "facebook_account"
+    cols_to_keep = ["account_handle", "account_name", "account_label"]
+    df = final_facebook_posts_objects_accounts_classes[cols_to_keep]
+    df = processing_utilities.reduce_concat_classes(df, ["account_handle"], "account_label")
+    df = df.rename(columns={"account_handle": "node_name", "account_name": "node_label"})
+    df["type"] = "account"
     return df
 
 
-def process_post_nodes(final_facebook_posts_classes: pd.DataFrame) -> pd.DataFrame:
-    """Process facebook posts to create set of nodes of type `post`."""
-    cols_to_keep = [
-        "object_id",
-        "platform_id",
-        "account_handle",
-        "account_platform_id",
-        "medium_type",
-        "text",
-        "class",
-    ]
-    cols_to_keep = cols_to_keep + [
-        col for col in final_facebook_posts_classes.columns if "statistics" in col
-    ]
-    df = final_facebook_posts_classes[cols_to_keep]
-    df = processing_utilities.reduce_concat_classes(df, ["object_id"], "class")
-    df["node_name"] = df["object_id"]
-    df["type"] = "facebook_post"
-    return df
-
-
-def process_commenter_nodes(final_facebook_comments_classes: pd.DataFrame) -> pd.DataFrame:
+def process_commenter_nodes(
+    final_facebook_comments_inherited_accounts_classes: pd.DataFrame,
+) -> pd.DataFrame:
     """Process facebook comments to create set of nodes of type `commenter`."""
-    cols_to_keep = ["user_name", "class"]
-    df = final_facebook_comments_classes[cols_to_keep]
+    cols_to_keep = ["user_name", "user_display_name", "account_label"]
+    df = final_facebook_comments_inherited_accounts_classes[cols_to_keep]
     df = df.dropna()
-    df = processing_utilities.reduce_concat_classes(df, ["user_name"], "class")
-    df["node_name"] = df["user_name"]
-    df["type"] = "facebook_commenter"
+    df = processing_utilities.reduce_concat_classes(df, ["user_name"], "account_label")
+    df = df.rename(columns={"user_name": "node_name", "user_display_name": "node_label"})
+    df["type"] = "commenter"
     return df
 
 
-def process_account_post_edges(final_facebook_posts_classes: pd.DataFrame) -> pd.DataFrame:
-    """Process edges from accounts to posts."""
-    df = final_facebook_posts_classes[["object_id", "account_handle"]]
-    df = df.drop_duplicates()
-    df = df.dropna(subset=["account_handle"])
-    df["source_node"] = df["account_handle"]
-    df["destination_node"] = df["object_id"]
-    return df
+def process_account_commenter_edges(
+    final_facebook_posts_classes: pd.DataFrame,
+    final_facebook_comments_inherited_accounts_classes: pd.DataFrame,
+) -> pd.DataFrame:
+    """Process edges from accounts commenters."""
+    facebook_comments = final_facebook_comments_inherited_accounts_classes[
+        ["user_name", "url_post_id"]
+    ]
+    facebook_comments = facebook_comments.drop_duplicates()
+    to_keep = ["account_handle", "url_post_id", "language_sentiment", "class"]
+    facebook_posts_classes = final_facebook_posts_classes[to_keep]
+    df = facebook_posts_classes.merge(facebook_comments, on="url_post_id")
+    df["account_id_1"] = df["account_handle"]
+    df["account_id_2"] = df["user_name"]
+    return processing_utilities.commenters_group_edges(df, "url_post_id", SIZE_COLUMN_NAME)
 
 
-def process_commenter_post_edges(final_facebook_comments_classes: pd.DataFrame) -> pd.DataFrame:
-    """Process edges from commenters to posts."""
-    df = final_facebook_comments_classes[["post_id", "user_name"]]
-    df["post_id"] = df["post_id"].astype(str)
-    df = df.groupby(["post_id", "user_name"]).size().reset_index()
-    df = df.rename(columns={0: "times_commented"})
-    df["source_node"] = df["user_name"]
-    df["destination_node"] = df["post_id"]
+def process_commenter_commenter_edges(
+    final_facebook_posts_classes: pd.DataFrame,
+    final_facebook_comments_inherited_accounts_classes: pd.DataFrame,
+) -> pd.DataFrame:
+    """Process edges from accounts commenters."""
+    facebook_posts_classes = final_facebook_posts_classes[
+        ["url_post_id", "class", "language_sentiment"]
+    ]
+    # We don't need the class from the comments because they are inherited
+    facebook_comments = final_facebook_comments_inherited_accounts_classes[
+        ["user_name", "url_post_id"]
+    ]
+    facebook_comments = facebook_comments.drop_duplicates()
+    df = facebook_posts_classes.merge(facebook_comments, on="url_post_id")
+    df = df.rename(columns={"user_name": "account_id_1"})
+    df = df.merge(facebook_comments, on="url_post_id")
+    df["account_id_2"] = df["user_name"]
+    df = df[df["account_id_1"] != df["account_id_2"]]
+    df = processing_utilities.commenters_group_edges(df, "url_post_id", SIZE_COLUMN_NAME)
+    # Doing a deduplicate columns which contains the sorted account ids
+    # to deduplicate the dataframe from have two vesion of the same commeter
+    # connection but in both directions
+    df_ids = df[["account_id_1", "account_id_2"]]
+    df["deduplicate"] = [", ".join(sorted(filter(None, x))) for x in df_ids.to_numpy()]
+    df = df.drop_duplicates(subset=["deduplicate"])
+    df = df.drop(["deduplicate"], axis=1)
     return df
 
 
 def process(
-    final_facebook_comments_classes: pd.DataFrame,
     final_facebook_posts_classes: pd.DataFrame,
-    final_accounts: pd.DataFrame,
+    final_facebook_comments_inherited_accounts_classes: pd.DataFrame,
+    final_facebook_posts_objects_accounts_classes: pd.DataFrame,
+    quantile_of_commenters=0.99,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Process facebook accounts, posts, and commenters into three type network graph."""
+    fciac_df = final_facebook_comments_inherited_accounts_classes
+    fciac_df["url_post_id"] = fciac_df["post_id"].astype("string")
+    if quantile_of_commenters:
+        commenter_comment_counts = (
+            fciac_df[["user_name", "url_post_id"]].drop_duplicates()["user_name"].value_counts()
+        )
+        cut_off = commenter_comment_counts.quantile(quantile_of_commenters)
+        filtered_commenter_comment_counts = commenter_comment_counts[
+            commenter_comment_counts >= cut_off
+        ]
+        number_of_commenters = filtered_commenter_comment_counts.shape[0]
+        logging.info(
+            f"Commenters have been filtered to include a subset of: {number_of_commenters}."
+        )
+        fciac_df = fciac_df[fciac_df["user_name"].isin(filtered_commenter_comment_counts.index)]
+
     # edges
-    account_post_edges = process_account_post_edges(final_facebook_posts_classes)
-    commenter_post_edges = process_commenter_post_edges(final_facebook_comments_classes)
-    edges = account_post_edges.append(commenter_post_edges)
-    edges = edges.reset_index(drop=True)
+    account_commenter_edges = process_account_commenter_edges(
+        final_facebook_posts_classes, fciac_df
+    )
+    commenter_commenter_edges = process_commenter_commenter_edges(
+        final_facebook_posts_classes, fciac_df
+    )
+    edges = account_commenter_edges.append(commenter_commenter_edges)
 
     # nodes
-    account_nodes = process_account_nodes(final_accounts)
-    post_nodes = process_post_nodes(final_facebook_posts_classes)
-    commenter_nodes = process_commenter_nodes(final_facebook_comments_classes)
-    nodes = account_nodes.append(post_nodes).append(commenter_nodes)
+    account_nodes = process_account_nodes(final_facebook_posts_objects_accounts_classes)
+    commenter_nodes = process_commenter_nodes(fciac_df)
+    commenter_nodes = commenter_nodes[
+        ~commenter_nodes["node_name"].isin(account_nodes["node_name"])
+    ]
+    nodes = account_nodes.append(commenter_nodes)
     nodes = nodes.reset_index(drop=True)
+
+    edges = edges[edges["account_id_1"].isin(nodes["node_name"])]
+    edges = edges[edges["account_id_2"].isin(nodes["node_name"])]
+    edges = edges.reset_index(drop=True)
 
     return edges, nodes
 
 
 plot_config = phoenix_graphistry.PlotConfig(
-    edge_source_col="source_node",
-    edge_destination_col="destination_node",
+    edge_source_col="account_id_1",
+    edge_destination_col="account_id_2",
     nodes_col="node_name",
     graph_name="facebook_commenters",
     graph_description="""
-        Graph showing accounts, their posts, and commenters on those posts.
-        Nodes: three types; accounts, posts, commenters
-        Edges: two types
-            - from account to post; denote account made post
-            - from commenter to post; denote number of times (if any) commenter commented on post
+        Graph showing how commenters are connected.
+        Nodes: commenters
+        Edges: when commenters comment on the same posts.
     """,
-    directed=True,
+    directed=False,
+    color_by_type=False,
+    node_label_col="node_label",
+    edge_weight_col="post_count",
 )
