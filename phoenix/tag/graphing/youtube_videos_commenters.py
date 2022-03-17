@@ -10,19 +10,19 @@ from phoenix.tag.graphing import phoenix_graphistry, processing_utilities
 
 INPUT_DATASETS_ARTIFACT_KEYS = {
     "final_youtube_videos_classes": {
-        "artifact_key": "final-youtube_videos_classes",
+        "artifact_key": "tagging_runs-youtube_videos_classes_final",
         "url_config_override": {},
     },
     "final_youtube_comments": {
-        "artifact_key": "final-youtube_comments",
+        "artifact_key": "tagging_runs-youtube_comments_final",
         "url_config_override": {},
     },
     "final_youtube_comments_objects_accounts_classes": {
-        "artifact_key": "final-objects_accounts_classes",
+        "artifact_key": "tagging_runs-objects_accounts_classes_final",
         "url_config_override": {"OBJECT_TYPE": "youtube_comments"},
     },
     "final_youtube_videos_objects_accounts_classes": {
-        "artifact_key": "final-objects_accounts_classes",
+        "artifact_key": "tagging_runs-objects_accounts_classes_final",
         "url_config_override": {},
     },
 }

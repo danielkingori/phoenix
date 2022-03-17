@@ -9,16 +9,16 @@ from phoenix.tag.graphing import phoenix_graphistry, processing_utilities
 
 
 INPUT_DATASETS_ARTIFACT_KEYS = {
-    "final_facebook_posts_classes": {
-        "artifact_key": "final-facebook_posts_classes",
+    "tagging_runs_facebook_posts_classes_final": {
+        "artifact_key": "tagging_runs-facebook_posts_classes_final",
         "url_config_override": {},
     },
-    "final_facebook_comments_inherited_accounts_classes": {
-        "artifact_key": "final-objects_accounts_classes",
-        "url_config_override": {"OBJECT_TYPE": "facebook_comments_inherited"},
+    "tagging_runs_facebook_comments_classes_final": {
+        "artifact_key": "tagging_runs-objects_accounts_classes_final",
+        "url_config_override": {"OBJECT_TYPE": "facebook_comments"},
     },
-    "final_facebook_posts_objects_accounts_classes": {
-        "artifact_key": "final-objects_accounts_classes",
+    "tagging_runs_facebook_posts_objects_accounts_classes_final": {
+        "artifact_key": "tagging_runs-objects_accounts_classes_final",
         "url_config_override": {},
     },
 }
