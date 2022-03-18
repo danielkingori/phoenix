@@ -1,5 +1,5 @@
 """Filtering."""
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import pandas as pd
 
@@ -13,8 +13,23 @@ def filter_posts(
     include_accounts: Optional[List[str]],
     has_topics: Optional[bool] = False,
     order_by: Optional[str] = DEFAULT_ORDER_BY,
-) -> pd.DataFrame:
-    """Filter the facebook posts for the export manual scraping."""
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """Filter the facebook posts for the export manual scraping.
+
+    Args:
+        facebook_posts_df: Dataframe to filter,
+        head: number of posts to return,
+        include_accounts: List of accounts to filter by,
+        has_topics: if true filter by has_topics (relevant),
+        order_by: Order by before the cut, default is total_interactions
+
+    Return:
+        A tuple with:
+        (
+            Facebook posts filtered,
+            List of all matched accounts include those not in the cut
+        )
+    """
     df = facebook_posts_df.copy()
     if include_accounts:
         df = df[df["account_handle"].isin(include_accounts)]
@@ -24,4 +39,6 @@ def filter_posts(
 
     df = df.sort_values(by=order_by, ascending=False)
 
-    return df.head(head)
+    found_accounts = df["account_handle"].unique()
+
+    return df.head(head), found_accounts

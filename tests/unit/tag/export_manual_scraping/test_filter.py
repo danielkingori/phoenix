@@ -19,7 +19,7 @@ def input_dataframe():
 
 
 @pytest.mark.parametrize(
-    ("expected_return, head, include_accounts, has_topics"),
+    ("expected_return, expected_matched_accounts, head, include_accounts, has_topics"),
     [
         (
             pd.DataFrame(
@@ -31,6 +31,7 @@ def input_dataframe():
                 },
                 index=pd.Int64Index([9, 8, 7, 6], dtype="int64"),
             ),
+            ["account_3", "account_2", "account_1"],
             4,
             None,
             None,
@@ -45,6 +46,7 @@ def input_dataframe():
                 },
                 index=pd.Int64Index([8, 6, 4, 2], dtype="int64"),
             ),
+            ["account_3", "account_2", "account_1"],
             4,
             None,
             True,
@@ -59,6 +61,7 @@ def input_dataframe():
                 },
                 index=pd.Int64Index([5, 4], dtype="int64"),
             ),
+            ["account_2"],
             2,
             ["account_2"],
             None,
@@ -73,6 +76,7 @@ def input_dataframe():
                 },
                 index=pd.Int64Index([4], dtype="int64"),
             ),
+            ["account_2"],
             3,
             ["account_2"],
             True,
@@ -87,6 +91,7 @@ def input_dataframe():
                 },
                 index=pd.Int64Index([4, 2], dtype="int64"),
             ),
+            ["account_1", "account_2"],
             2,
             ["account_1", "account_2"],
             True,
@@ -101,7 +106,23 @@ def input_dataframe():
                 },
                 index=pd.Int64Index([5, 4, 3, 2, 1], dtype="int64"),
             ),
+            ["account_1", "account_2"],
             5,
+            ["account_1", "account_2"],
+            False,
+        ),
+        (
+            pd.DataFrame(
+                {
+                    "id": [6, 5],
+                    "account_handle": ["account_2"] * 2,
+                    "has_topics": [False, True],
+                    "total_interactions": [6, 5],
+                },
+                index=pd.Int64Index([5, 4], dtype="int64"),
+            ),
+            ["account_1", "account_2"],
+            2,
             ["account_1", "account_2"],
             False,
         ),
@@ -109,16 +130,18 @@ def input_dataframe():
 )
 def test_filter(
     expected_return,
+    expected_matched_accounts,
     head,
     include_accounts,
     has_topics,
     input_dataframe,
 ):
     """Test filter."""
-    return_df = export_manual_scraping.filter_posts(
+    return_df, return_matched_accounts = export_manual_scraping.filter_posts(
         facebook_posts_df=input_dataframe,
         head=head,
         include_accounts=include_accounts,
         has_topics=has_topics,
     )
     pd.testing.assert_frame_equal(return_df, expected_return)
+    assert return_matched_accounts.sort() == expected_matched_accounts.sort()
