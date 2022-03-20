@@ -17,6 +17,7 @@ def filter_posts(
     order_by: Optional[str] = DEFAULT_ORDER_BY,
     after_timestamp: Optional[datetime.datetime] = None,
     before_timestamp: Optional[datetime.datetime] = None,
+    exclude_accounts: Optional[List[str]] = None,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Filter the facebook posts for the export manual scraping.
 
@@ -28,6 +29,7 @@ def filter_posts(
         order_by: Order by before the cut, default is total_interactions,
         after_timestamp: Posts created after a date time,
         before_timestamp: Posts created before a date time,
+        exclude_accounts: List of accounts to exclude,
 
     Return:
         A tuple with:
@@ -39,6 +41,9 @@ def filter_posts(
     df = facebook_posts_df.copy()
     if include_accounts:
         df = df[df["account_platform_id"].isin(include_accounts)]
+
+    if exclude_accounts:
+        df = df[~df["account_platform_id"].isin(exclude_accounts)]
 
     if has_topics:
         df = df.loc[df["has_topics"]]

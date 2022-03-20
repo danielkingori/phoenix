@@ -45,6 +45,7 @@ def input_dataframe():
     (
         "expected_return, expected_matched_accounts,"
         " head, include_accounts, has_topics, after_timestamp, before_timestamp"
+        ", exclude_accounts"
     ),
     [
         (
@@ -73,6 +74,7 @@ def input_dataframe():
                 },
             ),
             4,
+            None,
             None,
             None,
             None,
@@ -108,6 +110,7 @@ def input_dataframe():
             True,
             None,
             None,
+            None,
         ),
         (
             pd.DataFrame(
@@ -134,6 +137,7 @@ def input_dataframe():
             ),
             2,
             [2],
+            None,
             None,
             None,
             None,
@@ -165,6 +169,7 @@ def input_dataframe():
             True,
             None,
             None,
+            None,
         ),
         (
             pd.DataFrame(
@@ -192,6 +197,7 @@ def input_dataframe():
             2,
             [1, 2],
             True,
+            None,
             None,
             None,
         ),
@@ -226,6 +232,7 @@ def input_dataframe():
             False,
             None,
             None,
+            None,
         ),
         (
             pd.DataFrame(
@@ -253,6 +260,7 @@ def input_dataframe():
             2,
             [1, 2],
             False,
+            None,
             None,
             None,
         ),
@@ -292,6 +300,7 @@ def input_dataframe():
             None,
             None,
             None,
+            None,
         ),
         (
             pd.DataFrame(
@@ -326,6 +335,7 @@ def input_dataframe():
             None,
             None,
             FEB_2022_FILTER,
+            None,
         ),
         (
             pd.DataFrame(
@@ -360,6 +370,7 @@ def input_dataframe():
             None,
             JAN_2022_FILTER,
             None,
+            None,
         ),
         (
             pd.DataFrame(
@@ -389,6 +400,37 @@ def input_dataframe():
             None,
             JAN_2022_FILTER,
             FEB_2022_FILTER,
+            None,
+        ),
+        (
+            pd.DataFrame(
+                {
+                    "id": [9, 8],
+                    "account_platform_id": [3] * 2,
+                    "account_handle": ["account_3"] * 2,
+                    "account_name": ["account_3"] * 2,
+                    "has_topics": [True, False],
+                    "total_interactions": [9, 8],
+                    "timestamp_filter": [
+                        JAN_2022,
+                        JAN_2022,
+                    ],
+                },
+                index=pd.Int64Index([8, 7], dtype="int64"),
+            ),
+            pd.DataFrame(
+                {
+                    "account_platform_id": [3],
+                    "account_handle": ["account_3"],
+                    "account_name": ["account_3"],
+                },
+            ),
+            10,
+            None,
+            None,
+            JAN_2022_FILTER,
+            FEB_2022_FILTER,
+            [1, 2],
         ),
     ],
 )
@@ -400,6 +442,7 @@ def test_filter(
     has_topics,
     after_timestamp,
     before_timestamp,
+    exclude_accounts,
     input_dataframe,
 ):
     """Test filter."""
@@ -410,6 +453,7 @@ def test_filter(
         has_topics=has_topics,
         after_timestamp=after_timestamp,
         before_timestamp=before_timestamp,
+        exclude_accounts=exclude_accounts,
     )
     pd.testing.assert_frame_equal(return_df, expected_return)
     pd.testing.assert_frame_equal(return_matched_accounts, expected_matched_accounts)
