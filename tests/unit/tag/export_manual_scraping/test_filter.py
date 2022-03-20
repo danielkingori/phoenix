@@ -11,7 +11,9 @@ def input_dataframe():
     return pd.DataFrame(
         {
             "id": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            "account_platform_id": [1] * 3 + [2] * 3 + [3] * 4,
             "account_handle": ["account_1"] * 3 + ["account_2"] * 3 + ["account_3"] * 4,
+            "account_name": ["account_1"] * 3 + ["account_2"] * 3 + ["account_3"] * 4,
             "has_topics": [True, False] * 5,
             "total_interactions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         }
@@ -25,13 +27,21 @@ def input_dataframe():
             pd.DataFrame(
                 {
                     "id": [10, 9, 8, 7],
+                    "account_platform_id": [3] * 4,
                     "account_handle": ["account_3"] * 4,
+                    "account_name": ["account_3"] * 4,
                     "has_topics": [False, True] * 2,
                     "total_interactions": [10, 9, 8, 7],
                 },
                 index=pd.Int64Index([9, 8, 7, 6], dtype="int64"),
             ),
-            ["account_3", "account_2", "account_1"],
+            pd.DataFrame(
+                {
+                    "account_platform_id": [3, 2, 1],
+                    "account_handle": ["account_3", "account_2", "account_1"],
+                    "account_name": ["account_3", "account_2", "account_1"],
+                },
+            ),
             4,
             None,
             None,
@@ -40,13 +50,21 @@ def input_dataframe():
             pd.DataFrame(
                 {
                     "id": [9, 7, 5, 3],
+                    "account_platform_id": [3] * 2 + [2, 1],
                     "account_handle": ["account_3"] * 2 + ["account_2", "account_1"],
+                    "account_name": ["account_3"] * 2 + ["account_2", "account_1"],
                     "has_topics": [True] * 4,
                     "total_interactions": [9, 7, 5, 3],
                 },
                 index=pd.Int64Index([8, 6, 4, 2], dtype="int64"),
             ),
-            ["account_3", "account_2", "account_1"],
+            pd.DataFrame(
+                {
+                    "account_platform_id": [3, 2, 1],
+                    "account_handle": ["account_3", "account_2", "account_1"],
+                    "account_name": ["account_3", "account_2", "account_1"],
+                },
+            ),
             4,
             None,
             True,
@@ -55,75 +73,115 @@ def input_dataframe():
             pd.DataFrame(
                 {
                     "id": [6, 5],
+                    "account_platform_id": [2] * 2,
                     "account_handle": ["account_2"] * 2,
+                    "account_name": ["account_2"] * 2,
                     "has_topics": [False, True],
                     "total_interactions": [6, 5],
                 },
                 index=pd.Int64Index([5, 4], dtype="int64"),
             ),
-            ["account_2"],
+            pd.DataFrame(
+                {
+                    "account_platform_id": [2],
+                    "account_handle": ["account_2"],
+                    "account_name": ["account_2"],
+                },
+            ),
             2,
-            ["account_2"],
+            [2],
             None,
         ),
         (
             pd.DataFrame(
                 {
                     "id": [5],
+                    "account_platform_id": [2],
                     "account_handle": ["account_2"],
+                    "account_name": ["account_2"],
                     "has_topics": [True],
                     "total_interactions": [5],
                 },
                 index=pd.Int64Index([4], dtype="int64"),
             ),
-            ["account_2"],
+            pd.DataFrame(
+                {
+                    "account_platform_id": [2],
+                    "account_handle": ["account_2"],
+                    "account_name": ["account_2"],
+                },
+            ),
             3,
-            ["account_2"],
+            [2],
             True,
         ),
         (
             pd.DataFrame(
                 {
                     "id": [5, 3],
+                    "account_platform_id": [2, 1],
                     "account_handle": ["account_2", "account_1"],
+                    "account_name": ["account_2", "account_1"],
                     "has_topics": [True, True],
                     "total_interactions": [5, 3],
                 },
                 index=pd.Int64Index([4, 2], dtype="int64"),
             ),
-            ["account_1", "account_2"],
+            pd.DataFrame(
+                {
+                    "account_platform_id": [2, 1],
+                    "account_handle": ["account_2", "account_1"],
+                    "account_name": ["account_2", "account_1"],
+                },
+            ),
             2,
-            ["account_1", "account_2"],
+            [1, 2],
             True,
         ),
         (
             pd.DataFrame(
                 {
                     "id": [6, 5, 4, 3, 2],
+                    "account_platform_id": [2] * 3 + [1] * 2,
                     "account_handle": ["account_2"] * 3 + ["account_1"] * 2,
+                    "account_name": ["account_2"] * 3 + ["account_1"] * 2,
                     "has_topics": [False, True, False, True, False],
                     "total_interactions": [6, 5, 4, 3, 2],
                 },
                 index=pd.Int64Index([5, 4, 3, 2, 1], dtype="int64"),
             ),
-            ["account_1", "account_2"],
+            pd.DataFrame(
+                {
+                    "account_platform_id": [2, 1],
+                    "account_handle": ["account_2", "account_1"],
+                    "account_name": ["account_2", "account_1"],
+                },
+            ),
             5,
-            ["account_1", "account_2"],
+            [1, 2],
             False,
         ),
         (
             pd.DataFrame(
                 {
                     "id": [6, 5],
+                    "account_platform_id": [2] * 2,
                     "account_handle": ["account_2"] * 2,
+                    "account_name": ["account_2"] * 2,
                     "has_topics": [False, True],
                     "total_interactions": [6, 5],
                 },
                 index=pd.Int64Index([5, 4], dtype="int64"),
             ),
-            ["account_1", "account_2"],
+            pd.DataFrame(
+                {
+                    "account_platform_id": [2, 1],
+                    "account_handle": ["account_2", "account_1"],
+                    "account_name": ["account_2", "account_1"],
+                },
+            ),
             2,
-            ["account_1", "account_2"],
+            [1, 2],
             False,
         ),
     ],
@@ -144,4 +202,4 @@ def test_filter(
         has_topics=has_topics,
     )
     pd.testing.assert_frame_equal(return_df, expected_return)
-    assert return_matched_accounts.sort() == expected_matched_accounts.sort()
+    pd.testing.assert_frame_equal(return_matched_accounts, expected_matched_accounts)

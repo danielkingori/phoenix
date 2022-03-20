@@ -32,13 +32,18 @@ def filter_posts(
     """
     df = facebook_posts_df.copy()
     if include_accounts:
-        df = df[df["account_handle"].isin(include_accounts)]
+        df = df[df["account_platform_id"].isin(include_accounts)]
 
     if has_topics:
         df = df.loc[df["has_topics"]]
 
     df = df.sort_values(by=order_by, ascending=False)
 
-    found_accounts = df["account_handle"].unique()
+    found_accounts = (
+        df[["account_platform_id", "account_handle", "account_name"]]
+        .drop_duplicates()
+        .sort_values(by="account_platform_id", ascending=False)
+        .reset_index(drop=True)
+    )
 
     return df.head(head), found_accounts

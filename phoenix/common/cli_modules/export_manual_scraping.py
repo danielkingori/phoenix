@@ -27,7 +27,7 @@ def export_manual_scraping():
 )
 @click.option(
     "--include_accounts",
-    help=("Accounts to include in the posts to scrape. Format: 'account_1,account_2'"),
+    help=("Account ids to include in the posts to scrape. Format: '1,2'"),
 )
 @click.option(
     "--has_topics",
