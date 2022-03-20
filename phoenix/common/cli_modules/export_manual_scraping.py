@@ -34,6 +34,20 @@ def export_manual_scraping():
     default=False,
     help=("If True posts to scrape will be filtered by has_topics True (relevant)"),
 )
+@click.option(
+    "--after_timestamp",
+    help=(
+        "Filter the year and month tagging run dataset for posts after a timestamp."
+        " Format of iso string."
+    ),
+)
+@click.option(
+    "--before_timestamp",
+    help=(
+        "Filter the year and month tagging run dataset for posts before a timestamp."
+        " Format of iso string."
+    ),
+)
 @click.option("--custom_prefix", help=("A custom prefix on persisted csv"))
 @click.pass_context
 def facebook_posts(
@@ -46,6 +60,8 @@ def facebook_posts(
     include_accounts,
     has_topics,
     custom_prefix,
+    after_timestamp,
+    before_timestamp,
 ):
     """Run create of the labelling from pulled_data.
 
@@ -69,6 +85,8 @@ def facebook_posts(
         "INCLUDE_ACCOUNTS": include_accounts,
         "HAS_TOPICS": has_topics,
         "CUSTOM_PREFIX": custom_prefix,
+        "AFTER_TIMESTAMP": after_timestamp,
+        "BEFORE_TIMESTAMP": before_timestamp,
         "OBJECT_TYPE": "facebook_posts",
     }
     parameters = {
