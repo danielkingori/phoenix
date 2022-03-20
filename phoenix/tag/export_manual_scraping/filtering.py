@@ -1,6 +1,8 @@
 """Filtering."""
 from typing import List, Optional, Tuple
 
+import datetime
+
 import pandas as pd
 
 
@@ -13,6 +15,8 @@ def filter_posts(
     include_accounts: Optional[List[str]],
     has_topics: Optional[bool] = False,
     order_by: Optional[str] = DEFAULT_ORDER_BY,
+    after_timestamp: Optional[datetime.datetime] = None,
+    before_timestamp: Optional[datetime.datetime] = None,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Filter the facebook posts for the export manual scraping.
 
@@ -21,7 +25,9 @@ def filter_posts(
         head: number of posts to return,
         include_accounts: List of accounts to filter by,
         has_topics: if true filter by has_topics (relevant),
-        order_by: Order by before the cut, default is total_interactions
+        order_by: Order by before the cut, default is total_interactions,
+        after_timestamp: Posts created after a date time,
+        before_timestamp: Posts created before a date time,
 
     Return:
         A tuple with:
@@ -36,6 +42,12 @@ def filter_posts(
 
     if has_topics:
         df = df.loc[df["has_topics"]]
+
+    if after_timestamp:
+        df = df[df["timestamp_filter"] > after_timestamp]
+
+    if before_timestamp:
+        df = df[df["timestamp_filter"] < before_timestamp]
 
     df = df.sort_values(by=order_by, ascending=False)
 
