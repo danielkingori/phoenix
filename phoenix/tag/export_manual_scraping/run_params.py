@@ -29,6 +29,8 @@ class ExportManualScrapingRunParams(base.RunParams):
     has_topics: bool
     custom_prefix: Union[str, None]
     head: int
+    after_timestamp: Union[datetime.datetime, None]
+    before_timestamp: Union[datetime.datetime, None]
 
 
 def create(
@@ -42,6 +44,8 @@ def create(
     has_topics: Optional[Union[bool, str]],
     custom_prefix: Optional[str],
     head: Optional[Union[str, int]],
+    after_timestamp: Optional[Union[str, datetime.datetime]],
+    before_timestamp: Optional[Union[str, datetime.datetime]],
 ) -> ExportManualScrapingRunParams:
     """Create the ExportManualScrapingRunParams."""
     general_run_params = general.create(artifacts_environment_key, tenant_id, run_datetime_str)
@@ -55,6 +59,9 @@ def create(
     if not normalised_head:
         normalised_head = DEFAULT_HEAD
 
+    normalised_after_timestamp = normalise_datetime(after_timestamp)
+    normalised_before_timestamp = normalise_datetime(before_timestamp)
+
     return ExportManualScrapingRunParams(
         general=general_run_params,
         urls=urls,
@@ -62,6 +69,8 @@ def create(
         has_topics=normalised_has_topics,
         custom_prefix=custom_prefix,
         head=normalised_head,
+        after_timestamp=normalised_after_timestamp,
+        before_timestamp=normalised_before_timestamp,
     )
 
 
@@ -102,3 +111,31 @@ def normalise_account_parameter(
         raise ValueError("Accounts parameter is not a list.")
 
     return accounts
+
+
+def normalise_datetime(
+    dt: Optional[Union[str, datetime.datetime]],
+) -> Union[datetime.datetime, None]:
+    """Normalise a datetime."""
+    if not dt:
+        return None
+
+    if type(dt) is str:
+        return _datetime_from_string(dt)
+
+    if type(dt) is datetime.datetime:
+        return dt
+
+    if type(dt) is datetime.date:
+        dt = datetime.datetime.combine(dt, datetime.datetime.min.time())
+        dt = dt.replace(tzinfo=datetime.timezone.utc)
+        return dt
+
+    raise ValueError(f"Unable to convert to datetime: {dt} with type: {type(dt)}")
+
+
+def _datetime_from_string(dt_str: str) -> datetime.datetime:
+    dt = datetime.datetime.fromisoformat(dt_str)
+    if not dt.tzinfo:
+        dt = dt.replace(tzinfo=datetime.timezone.utc)
+    return dt

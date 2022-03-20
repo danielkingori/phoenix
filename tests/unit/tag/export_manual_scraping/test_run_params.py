@@ -1,4 +1,5 @@
 """Run params for export manual scraping."""
+import datetime
 import os
 
 import mock
@@ -12,6 +13,11 @@ URL_PREFIX = "s3://data-lake/"
 OBJECT_TYPE = "facebook_posts"
 ARTIFACTS_ENVIRONMENT_KEY = "production"
 TENANT_ID = "tenant_id_1"
+JAN_DATETIME = datetime.datetime(2022, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc)
+JAN_DATETIME_HOUR = datetime.datetime(2022, 1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)
+JAN_DATETIME_TIMEZONE = datetime.datetime(
+    2022, 1, 1, 0, 0, 0, tzinfo=datetime.timezone(datetime.timedelta(seconds=14400))
+)
 
 
 @mock.patch.dict(os.environ, {registry_environment.PRODUCTION_ENV_VAR_KEY: URL_PREFIX})
@@ -21,6 +27,8 @@ TENANT_ID = "tenant_id_1"
         ", has_topics, expected_has_topics"
         ", custom_prefix, expected_facebook_posts_to_scrape_url"
         ", head, expected_head"
+        ", after_timestamp, expected_after_timestamp"
+        ", before_timestamp, expected_before_timestamp"
     ),
     [
         (
@@ -32,6 +40,10 @@ TENANT_ID = "tenant_id_1"
             "default",
             None,
             export_manual_scraping.run_params.DEFAULT_HEAD,
+            None,
+            None,
+            None,
+            None,
         ),
         (
             None,
@@ -46,10 +58,53 @@ TENANT_ID = "tenant_id_1"
             ),
             20,
             20,
+            "2022-01-01",
+            JAN_DATETIME,
+            "2022-01-01",
+            JAN_DATETIME,
         ),
-        (None, None, False, False, None, "default", "30", 30),
-        ("account_1", ["account_1"], "t", True, None, "default", 10, 10),
-        (["account_1"], ["account_1"], "True", True, None, "default", 10, 10),
+        (
+            None,
+            None,
+            False,
+            False,
+            None,
+            "default",
+            "30",
+            30,
+            "2022-01-01 00:00:00",
+            JAN_DATETIME,
+            "2022-01-01 00:00:00",
+            JAN_DATETIME,
+        ),
+        (
+            "account_1",
+            ["account_1"],
+            "t",
+            True,
+            None,
+            "default",
+            10,
+            10,
+            "2022-01-01 01:00:00+00:00",
+            JAN_DATETIME_HOUR,
+            "2022-01-01 01:00:00+00:00",
+            JAN_DATETIME_HOUR,
+        ),
+        (
+            ["account_1"],
+            ["account_1"],
+            "True",
+            True,
+            None,
+            "default",
+            10,
+            10,
+            "2022-01-01 00:00:00+04:00",
+            JAN_DATETIME_TIMEZONE,
+            "2022-01-01 00:00:00+04:00",
+            JAN_DATETIME_TIMEZONE,
+        ),
         (
             "account_1,account_2",
             ["account_1", "account_2"],
@@ -59,6 +114,10 @@ TENANT_ID = "tenant_id_1"
             "default",
             10,
             10,
+            datetime.date(2022, 1, 1),
+            JAN_DATETIME,
+            datetime.date(2022, 1, 1),
+            JAN_DATETIME,
         ),
         (
             ["account_1", "account_2"],
@@ -69,6 +128,10 @@ TENANT_ID = "tenant_id_1"
             "default",
             10,
             10,
+            JAN_DATETIME_HOUR,
+            JAN_DATETIME_HOUR,
+            JAN_DATETIME_HOUR,
+            JAN_DATETIME_HOUR,
         ),
     ],
 )
@@ -81,6 +144,10 @@ def test_create(
     expected_facebook_posts_to_scrape_url,
     head,
     expected_head,
+    after_timestamp,
+    expected_after_timestamp,
+    before_timestamp,
+    expected_before_timestamp,
     tenants_template_url_mock,
 ):
     """Test create of the export manual scraping run params."""
@@ -95,6 +162,8 @@ def test_create(
         has_topics=has_topics,
         custom_prefix=custom_prefix,
         head=head,
+        after_timestamp=after_timestamp,
+        before_timestamp=before_timestamp,
     )
 
     assert run_params
@@ -102,6 +171,8 @@ def test_create(
     assert run_params.include_accounts == expected_include_accounts
     assert run_params.has_topics == expected_has_topics
     assert run_params.head == expected_head
+    assert run_params.after_timestamp == expected_after_timestamp
+    assert run_params.before_timestamp == expected_before_timestamp
 
     TAGGING_BASE = (
         "s3://data-lake/tenant_id_1/"
