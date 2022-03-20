@@ -29,6 +29,7 @@ JAN_DATETIME_TIMEZONE = datetime.datetime(
         ", head, expected_head"
         ", after_timestamp, expected_after_timestamp"
         ", before_timestamp, expected_before_timestamp"
+        ", exclude_accounts, expected_exclude_accounts"
     ),
     [
         (
@@ -40,6 +41,8 @@ JAN_DATETIME_TIMEZONE = datetime.datetime(
             "default",
             None,
             export_manual_scraping.run_params.DEFAULT_HEAD,
+            None,
+            None,
             None,
             None,
             None,
@@ -62,6 +65,8 @@ JAN_DATETIME_TIMEZONE = datetime.datetime(
             JAN_DATETIME,
             "2022-01-01",
             JAN_DATETIME,
+            "1",
+            ["1"],
         ),
         (
             None,
@@ -76,6 +81,8 @@ JAN_DATETIME_TIMEZONE = datetime.datetime(
             JAN_DATETIME,
             "2022-01-01 00:00:00",
             JAN_DATETIME,
+            "1,2",
+            ["1", "2"],
         ),
         (
             "account_1",
@@ -90,6 +97,8 @@ JAN_DATETIME_TIMEZONE = datetime.datetime(
             JAN_DATETIME_HOUR,
             "2022-01-01 01:00:00+00:00",
             JAN_DATETIME_HOUR,
+            None,
+            None,
         ),
         (
             ["account_1"],
@@ -104,6 +113,8 @@ JAN_DATETIME_TIMEZONE = datetime.datetime(
             JAN_DATETIME_TIMEZONE,
             "2022-01-01 00:00:00+04:00",
             JAN_DATETIME_TIMEZONE,
+            None,
+            None,
         ),
         (
             "account_1,account_2",
@@ -118,6 +129,8 @@ JAN_DATETIME_TIMEZONE = datetime.datetime(
             JAN_DATETIME,
             datetime.date(2022, 1, 1),
             JAN_DATETIME,
+            None,
+            None,
         ),
         (
             ["account_1", "account_2"],
@@ -132,6 +145,8 @@ JAN_DATETIME_TIMEZONE = datetime.datetime(
             JAN_DATETIME_HOUR,
             JAN_DATETIME_HOUR,
             JAN_DATETIME_HOUR,
+            None,
+            None,
         ),
     ],
 )
@@ -148,6 +163,8 @@ def test_create(
     expected_after_timestamp,
     before_timestamp,
     expected_before_timestamp,
+    exclude_accounts,
+    expected_exclude_accounts,
     tenants_template_url_mock,
 ):
     """Test create of the export manual scraping run params."""
@@ -164,6 +181,7 @@ def test_create(
         head=head,
         after_timestamp=after_timestamp,
         before_timestamp=before_timestamp,
+        exclude_accounts=exclude_accounts,
     )
 
     assert run_params
@@ -173,6 +191,7 @@ def test_create(
     assert run_params.head == expected_head
     assert run_params.after_timestamp == expected_after_timestamp
     assert run_params.before_timestamp == expected_before_timestamp
+    assert run_params.exclude_accounts == expected_exclude_accounts
 
     TAGGING_BASE = (
         "s3://data-lake/tenant_id_1/"

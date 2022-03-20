@@ -30,6 +30,10 @@ def export_manual_scraping():
     help=("Account ids to include in the posts to scrape. Format: '1,2'"),
 )
 @click.option(
+    "--exclude_accounts",
+    help=("Account ids to exclude in the posts to scrape. Format: '1,2'"),
+)
+@click.option(
     "--has_topics",
     default=False,
     help=("If True posts to scrape will be filtered by has_topics True (relevant)"),
@@ -62,6 +66,7 @@ def facebook_posts(
     custom_prefix,
     after_timestamp,
     before_timestamp,
+    exclude_accounts,
 ):
     """Run create of the labelling from pulled_data.
 
@@ -87,6 +92,7 @@ def facebook_posts(
         "CUSTOM_PREFIX": custom_prefix,
         "AFTER_TIMESTAMP": after_timestamp,
         "BEFORE_TIMESTAMP": before_timestamp,
+        "EXCLUDE_ACCOUNTS": exclude_accounts,
         "OBJECT_TYPE": "facebook_posts",
     }
     parameters = {

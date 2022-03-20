@@ -26,6 +26,7 @@ class ExportManualScrapingRunParams(base.RunParams):
     urls: ExportManualScrapingRunParamsURLs
     general: general.GeneralRunParams
     include_accounts: Union[List[str], None]
+    exclude_accounts: Union[List[str], None]
     has_topics: bool
     custom_prefix: Union[str, None]
     head: int
@@ -46,11 +47,13 @@ def create(
     head: Optional[Union[str, int]],
     after_timestamp: Optional[Union[str, datetime.datetime]],
     before_timestamp: Optional[Union[str, datetime.datetime]],
+    exclude_accounts: Optional[Union[List[str], str]],
 ) -> ExportManualScrapingRunParams:
     """Create the ExportManualScrapingRunParams."""
     general_run_params = general.create(artifacts_environment_key, tenant_id, run_datetime_str)
     urls = _get_urls(general_run_params, object_type, year_filter, month_filter, custom_prefix)
     include_accounts = normalise_account_parameter(include_accounts)
+    exclude_accounts = normalise_account_parameter(exclude_accounts)
     normalised_has_topics = True
     if has_topics is not None:
         normalised_has_topics = utils.normalise_bool(has_topics)
@@ -71,6 +74,7 @@ def create(
         head=normalised_head,
         after_timestamp=normalised_after_timestamp,
         before_timestamp=normalised_before_timestamp,
+        exclude_accounts=exclude_accounts,
     )
 
 
