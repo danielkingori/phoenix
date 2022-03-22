@@ -8,6 +8,9 @@ from phoenix.common.artifacts.registry_mappers.default_url_mapper import MapperD
 GROUP_BY_FACEBOOK_COMMENT_PAGES = (
     "base/grouped_by_year_month/facebook_comments_pages/" f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
 )
+GROUP_BY_FACEBOOK_POST_PAGES = (
+    "base/grouped_by_year_month/facebook_posts_pages/" f"{shared_urls.YEAR_MONTH_FILTER_DIRS}"
+)
 
 MAPPERS: MapperDict = {
     # Facebook Posts
@@ -38,6 +41,20 @@ MAPPERS: MapperDict = {
     ),
     "base-facebook_comments_pages_all_failed_parse": partial(
         url_mapper, GROUP_BY_FACEBOOK_COMMENT_PAGES + "failed_parse/"
+    # Facebook Posts - manual scraping
+    "base-grouped_by_facebook_posts": partial(
+        url_mapper,
+        shared_urls.GROUP_BY_FACEBOOK_PAGES + "facebook_posts-{RUN_DATETIME}.json",
+    ),
+    "base-facebook_posts_pages_to_parse": partial(
+        url_mapper, GROUP_BY_FACEBOOK_POST_PAGES + "to_parse/"
+    ),
+    "base-facebook_posts_pages_successful_parse": partial(
+        url_mapper,
+        GROUP_BY_FACEBOOK_POST_PAGES + "successful_parse/{RUN_DATETIME}/",
+    ),
+    "base-facebook_posts_pages_failed_parse": partial(
+        url_mapper, GROUP_BY_FACEBOOK_POST_PAGES + "failed_parse/{RUN_DATETIME}/"
     ),
     # Acled events
     "base-acled_events_input": partial(url_mapper, shared_urls.BASE_BASE + "acled_events/"),
