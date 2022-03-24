@@ -58,6 +58,11 @@ MAPPERS: MapperDict = {
     "tagging_runs-facebook_posts_classes_final": partial(
         url_mapper, TAGGING_FACEBOOK_POSTS + "facebook_posts_classes_final.parquet"
     ),
+    "tagging_runs-custom_facebook_posts_to_scrape": partial(
+        url_mapper,
+        TAGGING_FACEBOOK_POSTS
+        + "export_manual_scraping/{CUSTOM_PREFIX}facebook_posts_to_scrape.csv",
+    ),
     # Tweets
     "tagging_runs-tweets_input": partial(url_mapper, shared_urls.GROUP_BY_TWEETS),
     "tagging_runs-tweets_pulled": partial(url_mapper, TAGGING_TWEETS + "tweets_pulled.parquet"),
