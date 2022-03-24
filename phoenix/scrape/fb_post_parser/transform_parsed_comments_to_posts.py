@@ -23,6 +23,7 @@ def transform(pages: list) -> list:
                 else:
                     post_dict["type"] = "status"
                 post_dict["languageCode"] = "und"
+                post_dict["platform"] = "Facebook"
                 post_dict["message"] = comment_post_entry["text"]
                 post_dict["account"] = {}
                 post_dict["account"]["name"] = comment_post_entry["user_display_name"]
