@@ -14,7 +14,7 @@ def transform(pages: list) -> list:
                 post_dict["date"] = comment_post_entry["date_utc"]
                 post_dict["updated"] = comment_post_entry["date_utc"]
                 post_dict["postUrl"] = (
-                    f"https://www.facebook.com/{comment_post_entry['user_name']}"
+                    f"https://www.facebook.com/{page['page']['top_post_owner']}"
                     f"/posts/{comment_post_entry['post_id']}"
                 )
                 post_dict["link"] = post_dict["postUrl"]
@@ -29,7 +29,7 @@ def transform(pages: list) -> list:
                 post_dict["account"]["handle"] = comment_post_entry["user_name"]
                 post_dict["account"][
                     "url"
-                ] = f"https://www.facebook.com/{comment_post_entry['user_name']}"
+                ] = f"https://www.facebook.com/{page['page']['top_post_owner']}"
                 post_dict["account"]["platformId"] = page["page"]["top_post_owner"]
                 for entry in [
                     "pageCategory",
