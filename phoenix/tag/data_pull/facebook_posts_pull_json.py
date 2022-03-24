@@ -197,7 +197,11 @@ def merge_flattened(df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFram
         "statistics_actual_angry_count",
         "statistics_actual_care_count",
     ]
-    df[to_add] = df_flattened[to_add]
+    for column in to_add:
+        if column in df_flattened:
+            df[column] = df_flattened[column]
+        else:
+            df[column] = None
     # Some posts don't have an account this should be looked in to further
     # https://gitlab.com/howtobuildup/phoenix/-/issues/47
     df["account_platform_id"] = df["account_platform_id"].fillna(0).astype(int)
