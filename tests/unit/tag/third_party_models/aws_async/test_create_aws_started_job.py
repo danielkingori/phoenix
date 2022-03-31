@@ -1,7 +1,7 @@
 """Unit tests for create_aws_started_job."""
 import pytest
 
-from phoenix.tag.third_party_models.aws_async import job_types, start_sentiment
+from phoenix.tag.third_party_models.aws_async import job_types, jobs, start_sentiment
 
 
 def create_async_job_meta():
@@ -29,7 +29,7 @@ def test_create_aws_started_job():
     }
     aws_started_job = start_sentiment.create_aws_started_job(job_dict, async_job_meta)
 
-    assert job_types.are_jobs_equal(
+    assert jobs.are_jobs_equal(
         aws_started_job,
         job_types.AWSStartedJob(
             job_id=job_id,
@@ -50,7 +50,7 @@ def test_create_aws_started_job_no_arn():
     }
     aws_started_job = start_sentiment.create_aws_started_job(job_dict, async_job_meta)
 
-    assert job_types.are_jobs_equal(
+    assert jobs.are_jobs_equal(
         aws_started_job,
         job_types.AWSStartedJob(
             job_id=job_id,

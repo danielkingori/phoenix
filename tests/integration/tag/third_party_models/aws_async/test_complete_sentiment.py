@@ -9,6 +9,7 @@ from phoenix.tag.third_party_models.aws_async import (
     complete_sentiment,
     info_sentiment,
     job_types,
+    jobs,
     start_sentiment,
 )
 
@@ -41,8 +42,8 @@ def test_complete_sentiment(
     async_job_group_url = f"{tmpdir_url}/async_job_group.json"
 
     # Doing the persist as this is part of the full functionality
-    _ = job_types.persist_json(async_job_group_url, async_job_group)
-    async_job_group_gotten = job_types.get_json(async_job_group_url)
+    _ = jobs.persist_json(async_job_group_url, async_job_group)
+    async_job_group_gotten = jobs.get_json(async_job_group_url)
 
     # Pointing to the test data
     async_job_group_gotten.async_jobs[0].async_job_meta.output_url = aws_sentiment_ar_output_url

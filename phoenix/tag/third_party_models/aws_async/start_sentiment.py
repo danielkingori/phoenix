@@ -6,7 +6,7 @@ import pandas as pd
 
 from phoenix.common import artifacts
 from phoenix.tag.third_party_models import aws_utils
-from phoenix.tag.third_party_models.aws_async import job_types, text_documents_for_analysis
+from phoenix.tag.third_party_models.aws_async import job_types, jobs, text_documents_for_analysis
 
 
 VALID_LANGUAGE_CODES = ["en", "ar"]
@@ -39,7 +39,7 @@ def start_sentiment_analysis_jobs(
         AsyncJobGroup
     """
     objects["text_bytes_truncate"] = aws_utils.text_bytes_truncate(objects["text"])
-    async_job_group_meta = job_types.create_async_job_group_meta("sentiment_analysis", bucket_url)
+    async_job_group_meta = jobs.create_async_job_group_meta("sentiment_analysis", bucket_url)
     async_jobs = []
     language_codes = [
         obj_lang_code
@@ -72,7 +72,7 @@ def start_sentiment_analysis_job(
     client=None,
 ) -> job_types.AsyncJob:
     """Start the sentiment_analysis_jobs filtering objects for language."""
-    async_job_meta = job_types.create_async_job_meta(async_job_group_meta, language_code)
+    async_job_meta = jobs.create_async_job_meta(async_job_group_meta, language_code)
     objects_to_analyse = get_objects_to_analyse(objects, async_job_meta.language_code)
     _ = persist_for_sentiment_analysis(async_job_meta.input_url, objects_to_analyse)
     # Need to persist the objects that have been analysed
