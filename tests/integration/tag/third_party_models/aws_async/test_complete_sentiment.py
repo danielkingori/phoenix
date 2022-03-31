@@ -5,6 +5,7 @@ import mock
 import pandas as pd
 import pytest
 
+from phoenix.common import run_datetime
 from phoenix.tag.third_party_models.aws_async import (
     complete_sentiment,
     info_sentiment,
@@ -34,8 +35,10 @@ def test_complete_sentiment(
     m_start.return_value = job_types.AWSStartedJob(
         job_id="id", job_arn="arn", job_status=job_types.JOB_STATUS_SUBMITTED
     )
+    dt = datetime.datetime(2000, 1, 2, 3, 4, 5, tzinfo=datetime.timezone.utc)
+    run_dt = run_datetime.RunDatetime(dt)
     async_job_group = start_sentiment.start_sentiment_analysis_jobs(
-        data_access_role_arn, tmpdir_url, aws_sentiment_objects, client
+        run_dt, data_access_role_arn, tmpdir_url, aws_sentiment_objects, client
     )
     assert async_job_group
 

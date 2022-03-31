@@ -7,20 +7,18 @@ from typing import Dict, cast
 
 import dataclasses
 import json
-import uuid
 
 import dacite
 
-from phoenix.common import artifacts
+from phoenix.common import artifacts, run_datetime
 from phoenix.tag.third_party_models.aws_async import job_types
 
 
 def create_async_job_group_meta(
-    analysis_type: str, bucket_url: str
+    analysis_type: str, bucket_url: str, run_dt: run_datetime.RunDatetime
 ) -> job_types.AsyncJobGroupMeta:
     """Create a AsyncGroupJobMeta."""
-    # Using uuid for the moment but it might be better to use RunDatetime at some point
-    group_job_id = f"{analysis_type}-{uuid.uuid4()}"
+    group_job_id = f"{analysis_type}-{run_dt.to_file_safe_str()}"
     artifacts_base = f"{bucket_url}{group_job_id}/"
     return job_types.AsyncJobGroupMeta(
         analysis_type=analysis_type, group_job_id=group_job_id, artifacts_base=artifacts_base

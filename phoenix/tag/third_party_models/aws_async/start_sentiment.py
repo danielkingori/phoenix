@@ -4,7 +4,7 @@ from typing import Any, Dict
 import boto3
 import pandas as pd
 
-from phoenix.common import artifacts
+from phoenix.common import artifacts, run_datetime
 from phoenix.tag.third_party_models import aws_utils
 from phoenix.tag.third_party_models.aws_async import job_types, jobs, text_documents_for_analysis
 
@@ -13,6 +13,7 @@ VALID_LANGUAGE_CODES = ["en", "ar"]
 
 
 def start_sentiment_analysis_jobs(
+    run_dt: run_datetime.RunDatetime,
     data_access_role_arn: str,
     bucket_url: str,
     objects: pd.DataFrame,
@@ -39,7 +40,9 @@ def start_sentiment_analysis_jobs(
         AsyncJobGroup
     """
     objects["text_bytes_truncate"] = aws_utils.text_bytes_truncate(objects["text"])
-    async_job_group_meta = jobs.create_async_job_group_meta("sentiment_analysis", bucket_url)
+    async_job_group_meta = jobs.create_async_job_group_meta(
+        "sentiment_analysis", bucket_url, run_dt
+    )
     async_jobs = []
     language_codes = [
         obj_lang_code
