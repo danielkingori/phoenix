@@ -32,3 +32,21 @@ def get(folder_url: str) -> pd.DataFrame:
     """
     art_ddf = artifacts.dask_dataframes.get(folder_url)
     return art_ddf.dataframe.compute()
+
+
+def get_objects_still_to_analyse(objects_df: pd.DataFrame, language_sentiment_dataset_url: str):
+    """Get the objects that are have not yet been analysed.
+
+    Args:
+        objects_url: the url of the objects url.
+        language_sentiment_dataset_url: the url of the language_sentiment_dataset
+
+    Returns:
+        DataFrame
+    """
+    language_sentiment_df = get(language_sentiment_dataset_url)
+    matched_df = language_sentiment_df[objects_df.columns]
+    result_df = pd.concat([objects_df, matched_df]).drop_duplicates(
+        subset=["object_id"], keep=False
+    )
+    return result_df.reset_index(drop=True)

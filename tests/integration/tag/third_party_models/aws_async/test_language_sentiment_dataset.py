@@ -53,3 +53,38 @@ def test_persist_get(language_sentiment_dataset_url):
 
     expected_read_df_2 = pd.concat([df, df_2])
     pd.testing.assert_frame_equal(read_df_2, expected_read_df_2)
+
+
+def test_get_objects_still_to_analysis(language_sentiment_dataset_url):
+    """Test persist of language_sentiment_dataset."""
+    df = pd.DataFrame(
+        {
+            "object_id": ["1", "2"],
+            "object_url": ["url_1", "url_2"],
+            "language_sentiment": ["POSITIVE", "NEGATIVE"],
+        }
+    )
+    run_dt = run_datetime.RunDatetime(
+        dt=datetime.datetime(2000, 1, 1, 1, 1, 1, tzinfo=datetime.timezone.utc)
+    )
+
+    _ = language_sentiment_dataset.persist(language_sentiment_dataset_url, df, run_dt)
+
+    objects_df = pd.DataFrame(
+        {
+            "object_id": ["1", "2", "3", "4"],
+            "object_url": ["url_1", "url_2", "url_3", "url_4"],
+        }
+    )
+
+    still_to_analyse = language_sentiment_dataset.get_objects_still_to_analyse(
+        objects_df, language_sentiment_dataset_url
+    )
+    expected_df = pd.DataFrame(
+        {
+            "object_id": ["3", "4"],
+            "object_url": ["url_3", "url_4"],
+        }
+    )
+
+    pd.testing.assert_frame_equal(still_to_analyse, expected_df)
