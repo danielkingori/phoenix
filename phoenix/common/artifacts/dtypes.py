@@ -40,4 +40,4 @@ class ArtifactJson:
     """
 
     url: str
-    obj: Union[List, Dict[Any, Any]]
+    obj: Union[List, Dict[Any, Any], None]

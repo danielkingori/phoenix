@@ -13,7 +13,9 @@ from phoenix.common.artifacts import dtypes, utils
 VALID_SUFFIX = ".json"
 
 
-def persist(artifacts_json_url: str, obj: Union[List, Dict[Any, Any]]) -> dtypes.ArtifactJson:
+def persist(
+    artifacts_json_url: str, obj: Union[List, Dict[Any, Any], None]
+) -> dtypes.ArtifactJson:
     """Persist a obj creating a ArtifactJson.
 
     Ecoding is "utf-8" which comes from tentaclio.

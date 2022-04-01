@@ -3,7 +3,7 @@
 Typing the data that will be stored between the
 start and complete stages of the asynchronous analysis.
 """
-from typing import Dict, cast
+from typing import Any, Dict, Union, cast
 
 import dataclasses
 import json
@@ -45,14 +45,28 @@ def create_async_job_meta(
     )
 
 
-def persist_json(url: str, async_job_group: job_types.AsyncJobGroup):
-    """Persist the AsyncJobGroup."""
-    return artifacts.json.persist(url, dataclasses.asdict(async_job_group))
+def persist_json(url: str, to_persist: Union[job_types.AsyncJobGroup, None]):
+    """Persist a AsyncJobGroup or None."""
+    return artifacts.json.persist(url, _normalise_before_persists(to_persist))
+
+
+def _normalise_before_persists(
+    to_persist: Union[job_types.AsyncJobGroup, None]
+) -> Union[Dict[Any, Any], None]:
+    if isinstance(to_persist, job_types.AsyncJobGroup):
+        return dataclasses.asdict(to_persist)
+
+    if to_persist is None:
+        return to_persist
+
+    raise ValueError("Not able to persist type {type(to_persist)}")
 
 
 def get_json(url: str):
     """Get the AsyncJobGroup."""
     raw_dict = artifacts.json.get(url).obj
+    if not raw_dict:
+        return None
     raw_dict = cast(Dict, raw_dict)  # casting type for mypy because we know it is correct
     return dacite.from_dict(data=raw_dict, data_class=job_types.AsyncJobGroup)
 

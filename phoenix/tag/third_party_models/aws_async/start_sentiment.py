@@ -1,5 +1,5 @@
 """Start the sentiment analysis."""
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 import boto3
 import pandas as pd
@@ -18,7 +18,7 @@ def start_sentiment_analysis_jobs(
     bucket_url: str,
     objects: pd.DataFrame,
     client=None,
-) -> job_types.AsyncJobGroup:
+) -> Union[job_types.AsyncJobGroup, None]:
     """Start sentiment analysis jobs in AWS Comprehend.
 
     Will start a job for each supported language.
@@ -37,8 +37,11 @@ def start_sentiment_analysis_jobs(
         client: Optional boto 3 client
 
     Returns:
-        AsyncJobGroup
+        AsyncJobGroup when there was a sentiment analysis started
+        None if no objects can be analysed
     """
+    if count_of_objects_to_be_analysed(objects) == 0:
+        return None
     objects["text_bytes_truncate"] = aws_utils.text_bytes_truncate(objects["text"])
     async_job_group_meta = jobs.create_async_job_group_meta(
         "sentiment_analysis", bucket_url, run_dt
@@ -156,3 +159,9 @@ def persist_for_sentiment_analysis(url: str, objects_to_analyse: pd.DataFrame):
     return text_documents_for_analysis.persist_text_series(
         url, objects_to_analyse["text_bytes_truncate"]
     )
+
+
+def count_of_objects_to_be_analysed(df: pd.DataFrame) -> int:
+    """Get the count of objects that can be analyised."""
+    can_be_analysied = df[df["language"].isin(VALID_LANGUAGE_CODES)]
+    return can_be_analysied.shape[0]
