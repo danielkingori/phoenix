@@ -3,6 +3,8 @@ from typing import Literal
 
 
 ArtifactKey = Literal[
+    # Legacy
+    "legacy-language_sentiment_objects",
     # static
     "static-twitter_users",
     "static-twitter_keywords",
