@@ -54,6 +54,36 @@ def test_persist_get(language_sentiment_dataset_url):
     expected_read_df_2 = pd.concat([df, df_2])
     pd.testing.assert_frame_equal(read_df_2, expected_read_df_2)
 
+    # Duplicated should be added but be filtered
+    df_3 = pd.DataFrame(
+        {
+            "object_id": ["3", "5"],
+            "object_url": ["url_3", "url_5"],
+            "language_sentiment": ["POSITIVE", "NEGATIVE"],
+        }
+    )
+
+    run_dt = run_datetime.RunDatetime(
+        dt=datetime.datetime(2000, 1, 1, 1, 1, 3, tzinfo=datetime.timezone.utc)
+    )
+
+    art_df = language_sentiment_dataset.persist(language_sentiment_dataset_url, df_3, run_dt)
+    read_df_3 = language_sentiment_dataset.get(language_sentiment_dataset_url)
+    assert art_df.url == f"{language_sentiment_dataset_url}{run_dt.to_file_safe_str()}.parquet"
+    pd.testing.assert_frame_equal(art_df.dataframe, df_3)
+
+    expected_df_3 = pd.DataFrame(
+        {
+            "object_id": ["5"],
+            "object_url": ["url_5"],
+            "language_sentiment": ["NEGATIVE"],
+        },
+        # The second item is the one that is added
+        index=pd.Int64Index([1], dtype="int64"),
+    )
+    expected_read_df_3 = pd.concat([df, df_2, expected_df_3])
+    pd.testing.assert_frame_equal(read_df_3, expected_read_df_3)
+
 
 def test_get_objects_still_to_analysis(language_sentiment_dataset_url):
     """Test persist of language_sentiment_dataset."""

@@ -31,7 +31,13 @@ def get(folder_url: str) -> pd.DataFrame:
         DataFrame
     """
     art_ddf = artifacts.dask_dataframes.get(folder_url)
-    return art_ddf.dataframe.compute()
+    # Deduplication in case there is duplicate persisted
+    # This could happen if there are two cuncurrent start and complete sentiment
+    # scripts run.
+    # This is race condition will only cause extra costs so it not
+    # a huge problem
+    df = art_ddf.dataframe.drop_duplicates(subset=["object_id"])
+    return df.compute()
 
 
 def get_objects_still_to_analyse(objects_df: pd.DataFrame, language_sentiment_dataset_url: str):
