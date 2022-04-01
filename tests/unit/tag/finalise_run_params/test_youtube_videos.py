@@ -64,7 +64,7 @@ def test_create(
     urls = run_params.urls
     assert urls.input_dataset == f"{TAGGING_BASE}youtube_videos_pulled.parquet"
     assert urls.objects_tensions == f"{TAGGING_BASE}objects_tensions.parquet"
-    assert urls.language_sentiment_objects == f"{TAGGING_BASE}language_sentiment_objects.parquet"
+    assert urls.language_sentiment_objects == f"{TAGGING_BASE}language_sentiment_objects/"
     assert urls.tagging_final == f"{TAGGING_BASE}youtube_videos_final.parquet"
     if expected_final_url == "default":
         FINAL_BASE = "s3://data-lake/tenant_id_1/final/youtube_videos/"
