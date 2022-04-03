@@ -4,6 +4,7 @@ from phoenix.common.artifacts.registry_mappers import (
     final_mappers,
     graphing_mappers,
     labelling_mappers,
+    legacy_mappers,
     sflm_mappers,
     source_mappers,
     static_mappers,
@@ -27,6 +28,7 @@ DEFAULT_MAPPERS: MapperDict = {
     **tagging_mappers.MAPPERS,
     **final_mappers.MAPPERS,
     **sflm_mappers.MAPPERS,
+    **legacy_mappers.MAPPERS,
 }
 
 

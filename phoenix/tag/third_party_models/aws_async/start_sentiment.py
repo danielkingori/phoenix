@@ -1,23 +1,24 @@
 """Start the sentiment analysis."""
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 import boto3
 import pandas as pd
 
-from phoenix.common import artifacts
+from phoenix.common import artifacts, run_datetime
 from phoenix.tag.third_party_models import aws_utils
-from phoenix.tag.third_party_models.aws_async import job_types, text_documents_for_analysis
+from phoenix.tag.third_party_models.aws_async import job_types, jobs, text_documents_for_analysis
 
 
 VALID_LANGUAGE_CODES = ["en", "ar"]
 
 
 def start_sentiment_analysis_jobs(
+    run_dt: run_datetime.RunDatetime,
     data_access_role_arn: str,
     bucket_url: str,
     objects: pd.DataFrame,
     client=None,
-) -> job_types.AsyncJobGroup:
+) -> Union[job_types.AsyncJobGroup, None]:
     """Start sentiment analysis jobs in AWS Comprehend.
 
     Will start a job for each supported language.
@@ -36,10 +37,15 @@ def start_sentiment_analysis_jobs(
         client: Optional boto 3 client
 
     Returns:
-        AsyncJobGroup
+        AsyncJobGroup when there was a sentiment analysis started
+        None if no objects can be analysed
     """
+    if count_of_objects_to_be_analysed(objects) == 0:
+        return None
     objects["text_bytes_truncate"] = aws_utils.text_bytes_truncate(objects["text"])
-    async_job_group_meta = job_types.create_async_job_group_meta("sentiment_analysis", bucket_url)
+    async_job_group_meta = jobs.create_async_job_group_meta(
+        "sentiment_analysis", bucket_url, run_dt
+    )
     async_jobs = []
     language_codes = [
         obj_lang_code
@@ -72,7 +78,7 @@ def start_sentiment_analysis_job(
     client=None,
 ) -> job_types.AsyncJob:
     """Start the sentiment_analysis_jobs filtering objects for language."""
-    async_job_meta = job_types.create_async_job_meta(async_job_group_meta, language_code)
+    async_job_meta = jobs.create_async_job_meta(async_job_group_meta, language_code)
     objects_to_analyse = get_objects_to_analyse(objects, async_job_meta.language_code)
     _ = persist_for_sentiment_analysis(async_job_meta.input_url, objects_to_analyse)
     # Need to persist the objects that have been analysed
@@ -153,3 +159,9 @@ def persist_for_sentiment_analysis(url: str, objects_to_analyse: pd.DataFrame):
     return text_documents_for_analysis.persist_text_series(
         url, objects_to_analyse["text_bytes_truncate"]
     )
+
+
+def count_of_objects_to_be_analysed(df: pd.DataFrame) -> int:
+    """Get the count of objects that can be analyised."""
+    can_be_analysied = df[df["language"].isin(VALID_LANGUAGE_CODES)]
+    return can_be_analysied.shape[0]

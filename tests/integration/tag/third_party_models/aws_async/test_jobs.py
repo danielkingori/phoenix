@@ -1,5 +1,5 @@
-"""Integration test for start of sentiment."""
-from phoenix.tag.third_party_models.aws_async import job_types
+"""Integration jobs functionality."""
+from phoenix.tag.third_party_models.aws_async import job_types, jobs
 
 
 def test_job_types_persist(tmpdir_url):
@@ -35,7 +35,17 @@ def test_job_types_persist(tmpdir_url):
 
     async_job_group_url = f"{tmpdir_url}/async_job_group.json"
 
-    _ = job_types.persist_json(async_job_group_url, async_job_group)
-    async_job_group_gotten = job_types.get_json(async_job_group_url)
+    _ = jobs.persist_json(async_job_group_url, async_job_group)
+    async_job_group_gotten = jobs.get_json(async_job_group_url)
 
-    assert job_types.are_jobs_equal(async_job_group, async_job_group_gotten)
+    assert jobs.are_jobs_equal(async_job_group, async_job_group_gotten)
+
+
+def test_job_types_empty(tmpdir_url):
+    """Test persist of job types."""
+    async_job_group_url = f"{tmpdir_url}/async_job_group.json"
+
+    _ = jobs.persist_json(async_job_group_url, None)
+    async_job_group_gotten = jobs.get_json(async_job_group_url)
+
+    assert async_job_group_gotten is None

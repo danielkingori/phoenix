@@ -66,7 +66,7 @@ def tmp_s3_dir(request):
 @pytest.fixture
 def tmpdir_url(tmpdir):
     """Return the tmpdir as a url."""
-    return f"file:///{tmpdir}"
+    return f"file://{tmpdir}"
 
 
 def get_s3_keys(bucket, prefix=None, client=None):

@@ -60,6 +60,7 @@ def test_create(
     assert urls.objects == f"{TAGGING_BASE}objects.parquet"
     assert urls.async_job_group == f"{TAGGING_BASE}sentiment_analysis/async_job_group.json"
     assert urls.comprehend_base == f"{TAGGING_BASE}sentiment_analysis/comprehend_jobs/"
+    assert urls.language_sentiment_objects == f"{TAGGING_BASE}language_sentiment_objects/"
 
 
 def test_get_aws_comprehend_role_execption():

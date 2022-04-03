@@ -24,6 +24,7 @@ def setup_notebook_logging(level=logging.INFO):
     logger.info(
         f"Outputting logs within notebook enabled. Set level:{logging.getLevelName(level)}."
     )
+    return logger
 
 
 def setup_notebook_matplotlib_config():

@@ -37,4 +37,4 @@ def test_create(
 
     urls = run_params.urls
     assert urls.async_job_group == f"{TAGGING_BASE}sentiment_analysis/async_job_group.json"
-    assert urls.language_sentiment_objects == f"{TAGGING_BASE}language_sentiment_objects.parquet"
+    assert urls.language_sentiment_objects == f"{TAGGING_BASE}language_sentiment_objects/"

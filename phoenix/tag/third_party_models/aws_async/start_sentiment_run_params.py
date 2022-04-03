@@ -18,6 +18,7 @@ class StartSentimentRunParamsURLs(base.RunParams):
     objects: str
     async_job_group: str
     comprehend_base: str
+    language_sentiment_objects: str
 
 
 @dataclasses.dataclass
@@ -66,6 +67,9 @@ def _get_urls(
         objects=art_url_reg.get_url("tagging_runs-objects", url_config),
         async_job_group=art_url_reg.get_url("tagging_runs-async_job_group", url_config),
         comprehend_base=art_url_reg.get_url("tagging_runs-comprehend_base", url_config),
+        language_sentiment_objects=art_url_reg.get_url(
+            "tagging_runs-language_sentiment_objects", url_config
+        ),
     )
 
 

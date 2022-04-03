@@ -1,10 +1,11 @@
 """Integration test for start of sentiment."""
 import abc
+import datetime
 
 import mock
 import pandas as pd
 
-from phoenix.common import artifacts
+from phoenix.common import artifacts, run_datetime
 from phoenix.tag.third_party_models.aws_async import (
     job_types,
     start_sentiment,
@@ -34,10 +35,16 @@ def test_start_sentiment(m_aws_call, tmpdir_url, aws_sentiment_objects):
     m_aws_call.return_value = job_types.AWSStartedJob(
         job_id="id", job_arn="arn", job_status=job_types.JOB_STATUS_SUBMITTED
     )
+    dt = datetime.datetime(2000, 1, 2, 3, 4, 5, tzinfo=datetime.timezone.utc)
+    run_dt = run_datetime.RunDatetime(dt)
     async_job_group = start_sentiment.start_sentiment_analysis_jobs(
-        data_access_role_arn, tmpdir_url, aws_sentiment_objects, client
+        run_dt, data_access_role_arn, tmpdir_url, aws_sentiment_objects, client
     )
     assert async_job_group
+    assert (
+        async_job_group.async_job_group_meta.group_job_id
+        == "sentiment_analysis-20000102T030405.000000Z"
+    )
     # For each language a job should be made
     assert len(async_job_group.async_jobs) == 2
 
@@ -96,3 +103,29 @@ def test_start_sentiment(m_aws_call, tmpdir_url, aws_sentiment_objects):
         text_to_analysis,
         check_names=False,
     )
+
+
+@mock.patch(
+    "phoenix.tag.third_party_models.aws_async.start_sentiment._start_sentiment_detection_job"
+)
+def test_start_sentiment_for_no_objects(m_aws_call, tmpdir_url):
+    """Test the start of the sentiment."""
+    objects_df = pd.DataFrame(
+        {
+            "object_id": [1, 2],
+            "text": ["t1", "t2"],
+            "language": ["not_supported", "not_supported"],
+        }
+    )
+    client = mock.Mock()
+    data_access_role_arn = "data_access_role_arn"
+    m_aws_call.return_value = job_types.AWSStartedJob(
+        job_id="id", job_arn="arn", job_status=job_types.JOB_STATUS_SUBMITTED
+    )
+    dt = datetime.datetime(2000, 1, 2, 3, 4, 5, tzinfo=datetime.timezone.utc)
+    run_dt = run_datetime.RunDatetime(dt)
+    async_job_group = start_sentiment.start_sentiment_analysis_jobs(
+        run_dt, data_access_role_arn, tmpdir_url, objects_df, client
+    )
+    assert async_job_group is None
+    m_aws_call.assert_not_called()
