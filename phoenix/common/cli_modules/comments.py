@@ -58,6 +58,12 @@ def get_files_to_process(url_to_folder) -> List[str]:
     type=click.INT,
     help="Max number of files to process",
 )
+@click.option(
+    "--dont_run_tagging",
+    default=False,
+    type=click.BOOL,
+    help="Dont run the tagging flag.",
+)
 @click.pass_context
 def run_phase(
     ctx,
@@ -69,6 +75,7 @@ def run_phase(
     include_accounts,
     include_inference,
     max_files_to_process,
+    dont_run_tagging,
 ):
     """Run processing and tagging of the raw comment data.
 
@@ -130,15 +137,16 @@ def run_phase(
         )
 
     start_offset = start_offset - 1
-    tagging._run_tagging_notebooks(
-        1,
-        "facebook_comments",
-        parameters,
-        cur_run_params.art_url_reg,
-        start_offset,
-        include_accounts,
-        include_inference,
-    )
+    if not dont_run_tagging:
+        tagging._run_tagging_notebooks(
+            1,
+            "facebook_comments",
+            parameters,
+            cur_run_params.art_url_reg,
+            start_offset,
+            include_accounts,
+            include_inference,
+        )
 
 
 @comments.command(
