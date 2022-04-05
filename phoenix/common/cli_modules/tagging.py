@@ -1,6 +1,8 @@
 """Tagging CLI commands."""
 from typing import Any, Dict, List, Optional
 
+import datetime
+
 import click
 
 from phoenix.common import artifacts, run_datetime, run_params
@@ -44,6 +46,16 @@ def tagging():
         "eg. --include_inference tensions --include_inference sentiment"
     ),
 )
+@click.option(
+    "--objects_after",
+    type=click.DateTime(),
+    help="Filter the objects after",
+)
+@click.option(
+    "--objects_before",
+    type=click.DateTime(),
+    help="Filter the objects before",
+)
 @click.pass_context
 def run_phase(
     ctx,
@@ -56,6 +68,8 @@ def run_phase(
     start_offset,
     include_accounts,
     include_inference: Optional[List[str]] = [],
+    objects_after: Optional[datetime.datetime] = None,
+    objects_before: Optional[datetime.datetime] = None,
 ):
     """Run tagging phase.
 
@@ -86,6 +100,8 @@ def run_phase(
         start_offset,
         include_accounts,
         include_inference,
+        objects_after,
+        objects_before,
     )
 
 
@@ -173,13 +189,21 @@ def _run_phase(
     start_offset,
     include_accounts,
     include_inference: Optional[List[str]] = [],
+    objects_after: Optional[datetime.datetime] = None,
+    objects_before: Optional[datetime.datetime] = None,
 ):
     """Private function for running the tagging phase."""
     cur_run_params = run_params.general.create(artifact_env, tenant_id)
+    if objects_after:
+        objects_after = objects_after.isoformat()
+    if objects_before:
+        objects_before = objects_before.isoformat()
     args_parameters = {
         "OBJECT_TYPE": object_type,
         "YEAR_FILTER": year_filter,
         "MONTH_FILTER": month_filter,
+        "OBJECTS_AFTER": objects_after,
+        "OBJECTS_BEFORE": objects_before,
     }
     include_inference = validate_inferences(include_inference)
     args_parameters = append_inference_params(args_parameters, include_inference)
