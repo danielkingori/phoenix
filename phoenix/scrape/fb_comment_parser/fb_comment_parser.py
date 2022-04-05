@@ -31,6 +31,9 @@ def test_is_file_mbasic(file, file_name):  # noqa
     # is wrong
     length = 0
     max_length = len(file)
+    if max_length == 0:
+        return None
+    comments = None
     while length < max_length:
         # Increase the search at the head of the file until a comment is found.
         # It will be SingleFile's comment.
@@ -39,7 +42,14 @@ def test_is_file_mbasic(file, file_name):  # noqa
         if comments:
             break
         length += 500
+
+    if not comments:
+        return False
     comment = comments[0].split()
+    try:
+        _ = comment.index("url:")
+    except ValueError:
+        return False
     url = parse.urlsplit(comment[comment.index("url:") + 1])
     if url.netloc == "mbasic.facebook.com":
         return True
@@ -54,13 +64,21 @@ class Page(object):  # noqa
     def __init__(self, raw_file: str, file_name: Optional[str] = None):
 
         if test_is_file_mbasic(raw_file, file_name):
+            self.file_name = file_name
             self.raw = raw_file
             self.setup()
-            if self.test_page_url() and not self.content_not_found(file_name):
-                self.create_page(file_name)
-                self.parse_status = True
-            else:
-                self.parse_status = False
+            self.is_mbasic = True
+        else:
+            self.is_mbasic = False
+
+    def run(self):
+        """Run."""
+        if not self.is_mbasic:
+            return False
+
+        if self.test_page_url() and not self.content_not_found(self.file_name):
+            self.create_page(self.file_name)
+            self.parse_status = True
         else:
             self.parse_status = False
 
@@ -84,6 +102,7 @@ class Page(object):  # noqa
         logging.debug("BeautifulSoup created")
         # Extract and save URL
         self.url = self.get_page_url()
+        self.scrape_url = self.url.replace("https://www", "https://mbasic")
         self.url_components = self.get_url_components()
         logging.debug(f"url components: {self.url_components}")
 

@@ -38,6 +38,7 @@ ArtifactKey = Literal[
     "base-facebook_comments_pages_to_parse",
     "base-facebook_comments_pages_successful_parse",
     "base-facebook_comments_pages_failed_parse",
+    "base-facebook_comments_pages_all_failed_parse",
     "base-grouped_by_facebook_comments",
     # Youtube
     "source-youtube_channels_from_channel_ids",

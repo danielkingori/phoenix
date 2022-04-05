@@ -34,6 +34,7 @@ def test_fb_comment_parser(m_move, test_html_pages_url):
         logging.info(f"Processing: {file_url}")
         contents, basename = run.get_single_file(file_url)
         page = run.parse_fb_page(contents, basename)
+        page.run()
         # All pages should be processable
         assert page
 
