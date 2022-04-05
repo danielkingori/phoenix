@@ -58,6 +58,16 @@ def get_files_to_process(url_to_folder) -> List[str]:
     type=click.INT,
     help="Max number of files to process",
 )
+@click.option(
+    "--objects_after",
+    type=click.DateTime(),
+    help="Filter the objects after",
+)
+@click.option(
+    "--objects_before",
+    type=click.DateTime(),
+    help="Filter the objects before",
+)
 @click.pass_context
 def run_phase(
     ctx,
@@ -69,6 +79,8 @@ def run_phase(
     include_accounts,
     include_inference,
     max_files_to_process,
+    objects_after,
+    objects_before,
 ):
     """Run processing and tagging of the raw comment data.
 
@@ -89,10 +101,16 @@ def run_phase(
     year_filter, month_filter = utils.get_year_month_for_offset(
         cur_run_params.run_dt, month_offset
     )
+    if objects_after:
+        objects_after = objects_after.isoformat()
+    if objects_before:
+        objects_before = objects_before.isoformat()
     args_parameters = {
         "OBJECT_TYPE": "facebook_comments",
         "YEAR_FILTER": year_filter,
         "MONTH_FILTER": month_filter,
+        "OBJECTS_AFTER": objects_after,
+        "OBJECTS_BEFORE": objects_before,
     }
     include_inference = tagging.validate_inferences(include_inference)
     args_parameters = tagging.append_inference_params(args_parameters, include_inference)
@@ -118,7 +136,6 @@ def run_phase(
         if not silence_no_files_to_process_exception:
             raise RuntimeError(message)
         click.echo(message)
-        return
 
     click.echo("Processing files:")
     for f in files_to_process:
