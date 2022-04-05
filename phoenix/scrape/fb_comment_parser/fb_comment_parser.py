@@ -540,15 +540,13 @@ class Page(object):  # noqa
         # solution from:
         # https://stackoverflow.com/questions/
         # 59507827/converting-a-string-object-value-with-m-and-k-to-million-and-thousand
+        number = number.replace("\u200f", "")
         number = number.strip()
         if number[-1:] == "K":  # Check if the last digit is K
-            converted_number = int(
-                float(number[:-1]) * 1000
-            )  # Remove the last digit with [:-1], and convert to int and multiply by 1000
-        else:
-            # it's just a number
-            converted_number = int(number)
-        return converted_number
+            # Remove the last digit with [:-1], and convert to int and multiply by 1000
+            return int(float(number[:-1]) * 1000)
+        # it's just a number
+        return int(number)
 
     def get_comment_section(self, post_metadata={}):
         """Get comments section for a page."""
