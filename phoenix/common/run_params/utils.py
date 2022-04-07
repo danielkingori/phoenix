@@ -1,6 +1,8 @@
 """RunParams utils."""
 from typing import Union
 
+import datetime
+
 
 TRUTHY_STR_VALUES = ["t", "true"]
 FALSEY_STR_VALUES = ["f", "false"]
@@ -36,3 +38,17 @@ def normalise_int(to_normalise: Union[int, str, None]) -> Union[int, None]:
         return int(to_normalise)
 
     return None
+
+
+def normalise_datetime(dt: Union[str, datetime.datetime]):
+    """Is the datetime utc."""
+    if not dt:
+        return None
+
+    if isinstance(dt, str):
+        dt = datetime.datetime.fromisoformat(dt)
+
+    if not dt.tzinfo:
+        return dt.replace(tzinfo=datetime.timezone.utc)
+
+    return dt.astimezone(datetime.timezone.utc)
