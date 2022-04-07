@@ -269,7 +269,6 @@ def test_process(
         final_facebook_posts_classes=input_final_facebook_posts_classes,
         final_facebook_comments_inherited_accounts_classes=fciac,
         final_facebook_posts_objects_accounts_classes=fpoac,
-        quantile_of_commenters=0.1,
     )
     r_edges = edges.sort_values(by=["account_id_1", "account_id_2"]).reset_index(drop=True)
     r_output_edges = output_edges.sort_values(by=["account_id_1", "account_id_2"]).reset_index(
@@ -277,3 +276,31 @@ def test_process(
     )
     pd.testing.assert_frame_equal(r_edges, r_output_edges)
     pd.testing.assert_frame_equal(nodes, output_nodes)
+
+
+def test_process_limited(
+    input_final_facebook_posts_classes,
+    input_final_facebook_comments_inherited_accounts_classes,
+    input_final_facebook_posts_objects_accounts_classes,
+    edges,
+    nodes,
+):
+    """Test processing inputs to edges and nodes."""
+    fciac = input_final_facebook_comments_inherited_accounts_classes
+    fpoac = input_final_facebook_posts_objects_accounts_classes
+    output_edges, output_nodes = facebook_posts_commenters.process(
+        final_facebook_posts_classes=input_final_facebook_posts_classes,
+        final_facebook_comments_inherited_accounts_classes=fciac,
+        final_facebook_posts_objects_accounts_classes=fpoac,
+        limit_top_commenters=3,
+    )
+    r_edges = edges.sort_values(by=["account_id_1", "account_id_2"]).reset_index(drop=True)
+    r_output_edges = output_edges.sort_values(by=["account_id_1", "account_id_2"]).reset_index(
+        drop=True
+    )
+    r_edges_filtered = r_edges[r_edges["account_id_2"] != "ca_3"]
+    r_edges_filtered = r_edges_filtered.reset_index(drop=True)
+    pd.testing.assert_frame_equal(r_edges_filtered, r_output_edges)
+    nodes_filtered = nodes[~nodes["node_name"].isin(["ca_3"])]
+    nodes_filtered = nodes_filtered.reset_index(drop=True)
+    pd.testing.assert_frame_equal(nodes_filtered, output_nodes)

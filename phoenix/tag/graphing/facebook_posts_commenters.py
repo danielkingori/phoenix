@@ -1,5 +1,5 @@
 """Processing and config for facebook_posts_commentors graph."""
-from typing import Tuple
+from typing import Optional, Tuple
 
 import logging
 
@@ -97,29 +97,56 @@ def process_commenter_commenter_edges(
     return df
 
 
+def get_subset_of_commenters(
+    final_facebook_comments_inherited_accounts_classes: pd.DataFrame,
+    limit_top_commenters: Optional[int] = None,
+    quantile_of_commenters=None,
+) -> pd.DataFrame:
+    """Limit the number of comments."""
+    fciac_df = final_facebook_comments_inherited_accounts_classes
+    commenter_comment_counts = (
+        fciac_df[["user_name", "url_post_id"]].drop_duplicates()["user_name"].value_counts()
+    )
+    if quantile_of_commenters:
+        cut_off = commenter_comment_counts.quantile(quantile_of_commenters)
+        commenter_comment_counts = commenter_comment_counts[commenter_comment_counts >= cut_off]
+
+    if limit_top_commenters and limit_top_commenters < commenter_comment_counts.shape[0]:
+        commenter_comment_counts = commenter_comment_counts[:limit_top_commenters]
+
+    number_of_commenters = commenter_comment_counts.shape[0]
+
+    logging.info(f"Commenters have been filtered to include a subset of: {number_of_commenters}.")
+    return fciac_df[fciac_df["user_name"].isin(commenter_comment_counts.index)]
+
+
 def process(
     final_facebook_posts_classes: pd.DataFrame,
     final_facebook_comments_inherited_accounts_classes: pd.DataFrame,
     final_facebook_posts_objects_accounts_classes: pd.DataFrame,
-    quantile_of_commenters=0.99,
+    limit_top_commenters: Optional[int] = 2000,
+    quantile_of_commenters=None,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """Process facebook accounts, posts, and commenters into three type network graph."""
+    """Process facebook accounts, posts, and commenters into three type network graph.
+
+    Args:
+        final_facebook_posts_classes: DataFrame of the facebook posts classes.
+        final_facebook_comments_inherited_accounts_classes: DataFrame of the facebook comments with
+            the inherited classes.
+        final_facebook_posts_objects_accounts_classes: DataFrame of the facebook posts
+            and account classes
+        limit_top_commenters: limit the number of commenters that are used to compute graph.
+            Default is 2000 which seems to be a good amount: not to long to compute and graphistry
+            can handle this amount.
+        quantile_of_commenters: If you want to filter commenters by a quantile of
+            the most active commenters.
+
+    Returns:
+        edges dataframe, nodes dataframe
+    """
     fciac_df = final_facebook_comments_inherited_accounts_classes
     fciac_df["url_post_id"] = fciac_df["post_id"].astype("string")
-    if quantile_of_commenters:
-        commenter_comment_counts = (
-            fciac_df[["user_name", "url_post_id"]].drop_duplicates()["user_name"].value_counts()
-        )
-        cut_off = commenter_comment_counts.quantile(quantile_of_commenters)
-        filtered_commenter_comment_counts = commenter_comment_counts[
-            commenter_comment_counts >= cut_off
-        ]
-        number_of_commenters = filtered_commenter_comment_counts.shape[0]
-        logging.info(
-            f"Commenters have been filtered to include a subset of: {number_of_commenters}."
-        )
-        fciac_df = fciac_df[fciac_df["user_name"].isin(filtered_commenter_comment_counts.index)]
-
+    fciac_df = get_subset_of_commenters(fciac_df, limit_top_commenters, quantile_of_commenters)
     # edges
     account_commenter_edges = process_account_commenter_edges(
         final_facebook_posts_classes, fciac_df
