@@ -31,6 +31,9 @@ def test_is_file_mbasic(file, file_name):  # noqa
     # is wrong
     length = 0
     max_length = len(file)
+    if max_length == 0:
+        return None
+    comments = None
     while length < max_length:
         # Increase the search at the head of the file until a comment is found.
         # It will be SingleFile's comment.
@@ -39,7 +42,14 @@ def test_is_file_mbasic(file, file_name):  # noqa
         if comments:
             break
         length += 500
+
+    if not comments:
+        return False
     comment = comments[0].split()
+    try:
+        _ = comment.index("url:")
+    except ValueError:
+        return False
     url = parse.urlsplit(comment[comment.index("url:") + 1])
     if url.netloc == "mbasic.facebook.com":
         return True
@@ -54,13 +64,21 @@ class Page(object):  # noqa
     def __init__(self, raw_file: str, file_name: Optional[str] = None):
 
         if test_is_file_mbasic(raw_file, file_name):
+            self.file_name = file_name
             self.raw = raw_file
             self.setup()
-            if self.test_page_url() and not self.content_not_found(file_name):
-                self.create_page(file_name)
-                self.parse_status = True
-            else:
-                self.parse_status = False
+            self.is_mbasic = True
+        else:
+            self.is_mbasic = False
+
+    def run(self):
+        """Run."""
+        if not self.is_mbasic:
+            return False
+
+        if self.test_page_url() and not self.content_not_found(self.file_name):
+            self.create_page(self.file_name)
+            self.parse_status = True
         else:
             self.parse_status = False
 
@@ -84,6 +102,7 @@ class Page(object):  # noqa
         logging.debug("BeautifulSoup created")
         # Extract and save URL
         self.url = self.get_page_url()
+        self.scrape_url = self.url.replace("https://www", "https://mbasic")
         self.url_components = self.get_url_components()
         logging.debug(f"url components: {self.url_components}")
 
@@ -540,15 +559,13 @@ class Page(object):  # noqa
         # solution from:
         # https://stackoverflow.com/questions/
         # 59507827/converting-a-string-object-value-with-m-and-k-to-million-and-thousand
+        number = number.replace("\u200f", "")
         number = number.strip()
         if number[-1:] == "K":  # Check if the last digit is K
-            converted_number = int(
-                float(number[:-1]) * 1000
-            )  # Remove the last digit with [:-1], and convert to int and multiply by 1000
-        else:
-            # it's just a number
-            converted_number = int(number)
-        return converted_number
+            # Remove the last digit with [:-1], and convert to int and multiply by 1000
+            return int(float(number[:-1]) * 1000)
+        # it's just a number
+        return int(number)
 
     def get_comment_section(self, post_metadata={}):
         """Get comments section for a page."""
@@ -845,6 +862,9 @@ class Comment(object):
         #   display_name: string of commenter's name
         #   user_name: string with commenter username
         display_name = comment.h3.text
+        if "href" not in comment.h3.a:
+            return display_name, display_name
+
         url_components = comment.h3.a["href"].split("/")
 
         if (

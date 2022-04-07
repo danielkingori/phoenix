@@ -5,6 +5,7 @@ import logging
 import os
 from itertools import islice
 
+import pandas as pd
 import tentaclio
 
 from phoenix.common import artifacts
@@ -58,7 +59,9 @@ def move_processed_file(file_url, to_path, filename):
 
 def parse_fb_page(contents, filename):
     """Return a parsed Facebook page."""
-    return fb_comment_parser.Page(contents, filename)
+    page = fb_comment_parser.Page(contents, filename)
+    page.run()
+    return page
 
 
 def process_single_file(file_url, parsed_url, fail_url) -> Optional[Dict[Any, Any]]:
@@ -99,6 +102,23 @@ def run_fb_page_parser(
         if page is not None:
             pages.append(page)
     return pages
+
+
+def get_page_urls(folder_url, max_files_to_process: Union[int, bool] = False):
+    """Run the parser and return a list of parsed pages."""
+    pages = []
+    iterator = get_files(folder_url)
+    if max_files_to_process and isinstance(max_files_to_process, int):
+        iterator = islice(iterator, 0, max_files_to_process)
+    for file_url in iterator:
+        logging.debug(f"PROCESSING: {file_url}")
+        contents, basename = get_single_file(file_url)
+        page = fb_comment_parser.Page(contents, basename)
+        if page is not None and page.is_mbasic:
+            d = {"url": page.url, "file_name": basename, "scrape_url": page.scrape_url}
+            pages.append(d | page.url_components)
+
+    return pd.DataFrame(pages)
 
 
 def save_pretty(soup, path, filename):
