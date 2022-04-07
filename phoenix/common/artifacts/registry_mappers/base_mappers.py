@@ -41,6 +41,7 @@ MAPPERS: MapperDict = {
     ),
     "base-facebook_comments_pages_all_failed_parse": partial(
         url_mapper, GROUP_BY_FACEBOOK_COMMENT_PAGES + "failed_parse/"
+    ),
     # Facebook Posts - manual scraping
     "base-grouped_by_facebook_posts": partial(
         url_mapper,
