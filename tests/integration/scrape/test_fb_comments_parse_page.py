@@ -28,8 +28,8 @@ def test_fb_comment_parser(m_move, test_html_pages_url):
     logging.info(test_html_pages_url)
     for file_url in run.get_files(test_html_pages_url):
         # Filter for testing
-        if not file_url.endswith("failed8.html"):
-            continue
+        #  if not file_url.endswith("3_27_2022_10_09_30 PM_منصة ش….html"):
+        #  continue
 
         logging.info(f"Processing: {file_url}")
         contents, basename = run.get_single_file(file_url)
