@@ -50,7 +50,11 @@ def get_objects_still_to_analyse(objects_df: pd.DataFrame, language_sentiment_da
     Returns:
         DataFrame
     """
-    language_sentiment_df = get(language_sentiment_dataset_url)
+    try:
+        language_sentiment_df = get(language_sentiment_dataset_url)
+    except FileNotFoundError:
+        return objects_df
+
     matched_df = language_sentiment_df[objects_df.columns]
     result_df = pd.concat([objects_df, matched_df]).drop_duplicates(
         subset=["object_id"], keep=False

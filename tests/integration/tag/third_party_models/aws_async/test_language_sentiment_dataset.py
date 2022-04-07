@@ -87,6 +87,17 @@ def test_persist_get(language_sentiment_dataset_url):
 
 def test_get_objects_still_to_analysis(language_sentiment_dataset_url):
     """Test persist of language_sentiment_dataset."""
+    objects_df = pd.DataFrame(
+        {
+            "object_id": ["1", "2", "3", "4"],
+            "object_url": ["url_1", "url_2", "url_3", "url_4"],
+        }
+    )
+
+    still_to_analyse = language_sentiment_dataset.get_objects_still_to_analyse(
+        objects_df, language_sentiment_dataset_url
+    )
+    pd.testing.assert_frame_equal(objects_df, still_to_analyse)
     df = pd.DataFrame(
         {
             "object_id": ["1", "2"],
@@ -99,13 +110,6 @@ def test_get_objects_still_to_analysis(language_sentiment_dataset_url):
     )
 
     _ = language_sentiment_dataset.persist(language_sentiment_dataset_url, df, run_dt)
-
-    objects_df = pd.DataFrame(
-        {
-            "object_id": ["1", "2", "3", "4"],
-            "object_url": ["url_1", "url_2", "url_3", "url_4"],
-        }
-    )
 
     still_to_analyse = language_sentiment_dataset.get_objects_still_to_analyse(
         objects_df, language_sentiment_dataset_url
