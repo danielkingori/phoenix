@@ -845,6 +845,9 @@ class Comment(object):
         #   display_name: string of commenter's name
         #   user_name: string with commenter username
         display_name = comment.h3.text
+        if "href" not in comment.h3.a:
+            return display_name, display_name
+
         url_components = comment.h3.a["href"].split("/")
 
         if (
