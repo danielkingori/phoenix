@@ -1,5 +1,5 @@
 """Tagging CLI commands."""
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 import datetime
 
@@ -194,16 +194,18 @@ def _run_phase(
 ):
     """Private function for running the tagging phase."""
     cur_run_params = run_params.general.create(artifact_env, tenant_id)
+    objects_after_str: Union[str, None] = None
     if objects_after:
-        objects_after = objects_after.isoformat()
+        objects_after_str = objects_after.isoformat()
+    objects_before_str: Union[str, None] = None
     if objects_before:
-        objects_before = objects_before.isoformat()
+        objects_before_str = objects_before.isoformat()
     args_parameters = {
         "OBJECT_TYPE": object_type,
         "YEAR_FILTER": year_filter,
         "MONTH_FILTER": month_filter,
-        "OBJECTS_AFTER": objects_after,
-        "OBJECTS_BEFORE": objects_before,
+        "OBJECTS_AFTER": objects_after_str,
+        "OBJECTS_BEFORE": objects_before_str,
     }
     include_inference = validate_inferences(include_inference)
     args_parameters = append_inference_params(args_parameters, include_inference)
