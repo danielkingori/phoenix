@@ -109,6 +109,11 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
     df["scrape_url"] = df["post_url"].str.replace(
         "https://www.facebook", "https://mbasic.facebook"
     )
+    if "subscriber_count" not in df:
+        df["subscriber_count"] = 0
+    else:
+        df["subscriber_count"] = df["subscriber_count"].fillna(0)
+    df["subscriber_count"] = df["subscriber_count"].astype(int)
     # URL post id
     df["url_post_id"] = df["post_url"].fillna("").str.extract(r"(\d+$)", flags=0, expand=False)
     # Still using the phoenix_post_id as this seems a good way of identifying posts
@@ -216,6 +221,20 @@ def merge_flattened(df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFram
 
     for col in to_str:
         df[col] = df[col].astype(str)
+
+    fillna_cols = [
+        "statistics_actual_like_count",
+        "statistics_actual_comment_count",
+        "statistics_actual_share_count",
+        "statistics_actual_love_count",
+        "statistics_actual_wow_count",
+        "statistics_actual_haha_count",
+        "statistics_actual_sad_count",
+        "statistics_actual_angry_count",
+        "statistics_actual_care_count",
+    ]
+    for col in fillna_cols:
+        df[col] = df[col].fillna(0).astype(int)
     return df
 
 
