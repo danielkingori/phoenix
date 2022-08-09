@@ -124,24 +124,24 @@ def run_phase(
     if max_files_to_process:
         parameters["MAX_FILES_TO_PROCESS"] = max_files_to_process
 
-    BASE_URL_FACEBOOK_COMMENTS_PAGES_TO_PARSE = cur_run_params.art_url_reg.get_url(
-        "base-facebook_comments_pages_to_parse", parameters
-    )
-
-    files_to_process = get_files_to_process(BASE_URL_FACEBOOK_COMMENTS_PAGES_TO_PARSE)
-    if len(files_to_process) < 1:
-        message = (
-            f"There are no files to process in folder: {BASE_URL_FACEBOOK_COMMENTS_PAGES_TO_PARSE}"
-        )
-        if not silence_no_files_to_process_exception:
-            raise RuntimeError(message)
-        click.echo(message)
-
-    click.echo("Processing files:")
-    for f in files_to_process:
-        click.echo(f)
-
     if start_offset < 1:
+        BASE_URL_FACEBOOK_COMMENTS_PAGES_TO_PARSE = cur_run_params.art_url_reg.get_url(
+            "base-facebook_comments_pages_to_parse", parameters
+        )
+
+        files_to_process = get_files_to_process(BASE_URL_FACEBOOK_COMMENTS_PAGES_TO_PARSE)
+        if len(files_to_process) < 1:
+            message = (
+                f"There are no files to process in folder: "
+                f"{BASE_URL_FACEBOOK_COMMENTS_PAGES_TO_PARSE}"
+            )
+            if not silence_no_files_to_process_exception:
+                raise RuntimeError(message)
+            click.echo(message)
+
+        click.echo("Processing files:")
+        for f in files_to_process:
+            click.echo(f)
         tagging.tagging_run_notebook(
             "scrape/facebook_comments_pages_parse.ipynb", parameters, cur_run_params.art_url_reg
         )
