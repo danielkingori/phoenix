@@ -35,7 +35,9 @@ def from_json(url_to_folder: str) -> pd.DataFrame:
 def get_comments_df(pages):
     """Get the comments dataframe from pages."""
     comments = list(itertools.chain.from_iterable([get_comments(page) for page in pages]))
-    return pd.DataFrame(comments)
+    df = pd.DataFrame(comments)
+    df = df[df["id"].astype(bool)]
+    return df
 
 
 def get_comments(page_json):
