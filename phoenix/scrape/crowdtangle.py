@@ -62,7 +62,7 @@ def get_auth_token():
     return token
 
 
-def get_post(url: str, payload: Dict[str, Any]):
+def get_post(url: str, payload: Dict[str, Any], session: requests.Session):
     """Get a post from crowdtangle."""
     token = get_auth_token()
     safe_url = url.replace(token, "****")
@@ -90,6 +90,7 @@ def get_all_posts(
         "sortBy": constants.FACEBOOK_POST_SORT_BY,
         "count": 100,
     }
+    session = get_request_session()
 
     url = POSTS_BASE_URL
     status = 200
@@ -100,7 +101,7 @@ def get_all_posts(
     # Doing the pagination based on
     # https://github.com/CrowdTangle/API/wiki/Pagination
     while status == 200 and nextPage:
-        r = get_post(url, payload)
+        r = get_post(url, payload, session)
         status, found_posts, nextPage = _process_response_data(r)
         url = nextPage
         payload = {}
