@@ -12,6 +12,7 @@ import os
 import time
 
 import requests
+from requests.adapters import HTTPAdapter, Retry
 
 from phoenix.common import constants
 
@@ -42,6 +43,16 @@ def get_rate_limits():
     return rate_limit_calls, rate_limit_seconds
 
 
+def get_request_session() -> requests.Session:
+    """Get a requests session."""
+    session = requests.Session()
+    # We retry up to a total of 10 times over a period of +- 30 minutes if a 50x error is found
+    retries = Retry(total=10, backoff_factor=2.0, status_forcelist=[500, 502, 503, 504])
+
+    session.mount(POSTS_BASE_URL, HTTPAdapter(max_retries=retries))
+    return session
+
+
 def get_auth_token():
     """Get the authorisation token."""
     token = os.getenv(TOKEN_ENV_NAME)
@@ -58,7 +69,8 @@ def get_post(url: str, payload: Dict[str, Any]):
     if "token" in safe_payload:
         safe_payload["token"] = "****"
     logging.info(f"Making request {safe_url}, payload {safe_payload}")
-    r = requests.get(url, params=payload, headers={"x-api-token": get_auth_token()})
+
+    r = session.get(url, params=payload, headers={"x-api-token": get_auth_token()})
     r.raise_for_status()
     return r.json()
 

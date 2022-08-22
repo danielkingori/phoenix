@@ -6,6 +6,7 @@ import os
 
 import mock
 import pytest
+import requests
 
 from phoenix.common import constants, utils
 from phoenix.scrape import crowdtangle
@@ -98,3 +99,9 @@ def test_process_scrape_list_id(scrape_list_id_arg, expected_result):
     """Test process_scrape_list_id."""
     result = crowdtangle.process_scrape_list_id(scrape_list_id_arg)
     assert expected_result == result
+
+
+def test_get_request_session():
+    """Test that get_request_session returns an instatiated session."""
+    session = crowdtangle.get_request_session()
+    assert type(session) == requests.Session
