@@ -6,6 +6,7 @@ import os
 
 import mock
 import pytest
+import requests
 
 from phoenix.common import constants, utils
 from phoenix.scrape import crowdtangle
@@ -35,13 +36,16 @@ def ct_data_no_next(ct_data):
 
 @mock.patch.dict(os.environ, {"CT_RATE_LIMIT_CALLS": "10000"})
 @mock.patch.dict(os.environ, {"CT_RATE_LIMIT_SECONDS": "1"})
+@mock.patch("phoenix.scrape.crowdtangle.get_request_session")
 @mock.patch("phoenix.scrape.crowdtangle.get_post")
-def test_get_all_posts(m_get_post, ct_data_with_next, ct_data_no_next):
+def test_get_all_posts(m_get_post, m_get_request_session, ct_data_with_next, ct_data_no_next):
     """Get all posts for 2 pages."""
     m_get_post.side_effect = [
         ct_data_with_next,
         ct_data_no_next,
     ]
+    mock_session = mock.MagicMock()
+    m_get_request_session.return_value = mock_session
 
     start_date = datetime.datetime(2021, 1, 1)
     end_date = datetime.datetime(2021, 1, 1)
@@ -58,8 +62,9 @@ def test_get_all_posts(m_get_post, ct_data_with_next, ct_data_no_next):
                 "sortBy": constants.FACEBOOK_POST_SORT_BY,
                 "count": 100,
             },
+            mock_session,
         ),
-        mock.call(ct_data_with_next["result"]["pagination"]["nextPage"], {}),
+        mock.call(ct_data_with_next["result"]["pagination"]["nextPage"], {}, mock_session),
     ]
 
     m_get_post.assert_has_calls(calls)
@@ -108,3 +113,9 @@ def test_process_scrape_list_id_error():
     """Test process_scrape_list_id raises if none found."""
     with pytest.raises(RuntimeError):
         crowdtangle.process_scrape_list_id()
+
+
+def test_get_request_session():
+    """Test that get_request_session returns an instatiated session."""
+    session = crowdtangle.get_request_session()
+    assert type(session) == requests.Session
