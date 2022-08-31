@@ -3,3 +3,4 @@
 -r development.in
 tweepy
 bs4
+git+https://github.com/th3hamm0r/facebook-sdk@feature/softened-version-check#egg=facebook-sdk

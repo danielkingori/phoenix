@@ -151,6 +151,8 @@ entrypoints==0.3
     #   papermill
 et-xmlfile==1.1.0
     # via openpyxl
+git+https://github.com/th3hamm0r/facebook-sdk@feature/softened-version-check#egg=facebook-sdk
+    # via -r requirements/scrape.in
 fastparquet==0.7.1
     # via -r requirements/common.in
 fasttext==0.9.2
@@ -552,6 +554,7 @@ regex==2021.8.3
     #   nltk
 requests[socks]==2.25.1
     # via
+    #   facebook-sdk
     #   google-api-core
     #   google-cloud-storage
     #   graphistry
