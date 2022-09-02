@@ -1,9 +1,15 @@
 """Facebook graph module."""
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+import dataclasses
+import datetime
 import logging
 import os
 
 import facebook
 import requests
+
+from phoenix.common.run_params import base, general
 
 
 FACEBOOK_GRAPH_URL = "https://graph.facebook.com/"
@@ -80,3 +86,54 @@ def _process_response_data(response_json):
     feed = response_json.get("data", [])
     nextPage = response_json.get("paging", {}).get("cursors", {}).get("nextPage", None)
     return feed, nextPage
+
+
+@dataclasses.dataclass
+class FacebookFeedScrapeRunParamsURLs(base.RunParams):
+    """URLS."""
+
+    config: Dict[str, Any]
+    source: str
+    base: str
+
+
+@dataclasses.dataclass
+class FacebookFeedScrapeRunParams(base.RunParams):
+    """Finalise accounts run params."""
+
+    urls: FacebookFeedScrapeRunParamsURLs
+    general: general.GeneralRunParams
+    graph: Any
+    page_id: str
+    pagination_limit: Optional[int]
+
+
+def create_feed_run_params(
+    access_token: str,
+    page_id: str,
+    artifacts_environment_key: str,
+    tenant_id: str,
+    run_datetime_str: Optional[str],
+    pagination_limit: Optional[int],
+):
+    """Create the run params for the facebook_graph feed."""
+    if not access_token or page_id:
+        ValueError("Must have ACCESS_TOKEN and PAGE_ID set.")
+
+    general_run_params = general.create(artifacts_environment_key, tenant_id, run_datetime_str)
+    art_url_reg = general_run_params.art_url_reg
+
+    url_config: Dict[str, Any] = {}
+    urls = FacebookFeedScrapeRunParamsURLs(
+        config=url_config,
+        source=art_url_reg.get_url("source-facebook_feed", url_config),
+        base=art_url_reg.get_url("base-facebook_feed", url_config),
+    )
+    graph = get_graph(access_token)
+    return FacebookFeedScrapeRunParams(
+        general=general_run_params,
+        urls=urls,
+        graph=graph,
+        page_id=page_id,
+        pagination_limit=pagination_limit,
+    )

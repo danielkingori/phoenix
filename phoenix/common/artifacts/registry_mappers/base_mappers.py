@@ -13,6 +13,9 @@ GROUP_BY_FACEBOOK_POST_PAGES = (
 )
 
 MAPPERS: MapperDict = {
+    "base-facebook_feed": partial(
+        url_mapper, shared_urls.BASE_FACEBOOK_FEED + "feed-{RUN_DATETIME}.json"
+    ),
     # Facebook Posts
     "base-grouped_by_posts": partial(
         url_mapper, shared_urls.GROUP_BY_FACEBOOK_POSTS + "posts-{RUN_DATETIME}.json"

@@ -22,3 +22,5 @@ GROUP_BY_YOUTUBE_SEARCH_VIDEOS = (
 GROUP_BY_YOUTUBE_COMMENT_THREADS = (
     f"{BASE_BASE}grouped_by_year_month/youtube_comment_threads/{YEAR_MONTH_FILTER_DIRS}"
 )
+
+BASE_FACEBOOK_FEED = f"{BASE_BASE}facebook_feed/"

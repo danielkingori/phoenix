@@ -42,6 +42,8 @@ ArtifactKey = Literal[
     "base-grouped_by_facebook_comments",
     # Facebook Posts - manual scraping
     "source-facebook_posts",
+    "source-facebook_feed",
+    "base-facebook_feed",
     "base-facebook_posts_pages_to_parse",
     "base-facebook_posts_pages_successful_parse",
     "base-facebook_posts_pages_failed_parse",
