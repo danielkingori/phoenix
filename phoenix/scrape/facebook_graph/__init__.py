@@ -8,6 +8,7 @@ import requests
 
 FACEBOOK_GRAPH_URL = "https://graph.facebook.com/"
 FACEBOOK_GRAPH_AUTH_URL = f"{FACEBOOK_GRAPH_URL}oauth/access_token"
+DEFAULT_POST_FIELDS = "id,message,created_time,from,shares,updated_time"
 
 
 def get_graph(access_token: str):
@@ -53,3 +54,29 @@ def get_client_access_token():
     m = "FACEBOOK_CLIENT_ID and FACEBOOK_CLIENT_ID must be set to create a client access_token."
     m += " Current values: FACEBOOK_CLIENT_ID: {app_id}, FACEBOOK_APP_ID: {client_token}"
     raise ValueError(m)
+
+
+def get_feed_of_a_page(graph, page_id: str, fields=DEFAULT_POST_FIELDS, pagination_limit=None):
+    """Get the feed of a page."""
+    feed_result = []
+    path = f"{page_id}/feed"
+    status = 200
+    nextPage = "placeholder"
+    page_count = 0
+    args = {"fields": fields}
+    while status == 200 and nextPage:
+        r = graph.request(path=path, args=args)
+        found_feed, nextPage = _process_response_data(r)
+        path = nextPage
+        feed_result.extend(found_feed)
+        page_count += 1
+        if pagination_limit and page_count >= pagination_limit:
+            break
+    return feed_result
+
+
+def _process_response_data(response_json):
+    """Process the response to get the status, posts and nextPage."""
+    feed = response_json.get("data", [])
+    nextPage = response_json.get("paging", {}).get("cursors", {}).get("nextPage", None)
+    return feed, nextPage
