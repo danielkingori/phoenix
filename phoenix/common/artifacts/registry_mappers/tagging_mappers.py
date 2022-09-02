@@ -14,6 +14,7 @@ FOR_TAGGING_SUFFIX = "for_tagging/"
 # Facebook
 TAGGING_FACEBOOK_POSTS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}facebook_posts/"
 TAGGING_FACEBOOK_POSTS_FOR_TAGGING = TAGGING_FACEBOOK_POSTS + FOR_TAGGING_SUFFIX
+TAGGING_FACEBOOK_FEED = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}facebook_feed/"
 
 # Tweets
 TAGGING_TWEETS = f"tagging_runs/{shared_urls.YEAR_MONTH_FILTER_DIRS}tweets/"
@@ -36,6 +37,10 @@ MAPPERS: MapperDict = {
         url_mapper, TAGGING_PIPELINE_BASE + "output_notebooks/{RUN_DATETIME}/"
     ),
     # Facebook Posts
+    "tagging_runs-facebook_feed_input": partial(url_mapper, shared_urls.BASE_FACEBOOK_FEED),
+    "tagging_runs-facebook_feed_pulled": partial(
+        url_mapper, TAGGING_FACEBOOK_FEED + "facebook_feed_pulled.parquet"
+    ),
     "tagging_runs-facebook_posts_input": partial(url_mapper, shared_urls.GROUP_BY_FACEBOOK_POSTS),
     "tagging_runs-facebook_posts_pulled": partial(
         url_mapper, TAGGING_FACEBOOK_POSTS + "facebook_posts_pulled.parquet"

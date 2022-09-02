@@ -4,6 +4,7 @@ from typing import Callable, Dict, Optional, Union
 from phoenix.common.run_params import general, utils
 from phoenix.tag.data_pull.run_params import (
     dtypes,
+    facebook_feed,
     facebook_posts,
     tweets,
     youtube_comments,
@@ -13,6 +14,7 @@ from phoenix.tag.data_pull.run_params import (
 
 _urls_registry_map: Dict[str, Callable] = {
     "facebook_posts": facebook_posts.get_urls,
+    "facebook_feed": facebook_feed.get_urls,
     "tweets": tweets.get_urls,
     "youtube_videos": youtube_videos.get_urls,
     "youtube_comments": youtube_comments.get_urls,
