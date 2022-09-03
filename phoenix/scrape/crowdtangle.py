@@ -12,6 +12,7 @@ import os
 import time
 
 import requests
+from requests.adapters import HTTPAdapter, Retry
 
 from phoenix.common import constants
 
@@ -42,6 +43,16 @@ def get_rate_limits():
     return rate_limit_calls, rate_limit_seconds
 
 
+def get_request_session() -> requests.Session:
+    """Get a requests session."""
+    session = requests.Session()
+    # We retry up to a total of 10 times over a period of +- 30 minutes if a 50x error is found
+    retries = Retry(total=10, backoff_factor=2.0, status_forcelist=[500, 502, 503, 504])
+
+    session.mount(POSTS_BASE_URL, HTTPAdapter(max_retries=retries))
+    return session
+
+
 def get_auth_token():
     """Get the authorisation token."""
     token = os.getenv(TOKEN_ENV_NAME)
@@ -50,7 +61,7 @@ def get_auth_token():
     return token
 
 
-def get_post(url: str, payload: Dict[str, Any]):
+def get_post(url: str, payload: Dict[str, Any], session: requests.Session):
     """Get a post from crowdtangle."""
     token = get_auth_token()
     safe_url = url.replace(token, "****")
@@ -58,7 +69,8 @@ def get_post(url: str, payload: Dict[str, Any]):
     if "token" in safe_payload:
         safe_payload["token"] = "****"
     logging.info(f"Making request {safe_url}, payload {safe_payload}")
-    r = requests.get(url, params=payload, headers={"x-api-token": get_auth_token()})
+
+    r = session.get(url, params=payload, headers={"x-api-token": get_auth_token()})
     r.raise_for_status()
     return r.json()
 
@@ -77,6 +89,7 @@ def get_all_posts(
         "sortBy": constants.FACEBOOK_POST_SORT_BY,
         "count": 100,
     }
+    session = get_request_session()
 
     url = POSTS_BASE_URL
     status = 200
@@ -87,7 +100,7 @@ def get_all_posts(
     # Doing the pagination based on
     # https://github.com/CrowdTangle/API/wiki/Pagination
     while status == 200 and nextPage:
-        r = get_post(url, payload)
+        r = get_post(url, payload, session)
         status, found_posts, nextPage = _process_response_data(r)
         url = nextPage
         payload = {}
