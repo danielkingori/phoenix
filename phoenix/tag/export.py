@@ -12,11 +12,23 @@ from phoenix.common import artifacts
 from phoenix.tag import constants, feature, object_filters
 
 
+POSTS_TO_SCRAPE_COLUMNS = [
+    "phoenix_post_id",
+    "account_name",
+    "post_created",
+    "text",
+    "total_interactions",
+    "post_url",
+    "scrape_url",
+]
+
+
 def get_posts_to_scrape(posts_df: pd.DataFrame) -> pd.DataFrame:
     """Get posts to scrape.
 
     Get the top 10% of posts that will be manually scraped for comments.
     Order the posts by interactions.
+    Will be capped at the configured to label maximum.
 
     Arguments:
         posts_df: see docs/schemas/facebook_posts.md
@@ -25,17 +37,7 @@ def get_posts_to_scrape(posts_df: pd.DataFrame) -> pd.DataFrame:
         A subset of the columns needed for manual scraping.
 
     """
-    posts_to_scrape = posts_df[
-        [
-            "phoenix_post_id",
-            "account_name",
-            "post_created",
-            "text",
-            "total_interactions",
-            "post_url",
-            "scrape_url",
-        ]
-    ]
+    posts_to_scrape = posts_df[POSTS_TO_SCRAPE_COLUMNS]
     posts_to_scrape.sort_values(by="total_interactions", inplace=True, ascending=False)
     ten_percent = min(constants.TO_LABEL_CSV_MAX, round(posts_to_scrape.shape[0] * 0.1))
 
