@@ -62,9 +62,18 @@ def create_test_posts_df(number_of_rows: int = 100) -> pd.DataFrame:
 
 def test_get_posts_to_scrape_default_percent():
     """Test posts to scrape default percent."""
-    posts_df = create_test_posts_df()
+    posts_df = create_test_posts_df(1000)
     result_df = export.get_posts_to_scrape(posts_df)
-    expected_df = posts_df[:10]
+    expected_df = posts_df[:100]
+    expected_df = expected_df[export.POSTS_TO_SCRAPE_COLUMNS]
+    pd.testing.assert_frame_equal(result_df, expected_df)
+
+
+def test_get_posts_to_scrape_set_percent():
+    """Test posts to scrape are correct with percentage_of_posts is set."""
+    posts_df = create_test_posts_df(1000)
+    result_df = export.get_posts_to_scrape(posts_df, 20)
+    expected_df = posts_df[:200]
     expected_df = expected_df[export.POSTS_TO_SCRAPE_COLUMNS]
     pd.testing.assert_frame_equal(result_df, expected_df)
 
