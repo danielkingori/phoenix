@@ -24,6 +24,12 @@ variables:
   # create them automatically on boot, and will create
   # `/certs/client` that will be shared between the service and job
   # container, thanks to volume mount from config.toml
+  IMAGE_NAME: build-up/phoenix
+  AWS_PUBLIC_SERVER: public.ecr.aws
+  TAG_LATEST: $AWS_PUBLIC_SERVER/$IMAGE_NAME:latest
+  TAG_COMMIT: $AWS_PUBLIC_SERVER/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+  TAG_BRANCH: $AWS_PUBLIC_SERVER/$IMAGE_NAME:$CI_COMMIT_REF_SLUG
+  IMAGE_FILE_FOR_BUILD: phoenix-image-for-commit-$CI_COMMIT_SHORT_SHA.tar.gz
   DOCKER_TLS_CERTDIR: "/certs"
 
 services:
@@ -32,7 +38,52 @@ services:
 before_script:
   - docker info
 
-build_test_all_image:
+cache:
+  key: $CI_COMMIT_SHORT_SHA
+  paths:
+    - $IMAGE_FILE_FOR_BUILD
+
+build_phoenix_for_commit:
+  stage: build
   script:
-    - docker build -t all-image -f docker/dev.Dockerfile .
-    - docker run all-image
+    - docker pull $TAG_LATEST || true
+    - >
+      docker build
+      --build-arg PROJECT=all
+      --cache-from $TAG_LATEST
+      -t $TAG_COMMIT
+      -f docker/Dockerfile .
+    - docker save $TAG_COMMIT | gzip > $IMAGE_FILE_FOR_BUILD
+
+test_in_phoenix_docker_image:
+  stage: test
+  script:
+    - docker load --input $IMAGE_FILE_FOR_BUILD
+    - docker run $TAG_COMMIT
+
+# Push of the image taken from:
+# https://datawookie.dev/blog/2022/02/pushing-docker-images-from-gitlab-to-aws-ecr/
+push_images:
+  only:
+    - main
+    # All the ci/ branches are also protected
+    - /^ci\/.*$/
+  stage: deploy
+  script:
+    - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+    - export AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
+    - export AWS_REGION=${AWS_REGION}
+    - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    - apk add --no-cache python3 py3-pip
+    - pip3 install --no-cache-dir awscli
+    - docker load --input $IMAGE_FILE_FOR_BUILD
+    - >
+      aws ecr-public get-login-password
+      --region $AWS_REGION | docker login
+      --username AWS
+      --password-stdin $AWS_PUBLIC_SERVER
+    - docker tag $TAG_COMMIT $TAG_LATEST
+    - docker tag $TAG_COMMIT $TAG_BRANCH
+    - docker push $TAG_LATEST
+    - docker push $TAG_COMMIT
+    - docker push $TAG_BRANCH
