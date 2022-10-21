@@ -7,7 +7,7 @@
 #
 # It uses the "Docker-in-Docker" pattern:
 # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-docker-executor-with-the-docker-image-docker-in-docker
-image: docker:19.03.12
+image: docker:20.10.16
 
 variables:
   # When using dind service, we need to instruct docker to talk with
@@ -27,7 +27,7 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
 services:
-  - docker:19.03.12-dind
+  - docker:20.10.16-dind
 
 before_script:
   - docker info
