@@ -87,3 +87,7 @@ push_images:
     - docker push $TAG_LATEST
     - docker push $TAG_COMMIT
     - docker push $TAG_BRANCH
+    - echo -e "Created images with URLs\n
+        Latest ${TAG_LATEST}\n
+        Commit ${TAG_COMMIT}\n
+        Branch ${TAG_BRANCH}"
