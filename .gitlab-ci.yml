@@ -65,6 +65,10 @@ test_in_phoenix_docker_image:
 # https://datawookie.dev/blog/2022/02/pushing-docker-images-from-gitlab-to-aws-ecr/
 push_images:
   only:
+    # Branches that the push_images runs on
+    # MUST be protected.
+    # This is because the AWS configuration variables
+    # are only available on protected branches.
     - main
     # All the ci/ branches are also protected
     - /^ci\/.*$/
