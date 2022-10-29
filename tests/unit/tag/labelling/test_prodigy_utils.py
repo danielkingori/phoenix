@@ -103,3 +103,40 @@ def test_create_spacy_pattern_json(label, text, expected_pattern):
     """Test create_spacy_pattern_json works for roman and arabic scripts."""
     actual_pattern = prodigy_utils.create_spacy_pattern_json(label, text)
     assert actual_pattern == expected_pattern
+
+
+def test_text_snippet_to_patterns():
+    """Test text_snippet_to_patterns returns a patterns list."""
+    input_snippets = [
+        {"label": "test_label", "text": "keyword"},
+        {"label": "test_label", "text": "key words"},
+    ]
+    label = "pizza"
+
+    expected_patterns_list = [
+        {"label": "pizza", "pattern": [{"lower": "keyword"}]},
+        {"label": "pizza", "pattern": [{"lower": "key"}, {"lower": "words"}]},
+    ]
+
+    actual_patterns_list = prodigy_utils.text_snippet_to_patterns(label, input_snippets)
+
+    assert actual_patterns_list == expected_patterns_list
+
+
+def test_text_snippet_to_patterns_duplicates():
+    """Test text_snippet_to_patterns returns a deduplicated patterns list."""
+    input_snippets = [
+        {"label": "test_label", "text": "keyword"},
+        {"label": "test_label", "text": "key words"},
+        {"label": "test_label", "text": "key words"},
+    ]
+    label = "pizza"
+
+    expected_patterns_list = [
+        {"label": "pizza", "pattern": [{"lower": "keyword"}]},
+        {"label": "pizza", "pattern": [{"lower": "key"}, {"lower": "words"}]},
+    ]
+
+    actual_patterns_list = prodigy_utils.text_snippet_to_patterns(label, input_snippets)
+
+    assert actual_patterns_list == expected_patterns_list

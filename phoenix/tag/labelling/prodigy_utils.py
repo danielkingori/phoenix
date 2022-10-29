@@ -26,3 +26,24 @@ def create_spacy_pattern_json(label: str, text: str) -> Dict[str, Any]:
         pattern.append({"lower": token})
     pattern_json = {"label": label.lower(), "pattern": pattern}
     return pattern_json
+
+
+def text_snippet_to_patterns(
+    label: str, text_snippets: List[Dict[str, Any]]
+) -> List[Dict[str, Any]]:
+    """Turn text snippets of annotated spans into a patterns file for prodigy training.
+
+    Assumes that any text in the text_snippets need to be split into tokens and lowered.
+
+    label (str): User's label for any text that matches the patterns in the text_snippets.
+    text_snippets (List[Dict[str, Any]]): text snippets that constitute a pattern for matching
+        text to labels.
+    """
+    patterns_list = []
+    for snippet in text_snippets:
+        snippet_text = snippet.get("text")
+        pattern_json = create_spacy_pattern_json(label, snippet_text)
+        if pattern_json not in patterns_list:
+            patterns_list.append(pattern_json)
+
+    return patterns_list
