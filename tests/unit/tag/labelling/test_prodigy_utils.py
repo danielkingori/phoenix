@@ -1,4 +1,5 @@
 """Unit tests for prodigy_utils."""
+import pandas as pd
 import pytest
 
 from phoenix.tag.labelling import prodigy_utils
@@ -140,3 +141,19 @@ def test_text_snippet_to_patterns_duplicates():
     actual_patterns_list = prodigy_utils.text_snippet_to_patterns(label, input_snippets)
 
     assert actual_patterns_list == expected_patterns_list
+
+
+def test_sfm_to_patterns():
+    """Test getting a patterns file from sfm dataframe."""
+    input_df = pd.DataFrame(
+        [("label_1", "keyword_1"), ("label_2", "keyword_2 extra_keyword")],
+        columns=["topic", "features"],
+    )
+    expected_patterns_list = [
+        {"label": "label_1", "pattern": [{"lower": "keyword_1"}]},
+        {"label": "label_2", "pattern": [{"lower": "keyword_2"}, {"lower": "extra_keyword"}]},
+    ]
+
+    actual_patterns_list = prodigy_utils.sfm_to_patterns(input_df)
+
+    assert [i for i in expected_patterns_list if i not in actual_patterns_list] == []

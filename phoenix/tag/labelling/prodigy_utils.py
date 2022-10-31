@@ -1,6 +1,8 @@
 """Utility functions for prodigy text annotation."""
 from typing import Any, Dict, List
 
+import pandas as pd
+
 
 def span_to_text_snippets(span_json: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Extract the text representations of spans with their labels."""
@@ -47,3 +49,11 @@ def text_snippet_to_patterns(
             patterns_list.append(pattern_json)
 
     return patterns_list
+
+
+def sfm_to_patterns(sfm_df: pd.DataFrame) -> List[Dict[str, Any]]:
+    """Transform Single Feature Mapping config file to spacy patterns file."""
+    sfm_df["pattern_json"] = sfm_df.apply(
+        lambda x: create_spacy_pattern_json(x["topic"], x["features"]), axis=1
+    )
+    return list(sfm_df["pattern_json"])
