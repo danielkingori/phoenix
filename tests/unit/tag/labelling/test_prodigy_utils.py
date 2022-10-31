@@ -52,3 +52,54 @@ def test_span_to_text_snippets_except_text():
 
     with pytest.raises(Exception):
         _ = prodigy_utils.span_to_text_snippets(test_json)
+
+
+@pytest.mark.parametrize(
+    "label, text, expected_pattern",
+    [
+        (
+            "test_label",
+            "hello world",
+            {"label": "test_label", "pattern": [{"lower": "hello"}, {"lower": "world"}]},
+        ),
+        (
+            "test_label",
+            "Min nizanibû a",
+            {
+                "label": "test_label",
+                "pattern": [{"lower": "Min"}, {"lower": "nizanibû"}, {"lower": "a"}],
+            },
+        ),
+        (
+            "test_label",
+            "لە ســـاڵەکانی ١٩٥٠دا یان",
+            {
+                "label": "test_label",
+                "pattern": [
+                    {"lower": "لە"},
+                    {"lower": "ســـاڵەکانی"},
+                    {"lower": "١٩٥٠دا"},
+                    {"lower": "یان"},
+                ],
+            },
+        ),
+        (
+            "test_label",
+            """ مبادرة #البابا_فرنسيس في يوم #لبنان """,
+            {
+                "label": "test_label",
+                "pattern": [
+                    {"lower": "مبادرة"},
+                    {"lower": "#البابا_فرنسيس"},
+                    {"lower": "في"},
+                    {"lower": "يوم"},
+                    {"lower": "#لبنان"},
+                ],
+            },
+        ),
+    ],
+)
+def test_create_spacy_pattern_json(label, text, expected_pattern):
+    """Test create_spacy_pattern_json works for roman and arabic scripts."""
+    actual_pattern = prodigy_utils.create_spacy_pattern_json(label, text)
+    assert actual_pattern == expected_pattern

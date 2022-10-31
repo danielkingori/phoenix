@@ -17,3 +17,12 @@ def span_to_text_snippets(span_json: Dict[str, Any]) -> List[Dict[str, Any]]:
         snippets.append({"label": span.get("label"), "text": span_text[start_index:end_index]})
 
     return snippets
+
+
+def create_spacy_pattern_json(label: str, text: str) -> Dict[str, Any]:
+    """Create a single pattern json for spacy models. Splits text on whitespace."""
+    pattern = []
+    for token in text.split():
+        pattern.append({"lower": token})
+    pattern_json = {"label": label.lower(), "pattern": pattern}
+    return pattern_json
