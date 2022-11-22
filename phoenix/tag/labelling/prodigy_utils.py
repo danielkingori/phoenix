@@ -1,7 +1,10 @@
 """Utility functions for prodigy text annotation."""
 from typing import Any, Dict, List
 
+import json
+
 import pandas as pd
+import tentaclio
 
 
 def span_to_text_snippets(span_json: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -57,3 +60,20 @@ def sfm_to_patterns(sfm_df: pd.DataFrame) -> List[Dict[str, Any]]:
         lambda x: create_spacy_pattern_json(x["topic"], x["features"]), axis=1
     )
     return list(sfm_df["pattern_json"])
+
+
+def save_dicts_to_jsonl(data_list: List[Dict[str, Any]], filepath: str) -> None:
+    """Save list of dicts into newline delimited json file.
+
+    Args:
+        data_list: (list) list of dicts to be stored,
+        filepath: (str) path to the output file. If suffix .jsonl is not given then methods appends
+        .jsonl suffix into the file.
+    """
+    jsonl_suffix = ".jsonl"
+    if not filepath.endswith(jsonl_suffix):
+        filepath = filepath + jsonl_suffix
+    with tentaclio.open(filepath, "w") as out:
+        for ddict in data_list:
+            json_out = json.dumps(ddict) + "\n"
+            out.write(json_out)
