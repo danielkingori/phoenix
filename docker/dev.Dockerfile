@@ -10,5 +10,6 @@ COPY . ./
 
 RUN pip install -e .
 
+ENTRYPOINT ["/src/docker/entrypoints/development-setup.sh"]
 CMD ["make", "all", "--no-print-directory"]
 
