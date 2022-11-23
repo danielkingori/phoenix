@@ -1,0 +1,2 @@
+# Dependencies for the ci so that we can run make
+awscli

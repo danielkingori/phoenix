@@ -37,6 +37,14 @@ services:
 
 before_script:
   - docker info
+  - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+  - export AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
+  - export AWS_REGION=${AWS_REGION}
+  - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+  # Python and py3-pip are needed for the requirements
+  # Make and Bash are needed for the `make` commmands
+  - apk add --no-cache python3 py3-pip make bash
+  - pip3 install -r requirements/ci.txt
 
 cache:
   key: $CI_COMMIT_SHORT_SHA
@@ -48,11 +56,10 @@ build_phoenix_for_commit:
   script:
     - docker pull $TAG_LATEST || true
     - >
-      docker build
-      --build-arg PROJECT=all
-      --cache-from $TAG_LATEST
-      -t $TAG_COMMIT
-      -f docker/Dockerfile .
+      make
+      TAG_LATEST=${TAG_LATEST}
+      TAG_CURRENT=${TAG_COMMIT}
+      docker_build
     - docker save $TAG_COMMIT | gzip > $IMAGE_FILE_FOR_BUILD
 
 test_in_phoenix_docker_image:
@@ -74,18 +81,12 @@ push_images:
     - /^ci\/.*$/
   stage: deploy
   script:
-    - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-    - export AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
-    - export AWS_REGION=${AWS_REGION}
-    - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-    - apk add --no-cache python3 py3-pip
-    - pip3 install --no-cache-dir awscli
     - docker load --input $IMAGE_FILE_FOR_BUILD
     - >
-      aws ecr-public get-login-password
-      --region $AWS_REGION | docker login
-      --username AWS
-      --password-stdin $AWS_PUBLIC_SERVER
+      make
+      AWS_REGION=${AWS_REGION}
+      AWS_SERVER=${AWS_PUBLIC_SERVER}
+      docker_login
     - docker tag $TAG_COMMIT $TAG_LATEST
     - docker tag $TAG_COMMIT $TAG_BRANCH
     - docker push $TAG_LATEST

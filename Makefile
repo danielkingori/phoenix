@@ -6,6 +6,7 @@ AWS_PROFILE = build-up-registry
 AWS_REGION = us-east-1
 AWS_SERVER = public.ecr.aws
 TAG_LATEST = $(AWS_SERVER)/$(IMAGE):latest
+TAG_CURRENT = $(AWS_SERVER)/$(IMAGE):latest
 
 all: lint test
 
@@ -63,8 +64,11 @@ format:
 	black phoenix tests
 
 # Docker commands
+docker_pull_latest:
+	docker pull $(TAG_LATEST)
+
 docker_build:
-	docker build --build-arg PROJECT=all -f ./docker/Dockerfile --cache-from $(TAG_LATEST) -t $(TAG_LATEST) .
+	docker build --build-arg PROJECT=all -f ./docker/Dockerfile --cache-from $(TAG_LATEST) -t $(TAG_CURRENT) .
 
 # For this to work you need to have an AWS CLI profile configured that has
 # the name of the variable of AWS_PROFILE that has access to write
@@ -75,4 +79,4 @@ docker_login:
 	docker login --username AWS --password-stdin $(AWS_SERVER)
 
 docker_push: docker_build docker_login
-	docker push $(TAG_LATEST)
+	docker push $(TAG_CURRENT)
