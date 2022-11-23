@@ -37,10 +37,6 @@ services:
 
 before_script:
   - docker info
-  - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-  - export AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
-  - export AWS_REGION=${AWS_REGION}
-  - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
   # Python and py3-pip are needed for the requirements
   # Make and Bash are needed for the `make` commmands
   - apk add --no-cache python3 py3-pip make bash
@@ -82,6 +78,10 @@ push_images:
   stage: deploy
   script:
     - docker load --input $IMAGE_FILE_FOR_BUILD
+    - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+    - export AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}
+    - export AWS_REGION=${AWS_REGION}
+    - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     - >
       make
       AWS_REGION=${AWS_REGION}

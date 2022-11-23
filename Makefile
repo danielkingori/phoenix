@@ -70,12 +70,8 @@ docker_pull_latest:
 docker_build:
 	docker build --build-arg PROJECT=all -f ./docker/Dockerfile --cache-from $(TAG_LATEST) -t $(TAG_CURRENT) .
 
-# For this to work you need to have an AWS CLI profile configured that has
-# the name of the variable of AWS_PROFILE that has access to write
-# to the ECR repository.
-# See docs on how to configure: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
 docker_login:
-	aws ecr-public get-login-password --region $(AWS_REGION) --profile $(AWS_PROFILE) | \
+	aws ecr-public get-login-password --region $(AWS_REGION) | \
 	docker login --username AWS --password-stdin $(AWS_SERVER)
 
 docker_push: docker_build docker_login
