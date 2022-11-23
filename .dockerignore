@@ -4,6 +4,7 @@ local_artifacts/
 # Jupyterlab cache
 .jupyter/lab/
 .jupyter/migrated
+**/*.ipynb_checkpoints/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
