@@ -50,4 +50,5 @@ COPY phoenix ./phoenix
 
 RUN pip install .
 
+ENTRYPOINT ["/src/docker/entrypoints/production-setup.sh"]
 CMD ["make", "all", "--no-print-directory"]
