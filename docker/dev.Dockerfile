@@ -1,5 +1,5 @@
-# From phoenix base
-FROM public.ecr.aws/a6e4n9u3/phoenix-base
+# From phoenix
+FROM public.ecr.aws/build-up/phoenix
 
 WORKDIR /src
 
@@ -10,5 +10,6 @@ COPY . ./
 
 RUN pip install -e .
 
+ENTRYPOINT ["/src/docker/entrypoints/development-setup.sh"]
 CMD ["make", "all", "--no-print-directory"]
 

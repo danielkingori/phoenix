@@ -1,6 +1,12 @@
 .PHONY: all install lint test format
 SHELL=/bin/bash
 
+IMAGE = build-up/phoenix
+AWS_PROFILE = build-up-registry
+AWS_REGION = us-east-1
+AWS_SERVER = public.ecr.aws
+TAG_LATEST = $(AWS_SERVER)/$(IMAGE):latest
+
 all: lint test
 
 install_all:
@@ -52,12 +58,17 @@ format:
 	isort phoenix tests
 	black phoenix tests
 
-
 # Docker commands
-docker_base_build:
-	# Currently all is being used as they have all the requirements
-	docker build -t phoenix-base --build-arg PROJECT=all -f ./docker/base.Dockerfile .
+docker_build:
+	docker build --build-arg PROJECT=all -f ./docker/Dockerfile --cache-from $(TAG_LATEST) -t $(TAG_LATEST) .
 
-docker_base_push:
-	docker tag phoenix-base:latest public.ecr.aws/a6e4n9u3/phoenix-base
-	docker push public.ecr.aws/a6e4n9u3/phoenix-base
+# For this to work you need to have an AWS CLI profile configured that has
+# the name of the variable of AWS_PROFILE that has access to write
+# to the ECR repository.
+# See docs on how to configure: https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html
+docker_login:
+	aws ecr-public get-login-password --region $(AWS_REGION) --profile $(AWS_PROFILE) | \
+	docker login --username AWS --password-stdin $(AWS_SERVER)
+
+docker_push: docker_build docker_login
+	docker push $(TAG_LATEST)
