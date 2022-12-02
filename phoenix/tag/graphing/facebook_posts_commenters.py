@@ -104,12 +104,27 @@ def get_subset_of_commenters(
 ) -> pd.DataFrame:
     """Limit the number of comments."""
     fciac_df = final_facebook_comments_inherited_accounts_classes
+    fciac_df = fciac_df.sort_values(by=["user_name", "url_post_id"])
     commenter_comment_counts = (
         fciac_df[["user_name", "url_post_id"]].drop_duplicates()["user_name"].value_counts()
     )
+    commenter_comment_counts = commenter_comment_counts.reset_index(drop=False)
+    # value_count messes up the names
+    commenter_comment_counts = commenter_comment_counts.rename(
+        columns={"user_name": "comment_count", "index": "commenter_name"}
+    )
+    # We are sorting by comment_count and commenter_name so that the function
+    # is deterministic. `value_counts` is not deterministic
+    # and will change the order of commenter_comment_counts
+    # for rows where comment_count are the same.
+    commenter_comment_counts = commenter_comment_counts.sort_values(
+        by=["comment_count", "commenter_name"], ascending=[False, False]
+    )
     if quantile_of_commenters:
-        cut_off = commenter_comment_counts.quantile(quantile_of_commenters)
-        commenter_comment_counts = commenter_comment_counts[commenter_comment_counts >= cut_off]
+        cut_off = commenter_comment_counts["comment_count"].quantile(quantile_of_commenters)
+        commenter_comment_counts = commenter_comment_counts[
+            commenter_comment_counts["comment_count"] >= cut_off
+        ]
 
     if limit_top_commenters and limit_top_commenters < commenter_comment_counts.shape[0]:
         commenter_comment_counts = commenter_comment_counts[:limit_top_commenters]
@@ -117,7 +132,7 @@ def get_subset_of_commenters(
     number_of_commenters = commenter_comment_counts.shape[0]
 
     logging.info(f"Commenters have been filtered to include a subset of: {number_of_commenters}.")
-    return fciac_df[fciac_df["user_name"].isin(commenter_comment_counts.index)]
+    return fciac_df[fciac_df["user_name"].isin(commenter_comment_counts["commenter_name"])]
 
 
 def process(
