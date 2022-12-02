@@ -49,8 +49,8 @@ def filter_out_duplicates(
         pd.DataFrame: subset of data_df which does not have a duplicate in filled_sheet_df.
             Duplication checked on the `cols` parameter.
     """
-    # Check that all the cols are in the sheet from google
-    if cols and not all(elem in filled_sheet_df for elem in cols):
+    # if the google sheet is empty then use
+    if filled_sheet_df.shape[0] == 0:
         return data_df
     cols = ["object_id"] if cols is None else cols
     merged_df = pd.merge(data_df, filled_sheet_df[cols], how="left", on=cols, indicator=True)
