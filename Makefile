@@ -9,8 +9,15 @@ TAG_LATEST = $(AWS_SERVER)/$(IMAGE):latest
 
 all: lint test
 
-install_all:
+install_all: check_python_version
 	pip install -r requirements/all.txt  -e .
+
+check_python_version:
+	if [ "$$(python --version)" != "Python $$(cat .python-version)" ]; then \
+		echo "Python version is not correct. It should be $$(cat .python-version)"; \
+		echo "See ./docs/deployment.md for more information."; \
+		exit 1; \
+	fi
 
 compile:
 	for f in requirements/*; \

@@ -1,8 +1,8 @@
 # Development
 
 ## Setup your development env
-It is recommended that you use some sort of vitualisation to setup your development environment.
-This repo has two options that are already set up: docker and virturalenv.
+It is recommended that you use some sort of virtualisation to setup your development environment.
+This repo has two options that are already set up: docker and virtualenv.
 
 ## Python Version
 The current python version of this project is 3.9.2. This is the latest major version released minus 0.1.0 as of March 30 2021.
@@ -15,6 +15,10 @@ If the version is updated then the files `.python-version` and Dockerfiles shoul
 
 ## Virtualenv
 It is recommended you manage your python package installs (i.e. per project) using python's built in venv.
+
+Before installing dependencies, please make sure that your Python version matches what is contained in the `.python_version` file.
+
+If the versions do not match, please refer to the above.
 
 The terminal commands are then:
 ```
