@@ -2,7 +2,11 @@
 
 This keeps datetimes consistent across projects.
 """
+from typing import Any, Dict
+
 import datetime
+
+from phoenix.common import utils
 
 
 # Expected Format for RUN_DATETIME parameters in notebooks
@@ -21,14 +25,7 @@ class RunDatetime:
         datetime objects are build to actively discourage checking
         for micro seconds.
         """
-        if not dt.tzinfo:
-            raise ValueError("RunDatetime must have time zone UTC")
-
-        utcoffset = dt.utcoffset()
-
-        # Taken from
-        # https://stackoverflow.com/questions/6706499/checking-if-date-is-in-utc-format
-        if utcoffset and int(utcoffset.total_seconds()) != 0:
+        if not utils.is_utc(dt):
             raise ValueError("RunDatetime must have time zone UTC")
 
         self.dt = dt
@@ -49,6 +46,13 @@ class RunDatetime:
     def to_run_date_str(self) -> str:
         """Get the run date."""
         return self.dt.strftime("%Y-%m-%d")
+
+    def to_url_config(self) -> Dict[str, Any]:
+        """Get the url config for the run datetime."""
+        return {
+            "YEAR_FILTER": self.dt.year,
+            "MONTH_FILTER": self.dt.month,
+        }
 
 
 def create_run_datetime_now() -> RunDatetime:

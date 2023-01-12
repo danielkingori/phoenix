@@ -14,10 +14,7 @@ def get_object_topics(topics_df, objects_df):
         see docs/schemas/objects.md
 
     Returns:
-    objects topics:
-        columns in objects ....
-        topics: List[string]
-        has_topics: boolean
+        objects topics: see docs/schemas/objects.md#Object_topics
     """
     df = topics_df.groupby(["object_id", "object_type"])
     has_topics_df = (

@@ -56,11 +56,7 @@ def connect_twitter_api() -> tweepy.API:
 
 
 def _tweet_search_cursor(api, query, num_items) -> tweepy.Cursor:
-    """Manages the cursor for Twitter api.search endpoint.
-
-    Docs from tweepy:
-    https://docs.tweepy.org/en/stable/api.html#search-tweets
-    """
+    """Manages the cursor for Twitter api.search endpoint."""
     return tweepy.Cursor(
         api.search,
         q=query,
@@ -71,11 +67,7 @@ def _tweet_search_cursor(api, query, num_items) -> tweepy.Cursor:
 
 
 def _get_user_tweet_cursor(api, id, num_items) -> tweepy.Status:
-    """Manages the cursor for Twitter api.user_timeline endpoint.
-
-    Docs from tweepy:
-    https://docs.tweepy.org/en/stable/api.html#get-tweet-timelines
-    """
+    """Manages the cursor for Twitter api.user_timeline endpoint."""
     return tweepy.Cursor(
         api.user_timeline,
         id=id,

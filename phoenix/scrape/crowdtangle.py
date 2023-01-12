@@ -3,7 +3,7 @@
 Interface with the api:
 https://github.com/CrowdTangle/API/wiki
 """
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import copy
 import datetime
@@ -20,7 +20,6 @@ from phoenix.common import constants
 POSTS_BASE_URL = "https://api.crowdtangle.com/posts"
 
 TOKEN_ENV_NAME = "CROWDTANGLE_API_TOKEN"
-SCRAPE_LIST_ID_ENV_NAME = "CROWDTANGLE_SCRAPE_LIST_ID"
 
 DEFAULT_RATE_LIMIT_CALLS = 6
 DEFAULT_RATE_LIMIT_SECONDS = 60
@@ -120,20 +119,8 @@ def _process_response_data(r):
     return status, posts, nextPage
 
 
-def process_scrape_list_id(scrape_list_id: Optional[str] = None):
+def process_scrape_list_id(scrape_list_id: str) -> List[str]:
     """Process the scrape_list_id parameter of the notebook."""
-    if scrape_list_id:
-        return _normalise_into_list(scrape_list_id)
-
-    scrape_list_id = os.getenv(SCRAPE_LIST_ID_ENV_NAME, None)
-    if scrape_list_id:
-        return _normalise_into_list(scrape_list_id)
-
-    raise RuntimeError("No Scrape List ID was found.")
-
-
-def _normalise_into_list(scrape_list_id: str) -> List[str]:
-    """If multiple ids are in the string spilt them."""
     if "," in scrape_list_id:
         return scrape_list_id.split(",")
 

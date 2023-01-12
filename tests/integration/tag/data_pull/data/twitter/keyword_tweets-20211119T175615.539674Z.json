@@ -1,0 +1,296 @@
+[
+    {
+        "created_at": "Fri Nov 19 16:20:52 +0000 2021",
+        "id": 1461731209554313223,
+        "id_str": "1461731209554313223",
+        "full_text": "tweet_1_text",
+        "truncated": false,
+        "display_text_range": [
+            0,
+            140
+        ],
+        "entities": {
+            "hashtags": [],
+            "symbols": [],
+            "user_mentions": [
+                {
+                    "screen_name": "YemenShaawtar",
+                    "name": "tweet_1_name_1",
+                    "id": 1372248325,
+                    "id_str": "1372248325",
+                    "indices": [
+                        3,
+                        17
+                    ]
+                }
+            ],
+            "urls": []
+        },
+        "metadata": {
+            "iso_language_code": "ar",
+            "result_type": "recent"
+        },
+        "source": "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+        "in_reply_to_status_id": null,
+        "in_reply_to_status_id_str": null,
+        "in_reply_to_user_id": null,
+        "in_reply_to_user_id_str": null,
+        "in_reply_to_screen_name": null,
+        "user": {
+            "id": 1455531969186607120,
+            "id_str": "1455531969186607120",
+            "name": "tweet_1_name_2",
+            "screen_name": "E0S1msEvEzIopEc",
+            "location": "",
+            "description": "tweet_1_desc_2",
+            "url": null,
+            "entities": {
+                "description": {
+                    "urls": []
+                }
+            },
+            "protected": false,
+            "followers_count": 113,
+            "friends_count": 156,
+            "listed_count": 0,
+            "created_at": "Tue Nov 02 13:47:29 +0000 2021",
+            "favourites_count": 1310,
+            "utc_offset": null,
+            "time_zone": null,
+            "geo_enabled": false,
+            "verified": false,
+            "statuses_count": 270,
+            "lang": null,
+            "contributors_enabled": false,
+            "is_translator": false,
+            "is_translation_enabled": false,
+            "profile_background_color": "F5F8FA",
+            "profile_background_image_url": null,
+            "profile_background_image_url_https": null,
+            "profile_background_tile": false,
+            "profile_image_url": "http://pbs.twimg.com/profile_images/1455538809471385608/6P7M0o3M_normal.jpg",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/1455538809471385608/6P7M0o3M_normal.jpg",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "has_extended_profile": true,
+            "default_profile": true,
+            "default_profile_image": false,
+            "following": false,
+            "follow_request_sent": false,
+            "notifications": false,
+            "translator_type": "none",
+            "withheld_in_countries": []
+        },
+        "geo": null,
+        "coordinates": null,
+        "place": null,
+        "contributors": null,
+        "retweeted_status": {
+            "created_at": "Fri Nov 19 16:10:31 +0000 2021",
+            "id": 1461728605831053316,
+            "id_str": "1461728605831053316",
+            "full_text": "tweet_1_retweet_text_1",
+            "truncated": false,
+            "display_text_range": [
+                0,
+                178
+            ],
+            "entities": {
+                "hashtags": [],
+                "symbols": [],
+                "user_mentions": [],
+                "urls": []
+            },
+            "metadata": {
+                "iso_language_code": "ar",
+                "result_type": "recent"
+            },
+            "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+            "in_reply_to_status_id": null,
+            "in_reply_to_status_id_str": null,
+            "in_reply_to_user_id": null,
+            "in_reply_to_user_id_str": null,
+            "in_reply_to_screen_name": null,
+            "user": {
+                "id": 1372248325,
+                "id_str": "1372248325",
+                "name": "tweet_1_retweet_user_name",
+                "screen_name": "YemenShaawtar",
+                "location": "Yemen",
+                "description": "tweet_1_retweet_desc",
+                "url": null,
+                "entities": {
+                    "description": {
+                        "urls": []
+                    }
+                },
+                "protected": false,
+                "followers_count": 26562,
+                "friends_count": 1256,
+                "listed_count": 15,
+                "created_at": "Mon Apr 22 14:14:36 +0000 2013",
+                "favourites_count": 184274,
+                "utc_offset": null,
+                "time_zone": null,
+                "geo_enabled": false,
+                "verified": false,
+                "statuses_count": 127540,
+                "lang": null,
+                "contributors_enabled": false,
+                "is_translator": false,
+                "is_translation_enabled": false,
+                "profile_background_color": "C0DEED",
+                "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+                "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+                "profile_background_tile": false,
+                "profile_image_url": "http://pbs.twimg.com/profile_images/1301524981449396225/eFb24BxZ_normal.jpg",
+                "profile_image_url_https": "https://pbs.twimg.com/profile_images/1301524981449396225/eFb24BxZ_normal.jpg",
+                "profile_banner_url": "https://pbs.twimg.com/profile_banners/1372248325/1634229077",
+                "profile_link_color": "1B95E0",
+                "profile_sidebar_border_color": "FFFFFF",
+                "profile_sidebar_fill_color": "DDEEF6",
+                "profile_text_color": "333333",
+                "profile_use_background_image": true,
+                "has_extended_profile": true,
+                "default_profile": false,
+                "default_profile_image": false,
+                "following": false,
+                "follow_request_sent": false,
+                "notifications": false,
+                "translator_type": "none",
+                "withheld_in_countries": []
+            },
+            "geo": null,
+            "coordinates": null,
+            "place": null,
+            "contributors": null,
+            "is_quote_status": false,
+            "retweet_count": 4,
+            "favorite_count": 11,
+            "favorited": false,
+            "retweeted": false,
+            "lang": "ar"
+        },
+        "is_quote_status": false,
+        "retweet_count": 4,
+        "favorite_count": 0,
+        "favorited": false,
+        "retweeted": false,
+        "lang": "ar"
+    },
+    {
+        "created_at": "Fri Nov 19 17:34:16 +0000 2021",
+        "id": 1461749682200358914,
+        "id_str": "1461749682200358914",
+        "full_text": "tweet_2_text",
+        "truncated": false,
+        "display_text_range": [
+            12,
+            35
+        ],
+        "entities": {
+            "hashtags": [
+                {
+                    "text": "tweet_2_hashtags_text",
+                    "indices": [
+                        12,
+                        28
+                    ]
+                },
+                {
+                    "text": "tweet_2_text_2",
+                    "indices": [
+                        29,
+                        35
+                    ]
+                }
+            ],
+            "symbols": [],
+            "user_mentions": [
+                {
+                    "screen_name": "makhlafi22",
+                    "name": "tweet_2_name_1",
+                    "id": 793602906603810818,
+                    "id_str": "793602906603810818",
+                    "indices": [
+                        0,
+                        11
+                    ]
+                }
+            ],
+            "urls": []
+        },
+        "metadata": {
+            "iso_language_code": "und",
+            "result_type": "recent"
+        },
+        "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+        "in_reply_to_status_id": 1461456116790013958,
+        "in_reply_to_status_id_str": "1461456116790013958",
+        "in_reply_to_user_id": 793602906603810818,
+        "in_reply_to_user_id_str": "793602906603810818",
+        "in_reply_to_screen_name": "makhlafi22",
+        "user": {
+            "id": 899624482616332289,
+            "id_str": "899624482616332289",
+            "name": "tweet_2_name_2",
+            "screen_name": "alazzani_jmal",
+            "location": "Yemen",
+            "description": "tweet_2_desc",
+            "url": null,
+            "entities": {
+                "description": {
+                    "urls": []
+                }
+            },
+            "protected": false,
+            "followers_count": 1127,
+            "friends_count": 2334,
+            "listed_count": 0,
+            "created_at": "Mon Aug 21 13:29:25 +0000 2017",
+            "favourites_count": 7381,
+            "utc_offset": null,
+            "time_zone": null,
+            "geo_enabled": false,
+            "verified": false,
+            "statuses_count": 2389,
+            "lang": null,
+            "contributors_enabled": false,
+            "is_translator": false,
+            "is_translation_enabled": false,
+            "profile_background_color": "F5F8FA",
+            "profile_background_image_url": null,
+            "profile_background_image_url_https": null,
+            "profile_background_tile": false,
+            "profile_image_url": "http://pbs.twimg.com/profile_images/1187043713639469057/8HGsTDmD_normal.jpg",
+            "profile_image_url_https": "https://pbs.twimg.com/profile_images/1187043713639469057/8HGsTDmD_normal.jpg",
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/899624482616332289/1603727438",
+            "profile_link_color": "1DA1F2",
+            "profile_sidebar_border_color": "C0DEED",
+            "profile_sidebar_fill_color": "DDEEF6",
+            "profile_text_color": "333333",
+            "profile_use_background_image": true,
+            "has_extended_profile": true,
+            "default_profile": true,
+            "default_profile_image": false,
+            "following": false,
+            "follow_request_sent": false,
+            "notifications": false,
+            "translator_type": "none",
+            "withheld_in_countries": []
+        },
+        "geo": null,
+        "coordinates": null,
+        "place": null,
+        "contributors": null,
+        "is_quote_status": false,
+        "retweet_count": 0,
+        "favorite_count": 0,
+        "favorited": false,
+        "retweeted": false,
+        "lang": "und"
+    }
+]

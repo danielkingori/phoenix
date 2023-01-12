@@ -9,8 +9,9 @@ import pathlib
 
 
 ARTIFACTS_PATH = pathlib.Path(__file__).parents[3] / "local_artifacts"
+LOCAL_MODELS_PATH = pathlib.Path(__file__).parents[3] / "local_models"
 
-STATIC_CONFIG_PATH = pathlib.Path(__file__).parents[1] / "config"
+STATIC_DATA_PATH = pathlib.Path(__file__).parents[1] / "static_data"
 
 
 def get_local() -> str:
@@ -18,6 +19,11 @@ def get_local() -> str:
     return "file://" + str(ARTIFACTS_PATH) + "/"
 
 
-def get_static_config() -> str:
-    """Get the URL of the staic."""
-    return "file://" + str(STATIC_CONFIG_PATH) + "/"
+def get_static_data() -> str:
+    """Get the URL of the static data files directory."""
+    return "file://" + str(STATIC_DATA_PATH) + "/"
+
+
+def get_local_models() -> str:
+    """Get the URL of predownloaded models."""
+    return str(LOCAL_MODELS_PATH) + "/"

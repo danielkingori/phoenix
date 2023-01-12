@@ -5,10 +5,12 @@ import mock
 import pandas as pd
 import pytest
 
+from phoenix.common import run_datetime
 from phoenix.tag.third_party_models.aws_async import (
     complete_sentiment,
     info_sentiment,
     job_types,
+    jobs,
     start_sentiment,
 )
 
@@ -33,16 +35,18 @@ def test_complete_sentiment(
     m_start.return_value = job_types.AWSStartedJob(
         job_id="id", job_arn="arn", job_status=job_types.JOB_STATUS_SUBMITTED
     )
+    dt = datetime.datetime(2000, 1, 2, 3, 4, 5, tzinfo=datetime.timezone.utc)
+    run_dt = run_datetime.RunDatetime(dt)
     async_job_group = start_sentiment.start_sentiment_analysis_jobs(
-        data_access_role_arn, tmpdir_url, aws_sentiment_objects, client
+        run_dt, data_access_role_arn, tmpdir_url, aws_sentiment_objects, client
     )
     assert async_job_group
 
     async_job_group_url = f"{tmpdir_url}/async_job_group.json"
 
     # Doing the persist as this is part of the full functionality
-    _ = job_types.persist_json(async_job_group_url, async_job_group)
-    async_job_group_gotten = job_types.get_json(async_job_group_url)
+    _ = jobs.persist_json(async_job_group_url, async_job_group)
+    async_job_group_gotten = jobs.get_json(async_job_group_url)
 
     # Pointing to the test data
     async_job_group_gotten.async_jobs[0].async_job_meta.output_url = aws_sentiment_ar_output_url

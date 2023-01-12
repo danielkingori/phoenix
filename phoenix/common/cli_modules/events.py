@@ -1,7 +1,7 @@
 """Events CLI Interface."""
 import click
 
-from phoenix.common import artifacts, run_datetime
+from phoenix.common import run_params
 from phoenix.common.cli_modules import main_group, utils
 
 
@@ -17,35 +17,41 @@ def events():
         allow_extra_args=True,
     ),
 )
+@click.argument("artifact_env")
+@click.argument("tenant_id")
 @click.argument("event_type", type=click.STRING)
-@click.argument("artifact_env", default="local", envvar="ARTIFACT_ENV")
 @click.pass_context
 def run(
     ctx,
-    event_type,
     artifact_env,
+    tenant_id,
+    event_type,
 ):
     """Run the processing of the events data.
 
     Example command:
-    ./phoenix-cli events run acled production
+    ./phoenix-cli events run production tenant acled
 
-    EVENT_TYPE: acled, undp
     ARTIFACT_ENV:
-        The artifact environment that will be used. Default "local"
+        The artifact environment that will be used.
         Can use "production" which will pick the artifact env from the env var.
         Or a valid storage URL like "s3://my-phoenix-bucket/"
+    TENANT_ID: The id of the tenant to run phoenix for.
+    EVENT_TYPE: acled, undp
     """
-    run_dt = run_datetime.create_run_datetime_now()
-    art_url_reg = artifacts.registry.ArtifactURLRegistry(run_dt, artifact_env)
-    parameters = utils.init_parameters(run_dt, art_url_reg)
+    cur_run_params = run_params.general.create(artifact_env, tenant_id)
+    parameters = utils.init_parameters(cur_run_params)
     notebook_key = ""
     if event_type == "undp":
         notebook_key = "scrape/undp_events/undp_events_transform.ipynb"
-        output_nb_url = art_url_reg.get_url("source-undp_events_notebook", parameters)
+        output_nb_url = cur_run_params.art_url_reg.get_url(
+            "source-undp_events_notebook", parameters
+        )
     elif event_type == "acled":
         notebook_key = "scrape/acled_event_transform.ipynb"
-        output_nb_url = art_url_reg.get_url("source-acled_events_notebook", parameters)
+        output_nb_url = cur_run_params.art_url_reg.get_url(
+            "source-acled_events_notebook", parameters
+        )
     else:
         raise ValueError(f"Event type: {event_type} is not supported")
 

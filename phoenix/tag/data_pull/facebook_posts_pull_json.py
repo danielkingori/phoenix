@@ -13,6 +13,22 @@ from phoenix.common import pd_utils
 from phoenix.tag.data_pull import constants, utils
 
 
+MEDIUM_MAP = {
+    "status": constants.MEDIUM_TYPE_TEXT,
+    "link": constants.MEDIUM_TYPE_LINK,
+    "album": constants.MEDIUM_TYPE_PHOTO,
+    "photo": constants.MEDIUM_TYPE_PHOTO,
+    "igtv": constants.MEDIUM_TYPE_VIDEO,
+    "live_video": constants.MEDIUM_TYPE_VIDEO,
+    "live_video_complete": constants.MEDIUM_TYPE_VIDEO,
+    "live_video_scheduled": constants.MEDIUM_TYPE_VIDEO,
+    "native_video": constants.MEDIUM_TYPE_VIDEO,
+    "video": constants.MEDIUM_TYPE_VIDEO,
+    "vine": constants.MEDIUM_TYPE_VIDEO,
+    "youtube": constants.MEDIUM_TYPE_VIDEO,
+}
+
+
 def from_json(
     url_to_folder: str, year_filter: Optional[int] = None, month_filter: Optional[int] = None
 ) -> pd.DataFrame:
@@ -33,6 +49,10 @@ def from_json(
 
         with tentaclio.open(entry) as file_io:
             df_read = pd.read_json(file_io)
+
+        # Gaurd against empty files
+        if df_read.shape[0] == 0:
+            continue
 
         df = normalise(df_read, df_flattened)
         df["file_timestamp"] = file_timestamp
@@ -82,6 +102,7 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
     df["month_filter"] = df["post_created"].dt.month
     df["day_filter"] = df["post_created"].dt.day
     df["updated"] = pd.to_datetime(df["updated"]).dt.tz_localize("UTC")
+    df["medium_type"] = medium_type(df)
     # This will be hashed so that links are in the hash
     df["text_link"] = df["text"] + "-" + df["link"].fillna("")
     df["text_hash"] = df["text_link"].apply(utils.hash_message)
@@ -108,6 +129,21 @@ def normalise(raw_df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFrame:
         # Using ignore as missing data is not imporant
         errors="ignore",
     )
+
+
+def medium_type_for_value(type_value: str) -> str:
+    """Medium type for a value."""
+    if type_value in MEDIUM_MAP:
+        return MEDIUM_MAP[type_value]
+
+    raise RuntimeError(f"Type of post not mappable to medium_type: {type_value}")
+
+
+def medium_type(df: pd.DataFrame) -> pd.Series:
+    """Get the medium_type from the dataframe."""
+    ser = df["type"].apply(medium_type_for_value)
+    ser.name = "medium_type"
+    return ser
 
 
 def map_score(sort_by_api: str, df: pd.DataFrame) -> pd.DataFrame:
@@ -161,7 +197,11 @@ def merge_flattened(df: pd.DataFrame, df_flattened: pd.DataFrame) -> pd.DataFram
         "statistics_actual_angry_count",
         "statistics_actual_care_count",
     ]
-    df[to_add] = df_flattened[to_add]
+    for column in to_add:
+        if column in df_flattened:
+            df[column] = df_flattened[column]
+        else:
+            df[column] = None
     # Some posts don't have an account this should be looked in to further
     # https://gitlab.com/howtobuildup/phoenix/-/issues/47
     df["account_platform_id"] = df["account_platform_id"].fillna(0).astype(int)
@@ -190,12 +230,34 @@ def for_tagging(given_df: pd.DataFrame):
         object_id: String, dtype: string
         text: String, dtype: string
         object_type: "facebook_post", dtype: String
+        created_at: datetime
+        object_url: String, dtype: string
+        object_user_url: String, dtype: string
+        object_user_name: String, dtypu: string
 
     """
     df = given_df.copy()
-    df = df[["phoenix_post_id", "text", "language_from_api"]]
+    df = df[
+        [
+            "phoenix_post_id",
+            "text",
+            "language_from_api",
+            "post_created",
+            "post_url",
+            "account_url",
+            "account_handle",
+        ]
+    ]
 
-    df = df.rename(columns={"phoenix_post_id": "object_id"})
-    df = df.set_index(df["object_id"], verify_integrity=True)
+    df = df.rename(
+        columns={
+            "phoenix_post_id": "object_id",
+            "post_created": "created_at",
+            "post_url": "object_url",
+            "account_url": "object_user_url",
+            "account_handle": "object_user_name",
+        }
+    )
+    df = df.set_index("object_id", drop=False, verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_FACEBOOK_POST
     return df

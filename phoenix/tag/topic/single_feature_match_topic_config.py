@@ -26,7 +26,10 @@ def get_topic_config(config_url=None) -> pd.DataFrame:
         .rename(columns={"topic_list": "topic"})
     )
     df_ex["topic"] = df_ex["topic"].str.strip()
-    return df_ex[["features", "topic"]]
+    if "use_processed_features" in df_ex.columns:
+        return df_ex[["unprocessed_features", "features", "topic", "use_processed_features"]]
+    else:
+        return df_ex[["features", "topic"]]
 
 
 def _get_raw_topic_config(config_url=None) -> pd.DataFrame:
@@ -97,7 +100,7 @@ def persist_topic_config_csv(df: pd.DataFrame, config_url=None):
 
 def _default_config_url() -> str:
     """Default config url."""
-    return f"{artifacts.urls.get_static_config()}{constants.DEFAULT_RAW_TOPIC_CONFIG}"
+    return f"{artifacts.urls.get_static_data()}{constants.DEFAULT_RAW_TOPIC_CONFIG}"
 
 
 def create_new_committable_topic_config(

@@ -72,14 +72,17 @@ def for_tagging(given_df: pd.DataFrame):
         object_id: String, dtype: string
         text: String, dtype: string
         object_type: "facebook_post", dtype: String
+        date: datetime
+        post_url: String, dtype: string
+        account_url: String, dtype: string
 
     """
     df = given_df.copy()
-    df = df[["phoenix_post_id", "message"]]
+    df = df[["phoenix_post_id", "message", "date", "post_url", "account_url"]]
     if "lang" in given_df.columns:
         df["language_from_api"] = given_df["lang"]
 
     df = df.rename(columns={"phoenix_post_id": "object_id", "message": "text"})
-    df = df.set_index(df["object_id"], verify_integrity=True)
+    df = df.set_index("object_id", drop=False, verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_FACEBOOK_POST
     return df

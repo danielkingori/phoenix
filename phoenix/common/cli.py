@@ -4,10 +4,16 @@
 from phoenix.common.cli_modules import (  # noqa: F401
     comments,
     events,
+    export_manual_scraping,
     facebook_comments_pages,
     graphing,
+    labelling,
     main_group,
-    scrape,
+    scrape_facebook,
+    scrape_group,
+    scrape_twitter,
+    scrape_youtube,
+    sflm,
     tagging,
     utils,
 )

@@ -1,0 +1,37 @@
+[
+    {
+        "date": "2022-03-16 18:00:00",
+        "updated": "2022-03-16 18:00:00",
+        "postUrl": "https://www.facebook.com/1033341778/posts/10222896229127589",
+        "link": "https://www.facebook.com/1033341778/posts/10222896229127589",
+        "type": "status",
+        "platform": "Facebook",
+        "languageCode": "und",
+        "message": "A new number of \"In the Sandal\" starts just now, the subject: The consequences of the war in Ukraine on our economy Guests : Murad Abdel Salam, Director of Studies and Research at the Central Bank Hamza Muadab, researcher in political science Ayman and Salati, Specialist Engineer in Financial Markets Check out our shoes, live stream on Friedrich-Ebert-Stiftung Tunisie So we will put you a link in the commentsTranslated from Arabic",
+        "account": {
+            "name": "Haythem El Mekki",
+            "handle": "haythem.elmekki",
+            "url": "https://www.facebook.com/1033341778",
+            "platformId": 1033341778,
+            "pageCategory": NaN,
+            "pageDescription": NaN,
+            "pageAdminTopCountry": NaN,
+            "pageCreatedDate": NaN
+        },
+        "score": 585,
+        "statistics": {
+            "actual": {
+                "likeCount": NaN,
+                "shareCount": NaN,
+                "commentCount": NaN,
+                "loveCount": NaN,
+                "wowCount": NaN,
+                "hahaCount": NaN,
+                "sadCount": NaN,
+                "angryCount": NaN,
+                "thankfulCount": NaN,
+                "careCount": NaN
+            }
+        }
+    }
+]

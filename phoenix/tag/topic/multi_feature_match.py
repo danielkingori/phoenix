@@ -61,7 +61,7 @@ def get_topic_config(config_url=None) -> pd.DataFrame:
 def _get_raw_topic_config(config_url=None) -> pd.DataFrame:
     """Get the raw topic_config."""
     if not config_url:
-        config_url = f"{artifacts.urls.get_static_config()}{DEFAULT_RAW_TOPIC_CONFIG}"
+        config_url = f"{artifacts.urls.get_static_data()}{DEFAULT_RAW_TOPIC_CONFIG}"
 
     with tentaclio.open(config_url, "r") as fb:
         df = pd.read_csv(fb)

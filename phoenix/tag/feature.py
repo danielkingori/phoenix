@@ -5,9 +5,13 @@ Final dataframe schema: docs/schemas/features.md
 Please update if it is changed.
 """
 import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
 
-from phoenix.common import artifacts
 from phoenix.tag import constants, text_features_analyser
+
+
+# Only the necessary columns of features for running the SFLM inference pipeline.
+SFLM_NECESSARY_FEATURES_COLUMNS = ["object_id", "object_type", "language", "features"]
 
 
 def features(given_df: pd.DataFrame, text_key: str = "clean_text") -> pd.DataFrame:
@@ -21,8 +25,21 @@ def features(given_df: pd.DataFrame, text_key: str = "clean_text") -> pd.DataFra
         given_df copy with "features" column.
     """
     df = given_df.copy()
-    tfa = text_features_analyser.create()
-    df["features"] = tfa.features(df[[text_key, "language"]], text_key)
+    tfa_parallelizable = text_features_analyser.create(parallelisable=True)
+    tfa_non_parallelizable = text_features_analyser.create(parallelisable=False)
+
+    df_parallelizable = df[~((df["language"] == "ckb") | (df["language"] == "ku"))]
+    df_non_parallelizable = df[(df["language"] == "ckb") | (df["language"] == "ku")]
+
+    df_non_parallelizable["features"] = tfa_non_parallelizable.features(
+        df_non_parallelizable[[text_key, "language"]], text_key
+    )
+
+    df_parallelizable["features"] = tfa_parallelizable.features(
+        df_parallelizable[[text_key, "language"]], text_key
+    )
+
+    df = df_parallelizable.append(df_non_parallelizable).sort_index()
     return df
 
 
@@ -58,26 +75,6 @@ def explode_features(given_df: pd.DataFrame):
     )
 
 
-def key_features(given_df: pd.DataFrame, features_key: str = "features") -> pd.Series:
-    """Get the key features.
-
-    Arguments:
-        given_df: a dataframe containing "features" as a single string.
-        features_key: column in data frame where the list of features are.
-
-    Returns:
-        Subset of given_df that has interesting_features.
-    """
-    df = given_df.copy()
-    interesting_features = get_interesting_features()
-    return df[features_key].isin(interesting_features["interesting_features"])
-
-
-def get_interesting_features() -> pd.DataFrame:
-    """Get interesting features configuration."""
-    return pd.read_csv(f"{artifacts.urls.get_static_config()}/interesting_features.csv")
-
-
 def get_features_to_label(exploded_features_df) -> pd.DataFrame:
     """Get the features to label.
 
@@ -102,3 +99,39 @@ def get_features_to_label(exploded_features_df) -> pd.DataFrame:
     all_feature_count.sort_values(by="features_count", inplace=True, ascending=False)
     ten_percent = min(constants.TO_LABEL_CSV_MAX, round(all_feature_count.shape[0] * 0.1))
     return all_feature_count[:ten_percent]
+
+
+def get_unprocessed_features(given_df: pd.DataFrame, text_key: str = "clean_text"):
+    """Get ngrams of a text column without any pre-processing NLP steps.
+
+    Arguments:
+        given_df: A dataframe with text column and language column.
+        text_key: The column name of the text. Default "clean_text".
+
+    Returns
+        given_df copy with "features" column.
+    """
+    df = given_df.copy()
+    cv = CountVectorizer(ngram_range=(1, 3), token_pattern=r"#?\b\w+\b")
+    analyser = cv.build_analyzer()
+
+    df["features"] = df[text_key].apply(analyser)
+
+    return df
+
+
+def keep_neccesary_columns_sflm(given_df: pd.DataFrame):
+    """Keep only the necessary columns of the features df to run SFLM inference pipeline.
+
+    schema also found here: docs/schemas/features.md
+    Please update if it is changed.
+
+    Arguments:
+        given_df: A dataframe with many columns seen in docs/schemas/features.md.
+
+    Returns:
+        pd.DataFrame: Dataframe with only the necessary columns to run SFLM inference.
+    """
+    df = given_df[SFLM_NECESSARY_FEATURES_COLUMNS]
+
+    return df

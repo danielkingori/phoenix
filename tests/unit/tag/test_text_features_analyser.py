@@ -14,9 +14,26 @@ def test_StemmedCountVectorizer_en():
 
     en_corpus = ["succeeding in stemming removes the ends of words"]
 
-    en_vectorizer = tfa.StemmedCountVectorizer(en_stemmer, stop_words=stopwords.words("english"))
+    en_vectorizer = tfa.StemmedCountVectorizer(
+        stemmer=en_stemmer, stop_words=stopwords.words("english")
+    )
     en_vectorizer.fit_transform(en_corpus)
     expected_feature_names = ["succeed", "stem", "remov", "end", "word"]
+    assert set(en_vectorizer.get_feature_names()) == set(expected_feature_names)
+    assert isinstance(en_vectorizer, CountVectorizer)
+
+
+def test_StemmedCountVectorizer_numbers():
+    """Test if StemmedCountVectorizer can handle only numbers."""
+    en_stemmer = stemmer("english")
+
+    en_corpus = [15.0, 12, 13]
+
+    en_vectorizer = tfa.StemmedCountVectorizer(
+        stemmer=en_stemmer, stop_words=stopwords.words("english")
+    )
+    en_vectorizer.fit_transform(en_corpus)
+    expected_feature_names = ["12", "13", "15"]
     assert set(en_vectorizer.get_feature_names()) == set(expected_feature_names)
     assert isinstance(en_vectorizer, CountVectorizer)
 
@@ -25,7 +42,9 @@ def test_StemmedCountVectorizer_ar():
     """Test if StemmedCountVectorizer is initialized with the right stemmer."""
     ar_stemmer = stemmer("arabic")
 
-    ar_vectorizer = tfa.StemmedCountVectorizer(ar_stemmer, stop_words=stopwords.words("arabic"))
+    ar_vectorizer = tfa.StemmedCountVectorizer(
+        stemmer=ar_stemmer, stop_words=stopwords.words("arabic")
+    )
     ar_corpus = [
         "تقرير عن الأحداث التي ترافقت مع الانتخابات السورية ومقابلات مع سوريين شاهدوا الحلقة الكاملة من برنامج طوني خليفة عبر هذا الرابط"  # noqa
     ]
@@ -56,7 +75,9 @@ def test_StemmedCountVectorizer_ar():
 def test_StemmedCountVectorizer_common_words():
     en_stemmer = stemmer("english")
     en_corpus = ["succeeding in stemming removes the ends of words", "words words words"]
-    en_vectorizer = tfa.StemmedCountVectorizer(en_stemmer, stop_words=stopwords.words("english"))
+    en_vectorizer = tfa.StemmedCountVectorizer(
+        stemmer=en_stemmer, stop_words=stopwords.words("english")
+    )
     en_matrix = en_vectorizer.fit_transform(en_corpus)
     actual_word_dict = en_vectorizer.get_most_common_words(en_matrix)
     expected_word_dict = {
@@ -86,17 +107,40 @@ def test_get_stopwords_has_arabic():
     assert set(stopwords_list).issubset(actual_stopwords_list)
 
 
-@pytest.mark.skip(
-    "bug to be fixed: doesn't stem the first word of a bigram and the first 2 words of "
-    "a trigram"
-)
-def test_TextFeaturesAnalyser_features():
+def test_TextFeaturesAnalyser_default_accepted_languages():
+    """Test the whitelisted languages from tag.language are accepted in the default analyser.
+
+    This will raise an error if the TextFeaturesAnalyser doesn't have the languages in its
+    default language list.
+    """
+    df_test = pd.DataFrame(
+        [
+            ("1", "this is a sentance", "en"),
+            ("1", "some sentance", "ku"),
+            ("1", "another sentance", "und"),
+            ("1", "yas", "ckb"),
+            ("1", "yas sentance", "ar"),
+            ("1", "yas sentances", "ar_izi"),
+            ("1", "on peut aussi analyser le français", "fr"),
+        ],
+        columns=["id", "clean_text", "language"],
+    )
+
+    text_analyser = tfa.create(parallelisable=False)
+    df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+
+
+@pytest.mark.parametrize("parallelisable", [True, False])
+def test_TextFeaturesAnalyser_features(parallelisable):
     df_test = pd.DataFrame(
         [("1", "succeeding in stemming removes the ends of words", "en")],
         columns=["id", "clean_text", "language"],
     )
-    text_analyser = tfa.create()
-    df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+
+    text_analyser = tfa.create(parallelisable=parallelisable)
+    output_features = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+    assert isinstance(output_features, pd.Series)
+    df_test["features"] = output_features
 
     expected_3gram_feature_list = [
         "succeed",
@@ -113,7 +157,51 @@ def test_TextFeaturesAnalyser_features():
         "remov end word",
     ]
 
-    assert df_test["features"][0] == expected_3gram_feature_list
+    assert df_test.loc[0, "features"] == expected_3gram_feature_list
+
+
+def test_TextFeaturesAnalyser_kurdish():
+    """Test analysing Kurdish."""
+    df_test = pd.DataFrame(
+        [
+            ("1", "Min nizanibû a ku bin min", "ku"),
+            ("1", "لە ســـاڵەکانی ١٩٥٠دا یان", "ckb"),
+        ],
+        columns=["id", "clean_text", "language"],
+    )
+    text_analyser = tfa.create(ngram_ranges=[(1, 2)], parallelisable=False)
+    df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+
+    kurmanji_feats = ["Min", "nizanibû", "Min nizanibû"]
+
+    sorani_feats = ["ساڵ", "1950", "ساڵ 1950"]
+
+    assert df_test["features"][0] == kurmanji_feats
+    assert df_test["features"][1] == sorani_feats
+
+
+def test_TextFeaturesAnalyser_features_no_ngrams():
+    df_test = pd.DataFrame(
+        [("1", "succeeding in stemming removes the ends of words", "en")],
+        columns=["id", "clean_text", "language"],
+    )
+    text_analyser = tfa.create(use_ngrams=False)
+    text_analyser_non_parallelizable = tfa.create(use_ngrams=False, parallelisable=False)
+    df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+    df_test["features_no_dask"] = text_analyser_non_parallelizable.features(
+        df_test[["clean_text", "language"]], "clean_text"
+    )
+
+    expected_feature_list = [
+        "succeed",
+        "stem",
+        "remov",
+        "end",
+        "word",
+    ]
+
+    assert df_test["features"][0] == expected_feature_list
+    assert df_test["features_no_dask"][0] == expected_feature_list
 
 
 def test_TextFeaturesAnalyser_hashtags_arabic():

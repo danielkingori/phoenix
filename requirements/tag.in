@@ -6,12 +6,16 @@ pyicu
 pycld2
 python-bidi
 nltk
+klpt
 seaborn
 snowballstemmer
 sklearn
 freezegun
 dacite
 # Network graphing viz
+igraph
+graphistry
 webweb
 python-louvain
 networkx
+fasttext

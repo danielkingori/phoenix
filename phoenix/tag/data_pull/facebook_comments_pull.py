@@ -1,4 +1,7 @@
 """Data pulling for facebook comments."""
+from typing import Optional
+
+import datetime
 import itertools
 import json
 import logging
@@ -9,7 +12,11 @@ import tentaclio
 from phoenix.tag.data_pull import constants, utils
 
 
-def from_json(url_to_folder: str) -> pd.DataFrame:
+def from_json(
+    url_to_folder: str,
+    objects_after: Optional[datetime.datetime] = None,
+    objects_before: Optional[datetime.datetime] = None,
+) -> pd.DataFrame:
     """Get all the jsons and return a normalised facebook comments."""
     comment_li = []
     for entry in tentaclio.listdir(url_to_folder):
@@ -29,7 +36,14 @@ def from_json(url_to_folder: str) -> pd.DataFrame:
     df = df.sort_values("file_timestamp")
     df = df.groupby("id").last()
     df = df.reset_index()
-    return normalise_comments_dataframe(df)
+    df = normalise_comments_dataframe(df)
+    if objects_after:
+        df = df[df["timestamp_filter"] > objects_after]
+
+    if objects_before:
+        df = df[df["timestamp_filter"] < objects_before]
+
+    return df
 
 
 def get_comments_df(pages):
@@ -124,6 +138,6 @@ def for_tagging(given_df: pd.DataFrame):
     df = given_df.copy()
     df = df[["id", "text"]]
     df = df.rename(columns={"id": "object_id"})
-    df = df.set_index(df["object_id"], verify_integrity=True)
+    df = df.set_index("object_id", drop=False, verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_FACEBOOK_COMMENT
     return df

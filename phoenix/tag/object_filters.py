@@ -1,8 +1,7 @@
 """Filters for tagging dataframe.
 
 Dataframes that can be filtered are:
-    features_df: see docs/schemas/features.md
-    objects_df: see docs/schemas/features.md
+    objects_df: see docs/schemas/objects_df.md
 """
 import pandas as pd
 
@@ -24,53 +23,52 @@ def facebook_comments(df):
     return df["object_type"] == constants.OBJECT_TYPE_FACEBOOK_COMMENT
 
 
-def key_feature(df):
-    """Get key features from dataframe."""
-    return df["has_key_feature"].isin([True])
-
-
 def not_retweet(df):
     """Get none retweet."""
     return ~df["is_retweet"]
 
 
-def get_key_facebook_posts(df):
-    """Get key facebook posts."""
-    return df[(facebook_posts(df)) & (key_feature(df))]
+def get_relevant_facebook_posts(df):
+    """Get relevant facebook posts."""
+    return df[(facebook_posts(df)) & (is_relevant_object(df))]
 
 
-def get_key_facebook_comments(df):
-    """Get key facebook comments."""
-    return df[(facebook_comments(df)) & (key_feature(df))]
+def get_relevant_facebook_comments(df):
+    """Get relevant facebook comments."""
+    return df[(facebook_comments(df)) & (is_relevant_object(df))]
 
 
-def get_key_tweets(df):
-    """Get key tweets."""
-    return df[(tweets(df)) & (key_feature(df)) & (not_retweet(df))]
+def get_relevant_tweets(df):
+    """Get relevant tweets."""
+    return df[(tweets(df)) & (is_relevant_object(df)) & (not_retweet(df))]
 
 
-def get_all_key_objects(df):
-    """Get all key objects.
+def get_all_relevant_objects(df):
+    """Get all relevant objects.
 
-    This is used for determining the `is_key_object`.
+    This is used for determining the `has_topics`.
     """
     return pd.concat(
-        [get_key_tweets(df), get_key_facebook_posts(df), get_key_facebook_comments(df)]
+        [
+            get_relevant_tweets(df),
+            get_relevant_facebook_posts(df),
+            get_relevant_facebook_comments(df),
+        ]
     )
 
 
-def is_key_object(df):
-    """Is key object."""
-    return df["is_key_object"].isin([True])
+def is_relevant_object(df):
+    """Is relevant object."""
+    return df["has_topics"].isin([True])
 
 
-def get_key_objects(df):
-    """All key objects.
+def get_relevant_objects(df):
+    """All relevant objects.
 
-    This uses the `is_key_object` key and is for
+    This uses the `has_topics` relevant and is for
     finalised object lists.
     """
-    return df[is_key_object(df)]
+    return df[is_relevant_object(df)]
 
 
 def export(df, export_type):
@@ -84,16 +82,16 @@ def export(df, export_type):
     if "facebook_comments" == export_type:
         return df[(facebook_comments(df))]
 
-    if "key_facebook_posts" == export_type:
-        return df[(facebook_posts(df)) & (is_key_object(df))]
+    if "relevant_facebook_posts" == export_type:
+        return get_relevant_facebook_posts(df)
 
-    if "key_facebook_comments" == export_type:
-        return df[(facebook_comments(df)) & (is_key_object(df))]
+    if "relevant_facebook_comments" == export_type:
+        return get_relevant_facebook_comments(df)
 
-    if "key_tweets" == export_type:
-        return df[(tweets(df)) & (is_key_object(df))]
+    if "relevant_tweets" == export_type:
+        return get_relevant_tweets(df)
 
-    if "key_objects" == export_type:
-        return df[(is_key_object(df))]
+    if "relevant_objects" == export_type:
+        return get_relevant_objects(df)
 
     raise ValueError(f"Export Type not supported: {export_type}")

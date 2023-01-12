@@ -20,26 +20,9 @@ Final facebook comments dataframe
 | user_display_name       | object         | Displayed user name of the commenter |
 | username                | object         | Facebook id or username of the commenter |
 | position                | object         | "post", "comment", or "subcomment" |
-| text_object             | object         | The text that the tagging pipeline used |
-| object_type             | object         | facebook_comment |
-| language_from_api       | object         | - |
-| clean_text              | object         | The cleaned version of the text |
-| language                | object         | Phoenix detected language |
-| confidence              | float64        | Confidence of the phoenix language detection |
-| is_unofficial_retweet   | bool           | - |
-| is_retweet              | bool           | - |
-| is_key_object           | bool           | Does phoenix think the tweet is relevant |
-| features                | object         | List of features of the text that phoenix calculated |
-| features_count          | object         | List of counts of the features that phoenix calculated |
-| is_economic_labour_tension             | bool                | Economic labour tension flag |
-| is_sectarian_tension                   | bool                | Sectarian tension flag |
-| is_environmental_tension               | bool                | Environmental tension flag |
-| is_political_tension                   | bool                | Political tension flag |
-| is_service_related_tension             | bool                | Service Related tension flag |
-| is_community_insecurity_tension        | bool                | Community Insecurity tension flag |
-| is_geopolitics_tension                 | bool                | Geopolitics tension flag |
-| is_intercommunity_relations_tension    | bool                | Intercommunity relations tension flag |
 
+## Additional columns with the tensions inference
+see (`objects_topics`)[docs/schemas/objects.md#Objects_tensions]
 
 # Facebook comments topics
 

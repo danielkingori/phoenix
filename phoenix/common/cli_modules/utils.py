@@ -10,17 +10,17 @@ import papermill as pm
 import tentaclio
 from dateutil.relativedelta import relativedelta
 
-from phoenix.common import artifacts, run_datetime
+from phoenix import common
+from phoenix.common import run_datetime
 
 
-def init_parameters(
-    run_dt: run_datetime.RunDatetime, art_url_reg: artifacts.registry.ArtifactURLRegistry
-) -> Dict[str, Any]:
+def init_parameters(cur_run_params: common.run_params.general.GeneralRunParams) -> Dict[str, Any]:
     """Init the parameters for the cli commands."""
     return {
-        "RUN_DATETIME": run_dt.to_file_safe_str(),
-        "RUN_DATE": run_dt.to_run_date_str(),
-        "ARTIFACTS_ENVIRONMENT_KEY": art_url_reg.environment_key,
+        "RUN_DATETIME": cur_run_params.run_dt.to_file_safe_str(),
+        "RUN_DATE": cur_run_params.run_dt.to_run_date_str(),
+        "TENANT_ID": cur_run_params.tenant_config.id,
+        "ARTIFACTS_ENVIRONMENT_KEY": cur_run_params.art_url_reg.environment_key,
     }
 
 
@@ -89,3 +89,8 @@ def file_exists(url, silence=False):
         return False
 
     return True
+
+
+def get_extra_parameters(ctx) -> Dict[str, str]:
+    """Get the extra parameters from the click context."""
+    return dict([item.strip("--").split("=") for item in ctx.args])
