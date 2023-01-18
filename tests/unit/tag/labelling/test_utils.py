@@ -130,3 +130,65 @@ def test_filter_out_duplicates_multi_col_name():
         filter_using_this_df, to_filter_df, cols=["new_col_name", "another_col_name"]
     )
     pd.testing.assert_frame_equal(output_df, expected_df)
+
+
+def test_filter_out_duplicates_incompatible_col_name():
+    """Test that filled_sheet gets overwritten if it does not contain column names in cols."""
+    to_filter_df = pd.DataFrame(
+        data={
+            "new_col_name": ["1", "2", "3", "4", "5"],
+            "data_column": ["data_1", "data_2", "data_3", "data_4", "data_5"],
+        }
+    )
+
+    filter_using_this_df = pd.DataFrame(
+        data={
+            "incompatible_col_name": ["1", "3", "5"],
+            "different_data_column": ["best data", "better data", "ok data"],
+        }
+    )
+
+    expected_df = to_filter_df.copy()
+
+    output_df = utils.filter_out_duplicates(
+        filter_using_this_df, to_filter_df, cols=["new_col_name"]
+    )
+    pd.testing.assert_frame_equal(output_df, expected_df)
+
+
+def test_filter_out_duplicates_incompatible_default_col_name():
+    """Test that filled_sheet gets overwritten if there's no object_id and no cols are defined."""
+    to_filter_df = pd.DataFrame(
+        data={
+            "object_id": ["1", "2", "3", "4", "5"],
+            "data_column": ["data_1", "data_2", "data_3", "data_4", "data_5"],
+        }
+    )
+
+    filter_using_this_df = pd.DataFrame(
+        data={
+            "incompatible_col_name": ["1", "3", "5"],
+            "different_data_column": ["best data", "better data", "ok data"],
+        }
+    )
+
+    expected_df = to_filter_df.copy()
+
+    output_df = utils.filter_out_duplicates(filter_using_this_df, to_filter_df)
+    pd.testing.assert_frame_equal(output_df, expected_df)
+
+
+def test_filter_out_duplicates_with_empty_filler_sheet():
+    """Test that filled_sheet gets overwritten if there's no object_id and no cols are defined."""
+    to_filter_df = pd.DataFrame(
+        data={
+            "object_id": ["1", "2", "3", "4", "5"],
+            "data_column": ["data_1", "data_2", "data_3", "data_4", "data_5"],
+        }
+    )
+    filled_sheet_df = pd.DataFrame()
+
+    expected_df = to_filter_df.copy()
+
+    output_df = utils.filter_out_duplicates(filled_sheet_df, to_filter_df)
+    pd.testing.assert_frame_equal(output_df, expected_df)
