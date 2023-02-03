@@ -50,6 +50,10 @@ def filter_out_duplicates(
             Duplication checked on the `cols` parameter.
     """
     cols = ["object_id"] if cols is None else cols
+    # Check that all the cols are in the filled_sheet, otherwise overwrite
+    if cols and not all(elem in filled_sheet_df for elem in cols):
+        return data_df
+
     merged_df = pd.merge(data_df, filled_sheet_df[cols], how="left", on=cols, indicator=True)
     merged_df = merged_df.loc[merged_df["_merge"] == "left_only"].drop("_merge", axis=1)
     return merged_df
