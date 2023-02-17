@@ -123,6 +123,8 @@ def stem_analyzer(analyzer, stemmer, doc):
     for token in filter(None, analyzer(doc)):  # type: ignore
         if token:
             words_list = [stemmer.stemWord(w) for w in token.split(" ") if w]
+            # Need to call another function here if we use another, non-snowball stemmer
+            # stemmer.stem()
             li.append(" ".join(words_list))
     return li
 
@@ -341,6 +343,16 @@ def create(
         "fr": {
             "stemmer_initialiser": (stemmer, ("french",)),
             "stop_words": stopwords.words("french"),
+            "strip_accents": "ascii",
+            "encoding": "utf-8",
+            "token_pattern": r"#?\b\w\w+\b",
+        },
+        "sw": {
+            # this needs to be something new: check https://github.com/ondieki/swahili/blob/master/Stemmer.py "stemmer_initialiser": (stemmer, ("french",)),
+            # This also needs to be something new: as nltk doesn't support swahili stopwords. check
+            # https://data.mendeley.com/datasets/mmf4hnsm2n/1 see if I can add to nltk
+            # "stop_words":
+            # stopwords.words("french"),
             "strip_accents": "ascii",
             "encoding": "utf-8",
             "token_pattern": r"#?\b\w\w+\b",
