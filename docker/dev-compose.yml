@@ -13,7 +13,10 @@ services:
       dockerfile: ./docker/dev.Dockerfile
     image: phoenix-dev
     volumes:
-      - *default-bind
+      - type: bind
+        source: ../
+        target: /src
+        consistency: cached
     # See .jupyter/jupyter_notebook_config.py for setting
     command: ["jupyter","lab"]
     environment:
@@ -43,7 +46,10 @@ services:
   dask-scheduler:
     image: phoenix-dev
     volumes:
-      - *default-bind
+      - type: bind
+        source: ../
+        target: /src
+        consistency: cached
     hostname: scheduler
     ports:
       - "8786:8786"
@@ -53,5 +59,8 @@ services:
   dask-worker:
     image: phoenix-dev
     volumes:
-      - *default-bind
+      - type: bind
+        source: ../
+        target: /src
+        consistency: cached
     command: ["dask-worker", "tcp://scheduler:8786"]
