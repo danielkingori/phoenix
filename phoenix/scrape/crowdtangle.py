@@ -82,6 +82,18 @@ def get_all_posts(
 ):
     """Get all the posts for search params."""
     posts = []
+    for posts_chunk in _get_all_posts(start_date, end_date, list_ids):
+        posts.extend(posts_chunk)
+
+    return posts
+
+
+def _get_all_posts(
+    start_date: datetime.datetime,
+    end_date: datetime.datetime,
+    list_ids: List[str],
+):
+    """Generator function to get all posts."""
     payload = {
         "startDate": start_date.strftime("%Y-%m-%dT%H:%M:%S"),
         "endDate": end_date.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -100,14 +112,21 @@ def get_all_posts(
     # Doing the pagination based on
     # https://github.com/CrowdTangle/API/wiki/Pagination
     while status == 200 and nextPage:
-        r = get_post(url, payload, session)
-        status, found_posts, nextPage = _process_response_data(r)
-        url = nextPage
-        payload = {}
-        posts.extend(found_posts)
+        try:
+            r = get_post(url, payload, session)
+            status, found_posts, nextPage = _process_response_data(r)
+            url = nextPage
+            payload = {}
+            yield found_posts
+        except requests.exceptions.ConnectionError as e:
+            logging.warning(e)
+            yield []
+            break
+        except Exception as e:
+            raise e
+
         # Slow down for rate limit
         time.sleep(rate_limit_seconds / rate_limit_calls + 0.5)
-    return posts
 
 
 def _process_response_data(r):
