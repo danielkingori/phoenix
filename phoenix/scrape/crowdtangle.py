@@ -25,6 +25,7 @@ DEFAULT_RATE_LIMIT_CALLS = 6
 DEFAULT_RATE_LIMIT_SECONDS = 60
 RATE_LIMIT_CALLS_ENV_NAME = "CT_RATE_LIMIT_CALLS"
 RATE_LIMIT_MINUTES_ENV_NAME = "CT_RATE_LIMIT_SECONDS"
+DEFAULT_NUM_PAGES_TO_CRAWL = 1000
 
 
 def get_rate_limits():
@@ -79,16 +80,17 @@ def get_all_posts(
     start_date: datetime.datetime,
     end_date: datetime.datetime,
     list_ids: List[str],
+    num_pages_to_crawl: int = DEFAULT_NUM_PAGES_TO_CRAWL,
 ):
     """Get all the posts for search params."""
     posts = []
 
     if list_ids:
         for list_id in list_ids:
-            for posts_chunk in _get_all_posts(start_date, end_date, [list_id]):
+            for posts_chunk in _get_all_posts(start_date, end_date, [list_id], num_pages_to_crawl):
                 posts.extend(posts_chunk)
     else:
-        for posts_chunk in _get_all_posts(start_date, end_date, list_ids):
+        for posts_chunk in _get_all_posts(start_date, end_date, list_ids, num_pages_to_crawl):
             posts.extend(posts_chunk)
 
     return posts
@@ -98,6 +100,7 @@ def _get_all_posts(
     start_date: datetime.datetime,
     end_date: datetime.datetime,
     list_ids: List[str],
+    num_pages_to_crawl: int,
 ):
     """Generator function to get all posts."""
     payload = {
@@ -117,12 +120,14 @@ def _get_all_posts(
     logging.info(f"Rate limit: {rate_limit_calls} requests per {rate_limit_seconds} seconds.")
     # Doing the pagination based on
     # https://github.com/CrowdTangle/API/wiki/Pagination
-    while status == 200 and nextPage:
+    page_number = 1
+    while status == 200 and nextPage and page_number <= num_pages_to_crawl:
         try:
             r = get_post(url, payload, session)
             status, found_posts, nextPage = _process_response_data(r)
             url = nextPage
             payload = {}
+            page_number += 1
             yield found_posts
         except requests.exceptions.ConnectionError as e:
             logging.warning(e)
