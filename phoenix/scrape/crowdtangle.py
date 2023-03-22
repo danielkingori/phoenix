@@ -82,8 +82,14 @@ def get_all_posts(
 ):
     """Get all the posts for search params."""
     posts = []
-    for posts_chunk in _get_all_posts(start_date, end_date, list_ids):
-        posts.extend(posts_chunk)
+
+    if list_ids:
+        for list_id in list_ids:
+            for posts_chunk in _get_all_posts(start_date, end_date, [list_id]):
+                posts.extend(posts_chunk)
+    else:
+        for posts_chunk in _get_all_posts(start_date, end_date, list_ids):
+            posts.extend(posts_chunk)
 
     return posts
 
