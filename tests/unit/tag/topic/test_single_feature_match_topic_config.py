@@ -52,6 +52,31 @@ def test_merge_new_topic_config():
     )
 
 
+@mock.patch("phoenix.tag.topic.single_feature_match_topic_config._get_raw_topic_config")
+def test_get_topic_config_null_features(m__get_raw_topic_config):
+    """Only rows missing both features and unprocessed features need to be dropped."""
+    m__get_raw_topic_config.return_value = pd.DataFrame(
+        {
+            "features": ["f1", None, "f3 f4", "f5", None],
+            "unprocessed_features": ["f1", "f2", None, "f5", None],
+            "topic": ["t1", "t2", "t3, T4", "No Tag", "t5"],
+            "use_processed_features": [True, False, True, False, True],
+        }
+    )
+
+    result_df = sfm_topic_config.get_topic_config()
+    expected_df = pd.DataFrame(
+        {
+            "unprocessed_features": ["f1", "f2", None, None],
+            "features": ["f1", None, "f3 f4", "f3 f4"],
+            "topic": ["t1", "t2", "t3", "t4"],
+            "use_processed_features": [True, False, True, True],
+        },
+    )
+    expected_df["features"] = expected_df["features"].astype("string")
+    pd.testing.assert_frame_equal(result_df, expected_df)
+
+
 def test_committable_topic_config():
     """Test the create of a committable of topic config."""
     topic_config = pd.DataFrame(

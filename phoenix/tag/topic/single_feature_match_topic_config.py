@@ -18,7 +18,12 @@ def get_topic_config(config_url=None) -> pd.DataFrame:
     """
     df = _get_raw_topic_config(config_url)
     df["topic"] = df["topic"].str.lower()
-    df = df[~df["topic"].isin(["no tag", "other"])].dropna()
+    if "unprocessed_features" in df.columns:
+        df = df[~df["topic"].isin(["no tag", "other"])].dropna(
+            subset=["unprocessed_features", "features"], how="all"
+        )
+    else:
+        df = df[~df["topic"].isin(["no tag", "other"])].dropna()
     df["topic_list"] = df["topic"].str.split(",")
     df_ex = (
         df.explode("topic_list", ignore_index=True)
