@@ -31,6 +31,7 @@ def get_topic_config(config_url=None) -> pd.DataFrame:
         .rename(columns={"topic_list": "topic"})
     )
     df_ex["topic"] = df_ex["topic"].str.strip()
+    df_ex["features"] = df_ex["features"].astype("string").str.strip()
     if "use_processed_features" in df_ex.columns:
         df_ex["unprocessed_features"] = df_ex["unprocessed_features"].str.strip()
         return df_ex[["unprocessed_features", "features", "topic", "use_processed_features"]]

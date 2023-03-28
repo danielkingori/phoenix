@@ -15,15 +15,14 @@ def test_get_topic_config(m__get_raw_topic_config):
     )
 
     result_df = sfm_topic_config.get_topic_config()
-    pd.testing.assert_frame_equal(
-        result_df,
-        pd.DataFrame(
-            {
-                "features": ["f1", "f1", "f2", "f3 f4", "f3 f4", "f3 f4"],
-                "topic": ["t1", "t2", "t2", "t3", "t4", "t5"],
-            }
-        ),
+    expected_df = pd.DataFrame(
+        {
+            "features": ["f1", "f1", "f2", "f3 f4", "f3 f4", "f3 f4"],
+            "topic": ["t1", "t2", "t2", "t3", "t4", "t5"],
+        },
     )
+    expected_df["features"] = expected_df["features"].astype("string")
+    pd.testing.assert_frame_equal(result_df, expected_df)
 
 
 def test_merge_new_topic_config():
