@@ -11,7 +11,7 @@ from phoenix.tag import data_pull
 @pytest.fixture()
 def processed_df() -> pd.DataFrame:
     """Fixture for dataframe processed from scraped tweets JSON."""
-    return pd.DataFrame(
+    df = pd.DataFrame(
         [
             {
                 "id_str": "1461731209554313216",
@@ -32,8 +32,8 @@ def processed_df() -> pd.DataFrame:
                 "in_reply_to_user_id": None,
                 "in_reply_to_user_id_str": None,
                 "in_reply_to_screen_name": None,
-                "geo": np.nan,
-                "coordinates": np.nan,
+                "geo": "",
+                "coordinates": "",
                 "contributors": np.nan,
                 "is_quote_status": False,
                 "retweet_count": 4,
@@ -89,8 +89,8 @@ def processed_df() -> pd.DataFrame:
                 "in_reply_to_user_id": 7.936029066038108e17,
                 "in_reply_to_user_id_str": 7.936029066038108e17,
                 "in_reply_to_screen_name": "makhlafi22",
-                "geo": np.nan,
-                "coordinates": np.nan,
+                "geo": "",
+                "coordinates": "",
                 "contributors": np.nan,
                 "is_quote_status": False,
                 "retweet_count": 0,
@@ -129,6 +129,9 @@ def processed_df() -> pd.DataFrame:
             },
         ]
     )
+    df["geo"] = df["geo"].astype("string")
+    df["coordinates"] = df["coordinates"].astype("string")
+    return df
 
 
 def test_data_pull(twitter_raw_data_source_folder_url, processed_df):

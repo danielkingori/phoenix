@@ -52,6 +52,7 @@ def normalise_json(raw_df: pd.DataFrame):
     df = df.rename(columns={"full_text": "text", "lang": "language_from_api"})
     df = user_normalise(df)
     df = retweeted_status_normalise(df)
+    df = stringify_columns(df)
     # Dropping nested data for the moment
     df = df.drop(
         columns=[
@@ -190,4 +191,13 @@ def for_tagging(given_df: pd.DataFrame):
     df = df.rename(columns={"id_str": "object_id", "user_screen_name": "object_user_name"})
     df = df.set_index("object_id", drop=False, verify_integrity=True)
     df["object_type"] = constants.OBJECT_TYPE_TWEET
+    return df
+
+
+def stringify_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Stringify columns that could contain dicts or lists."""
+    for col in ["withheld_in_countries", "geo", "place", "coordinates"]:
+        if col in df.columns:
+            df[col] = df[col].fillna("")
+            df[col] = df[col].astype("string")
     return df

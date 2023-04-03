@@ -123,3 +123,63 @@ def test_medium_type():
             "url_within_text",
         ]
     )
+
+
+def test_stringify_columns_geo_withheld_in_countries():
+    """Test stringify_columns stringifies geo and withheld_in_countries columns.
+
+    Also tests that if a column is not in the dataframe(place, coordinates), no new columns are
+    instantiated.
+    """
+    withheld_in_countries = [["NL", "UK"], ["IN"]]
+    geo = [
+        {"type": "point", "coordinates": [1.0, 2.0]},
+        {"type": "point", "coordinates": [1.0, 2.0]},
+    ]
+    df = pd.DataFrame({"geo": geo, "withheld_in_countries": withheld_in_countries})
+
+    expected_withheld_in_countries = ["""['NL', 'UK']""", """['IN']"""]
+    expected_geo = [
+        """{'type': 'point', 'coordinates': [1.0, 2.0]}""",
+        """{'type': 'point', 'coordinates': [1.0, 2.0]}""",
+    ]
+
+    expected_df = pd.DataFrame(
+        {"geo": expected_geo, "withheld_in_countries": expected_withheld_in_countries}
+    )
+    expected_df = expected_df.astype("string")
+    result_df = twitter_pull.stringify_columns(df)
+
+    pd.testing.assert_frame_equal(result_df, expected_df)
+
+
+def test_stringify_columns_place_coordinates():
+    """Test stringify_columns stringifies place and coordinates columns.
+
+    Also tests that if a column is not in the dataframe(geo and withheld_in_countries ), no new
+    columns are instantiated.
+    """
+    place = [
+        {"place": {"id": "07d9db48bc083000", "name": "Madurodam"}},
+        {"place": {"id": "1111111111111", "name": "Big Ben"}},
+    ]
+    coordinates = [
+        [1.0, 2.0],
+        [1.0, 2.0],
+    ]
+    df = pd.DataFrame({"place": place, "coordinates": coordinates})
+
+    expected_place = [
+        """{'place': {'id': '07d9db48bc083000', 'name': 'Madurodam'}}""",
+        """{'place': {'id': '1111111111111', 'name': 'Big Ben'}}""",
+    ]
+    expected_coordinates = [
+        """[1.0, 2.0]""",
+        """[1.0, 2.0]""",
+    ]
+
+    expected_df = pd.DataFrame({"place": expected_place, "coordinates": expected_coordinates})
+    expected_df = expected_df.astype("string")
+    result_df = twitter_pull.stringify_columns(df)
+
+    pd.testing.assert_frame_equal(result_df, expected_df)
