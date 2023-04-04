@@ -345,6 +345,11 @@ def create(
             "encoding": "utf-8",
             "token_pattern": r"#?\b\w\w+\b",
         },
+        "swa": {
+            "strip_accents": "ascii",
+            "encoding": "utf-8",
+            "token_pattern": r"#?\b\w\w+\b",
+        },
         "und": {"strip_accents": "unicode"},
     }
 

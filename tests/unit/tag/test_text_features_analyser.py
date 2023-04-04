@@ -122,6 +122,7 @@ def test_TextFeaturesAnalyser_default_accepted_languages():
             ("1", "yas sentance", "ar"),
             ("1", "yas sentances", "ar_izi"),
             ("1", "on peut aussi analyser le français", "fr"),
+            ("1", "ninaweza kuchambua sentensi", "swa"),
         ],
         columns=["id", "clean_text", "language"],
     )
@@ -178,6 +179,31 @@ def test_TextFeaturesAnalyser_kurdish():
 
     assert df_test["features"][0] == kurmanji_feats
     assert df_test["features"][1] == sorani_feats
+
+
+def test_TextFeaturesAnalyser_kiswahili():
+    """Test analysing Kiswahili.
+
+    Currently expects no stemming, just tokenization
+    """
+    df_test = pd.DataFrame(
+        [
+            ("1", "Ninaweza kuchambua sentensi", "swa"),
+        ],
+        columns=["id", "clean_text", "language"],
+    )
+    text_analyser = tfa.create(ngram_ranges=[(1, 2)], parallelisable=True)
+    df_test["features"] = text_analyser.features(df_test[["clean_text", "language"]], "clean_text")
+
+    kiswahili_feats = [
+        "ninaweza",
+        "kuchambua",
+        "sentensi",
+        "ninaweza kuchambua",
+        "kuchambua sentensi",
+    ]
+
+    assert df_test["features"][0] == kiswahili_feats
 
 
 def test_TextFeaturesAnalyser_features_no_ngrams():
