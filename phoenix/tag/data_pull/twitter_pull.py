@@ -42,7 +42,7 @@ def twitter_json(
 def normalise_json(raw_df: pd.DataFrame):
     """normalise_tweets raw dataframe."""
     df = utils.to_type("full_text", str, raw_df)
-    df = utils.to_type("id_str", str, raw_df)
+    df = utils.to_type("id_str", str, df)
     df["timestamp_filter"] = df["created_at"]
     df["date_filter"] = df["created_at"].dt.date
     df["year_filter"] = df["created_at"].dt.year
