@@ -74,6 +74,48 @@ def test_get_all_posts(m_get_post, m_get_request_session, ct_data_with_next, ct_
     assert posts == e_posts
 
 
+@mock.patch("phoenix.scrape.crowdtangle.get_request_session")
+@mock.patch("phoenix.scrape.crowdtangle.get_post")
+def test_get_all_posts_limit_pages(
+    m_get_post, m_get_request_session, ct_data_with_next, ct_data_no_next
+):
+    """Get all posts for only 2 pages when num_pages_to_crawl set to 2."""
+    m_get_post.side_effect = [
+        ct_data_with_next,
+        ct_data_with_next,
+        ct_data_no_next,
+    ]
+    mock_session = mock.MagicMock()
+    m_get_request_session.return_value = mock_session
+
+    start_date = datetime.datetime(2021, 1, 1)
+    end_date = datetime.datetime(2021, 1, 1)
+    list_ids = ["1"]
+    num_pages_to_crawl = 2
+    posts = crowdtangle.get_all_posts(start_date, end_date, list_ids, num_pages_to_crawl)
+
+    calls = [
+        mock.call(
+            crowdtangle.POSTS_BASE_URL,
+            {
+                "startDate": start_date.strftime("%Y-%m-%dT%H:%M:%S"),
+                "endDate": end_date.strftime("%Y-%m-%dT%H:%M:%S"),
+                "listIds": list_ids,
+                "sortBy": "total_interactions",
+                "count": 100,
+            },
+            mock_session,
+        ),
+        mock.call(ct_data_with_next["result"]["pagination"]["nextPage"], {}, mock_session),
+    ]
+
+    m_get_post.assert_has_calls(calls)
+
+    e_posts = ct_data_with_next["result"]["posts"] + ct_data_with_next["result"]["posts"]
+
+    assert posts == e_posts
+
+
 @mock.patch.dict(os.environ, {"CT_RATE_LIMIT_CALLS": "100"})
 @mock.patch.dict(os.environ, {"CT_RATE_LIMIT_SECONDS": "300"})
 def test_get_rate_limits_env():
@@ -109,3 +151,44 @@ def test_get_request_session():
     """Test that get_request_session returns an instatiated session."""
     session = crowdtangle.get_request_session()
     assert type(session) == requests.Session
+
+
+@mock.patch("phoenix.scrape.crowdtangle.get_request_session")
+@mock.patch("phoenix.scrape.crowdtangle.get_post")
+def test_get_all_posts_connection_error(
+    m_get_post, m_get_request_session, ct_data_with_next, ct_data_no_next
+):
+    """Get all posts still returns 2 pages when third call is a connection error."""
+    m_get_post.side_effect = [
+        ct_data_with_next,
+        ct_data_with_next,
+        requests.exceptions.ConnectionError(),
+    ]
+    mock_session = mock.MagicMock()
+    m_get_request_session.return_value = mock_session
+
+    start_date = datetime.datetime(2021, 1, 1)
+    end_date = datetime.datetime(2021, 1, 1)
+    list_ids = ["1"]
+    posts = crowdtangle.get_all_posts(start_date, end_date, list_ids)
+
+    calls = [
+        mock.call(
+            crowdtangle.POSTS_BASE_URL,
+            {
+                "startDate": start_date.strftime("%Y-%m-%dT%H:%M:%S"),
+                "endDate": end_date.strftime("%Y-%m-%dT%H:%M:%S"),
+                "listIds": list_ids,
+                "sortBy": "total_interactions",
+                "count": 100,
+            },
+            mock_session,
+        ),
+        mock.call(ct_data_with_next["result"]["pagination"]["nextPage"], {}, mock_session),
+    ]
+
+    m_get_post.assert_has_calls(calls)
+
+    e_posts = ct_data_with_next["result"]["posts"] + ct_data_with_next["result"]["posts"]
+
+    assert posts == e_posts
