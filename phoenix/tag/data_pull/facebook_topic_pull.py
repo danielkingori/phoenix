@@ -18,7 +18,9 @@ def get_unique_groups(data):
         key = "user_name"
     else:
         key = "account_name"
-    return data.groupby(key)["topic"].unique()
+    series = data.groupby(key)["topic"].unique()
+    series = series.apply(lambda x: [i for i in x if pd.notna(i)])
+    return series
 
 
 def generate_permutations(data):
