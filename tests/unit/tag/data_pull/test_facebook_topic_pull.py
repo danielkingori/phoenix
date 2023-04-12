@@ -72,3 +72,21 @@ def test_get_unique_groups(groupby_key):
     result_series = facebook_topic_pull.get_unique_groups(input_df)
 
     pd.testing.assert_series_equal(result_series, expected_series)
+
+
+def test_permutations_remove_duplicates():
+    """Test permutations_remove_duplicates makes permutations of a list."""
+    items_list = ["Alice", "Bob", "Charlie", "Dan"]
+
+    expected_permutation_list = [
+        ("Alice", "Bob"),
+        ("Alice", "Charlie"),
+        ("Alice", "Dan"),
+        ("Bob", "Charlie"),
+        ("Bob", "Dan"),
+        ("Charlie", "Dan"),
+    ]
+
+    actual_permutation_list = facebook_topic_pull.permutations_remove_duplicates(items_list)
+
+    assert actual_permutation_list == expected_permutation_list

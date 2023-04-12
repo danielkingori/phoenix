@@ -1,4 +1,6 @@
 """Facebook topics data pull."""
+from typing import List
+
 import itertools
 
 import pandas as pd
@@ -28,7 +30,7 @@ def generate_permutations(data):
     return [permutations_remove_duplicates(data[key]) for key in data.keys()]
 
 
-def permutations_remove_duplicates(array):
+def permutations_remove_duplicates(array: List[str]):
     """Creates permutations and removes copies."""
     result = []
     for p in itertools.permutations(array, 2):
