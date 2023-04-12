@@ -90,3 +90,34 @@ def test_permutations_remove_duplicates():
     actual_permutation_list = facebook_topic_pull.permutations_remove_duplicates(items_list)
 
     assert actual_permutation_list == expected_permutation_list
+
+
+def test_get_weighted_dataframe():
+    """Test get_weighted_dataframe."""
+    input_data = pd.DataFrame(
+        [
+            ("Alice", "Bob"),
+            ("Alice", "Bob"),
+            ("Alice", "Bob"),
+            ("Alice", "Charlie"),
+            ("Alice", "Charlie"),
+            ("Alice", "Charlie"),
+            ("Alice", "Dan"),
+            ("Bob", "Charlie"),
+            ("Bob", "Dan"),
+            ("Charlie", "Dan"),
+            ("Charlie", "Dan"),
+        ]
+    )
+
+    expected_df = pd.DataFrame(
+        {
+            "topic-1": ["Alice", "Alice", "Alice", "Bob", "Bob", "Charlie"],
+            "topic-2": ["Bob", "Charlie", "Dan", "Charlie", "Dan", "Dan"],
+            "weight": [3, 3, 1, 1, 1, 2],
+        }
+    )
+
+    actual_df = facebook_topic_pull.get_weighted_dataframe(input_data)
+
+    pd.testing.assert_frame_equal(actual_df, expected_df)
